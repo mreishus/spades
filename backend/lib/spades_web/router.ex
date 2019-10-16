@@ -16,6 +16,7 @@ defmodule SpadesWeb.Router do
   scope "/", SpadesWeb do
     pipe_through :browser
 
+    get "/json_test", PageController, :json_test
     get "/", PageController, :index
   end
 

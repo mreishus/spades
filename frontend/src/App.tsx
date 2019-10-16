@@ -3,6 +3,8 @@ import logo from "./logo.svg";
 import "./App.css";
 import "./tailwind.css";
 
+import TestMe from "./components/TestMe";
+
 const App: React.FC = () => {
   return (
     <div className="App">
@@ -22,6 +24,7 @@ const App: React.FC = () => {
         <div className="border mt-2 shadow p-4 bg-red-800">Test</div>
         <div className="alert alert-danger mt-1">alert</div>
         <div className="alert alert-info mt-1">info</div>
+        <TestMe />
       </header>
     </div>
   );
