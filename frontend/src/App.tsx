@@ -20,6 +20,8 @@ const App: React.FC = () => {
           Learn React
         </a>
         <div className="border mt-2 shadow p-4 bg-red-800">Test</div>
+        <div className="alert alert-danger mt-1">alert</div>
+        <div className="alert alert-info mt-1">info</div>
       </header>
     </div>
   );
