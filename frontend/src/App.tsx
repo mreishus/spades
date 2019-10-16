@@ -1,6 +1,7 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import "./tailwind.css";
 
 const App: React.FC = () => {
   return (
@@ -18,6 +19,7 @@ const App: React.FC = () => {
         >
           Learn React
         </a>
+        <div className="border mt-2 shadow p-4 bg-red-800">Test</div>
       </header>
     </div>
   );

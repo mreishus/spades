@@ -14,8 +14,14 @@
     "typescript": "3.6.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "npm-run-all -p start:css start:js",
+    "build": "npm-run-all build:css build:js",
+    "start:js": "react-scripts start",
+    "build:js": "react-scripts build",
+    "start:css": "postcss src/css/tailwind.src.css -o src/tailwind.css -w",
+    "build:css": "postcss src/css/tailwind.src.css -o src/tailwind.css --env production",
+    "orig_start": "react-scripts start",
+    "orig_build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -33,5 +39,11 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^1.3.0",
+    "npm-run-all": "^4.1.5",
+    "postcss-cli": "^6.1.3",
+    "tailwindcss": "^1.1.2"
   }
 }
