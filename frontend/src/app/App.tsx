@@ -1,10 +1,14 @@
 import React from "react";
 import "../tailwind.css";
+import useBodyClass from "../hooks/useBodyClass";
+import useHtmlClass from "../hooks/useHtmlClass";
 
 import SocketProvider from "../components/SocketProvider";
 import TestMe from "../components/TestMe";
 
 const App: React.FC = () => {
+  useHtmlClass(["text-gray-900", "antialiased"]);
+  useBodyClass(["min-h-screen", "bg-gray-100"]);
   return (
     <SocketProvider
       wsUrl={process.env.REACT_APP_WS_URL || "/be/socket"}
