@@ -12,7 +12,8 @@ defmodule Spades.Application do
       Spades.Repo,
       # Start the endpoint when the application starts
       SpadesWeb.Endpoint,
-      {Registry, keys: :unique, name: SpadesGame.GameRegistry}
+      {Registry, keys: :unique, name: SpadesGame.GameRegistry},
+      SpadesGame.GameSupervisor
       # Starts a worker by calling: Spades.Worker.start_link(arg)
       # {Spades.Worker, arg},
     ]

@@ -49,6 +49,13 @@ defmodule SpadesGame.GameServer do
     end
   end
 
+  @doc """
+  discard/1: Move a card from the draw pile to the discard pile.
+  """
+  def discard(game_name) do
+    GenServer.call(via_tuple(game_name), :discard)
+  end
+
   #####################################
   ########### IMPLEMENTATION ##########
   #####################################
@@ -75,6 +82,12 @@ defmodule SpadesGame.GameServer do
 
   def handle_call(:state, _from, game) do
     {:reply, game, game, @timeout}
+  end
+
+  def handle_call(:discard, _from, game) do
+    new_game = Game.discard(game)
+    :ets.insert(:games, {game.game_name, new_game})
+    {:reply, new_game, new_game, @timeout}
   end
 
   # When timing out, the order is handle_info(:timeout, _) -> terminate({:shutdown, :timeout}, _)
