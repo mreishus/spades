@@ -27,6 +27,10 @@ const App: React.FC = () => {
           >
             Learn React
           </a>
+          <h1>H1 test</h1>
+          <h2>H2 test</h2>
+          <h3>H3 test</h3>
+          <a href="//google.com">Google.com</a>
           <div className="border mt-2 shadow p-4 bg-red-800">Test</div>
           <div className="alert alert-danger mt-1">alert</div>
           <div className="alert alert-info mt-1">info</div>
