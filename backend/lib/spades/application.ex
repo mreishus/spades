@@ -11,10 +11,13 @@ defmodule Spades.Application do
       # Start the Ecto repository
       Spades.Repo,
       # Start the endpoint when the application starts
-      SpadesWeb.Endpoint
+      SpadesWeb.Endpoint,
+      {Registry, keys: :unique, name: SpadesGame.GameRegistry}
       # Starts a worker by calling: Spades.Worker.start_link(arg)
       # {Spades.Worker, arg},
     ]
+
+    :ets.new(:games, [:public, :named_table])
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

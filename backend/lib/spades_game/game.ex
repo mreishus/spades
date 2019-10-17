@@ -7,15 +7,17 @@ defmodule SpadesGame.Game do
   """
   alias SpadesGame.{Deck, Game}
 
-  defstruct [:draw, :discard]
+  defstruct [:game_name, :draw, :discard]
 
   @type t :: %Game{
+          game_name: String.t(),
           draw: Deck.t(),
           discard: Deck.t()
         }
-  @spec new() :: Game.t()
-  def new do
+  @spec new(String.t()) :: Game.t()
+  def new(game_name) do
     %Game{
+      game_name: game_name,
       draw: Deck.new_shuffled(),
       discard: Deck.new_empty()
     }
