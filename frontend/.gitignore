@@ -5,7 +5,7 @@
 *.swo
 
 # Built Tailwind
-src/tailwind.css
+src/css/tailwind.compiled.css
 
 # dependencies
 /node_modules

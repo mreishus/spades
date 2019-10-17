@@ -1,5 +1,5 @@
 import React from "react";
-import "../tailwind.css";
+import "../css/tailwind.compiled.css";
 import useBodyClass from "../hooks/useBodyClass";
 import useHtmlClass from "../hooks/useHtmlClass";
 
