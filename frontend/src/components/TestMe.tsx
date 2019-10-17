@@ -17,8 +17,12 @@ export const TestMe = () => {
   const initialState = {
     createRepo: "init"
   };
-  const a = useChannel("mytopic:mysubtopic", eventReducer, initialState);
-  console.log({ a });
+  const [channelState, broadcast] = useChannel(
+    "mytopic:mysubtopic",
+    eventReducer,
+    initialState
+  );
+  console.log({ channelState });
 
   return (
     <div>
@@ -27,6 +31,12 @@ export const TestMe = () => {
       {isLoading && <span>Loading</span>}
       {isError && <span>Error</span>}
       {data && <div>{JSON.stringify(data)}</div>}
+      <button
+        className="bg-orange-800"
+        onClick={() => broadcast("thisevent", { some: "payload" })}
+      >
+        Send event over websocket
+      </button>
     </div>
   );
 };

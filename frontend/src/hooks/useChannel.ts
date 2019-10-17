@@ -1,44 +1,57 @@
-//
-// Lots of ANYs in here.  This is a placeholder I got from a webpage.
-// I'm not sure I like the way this ties together the state management,
-// forcing you to use useReducer.
-// This needs an overhaul, but leaving it in as I test prod connectivity.
-//
-import { useContext, useReducer, useEffect } from "react";
+import { useContext, useEffect, useReducer, useState } from "react";
+import { Socket } from "phoenix";
 import SocketContext from "../contexts/SocketContext";
 
-const useChannel = (channelTopic: string, reducer: any, initialState: any) => {
+const useChannel = (
+  channelTopic: string,
+  reducer: (state: any, event_and_payload: any) => any,
+  initialState: any
+) => {
   const socket = useContext(SocketContext);
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [broadcast, setBroadcast] = useState(mustJoinChannelWarning);
 
   useEffect(() => {
-    // @ts-ignore
-    if (socket === {} || socket.channel == null) {
-      return;
+    if (socket != null) {
+      joinChannel(socket, channelTopic, dispatch, setBroadcast);
     }
-    // @ts-ignore
-    const channel = socket.channel(channelTopic, { client: "browser" });
-
-    channel.onMessage = (event: any, payload: any) => {
-      dispatch({ event, payload });
-      return payload;
-    };
-
-    channel
-      .join()
-      .receive("ok", ({ messages }: { messages: any }) =>
-        console.log("successfully joined channel", messages || "")
-      )
-      .receive("error", ({ reason }: { reason: any }) =>
-        console.error("failed to join channel", reason)
-      );
-
-    return () => {
-      channel.leave();
-    };
   }, [channelTopic, socket]);
 
-  return state;
+  return [state, broadcast];
 };
+
+const joinChannel = (
+  socket: Socket,
+  channelTopic: string,
+  dispatch: React.Dispatch<any>,
+  setBroadcast: React.Dispatch<React.SetStateAction<() => void>>
+) => {
+  const channel = socket.channel(channelTopic, { client: "browser" });
+
+  channel.onMessage = (event, payload) => {
+    dispatch({ event, payload });
+    return payload;
+  };
+
+  channel
+    .join()
+    .receive("ok", ({ messages }) =>
+      console.log("successfully joined channel", messages || "")
+    )
+    .receive("error", ({ reason }) =>
+      console.error("failed to join channel", reason)
+    );
+
+  setBroadcast(() => channel.push.bind(channel));
+
+  return () => {
+    channel.leave();
+  };
+};
+
+const mustJoinChannelWarning = () => () =>
+  console.error(
+    `useChannel broadcast function cannot be invoked before the channel has been joined`
+  );
 
 export default useChannel;
