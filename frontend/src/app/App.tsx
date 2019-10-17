@@ -4,7 +4,9 @@ import useBodyClass from "../hooks/useBodyClass";
 import useHtmlClass from "../hooks/useHtmlClass";
 
 import SocketProvider from "../components/SocketProvider";
-import TestMe from "../components/TestMe";
+import AppRouter from "./AppRouter";
+
+import { BrowserRouter as Router, Link } from "react-router-dom";
 
 const App: React.FC = () => {
   useHtmlClass(["text-gray-900", "antialiased"]);
@@ -14,29 +16,21 @@ const App: React.FC = () => {
       wsUrl={process.env.REACT_APP_WS_URL || "/be/socket"}
       options={{ hello: "hi", token: "whatever" }}
     >
-      <div className="App">
-        <header className="App-header">
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          <h1>H1 test</h1>
-          <h2>H2 test</h2>
-          <h3>H3 test</h3>
-          <a href="//google.com">Google.com</a>
-          <div className="border mt-2 shadow p-4 bg-red-800">Test</div>
-          <div className="alert alert-danger mt-1">alert</div>
-          <div className="alert alert-info mt-1">info</div>
-          <TestMe />
-        </header>
-      </div>
+      <Router>
+        <nav>
+          <Link to="/">Home</Link>
+          <Link to="/about" className="ml-2">
+            About
+          </Link>
+          <Link to="/users" className="ml-2">
+            Users
+          </Link>
+          <Link to="/testme" className="ml-2">
+            TestMe
+          </Link>
+        </nav>
+        <AppRouter />
+      </Router>
     </SocketProvider>
   );
 };
