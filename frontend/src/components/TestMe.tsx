@@ -7,7 +7,9 @@ import useChannel from "../hooks/useChannel";
 interface Props {}
 
 const eventReducer = (state: any, action: any) => {
-  console.log({ state, action });
+  if (action.event == "ping") {
+    return action.payload;
+  }
   return state;
 };
 
@@ -22,7 +24,8 @@ export const TestMe = () => {
     eventReducer,
     initialState
   );
-  console.log({ channelState });
+  console.log("state");
+  console.log(channelState);
 
   return (
     <div>

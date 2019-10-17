@@ -8,6 +8,7 @@ set -e
 ## Backend
 echo "Building backend..."
 cd backend
+mix check
 docker build --tag=mreishus/spades-backend:$VERSION --tag=mreishus/spades-backend:latest .
 docker push mreishus/spades-backend:latest
 docker push mreishus/spades-backend:$VERSION
