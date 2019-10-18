@@ -27,7 +27,7 @@ defmodule SpadesGame.Game do
   @doc """
   discard/1:  Move one card from the draw pile to the discard pile.
   """
-  def discard(game = %Game{draw: []}), do: game
+  def discard(%Game{draw: []} = game), do: game
 
   def discard(%Game{draw: draw, discard: discard}) do
     [top_card | new_draw] = draw

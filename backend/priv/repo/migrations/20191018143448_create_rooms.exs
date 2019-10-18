@@ -3,10 +3,9 @@ defmodule Spades.Repo.Migrations.CreateRooms do
 
   def change do
     create table(:rooms) do
-      add :name, :string
+      add(:name, :string)
 
       timestamps()
     end
-
   end
 end
