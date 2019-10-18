@@ -21,7 +21,8 @@ defmodule SpadesWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", SpadesWeb do
-  #   pipe_through :api
-  # end
+  scope "/api", SpadesWeb do
+    pipe_through :api
+    resources "/rooms", RoomController, except: [:new, :edit]
+  end
 end
