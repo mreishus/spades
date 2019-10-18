@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import TestMe from "../components/TestMe";
-import Lobby from "../pages/Lobby";
+import Lobby from "../features/lobby/Lobby";
 
 function Home() {
   return <h2>Home</h2>;
