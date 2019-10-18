@@ -30,6 +30,12 @@ defmodule SpadesWeb.RoomControllerTest do
 
   describe "create room" do
     test "renders room when data is valid", %{conn: conn} do
+      # a = Routes.room_path(conn, :create)
+      # a |> IO.inspect(label: "path")
+
+      # @create_attrs
+      # |> IO.inspect(label: "attrs")
+
       conn = post(conn, Routes.room_path(conn, :create), room: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
 

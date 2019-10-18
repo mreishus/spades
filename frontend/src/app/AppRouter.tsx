@@ -1,6 +1,7 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import TestMe from "../components/TestMe";
+import Lobby from "../pages/Lobby";
 
 function Home() {
   return <h2>Home</h2>;
@@ -25,6 +26,9 @@ const AppRouter: React.FC = () => {
       </Route>
       <Route path="/users">
         <Users />
+      </Route>
+      <Route path="/lobby">
+        <Lobby />
       </Route>
       <Route path="/">
         <Home />

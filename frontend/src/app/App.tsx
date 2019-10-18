@@ -28,6 +28,9 @@ const App: React.FC = () => {
           <Link to="/testme" className="ml-2">
             TestMe
           </Link>
+          <Link to="/lobby" className="ml-2 text-purple-600">
+            Lobby
+          </Link>
         </nav>
         <AppRouter />
       </Router>
