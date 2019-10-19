@@ -2,7 +2,7 @@ import React from "react";
 //import classnames from "classnames";
 
 import useDataApi from "../hooks/useDataApi";
-import useChannel from "../hooks/useChannel";
+import useChannelOld from "../hooks/useChannelOld";
 
 interface Props {}
 
@@ -19,7 +19,7 @@ export const TestMe = () => {
   const initialState = {
     createRepo: "init"
   };
-  const [channelState, broadcast] = useChannel(
+  const [channelState, broadcast] = useChannelOld(
     "mytopic:mysubtopic",
     eventReducer,
     initialState

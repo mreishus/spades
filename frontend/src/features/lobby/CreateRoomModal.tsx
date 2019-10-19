@@ -5,15 +5,11 @@ import axios from "axios";
 import ReactModal from "react-modal";
 import Button from "../../components/basic/Button";
 
+import { getRandomInt } from "../../util/util";
+
 interface Props {
   isOpen: boolean;
   closeModal: () => void;
-}
-
-function getRandomInt(min: number, max: number) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 ReactModal.setAppElement("#root");

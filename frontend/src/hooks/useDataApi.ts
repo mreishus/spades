@@ -3,7 +3,8 @@ import axios from "axios";
 
 const useDataApi = (initialUrl: string, initialData: any) => {
   const [data, setData] = useState(initialData);
-  const [url, setUrl] = useState(initialUrl);
+  const [url, setUrl] = useState(initialUrl); // Mechanism to refetch by changing url
+  const [hash, setHash] = useState<any>(null); // Mechanism to refrech same url, by changing hash
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   useEffect(() => {
@@ -19,8 +20,8 @@ const useDataApi = (initialUrl: string, initialData: any) => {
       setIsLoading(false);
     };
     fetchData();
-  }, [url]);
-  return { data, isLoading, isError, doFetch: setUrl };
+  }, [url, hash]);
+  return { data, isLoading, isError, doFetchUrl: setUrl, doFetchHash: setHash };
 };
 
 export default useDataApi;

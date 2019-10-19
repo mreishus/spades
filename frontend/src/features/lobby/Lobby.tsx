@@ -1,15 +1,34 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import CreateRoomModal from "./CreateRoomModal";
 import Button from "../../components/basic/Button";
 import Container from "../../components/basic/Container";
 
 import useDataApi from "../../hooks/useDataApi";
+import useChannel from "../../hooks/useChannel";
+
+import { getRandomInt } from "../../util/util";
 
 interface Props {}
 
 export const Lobby: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
-  const { isLoading, isError, data } = useDataApi("/be/api/rooms", null);
+  const { isLoading, isError, data, doFetchHash } = useDataApi(
+    "/be/api/rooms",
+    null
+  );
+
+  const onChannelMessage = useCallback(
+    (event, payload) => {
+      console.log("Got event and payload from lobby channel");
+      console.log(event, payload);
+      if (event === "notify_update") {
+        console.log("refetching..");
+        doFetchHash(getRandomInt(1, 100000));
+      }
+    },
+    [doFetchHash]
+  );
+  useChannel("lobby:lobby", onChannelMessage);
 
   let roomItems = null;
   if (data != null && data.data != null) {
