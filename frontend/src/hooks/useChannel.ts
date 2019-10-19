@@ -2,6 +2,41 @@ import { useContext, useEffect, useState } from "react";
 import { Socket } from "phoenix";
 import SocketContext from "../contexts/SocketContext";
 
+/* useChannel is used to provide access to phoenix channels.
+
+example usage showing communication in both directions:
+
+interface Props {}
+export const TestComponent: React.FC<Props> = () => {
+  const onChannelMessage = useCallback((event, payload) => {
+    console.log("Got channel message from phoenix", event, payload);
+  }, []);
+  const broadcast = useChannel("lobby:lobby", onChannelMessage);
+  return (
+    <button
+      onClick={() => broadcast("test_message_from_javascript", { stuff: 1 })}
+    >
+      Send message to phoenix
+    </button>
+  );
+};
+
+this is adapated from alexgriff/use-phoenix-channel with the following changes:
+1. Ported to typescript
+2. Does not force you to use a reducer.
+
+Note: It does require access to a phoenix socket object, built like so:
+
+import { Socket } from 'phoenix';
+const socket = new Socket(webSocketUrl, {params: options});
+socket.connect();
+
+It looks for this in SocketContext.  See
+https://medium.com/flatiron-labs/improving-ux-with-phoenix-channels-react-hooks-8e661d3a771e
+for an example implementation.
+
+*/
+
 const useChannel = (
   channelTopic: string,
   onMessage: (event: any, payload: any) => void
@@ -16,7 +51,6 @@ const useChannel = (
       joinChannel(socket, channelTopic, onMessage, setBroadcast);
     }
   }, [channelTopic, onMessage, socket]);
-  //}, [channelTopic, onMessage, socket]);
 
   return broadcast;
 };
