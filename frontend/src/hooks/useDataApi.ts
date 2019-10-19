@@ -21,7 +21,14 @@ const useDataApi = (initialUrl: string, initialData: any) => {
     };
     fetchData();
   }, [url, hash]);
-  return { data, isLoading, isError, doFetchUrl: setUrl, doFetchHash: setHash };
+  return {
+    data,
+    isLoading,
+    isError,
+    doFetchUrl: setUrl,
+    doFetchHash: setHash,
+    setData
+  };
 };
 
 export default useDataApi;

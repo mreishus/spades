@@ -108,10 +108,10 @@ defmodule Spades.Rooms do
 
   ## Notify_lobby:
   ## After making a successful change to a room,
-  ## send the message "notify_update"
+  ## send the message "rooms_update"
   ## to the "lobby:lobby" channel
   defp notify_lobby({:ok, x}) do
-    Endpoint.broadcast!("lobby:lobby", "notify_update", %{})
+    Endpoint.broadcast!("lobby:lobby", "rooms_update", %{rooms: list_rooms()})
     {:ok, x}
   end
 

@@ -5,6 +5,10 @@ defmodule Spades.Rooms.Room do
   use Ecto.Schema
   import Ecto.Changeset
 
+  # Automatically convert to JSON when broadcasting %Room{}
+  # Objects over channel messages
+  @derive {Jason.Encoder, only: [:id, :name]}
+
   schema "rooms" do
     field :name, :string
 

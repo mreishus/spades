@@ -6,13 +6,11 @@ import Container from "../../components/basic/Container";
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
 
-import { getRandomInt } from "../../util/util";
-
 interface Props {}
 
 export const Lobby: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
-  const { isLoading, isError, data, doFetchHash } = useDataApi(
+  const { isLoading, isError, data, setData } = useDataApi(
     "/be/api/rooms",
     null
   );
@@ -21,12 +19,12 @@ export const Lobby: React.FC = () => {
     (event, payload) => {
       console.log("Got event and payload from lobby channel");
       console.log(event, payload);
-      if (event === "notify_update") {
-        console.log("refetching..");
-        doFetchHash(getRandomInt(1, 100000));
+      if (event === "rooms_update" && payload.rooms != null) {
+        console.log("Setting data from websocket..");
+        setData({ data: payload.rooms });
       }
     },
-    [doFetchHash]
+    [setData]
   );
   useChannel("lobby:lobby", onChannelMessage);
 
