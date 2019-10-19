@@ -31,6 +31,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
 
   return (
     <ReactModal
+      closeTimeoutMS={200}
       isOpen={isOpen}
       onRequestClose={closeModal}
       contentLabel="Minimal Modal Example"
