@@ -7,7 +7,9 @@ const useChannel = (
   onMessage: (event: any, payload: any) => void
 ) => {
   const socket = useContext(SocketContext);
-  const [broadcast, setBroadcast] = useState(mustJoinChannelWarning);
+  const [broadcast, setBroadcast] = useState<
+    (eventName: string, payload: object) => void
+  >(mustJoinChannelWarning);
 
   useEffect(() => {
     if (socket != null) {
@@ -23,7 +25,9 @@ const joinChannel = (
   socket: Socket,
   channelTopic: string,
   onMessage: (event: any, payload: any) => void,
-  setBroadcast: React.Dispatch<React.SetStateAction<() => void>>
+  setBroadcast: React.Dispatch<
+    React.SetStateAction<(eventName: string, payload: object) => void>
+  >
 ) => {
   const channel = socket.channel(channelTopic, { client: "browser" });
 
@@ -42,14 +46,19 @@ const joinChannel = (
       console.error("failed to join channel", reason)
     );
 
-  setBroadcast(() => channel.push.bind(channel));
+  setBroadcast((_oldstate: any) => (eventName: string, payload: object) =>
+    channel.push(eventName, payload)
+  );
 
   return () => {
     channel.leave();
   };
 };
 
-const mustJoinChannelWarning = () => () =>
+const mustJoinChannelWarning = (_oldstate: any) => (
+  eventName: string,
+  payload: object
+) =>
   console.error(
     `useChannel broadcast function cannot be invoked before the channel has been joined`
   );

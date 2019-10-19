@@ -19,13 +19,14 @@ export const Lobby: React.FC = () => {
 
   const onChannelMessage = useCallback(
     (event, payload) => {
+      console.log("Got channel message", event, payload);
       if (event === "rooms_update" && payload.rooms != null) {
         setData({ data: payload.rooms });
       }
     },
     [setData]
   );
-  useChannel("lobby:lobby", onChannelMessage);
+  const broadcast = useChannel("lobby:lobby", onChannelMessage);
 
   let roomItems = null;
   if (data != null && data.data != null) {
@@ -44,7 +45,17 @@ export const Lobby: React.FC = () => {
         {isError && <div>Error..</div>}
         {roomItems}
         <div>
-          <Button onClick={() => setShowModal(true)}>Create Room</Button>
+          <Button isPrimary onClick={() => setShowModal(true)}>
+            Create Room
+          </Button>
+          <Button
+            className="ml-4"
+            onClick={() =>
+              broadcast("test_message_from_javascript", { stuff: 1 })
+            }
+          >
+            Broadcast
+          </Button>
         </div>
         <CreateRoomModal
           isOpen={showModal}
