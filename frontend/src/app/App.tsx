@@ -19,12 +19,6 @@ const App: React.FC = () => {
       <Router>
         <nav>
           <Link to="/">Home</Link>
-          <Link to="/about" className="ml-2">
-            About
-          </Link>
-          <Link to="/users" className="ml-2">
-            Users
-          </Link>
           <Link to="/testme" className="ml-2">
             TestMe
           </Link>

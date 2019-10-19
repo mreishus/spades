@@ -1,19 +1,9 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
 import TestMe from "../components/TestMe";
-import Lobby from "../features/lobby/Lobby";
-
-function Home() {
-  return <h2>Home</h2>;
-}
-
-function About() {
-  return <h2>About</h2>;
-}
-
-function Users() {
-  return <h2>Users</h2>;
-}
+import RoomShow from "../pages/RoomShow";
+import LobbyIndex from "../pages/LobbyIndex";
+import Home from "../pages/Home";
 
 const AppRouter: React.FC = () => {
   return (
@@ -21,18 +11,10 @@ const AppRouter: React.FC = () => {
       <Route path="/testme">
         <TestMe />
       </Route>
-      <Route path="/about">
-        <About />
-      </Route>
-      <Route path="/users">
-        <Users />
-      </Route>
-      <Route path="/lobby">
-        <Lobby />
-      </Route>
-      <Route path="/">
-        <Home />
-      </Route>
+
+      <Route path="/room/:slug" component={RoomShow} />
+      <Route path="/lobby" component={LobbyIndex} />
+      <Route path="/" component={Home} />
     </Switch>
   );
 };
