@@ -4,6 +4,7 @@ defmodule SpadesWeb.UserSocket do
   ## Channels
   # channel "room:*", SpadesWeb.RoomChannel
   channel "mytopic:*", SpadesWeb.MyTopicChannel
+  channel "lobby:lobby", SpadesWeb.LobbyChannel
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
