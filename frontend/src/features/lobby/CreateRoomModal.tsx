@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Redirect } from "react-router";
 import axios from "axios";
 //import cx from "classnames";
 import ReactModal from "react-modal";
@@ -9,25 +10,42 @@ interface Props {
   closeModal: () => void;
 }
 
+function getRandomInt(min: number, max: number) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 ReactModal.setAppElement("#root");
 
 export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [roomSlugCreated, setRoomSlugCreated] = useState(null);
 
   const createRoom = async () => {
     console.log("Creating..");
-    const data = { hi: "hello" };
+    const name = "Room Name " + getRandomInt(1, 10000);
+    const data = { room: { name } };
     setIsLoading(true);
     setIsError(false);
     try {
-      const res = await axios.post("/be/api/whatever", data);
+      const res = await axios.post("/be/api/rooms", data);
       setIsLoading(false);
+      if (res.status !== 201) {
+        throw new Error("Room not created");
+      }
+      const room = res.data.data;
+      setRoomSlugCreated(room.name);
     } catch (err) {
       setIsLoading(false);
       setIsError(true);
     }
   };
+
+  if (roomSlugCreated != null) {
+    return <Redirect push to={`/room/${roomSlugCreated}`} />;
+  }
 
   return (
     <ReactModal
