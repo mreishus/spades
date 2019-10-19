@@ -12,8 +12,7 @@ export const Room: React.FC<Props> = ({ slug }) => {
     <Container>
       <div>
         This is a room
-        <div>another div</div>
-        <div className="p-2 bg-red-300">{slug}</div>
+        <div className="p-2 bg-purple-300 max-w-md rounded">{slug}</div>
       </div>
     </Container>
   );

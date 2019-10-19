@@ -20,7 +20,6 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   const [roomSlugCreated, setRoomSlugCreated] = useState(null);
 
   const createRoom = async () => {
-    console.log("Creating..");
     const name = "Room Name " + getRandomInt(1, 10000);
     const data = { room: { name } };
     setIsLoading(true);
@@ -32,7 +31,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
         throw new Error("Room not created");
       }
       const room = res.data.data;
-      setRoomSlugCreated(room.name);
+      setRoomSlugCreated(room.slug);
     } catch (err) {
       setIsLoading(false);
       setIsError(true);
