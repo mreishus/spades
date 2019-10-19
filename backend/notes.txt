@@ -1,0 +1,62 @@
+- Add a new field
+
+== Create Migration ==
+
+mix ecto.gen.migration add_slug_to_room
+vim priv/repo/migrations/20191019151752_add_slug_to_room.exs
+    ###
+    alter table("rooms") do
+      add(:slug, :string)
+    end
+    ###
+mix ecto.migrate
+
+== Add to Schema ==
+
+  schema "rooms" do
+    field :name, :string
+    field :slug, :string
+
+    timestamps()
+  end
+
+== Add to ChangeSet ==
+
+# room.ex: Change changeset to allow setting it directly, or
+# to make a derived field.
+#
+# Fancy derived field
+
+  def changeset(room, attrs) do
+    room
+    |> cast(attrs, [:name])
+    |> validate_required([:name])
+    |> put_slug()
+  end
+
+  def put_slug(changeset) do
+    case changeset do
+      %Ecto.Changeset{valid?: true, changes: %{name: name}} ->
+        put_change(changeset, :slug, Slugify.slugify(name))
+
+      _ ->
+        changeset
+    end
+  end
+
+== Add to JSON Encoder ==
+
+  @derive {Jason.Encoder, only: [:id, :name, :slug]}
+
+== Add to Typescript types ==
+
+elixir_backend.d.ts
+
+declare module "elixir-backend" {
+  export declare class Room {
+    public id: number;
+    public name: string;
+    public slug: string;
+  }
+}
+

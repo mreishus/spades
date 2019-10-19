@@ -6,6 +6,8 @@ import Container from "../../components/basic/Container";
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
 
+import { Room } from "elixir-backend";
+
 interface Props {}
 
 export const Lobby: React.FC = () => {
@@ -30,9 +32,9 @@ export const Lobby: React.FC = () => {
 
   let roomItems = null;
   if (data != null && data.data != null) {
-    roomItems = data.data.map((room: any) => (
+    roomItems = data.data.map((room: Room) => (
       <div key={room.id}>
-        id {room.id} name {room.name}
+        id {room.id} name {room.name} slug {room.slug}
       </div>
     ));
   }
