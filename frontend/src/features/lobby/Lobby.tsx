@@ -19,10 +19,7 @@ export const Lobby: React.FC = () => {
 
   const onChannelMessage = useCallback(
     (event, payload) => {
-      console.log("Got event and payload from lobby channel");
-      console.log(event, payload);
       if (event === "rooms_update" && payload.rooms != null) {
-        console.log("Setting data from websocket..");
         setData({ data: payload.rooms });
       }
     },

@@ -27,7 +27,7 @@ const useDataApi = (initialUrl: string, initialData: any) => {
     isError,
     doFetchUrl: setUrl,
     doFetchHash: setHash,
-    setData
+    setData // Override what was fetched by the API (For example, websocket updates)
   };
 };
 
