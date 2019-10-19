@@ -7,6 +7,7 @@ defmodule Spades.Rooms do
   alias Spades.Repo
 
   alias Spades.Rooms.Room
+  alias SpadesWeb.Endpoint
 
   @doc """
   Returns the list of rooms.
@@ -53,6 +54,7 @@ defmodule Spades.Rooms do
     %Room{}
     |> Room.changeset(attrs)
     |> Repo.insert()
+    |> notify_lobby()
   end
 
   @doc """
@@ -71,6 +73,7 @@ defmodule Spades.Rooms do
     room
     |> Room.changeset(attrs)
     |> Repo.update()
+    |> notify_lobby()
   end
 
   @doc """
@@ -87,6 +90,7 @@ defmodule Spades.Rooms do
   """
   def delete_room(%Room{} = room) do
     Repo.delete(room)
+    |> notify_lobby()
   end
 
   @doc """
@@ -101,4 +105,15 @@ defmodule Spades.Rooms do
   def change_room(%Room{} = room) do
     Room.changeset(room, %{})
   end
+
+  ## Notify_lobby:
+  ## After making a successful change to a room,
+  ## send the message "notify_update"
+  ## to the "lobby:lobby" channel
+  defp notify_lobby({:ok, x}) do
+    Endpoint.broadcast!("lobby:lobby", "notify_update", %{})
+    {:ok, x}
+  end
+
+  defp notify_lobby(x), do: x
 end
