@@ -10,6 +10,10 @@ use Mix.Config
 config :spades,
   ecto_repos: [Spades.Repo]
 
+config :spades, :pow,
+  user: Spades.Users.User,
+  repo: Spades.Repo
+
 # Configures the endpoint
 config :spades, SpadesWeb.Endpoint,
   url: [host: "localhost"],
