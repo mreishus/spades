@@ -7,10 +7,16 @@ defmodule SpadesWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    #   plug Pow.Plug.Session, otp_app: :spades # If we want HTML Frontend Auth
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug SpadesWeb.APIAuthPlug, otp_app: :spades
+  end
+
+  pipeline :api_protected do
+    plug Pow.Plug.RequireAuthenticated, error_handler: SpadesWeb.APIAuthErrorHandler
   end
 
   scope "/", SpadesWeb do
@@ -24,5 +30,19 @@ defmodule SpadesWeb.Router do
   scope "/api", SpadesWeb do
     pipe_through :api
     resources "/rooms", RoomController, except: [:new, :edit]
+  end
+
+  scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do
+    pipe_through :api
+
+    resources "/registration", RegistrationController, singleton: true, only: [:create]
+    resources "/session", SessionController, singleton: true, only: [:create, :delete]
+    post "/session/renew", SessionController, :renew
+  end
+
+  scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do
+    pipe_through [:api, :api_protected]
+
+    # Your protected API endpoints here
   end
 end
