@@ -2,6 +2,7 @@ defmodule SpadesGame.Card do
   @moduledoc """
   Represents a playing card.
   """
+  @derive Jason.Encoder
   defstruct [:rank, :suit]
   alias SpadesGame.Card
 

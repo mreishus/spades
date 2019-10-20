@@ -66,8 +66,12 @@ const joinChannel = (
   const channel = socket.channel(channelTopic, { client: "browser" });
 
   channel.onMessage = (event, payload) => {
-    onMessage(event, payload);
-    // Phoenix.js makes us always return the payload...???
+    // I think all of these chan_reply_ events are not needed?
+    if (!event.startsWith("chan_reply_")) {
+      onMessage(event, payload);
+    }
+    // Return the payload since we're using the
+    // special onMessage hook
     return payload;
   };
 

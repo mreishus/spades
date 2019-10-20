@@ -3,10 +3,19 @@ defmodule SpadesWeb.RoomChannel do
   This channel will handle individual game rooms.
   """
   use SpadesWeb, :channel
+  alias SpadesGame.{GameServer}
 
-  def join("room:lobby", _payload, socket) do
+  def join("room:" <> room_slug, _payload, socket) do
     # if authorized?(payload) do
-    {:ok, socket}
+    state = GameServer.state(room_slug)
+
+    socket =
+      socket
+      |> assign(:room_slug, room_slug)
+      |> assign(:game_state, state)
+
+    # {:ok, socket}
+    {:ok, client_state(socket), socket}
     # else
     #   {:error, %{reason: "unauthorized"}}
     # end
@@ -25,8 +34,40 @@ defmodule SpadesWeb.RoomChannel do
     {:noreply, socket}
   end
 
+  def handle_in("request_state", _payload, %{assigns: %{room_slug: room_slug}} = socket) do
+    # payload |> IO.inspect()
+    # Can also send back "{:reply, :ok, socket}" or send back "{:noreply, socket}"
+    state = GameServer.state(room_slug)
+    socket = socket |> assign(:game_state, state)
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in("discard_card", _payload, %{assigns: %{room_slug: room_slug}} = socket) do
+    GameServer.discard(room_slug)
+    state = GameServer.state(room_slug)
+    socket = socket |> assign(:game_state, state)
+    notify(socket)
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  defp notify(socket) do
+    # Fake a phx_reply event to everyone
+    payload = %{
+      response: client_state(socket),
+      status: "ok"
+    }
+
+    broadcast!(socket, "phx_reply", payload)
+  end
+
   # Add authorization logic here as required.
   # defp authorized?(_payload) do
   #   true
   # end
+
+  # This is what part of the state gets sent to the client.
+  # It can be used to transform or hide it before they get it.
+  defp client_state(socket) do
+    socket.assigns
+  end
 end

@@ -45,15 +45,20 @@ defmodule SpadesWeb.RoomControllerTest do
       conn = get(conn, Routes.room_path(conn, :show, id))
 
       assert %{
-               "id" => id,
-               "name" => "some name"
+               "id" => id
+               # "name" => "some name"
+               # Name is automatically generated.
              } = json_response(conn, 200)["data"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.room_path(conn, :create), room: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
-    end
+    ## Since names are automatically generated, and
+    ## they're the only field right now, we can't
+    ## generate invalid data.
+
+    # test "renders errors when data is invalid", %{conn: conn} do
+    #   conn = post(conn, Routes.room_path(conn, :create), room: @invalid_attrs)
+    #   assert json_response(conn, 422)["errors"] != %{}
+    # end
   end
 
   describe "update room" do
@@ -71,10 +76,14 @@ defmodule SpadesWeb.RoomControllerTest do
              } = json_response(conn, 200)["data"]
     end
 
-    test "renders errors when data is invalid", %{conn: conn, room: room} do
-      conn = put(conn, Routes.room_path(conn, :update, room), room: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
-    end
+    ## Since names are automatically generated, and
+    ## they're the only field right now, we can't
+    ## generate invalid data.
+
+    # test "renders errors when data is invalid", %{conn: conn, room: room} do
+    #   conn = put(conn, Routes.room_path(conn, :update, room), room: @invalid_attrs)
+    #   assert json_response(conn, 422)["errors"] != %{}
+    # end
   end
 
   describe "delete room" do

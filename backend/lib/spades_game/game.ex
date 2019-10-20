@@ -7,6 +7,7 @@ defmodule SpadesGame.Game do
   """
   alias SpadesGame.{Deck, Game}
 
+  @derive Jason.Encoder
   defstruct [:game_name, :draw, :discard]
 
   @type t :: %Game{

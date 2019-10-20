@@ -106,6 +106,11 @@ defmodule Spades.Rooms do
     Room.changeset(room, %{})
   end
 
+  ## This is a low quality temporary function
+  def temp_delete_all() do
+    list_rooms() |> Enum.map(fn x -> delete_room(x) end)
+  end
+
   ## Notify_lobby:
   ## After making a successful change to a room,
   ## send the message "rooms_update"
