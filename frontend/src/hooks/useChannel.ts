@@ -67,7 +67,7 @@ const joinChannel = (
 
   channel.onMessage = (event, payload) => {
     // I think all of these chan_reply_ events are not needed?
-    if (!event.startsWith("chan_reply_")) {
+    if (event != null && !event.startsWith("chan_reply_")) {
       onMessage(event, payload);
     }
     // Return the payload since we're using the
