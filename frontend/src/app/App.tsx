@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 import SocketProvider from "../components/SocketProvider";
 import AppRouter from "./AppRouter";
@@ -8,7 +9,7 @@ import "../css/tailwind.compiled.css";
 import useBodyClass from "../hooks/useBodyClass";
 import useHtmlClass from "../hooks/useHtmlClass";
 
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 const App: React.FC = () => {
   const [authToken, priv_setAuthToken] = useState();
@@ -21,6 +22,18 @@ const App: React.FC = () => {
     localStorage.setItem("renewToken", JSON.stringify(data));
     priv_setRenewToken(data);
   };
+  const logOut = async () => {
+    const res = await axios.delete("/be/api/v1/session", {
+      headers: {
+        Authorization: authToken
+      }
+    });
+    if (res.status !== 200) {
+      console.warn("unable to log out..");
+    }
+    setAuthToken(null);
+    setRenewToken(null);
+  };
 
   useHtmlClass(["text-gray-900", "antialiased"]);
   useBodyClass(["min-h-screen", "bg-gray-100"]);
@@ -31,7 +44,8 @@ const App: React.FC = () => {
         authToken,
         setAuthToken,
         renewToken,
-        setRenewToken
+        setRenewToken,
+        logOut
       }}
     >
       <SocketProvider
@@ -39,25 +53,6 @@ const App: React.FC = () => {
         options={{ hello: "hi", token: "whatever" }}
       >
         <Router>
-          <nav>
-            <div className="bg-purple-300">AuthToken: [{authToken}]</div>
-            <Link to="/">Home</Link>
-            <Link to="/testme" className="ml-2">
-              TestMe
-            </Link>
-            <Link to="/private" className="ml-2 text-green-600">
-              Private Page Test
-            </Link>
-            <Link to="/lobby" className="ml-2 text-purple-600">
-              Lobby
-            </Link>
-            <Link to="/login" className="ml-2">
-              Log In
-            </Link>
-            <Link to="/signup" className="ml-2 ">
-              Sign Up
-            </Link>
-          </nav>
           <AppRouter />
         </Router>
       </SocketProvider>

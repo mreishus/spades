@@ -1,5 +1,6 @@
 import React from "react";
 import { Switch, Route } from "react-router-dom";
+import AppNav from "./AppNav";
 import PrivateRoute from "./PrivateRoute";
 import TestMe from "../components/TestMe";
 import RoomShow from "../pages/RoomShow";
@@ -14,17 +15,20 @@ const PrivatePage: React.FC = () => {
 
 const AppRouter: React.FC = () => {
   return (
-    <Switch>
-      <Route path="/login" component={Login} />
-      <Route path="/signup" component={Signup} />
-      <Route path="/testme">
-        <TestMe />
-      </Route>
-      <PrivateRoute path="/private" component={PrivatePage} />
-      <Route path="/room/:slug" component={RoomShow} />
-      <Route path="/lobby" component={LobbyIndex} />
-      <Route path="/" component={Home} />
-    </Switch>
+    <>
+      <AppNav />
+      <Switch>
+        <Route path="/login" component={Login} />
+        <Route path="/signup" component={Signup} />
+        <Route path="/testme">
+          <TestMe />
+        </Route>
+        <PrivateRoute path="/private" component={PrivatePage} />
+        <Route path="/room/:slug" component={RoomShow} />
+        <Route path="/lobby" component={LobbyIndex} />
+        <Route path="/" component={Home} />
+      </Switch>
+    </>
   );
 };
 export default AppRouter;

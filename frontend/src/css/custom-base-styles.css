@@ -10,3 +10,6 @@ h3 {
 a {
   @apply text-blue-600 underline;
 }
+span.link {
+  @apply text-blue-600 underline cursor-pointer;
+}
