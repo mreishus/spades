@@ -15,6 +15,9 @@ export const Login: React.FC<Props> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [validationErrors, setValidationErrors] = useState<
+    Record<string, Array<string>>
+  >({});
   const { setAuthToken, setRenewToken } = useAuth();
 
   // Autofocus effect
@@ -33,10 +36,11 @@ export const Login: React.FC<Props> = () => {
       const data = {
         user: {
           email: inputs.email,
-          password: inputs.password
+          password: inputs.password,
+          confirm_password: inputs.confirm_password
         }
       };
-      const res = await axios.post("/be/api/v1/session", data);
+      const res = await axios.post("/be/api/v1/registration", data);
       console.log("got res");
       console.log(res);
       setIsLoading(false);
@@ -48,13 +52,13 @@ export const Login: React.FC<Props> = () => {
         res.data.data.token != null
       ) {
         const { renew_token, token } = res.data.data;
-        console.log("Logged in successfully");
+        console.log("Signed up successfully");
         console.log({ renew_token, token });
         setAuthToken(token);
         setRenewToken(renew_token);
         setLoggedIn(true);
       } else {
-        throw new Error("Invalid response from Login API");
+        throw new Error("Invalid response from Register API");
       }
     } catch (e) {
       console.log("catch response");
@@ -71,6 +75,16 @@ export const Login: React.FC<Props> = () => {
         setErrorMessage(res.data.error.message);
       } else {
         setErrorMessage(e.message);
+      }
+      if (
+        res != null &&
+        res.data != null &&
+        res.data.error != null &&
+        res.data.error.errors != null
+      ) {
+        setValidationErrors(res.data.error.errors);
+      } else {
+        setValidationErrors({});
       }
     }
   });
@@ -101,14 +115,36 @@ export const Login: React.FC<Props> = () => {
             onChange={handleInputChange}
             value={inputs.password || ""}
           />
+          <input
+            type="password"
+            name="confirm_password"
+            placeholder="confirm password"
+            className="form-control block mt-2"
+            onChange={handleInputChange}
+            value={inputs.confirm_password || ""}
+          />
           <Button isPrimary className="mt-2">
-            Sign In
+            Sign Up
           </Button>
         </fieldset>
       </form>
-      {isError && <div className="alert alert-danger mt-4">{errorMessage}</div>}
-      <Link className="mt-2" to="/signup">
-        Don't have an account?
+      {isError && (
+        <div className="alert alert-danger mt-4">
+          <span className="text-xl">{errorMessage}</span>
+
+          {Object.keys(validationErrors)
+            .filter(field => field !== "password_hash")
+            .map((field: string) =>
+              validationErrors[field].map((message: string) => (
+                <div key={field + message}>
+                  <span className="font-semibold">{field}</span>: {message}
+                </div>
+              ))
+            )}
+        </div>
+      )}
+      <Link className="mt-2" to="/login">
+        Already have an account?
       </Link>
     </Card>
   );
