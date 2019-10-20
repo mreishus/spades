@@ -1,3 +1,17 @@
+- Test Auth via curl
+
+curl -X POST -d "user[email]=test@example.com&user[password]=secret1234&user[confirm_password]=secret1234" http://localhost:4000/api/v1/registration
+{"data":{"renew_token":"RENEW_TOKEN","token":"AUTH_TOKEN"}}
+
+curl -X POST -d "user[email]=test@example.com&user[password]=secret1234" http://localhost:4000/api/v1/session
+{"data":{"renew_token":"RENEW_TOKEN","token":"AUTH_TOKEN"}}
+
+curl -X DELETE -H "Authorization: AUTH_TOKEN" http://localhost:4000/api/v1/session
+{"data":{}}
+
+curl -X POST -H "Authorization: RENEW_TOKEN" http://localhost:4000/api/v1/session/renew
+{"data":{"renew_token":"RENEW_TOKEN","token":"AUTH_TOKEN"}}
+
 - Add a new field
 
 == Create Migration ==

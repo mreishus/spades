@@ -1,0 +1,12 @@
+.form-control {
+  @apply bg-blue-200 border border-blue-300 rounded-lg py-1 px-2 appearance-none leading-normal;
+}
+.form-control:focus {
+  @apply outline-none shadow-outline
+}
+/*
+w-full
+block
+focus:outline-none
+focus:shadow-outline
+*/

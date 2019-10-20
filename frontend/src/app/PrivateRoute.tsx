@@ -11,12 +11,12 @@ export const PrivateRoute: React.FC<Props & RouteProps> = ({
   component: Component,
   ...rest
 }) => {
-  const isAuthenticated = useAuth();
+  const { authToken } = useAuth();
   return (
     <Route
       {...rest}
       render={props =>
-        isAuthenticated ? <Component {...props} /> : <Redirect to="/" />
+        authToken ? <Component {...props} /> : <Redirect to="/login" />
       }
     />
   );
