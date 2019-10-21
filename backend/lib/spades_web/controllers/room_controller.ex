@@ -13,6 +13,36 @@ defmodule SpadesWeb.RoomController do
     render(conn, "index.json", rooms: rooms)
   end
 
+  def authtest(conn, params) do
+    user =
+      conn
+      |> Pow.Plug.current_user()
+      |> IO.inspect(label: "user")
+
+    userid =
+      case user do
+        nil -> nil
+        _ -> user.id
+      end
+
+    result = %{fake: "data", userid: userid, now: DateTime.utc_now()}
+
+    case user do
+      nil ->
+        conn
+        |> put_status(401)
+        |> json(%{error: %{code: 401, message: "Not authenticated"}})
+
+      _ ->
+        conn |> json(result)
+
+        # _ ->
+        #   conn
+        #   |> put_status(401)
+        #   |> json(%{error: %{code: 401, message: "Not authenticated"}})
+    end
+  end
+
   def create(conn, %{"room" => room_params}) do
     game_name = NameGenerator.generate()
 

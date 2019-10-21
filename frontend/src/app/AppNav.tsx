@@ -13,6 +13,9 @@ export const AppNav: React.FC<Props> = () => {
       <Link to="/testme" className="ml-2">
         TestMe
       </Link>
+      <Link to="/authtest" className="ml-2">
+        Auth Test
+      </Link>
       <Link to="/private" className="ml-2 text-green-600">
         Private Page Test
       </Link>

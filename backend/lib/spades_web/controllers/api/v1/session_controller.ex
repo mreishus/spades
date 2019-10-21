@@ -28,15 +28,21 @@ defmodule SpadesWeb.API.V1.SessionController do
   def renew(conn, _params) do
     config = Pow.Plug.fetch_config(conn)
 
+    config |> IO.inspect(label: "config")
+
     conn
     |> APIAuthPlug.renew(config)
     |> case do
       {conn, nil} ->
+        "Invalid token" |> IO.inspect()
+
         conn
         |> put_status(401)
         |> json(%{error: %{status: 401, message: "Invalid token"}})
 
       {conn, _user} ->
+        "Renew work!" |> IO.inspect()
+
         json(conn, %{
           data: %{
             token: conn.private[:api_auth_token],

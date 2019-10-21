@@ -3,6 +3,7 @@ import { Switch, Route } from "react-router-dom";
 import AppNav from "./AppNav";
 import PrivateRoute from "./PrivateRoute";
 import TestMe from "../components/TestMe";
+import AuthTest from "../components/AuthTest";
 import RoomShow from "../pages/RoomShow";
 import LobbyIndex from "../pages/LobbyIndex";
 import Home from "../pages/Home";
@@ -20,6 +21,7 @@ const AppRouter: React.FC = () => {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route path="/authtest" component={AuthTest} />
         <Route path="/testme">
           <TestMe />
         </Route>

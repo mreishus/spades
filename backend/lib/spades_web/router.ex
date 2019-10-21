@@ -30,6 +30,7 @@ defmodule SpadesWeb.Router do
   scope "/api", SpadesWeb do
     pipe_through :api
     resources "/rooms", RoomController, except: [:new, :edit]
+    get "/authtest", RoomController, :authtest
   end
 
   scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do
