@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
 import axios from "axios";
-import { useAuth } from "../contexts/AuthContext";
+import useAuth from "./useAuth";
 
 const useNewDataApi = (initialUrl: string, initialData: any) => {
   const [data, setData] = useState(initialData);

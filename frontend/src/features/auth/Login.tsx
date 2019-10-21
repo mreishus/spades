@@ -6,7 +6,7 @@ import Button from "../../components/basic/Button";
 import Card from "../../components/basic/Card";
 
 import useForm from "../../hooks/useForm";
-import { useAuth } from "../../contexts/AuthContext";
+import useAuth from "../../hooks/useAuth";
 
 interface Props {}
 
