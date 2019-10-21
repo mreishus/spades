@@ -1,2 +1,2 @@
 alias Spades.Rooms
-alias SpadesGame.{Game, Deck, Card}
+alias SpadesGame.{Game, Deck, Card, GamePlayer}
