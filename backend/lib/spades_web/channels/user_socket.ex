@@ -21,10 +21,10 @@ defmodule SpadesWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(params, socket, _connect_info) do
-    Logger.info("Socket Join")
-    params |> IO.inspect(label: "UserSocket Params")
     user = get_user_from_auth_token(params["authToken"])
-    user |> IO.inspect(label: "User from token")
+    # Logger.info("Socket Join")
+    # params |> IO.inspect(label: "UserSocket Params")
+    # user |> IO.inspect(label: "User from token")
 
     ## Let non-authenticated users still connect to websockets,
     ## but we mark their user_id as nil

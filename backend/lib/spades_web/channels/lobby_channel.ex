@@ -5,10 +5,10 @@ defmodule SpadesWeb.LobbyChannel do
   use SpadesWeb, :channel
   require Logger
 
-  def join("lobby:lobby", payload, socket) do
-    Logger.info("Lobby Join")
-    payload |> IO.inspect(label: "lobby payload")
-    socket |> IO.inspect(label: "socket after lobby join")
+  def join("lobby:lobby", _payload, socket) do
+    # Logger.info("Lobby Join")
+    # payload |> IO.inspect(label: "lobby payload")
+    # socket |> IO.inspect(label: "socket after lobby join")
 
     # Dialyzer making me comment htis out.. lol
     #

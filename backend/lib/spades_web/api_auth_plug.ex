@@ -69,7 +69,7 @@ defmodule SpadesWeb.APIAuthPlug do
   @doc """
   Used by Websocket / Made by Matt, probably not right
   """
-  @spec fetch(Config.t(), String.t()) :: map() | nil
+  @spec fetch_from_token(Config.t(), String.t()) :: map() | nil
   def fetch_from_token(config, token) do
     config
     |> store_config()

@@ -13,11 +13,12 @@ defmodule SpadesWeb.RoomController do
     render(conn, "index.json", rooms: rooms)
   end
 
-  def authtest(conn, params) do
+  def authtest(conn, _params) do
     user =
       conn
       |> Pow.Plug.current_user()
-      |> IO.inspect(label: "user")
+
+    # |> IO.inspect(label: "user")
 
     userid =
       case user do

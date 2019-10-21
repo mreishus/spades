@@ -6,11 +6,17 @@ defmodule SpadesWeb.API.V1.RegistrationControllerTest do
       "user" => %{
         "email" => "test@example.com",
         "password" => "secret1234",
-        "confirm_password" => "secret1234"
+        "confirm_password" => "secret1234",
+        "alias" => "Test User"
       }
     }
     @invalid_params %{
-      "user" => %{"email" => "invalid", "password" => "secret1234", "confirm_password" => ""}
+      "user" => %{
+        "email" => "invalid",
+        "password" => "secret1234",
+        "confirm_password" => "",
+        "alias" => ""
+      }
     }
 
     test "with valid params", %{conn: conn} do
