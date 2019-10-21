@@ -8,7 +8,15 @@ defmodule Spades.Users.User do
 
   schema "users" do
     pow_user_fields()
+    field(:alias, :string)
 
     timestamps()
+  end
+
+  def changeset(user_or_changeset, attrs) do
+    user_or_changeset
+    |> pow_changeset(attrs)
+    |> Ecto.Changeset.cast(attrs, [:alias])
+    |> Ecto.Changeset.validate_required([:alias])
   end
 end

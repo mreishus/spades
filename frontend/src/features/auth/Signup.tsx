@@ -37,7 +37,8 @@ export const Login: React.FC<Props> = () => {
         user: {
           email: inputs.email,
           password: inputs.password,
-          confirm_password: inputs.confirm_password
+          confirm_password: inputs.confirm_password,
+          alias: inputs.alias
         }
       };
       const res = await axios.post("/be/api/v1/registration", data);
@@ -121,6 +122,14 @@ export const Login: React.FC<Props> = () => {
             className="form-control block mt-2"
             onChange={handleInputChange}
             value={inputs.confirm_password || ""}
+          />
+          <input
+            type="text"
+            name="alias"
+            placeholder="alias"
+            className="form-control block mt-2"
+            onChange={handleInputChange}
+            value={inputs.alias || ""}
           />
           <Button isPrimary className="mt-2">
             Sign Up
