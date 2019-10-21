@@ -1,12 +1,12 @@
 import Container from "./basic/Container";
 import React from "react";
-import useNewDataApi from "../hooks/useNewDataApi";
+import useAuthDataApi from "../hooks/useAuthDataApi";
 import Button from "../components/basic/Button";
 
 interface Props {}
 
 export const AuthTest: React.FC<Props> = () => {
-  const { isLoading, isError, data, doFetchHash: setHash } = useNewDataApi(
+  const { isLoading, isError, data, doFetchHash: setHash } = useAuthDataApi(
     "/be/api/authtest",
     null
   );
