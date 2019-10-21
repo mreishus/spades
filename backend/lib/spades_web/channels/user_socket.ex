@@ -1,5 +1,7 @@
 defmodule SpadesWeb.UserSocket do
   use Phoenix.Socket
+  require Logger
+  alias Spades.Users.User
 
   ## Channels
   # channel "room:*", SpadesWeb.RoomChannel
@@ -18,8 +20,30 @@ defmodule SpadesWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket, _connect_info) do
-    {:ok, socket}
+  def connect(params, socket, _connect_info) do
+    Logger.info("Socket Join")
+    params |> IO.inspect(label: "UserSocket Params")
+    user = get_user_from_auth_token(params["authToken"])
+    user |> IO.inspect(label: "User from token")
+
+    ## Let non-authenticated users still connect to websockets,
+    ## but we mark their user_id as nil
+    case user do
+      %User{} ->
+        {:ok, assign(socket, :user_id, user.id)}
+
+      _ ->
+        {:ok, assign(socket, :user_id, nil)}
+    end
+  end
+
+  defp get_user_from_auth_token(token) do
+    ## Warning: Hardcoded Config for Plug
+    ## I don't know how to get this, because I need
+    ## "conn" which doesn't exist in this context
+    config = [mod: SpadesWeb.APIAuthPlug, plug: SpadesWeb.APIAuthPlug, otp_app: :spades]
+    ## This APIAuthPlug probably shouldn't be hardcoded
+    SpadesWeb.APIAuthPlug.fetch_from_token(config, token)
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

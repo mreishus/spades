@@ -66,6 +66,20 @@ defmodule SpadesWeb.APIAuthPlug do
     load_and_create_session(user_id, conn, config)
   end
 
+  @doc """
+  Used by Websocket / Made by Matt, probably not right
+  """
+  @spec fetch(Config.t(), String.t()) :: map() | nil
+  def fetch_from_token(config, token) do
+    config
+    |> store_config()
+    |> CredentialsCache.get(token)
+    |> case do
+      :not_found -> nil
+      user -> user
+    end
+  end
+
   defp load_and_create_session(:not_found, conn, _config), do: {conn, nil}
 
   defp load_and_create_session(user_id, conn, config) do

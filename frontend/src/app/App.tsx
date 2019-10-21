@@ -78,11 +78,18 @@ const App: React.FC = () => {
     }
   }, []);
 
+  const socketParams = useMemo(
+    () => ({
+      authToken: tokens.authToken
+    }),
+    [tokens.authToken]
+  );
+
   return (
     <AuthContext.Provider value={authValue}>
       <SocketProvider
         wsUrl={process.env.REACT_APP_WS_URL || "/be/socket"}
-        options={{ hello: "hi", token: "whatever" }}
+        options={socketParams}
       >
         <Router>
           <AppRouter />

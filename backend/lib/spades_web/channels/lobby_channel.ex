@@ -3,8 +3,13 @@ defmodule SpadesWeb.LobbyChannel do
   Represents a channel that notifies browsers when new games are created/deleted.
   """
   use SpadesWeb, :channel
+  require Logger
 
-  def join("lobby:lobby", _payload, socket) do
+  def join("lobby:lobby", payload, socket) do
+    Logger.info("Lobby Join")
+    payload |> IO.inspect(label: "lobby payload")
+    socket |> IO.inspect(label: "socket after lobby join")
+
     # Dialyzer making me comment htis out.. lol
     #
     # if authorized?(payload) do
