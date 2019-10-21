@@ -18,5 +18,6 @@ defmodule Spades.Users.User do
     |> pow_changeset(attrs)
     |> Ecto.Changeset.cast(attrs, [:alias])
     |> Ecto.Changeset.validate_required([:alias])
+    |> Ecto.Changeset.unique_constraint(:alias)
   end
 end
