@@ -5,13 +5,16 @@ defmodule SpadesGame.Game do
   some toy game used to test everything around it.
   Right now, it's a simple draw pile and a discard pile.
   """
-  alias SpadesGame.{Deck, Game, GamePlayer}
+  alias SpadesGame.{Deck, Game, GamePlayer, GameOptions}
 
   @derive Jason.Encoder
-  defstruct [:game_name, :draw, :discard, :west, :north, :east, :south]
+  defstruct [:game_name, :options, :status, :turn, :draw, :discard, :west, :north, :east, :south]
 
   @type t :: %Game{
           game_name: String.t(),
+          options: GameOptions.t(),
+          status: :bidding | :playing,
+          turn: :west | :north | :east | :south,
           draw: Deck.t(),
           discard: Deck.t(),
           west: GamePlayer.t(),
@@ -19,13 +22,30 @@ defmodule SpadesGame.Game do
           east: GamePlayer.t(),
           south: GamePlayer.t()
         }
+
+  @doc """
+  new/1:  Create a game with default options.
+  """
   @spec new(String.t()) :: Game.t()
   def new(game_name) do
+    {:ok, options} = GameOptions.validate(%{})
+    new(game_name, options)
+  end
+
+  @doc """
+  new/2:  Create a game with specified options.
+  """
+  @spec new(String.t(), GameOptions.t()) :: Game.t()
+  def new(game_name, %GameOptions{} = options) do
     [w, n, e, s] =
-      Deck.new_shuffled() |> Enum.chunk_every(13) |> Enum.map(fn d -> GamePlayer.new(d) end)
+      get_initial_hands(options)
+      |> Enum.map(fn d -> GamePlayer.new(d) end)
 
     %Game{
       game_name: game_name,
+      options: options,
+      status: :playing,
+      turn: :north,
       draw: Deck.new_shuffled(),
       discard: Deck.new_empty(),
       west: w,
@@ -35,10 +55,22 @@ defmodule SpadesGame.Game do
     }
   end
 
-  @spec discard(Game.t()) :: Game.t()
+  ## Given GameOptions, return an array of
+  ## 4 hands to use when constructing the game.
+  defp get_initial_hands(options) do
+    case options.hardcoded_cards do
+      true ->
+        Deck.hardcoded_cards()
+
+      _ ->
+        Deck.new_shuffled() |> Enum.chunk_every(13)
+    end
+  end
+
   @doc """
   discard/1:  Move one card from the draw pile to the discard pile.
   """
+  @spec discard(Game.t()) :: Game.t()
   def discard(%Game{draw: []} = game), do: game
 
   def discard(%Game{draw: draw, discard: discard}) do

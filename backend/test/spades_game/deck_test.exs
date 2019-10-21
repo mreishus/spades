@@ -31,4 +31,24 @@ defmodule DeckTest do
       assert deck1 != deck2
     end
   end
+
+  describe "hardcoded_cards/0" do
+    test "gets 4 hands of 13 cards each" do
+      [h1, h2, h3, h4] = Deck.hardcoded_cards()
+      assert h1 |> length == 13
+      assert h2 |> length == 13
+      assert h3 |> length == 13
+      assert h4 |> length == 13
+    end
+
+    test "hands don't overlap" do
+      [h1, h2, h3, h4] = Deck.hardcoded_cards()
+      assert (h1 -- h2) |> length == 13
+      assert (h1 -- h3) |> length == 13
+      assert (h1 -- h4) |> length == 13
+      assert (h2 -- h3) |> length == 13
+      assert (h2 -- h4) |> length == 13
+      assert (h3 -- h4) |> length == 13
+    end
+  end
 end
