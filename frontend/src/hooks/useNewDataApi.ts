@@ -9,7 +9,7 @@ const useNewDataApi = (initialUrl: string, initialData: any) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
-  const { authToken, renewToken, setAuthToken, setRenewToken } = useAuth();
+  const { authToken, renewToken, setAuthAndRenewToken } = useAuth();
   const authOptions = useMemo(
     () => ({
       headers: {
@@ -55,14 +55,13 @@ const useNewDataApi = (initialUrl: string, initialData: any) => {
           console.log(res.data.data.renew_token);
           console.log(res.data.data.token);
 
-          setRenewToken(res.data.data.renew_token);
-          setAuthToken(res.data.data.token);
+          setAuthAndRenewToken(res.data.data.token, res.data.data.renew_token);
 
           return axios(originalRequest);
         }
       });
     },
-    [renewOptions, setAuthToken, setRenewToken]
+    [renewOptions, setAuthAndRenewToken]
   );
 
   useEffect(() => {

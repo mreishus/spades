@@ -17,16 +17,21 @@ const App: React.FC = () => {
     renewToken: null
   });
 
-  const setAuthToken = useCallback((data: any) => {
-    console.log("Trying to set auth token to [" + data + "]");
-    localStorage.setItem("authToken", JSON.stringify(data));
-    setTokens(tokens => ({ ...tokens, authToken: data }));
-  }, []);
-  const setRenewToken = useCallback((data: any) => {
-    console.log("Trying to set renew token to [" + data + "]");
-    localStorage.setItem("renewToken", JSON.stringify(data));
-    setTokens(tokens => ({ ...tokens, renewToken: data }));
-  }, []);
+  const setAuthAndRenewToken = useCallback(
+    (authTokenData: any, renewTokenData: any) => {
+      console.log(
+        `Trying to set auth and renew tokens to [${authTokenData}] [${renewTokenData}] `
+      );
+      localStorage.setItem("authToken", JSON.stringify(authTokenData));
+      localStorage.setItem("renewToken", JSON.stringify(renewTokenData));
+      setTokens({
+        authToken: authTokenData,
+        renewToken: renewTokenData
+      });
+    },
+    []
+  );
+
   const logOut = useCallback(async () => {
     const res = await axios.delete("/be/api/v1/session", {
       headers: {
@@ -44,13 +49,12 @@ const App: React.FC = () => {
 
   const authValue = useMemo(
     () => ({
+      setAuthAndRenewToken,
       authToken: tokens.authToken,
-      setAuthToken,
       renewToken: tokens.renewToken,
-      setRenewToken,
       logOut
     }),
-    [logOut, setAuthToken, setRenewToken, tokens.authToken, tokens.renewToken]
+    [logOut, setAuthAndRenewToken, tokens.authToken, tokens.renewToken]
   );
   console.log({ authValue });
 

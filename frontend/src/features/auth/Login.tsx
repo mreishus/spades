@@ -15,7 +15,7 @@ export const Login: React.FC<Props> = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const { setAuthToken, setRenewToken } = useAuth();
+  const { setAuthAndRenewToken } = useAuth();
 
   // Autofocus effect
   const emailRef = useRef(null);
@@ -50,8 +50,7 @@ export const Login: React.FC<Props> = () => {
         const { renew_token, token } = res.data.data;
         console.log("Logged in successfully");
         console.log({ renew_token, token });
-        setAuthToken(token);
-        setRenewToken(renew_token);
+        setAuthAndRenewToken(token, renew_token);
         setLoggedIn(true);
       } else {
         throw new Error("Invalid response from Login API");

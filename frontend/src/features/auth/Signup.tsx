@@ -18,7 +18,7 @@ export const Login: React.FC<Props> = () => {
   const [validationErrors, setValidationErrors] = useState<
     Record<string, Array<string>>
   >({});
-  const { setAuthToken, setRenewToken } = useAuth();
+  const { setAuthAndRenewToken } = useAuth();
 
   // Autofocus effect
   const emailRef = useRef(null);
@@ -54,8 +54,7 @@ export const Login: React.FC<Props> = () => {
         const { renew_token, token } = res.data.data;
         console.log("Signed up successfully");
         console.log({ renew_token, token });
-        setAuthToken(token);
-        setRenewToken(renew_token);
+        setAuthAndRenewToken(token, renew_token);
         setLoggedIn(true);
       } else {
         throw new Error("Invalid response from Register API");
