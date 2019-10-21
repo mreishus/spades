@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState, useCallback, useMemo, useEffect } from "react";
 import axios from "axios";
 
 import SocketProvider from "../components/SocketProvider";
@@ -42,6 +42,8 @@ const App: React.FC = () => {
       console.warn("unable to log out..");
     }
     setTokens({ authToken: null, renewToken: null });
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("renewToken");
   }, [tokens.authToken]);
 
   useHtmlClass(["text-gray-900", "antialiased"]);
@@ -57,6 +59,24 @@ const App: React.FC = () => {
     [logOut, setAuthAndRenewToken, tokens.authToken, tokens.renewToken]
   );
   console.log({ authValue });
+
+  useEffect(() => {
+    console.log("first load");
+    const at_raw = localStorage.getItem("authToken");
+    const rt_raw = localStorage.getItem("renewToken");
+    if (typeof at_raw == "string" && typeof rt_raw == "string") {
+      const at = JSON.parse(at_raw);
+      const rt = JSON.parse(rt_raw);
+      console.log({ at, rt });
+      if (at && rt) {
+        console.log("Setting token");
+        setTokens({
+          authToken: at,
+          renewToken: rt
+        });
+      }
+    }
+  }, []);
 
   return (
     <AuthContext.Provider value={authValue}>
