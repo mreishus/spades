@@ -16,7 +16,8 @@ config :spades, Spades.Repo,
 # you can enable the server option below.
 config :spades, SpadesWeb.Endpoint,
   http: [port: 4002],
-  server: false
+  server: false,
+  front_end_email_confirm_url: "http://localhost:3000/confirm-email/{token}"
 
 # Print only warnings and errors during test
 config :logger, level: :warn

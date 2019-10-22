@@ -12,7 +12,10 @@ config :spades,
 
 config :spades, :pow,
   user: Spades.Users.User,
-  repo: Spades.Repo
+  repo: Spades.Repo,
+  extensions: [PowEmailConfirmation],
+  controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
+  mailer_backend: SpadesWeb.PowMailer
 
 # Configures the endpoint
 config :spades, SpadesWeb.Endpoint,

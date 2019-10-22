@@ -28,7 +28,8 @@ config :spades, SpadesWeb.Endpoint,
       "--watch-stdin",
       cd: Path.expand("../assets", __DIR__)
     ]
-  ]
+  ],
+  front_end_email_confirm_url: "http://localhost:3000/confirm-email/{token}"
 
 # ## SSL Support
 #

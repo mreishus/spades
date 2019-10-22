@@ -9,6 +9,7 @@ import LobbyIndex from "../pages/LobbyIndex";
 import Home from "../pages/Home";
 import Login from "../features/auth/Login";
 import Signup from "../features/auth/Signup";
+import ConfirmEmail from "../features/auth/ConfirmEmail";
 
 const PrivatePage: React.FC = () => {
   return <div>this is a priv page</div>;
@@ -21,6 +22,7 @@ const AppRouter: React.FC = () => {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route path="/confirm-email/:confirm_token" component={ConfirmEmail} />
         <Route path="/authtest" component={AuthTest} />
         <Route path="/testme">
           <TestMe />

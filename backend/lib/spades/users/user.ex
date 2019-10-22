@@ -6,6 +6,9 @@ defmodule Spades.Users.User do
   use Ecto.Schema
   use Pow.Ecto.Schema
 
+  use Pow.Extension.Ecto.Schema,
+    extensions: [PowResetPassword, PowEmailConfirmation]
+
   schema "users" do
     pow_user_fields()
     field(:alias, :string)
@@ -16,6 +19,7 @@ defmodule Spades.Users.User do
   def changeset(user_or_changeset, attrs) do
     user_or_changeset
     |> pow_changeset(attrs)
+    |> pow_extension_changeset(attrs)
     |> Ecto.Changeset.cast(attrs, [:alias])
     |> Ecto.Changeset.validate_required([:alias])
     |> Ecto.Changeset.unique_constraint(:alias)
