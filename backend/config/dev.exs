@@ -29,7 +29,8 @@ config :spades, SpadesWeb.Endpoint,
       cd: Path.expand("../assets", __DIR__)
     ]
   ],
-  front_end_email_confirm_url: "http://localhost:3000/confirm-email/{token}"
+  front_end_email_confirm_url: "http://localhost:3000/confirm-email/{token}",
+  front_end_reset_password_url: "http://localhost:3000/reset-password/{token}"
 
 # ## SSL Support
 #

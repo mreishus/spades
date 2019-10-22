@@ -30,6 +30,9 @@ export const AppNav: React.FC<Props> = () => {
           <Link to="/signup" className="ml-2 ">
             Sign Up
           </Link>
+          <Link to="/reset-password" className="ml-2 ">
+            Forgot Password?
+          </Link>
         </>
       )}
       {authToken && (

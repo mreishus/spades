@@ -5,6 +5,7 @@ interface Props {
   children: ReactNode;
   onClick?: (e: React.MouseEvent) => void;
   isPrimary?: boolean;
+  isSubmit?: boolean;
   className?: string;
   disabled?: boolean;
 }
@@ -14,6 +15,7 @@ export const Button: React.FC<Props> = ({
   onClick,
   className,
   isPrimary,
+  isSubmit,
   disabled
 }) => {
   // bg-gray-300
@@ -24,7 +26,12 @@ export const Button: React.FC<Props> = ({
     { "bg-blue-800 text-gray-100 shadow-lg": isPrimary }
   );
   return (
-    <button className={classes} disabled={disabled} onClick={onClick}>
+    <button
+      className={classes}
+      disabled={disabled}
+      onClick={onClick}
+      type={isSubmit ? "submit" : "button"}
+    >
       {children}
     </button>
   );

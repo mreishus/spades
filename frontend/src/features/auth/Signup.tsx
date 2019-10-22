@@ -131,7 +131,7 @@ export const Login: React.FC<Props> = () => {
             onChange={handleInputChange}
             value={inputs.alias || ""}
           />
-          <Button isPrimary className="mt-2">
+          <Button isSubmit isPrimary className="mt-2">
             Sign Up
           </Button>
         </fieldset>

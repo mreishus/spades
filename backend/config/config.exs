@@ -13,7 +13,7 @@ config :spades,
 config :spades, :pow,
   user: Spades.Users.User,
   repo: Spades.Repo,
-  extensions: [PowEmailConfirmation],
+  extensions: [PowEmailConfirmation, PowResetPassword],
   controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
   mailer_backend: SpadesWeb.PowMailer
 

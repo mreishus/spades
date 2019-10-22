@@ -25,7 +25,8 @@ config :spades, SpadesWeb.Endpoint,
     "//172.22.2.32:31232",
     "//172.22.2.33:31232"
   ],
-  front_end_email_confirm_url: "http://entwine.xyz/confirm-email/{token}"
+  front_end_email_confirm_url: "http://entwine.xyz/confirm-email/{token}",
+  front_end_reset_password_url: "http://entwine.xyz/reset-password/{token}"
 
 # Do not print debug messages in production
 config :logger, level: :info

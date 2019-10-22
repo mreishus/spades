@@ -20,7 +20,8 @@ config :spades, Spades.Repo,
 config :spades, SpadesWeb.Endpoint,
   http: [port: 4002],
   server: false,
-  front_end_email_confirm_url: "http://localhost:3000/confirm-email/{token}"
+  front_end_email_confirm_url: "http://localhost:3000/confirm-email/{token}",
+  front_end_reset_password_url: "http://localhost:3000/reset-password/{token}"
 
 # Print only warnings and errors during test
 config :logger, level: :warn

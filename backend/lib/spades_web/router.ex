@@ -41,6 +41,8 @@ defmodule SpadesWeb.Router do
     post "/session/renew", SessionController, :renew
 
     resources "/confirm-email", ConfirmationController, only: [:show]
+    post "/reset-password", ResetPasswordController, :create
+    post "/reset-password/update", ResetPasswordController, :update
   end
 
   scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do

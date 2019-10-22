@@ -100,7 +100,7 @@ export const Login: React.FC<Props> = () => {
             onChange={handleInputChange}
             value={inputs.password || ""}
           />
-          <Button isPrimary className="mt-2">
+          <Button isSubmit isPrimary className="mt-2">
             Sign In
           </Button>
         </fieldset>
