@@ -58,13 +58,4 @@ defmodule SpadesWeb.API.V1.SessionController do
 
     json(conn, %{data: %{}})
   end
-
-  def emailtestme(conn, _params) do
-    {:ok, name} = Spades.Rot13.encode("Zngg Ervfuhf")
-    {:ok, email} = Spades.Rot13.encode("z.ervfuhf@snfgznvy.pbz")
-    Spades.UserEmail.another_test_email(%{name: name, email: email}) |> Spades.Mailer.deliver()
-
-    conn
-    |> json(%{success: %{message: "Sent Test Email"}})
-  end
 end

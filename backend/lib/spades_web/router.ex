@@ -41,8 +41,6 @@ defmodule SpadesWeb.Router do
     post "/session/renew", SessionController, :renew
 
     resources "/confirm-email", ConfirmationController, only: [:show]
-
-    get "/emailtestme", SessionController, :emailtestme
   end
 
   scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do
