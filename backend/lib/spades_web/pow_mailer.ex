@@ -1,19 +1,32 @@
 defmodule SpadesWeb.PowMailer do
   @moduledoc """
-  Fake mailer.
+  Interface for Pow to send Emails with.  Uses Swoosh.
   """
   use Pow.Phoenix.Mailer
+  use Swoosh.Mailer, otp_app: :spades
+
+  import Swoosh.Email
+
   require Logger
 
-  def cast(%{user: user, subject: subject, text: text, html: html, assigns: _assigns}) do
-    # Build email struct to be used in `process/1`
-
-    %{to: user.email, subject: subject, text: text, html: html}
+  def cast(%{user: user, subject: subject, text: text, html: html}) do
+    %Swoosh.Email{}
+    |> to({"", user.email})
+    |> from({"Spades", "spades@entwine.xyz"})
+    |> subject(subject)
+    |> html_body(html)
+    |> text_body(text)
   end
 
   def process(email) do
-    # Send email
-
-    Logger.info("E-mail sent: #{inspect(email)}")
+    email
+    |> deliver()
+    |> log_warnings()
   end
+
+  defp log_warnings({:error, reason}) do
+    Logger.warn("Mailer backend failed with: #{inspect(reason)}")
+  end
+
+  defp log_warnings({:ok, response}), do: {:ok, response}
 end

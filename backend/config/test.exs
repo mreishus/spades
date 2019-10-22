@@ -5,6 +5,7 @@ config :spades, :pow,
   repo: Spades.Repo
 
 config :spades, Spades.Mailer, adapter: Swoosh.Adapters.Test
+config :spades, SpadesWeb.PowMailer, adapter: Swoosh.Adapters.Test
 
 # Configure your database
 config :spades, Spades.Repo,

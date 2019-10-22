@@ -47,6 +47,11 @@ config :spades, Spades.Mailer,
   api_key: mailgun_api_key,
   domain: mailgun_domain
 
+config :spades, SpadesWeb.PowMailer,
+  adapter: Swoosh.Adapters.Mailgun,
+  api_key: mailgun_api_key,
+  domain: mailgun_domain
+
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix
