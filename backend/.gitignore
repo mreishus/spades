@@ -1,3 +1,6 @@
+# Dev Secret config - api keys
+config/dev.secret.exs
+
 # The directory Mix will write compiled artifacts to.
 /_build/
 

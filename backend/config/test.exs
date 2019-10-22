@@ -4,6 +4,8 @@ config :spades, :pow,
   user: Spades.Users.User,
   repo: Spades.Repo
 
+config :spades, Spades.Mailer, adapter: Swoosh.Adapters.Test
+
 # Configure your database
 config :spades, Spades.Repo,
   username: "postgres",
