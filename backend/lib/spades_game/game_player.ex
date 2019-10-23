@@ -35,6 +35,11 @@ defmodule SpadesGame.GamePlayer do
     }
   end
 
+  @spec won_trick(GamePlayer.t()) :: GamePlayer.t()
+  def won_trick(player) do
+    %GamePlayer{player | tricks_won: player.tricks_won + 1}
+  end
+
   @doc """
   play/1: Have a player move a card from their hand to a trick.
   """

@@ -174,7 +174,15 @@ defmodule SpadesGame.Game do
         {:error, "Trick too large"}
 
       length(game.trick) == 4 ->
-        _winner = trick_winner(game.trick)
+        # Compute trick winner
+        {_card, seat} = trick_winner(game.trick)
+        # Give them +1 tricks, clear the current trick, set the turn
+        new_player = Map.get(game, seat) |> GamePlayer.won_trick()
+
+        game =
+          %Game{game | turn: seat, trick: []}
+          |> Map.put(seat, new_player)
+
         {:ok, game}
 
       length(game.trick) < 4 ->

@@ -75,7 +75,11 @@ defmodule GameTest do
       assert {:ok, game} = Game.play(game, :east, card_e)
       assert {:ok, game} = Game.play(game, :south, card_s)
       assert {:ok, game} = Game.play(game, :west, card_w)
-      assert {:ok, _game} = Game.play(game, :north, card_n)
+      assert game.trick |> length == 3
+      assert {:ok, game} = Game.play(game, :north, card_n)
+      assert game.trick |> length == 0
+      assert game.turn == :east
+      assert game.east.tricks_won == 1
       # game |> IO.inspect(label: "label")
     end
   end
