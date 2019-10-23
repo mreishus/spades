@@ -91,13 +91,7 @@ defmodule SpadesGame.Game do
     end
   end
 
-  # @spec trick_cards(
-  # def trick_cards(game) do
-  #   [:west, :north, :east, :south]
-  #   |> Enum.map(fn seat -> Map.get(game, seat).trick_card end)
-  #   |> Enum.filter(fn card -> card != nil end)
-  # end
-
+  # play/3: A player puts a card on the table. (Moves from hand to trick.)
   @spec play(Game.t(), :west | :north | :east | :south, Card.t()) ::
           {:ok, Game.t()} | {:error, String.t()}
 
@@ -113,6 +107,8 @@ defmodule SpadesGame.Game do
     |> check_for_trick_winner_and_advance_turn()
   end
 
+  # Ensure_active_player/2: Only continue if the seat is the player
+  # whose turn it is.
   @spec ensure_active_player(
           {:ok, Game.t()} | {:error, String.t()},
           :west | :north | :east | :south
@@ -128,6 +124,8 @@ defmodule SpadesGame.Game do
     end
   end
 
+  # Remove_card_from_hand/3: Take the card and remove it from the player's
+  # hand.  Checks to see if the player actually has the card.
   @spec remove_card_from_hand(
           {:ok, Game.t()} | {:error, String.t()},
           :west | :north | :east | :south,
@@ -150,6 +148,9 @@ defmodule SpadesGame.Game do
     end
   end
 
+  # add_card_to_trick/3: Add the card specified to the current trick.
+  # Or start a new trick if no trick is in progress.
+  # Checks to ensure it's a valid play.
   @spec add_card_to_trick(
           {:ok, Game.t()} | {:error, String.t()},
           :west | :north | :east | :south,
@@ -163,10 +164,10 @@ defmodule SpadesGame.Game do
       length(game.trick) >= 4 ->
         {:error, "Too many cards in trick to add another"}
 
-      Enum.empty?(game.trick) && !valid_first_trick_card(game, card) ->
+      Enum.empty?(game.trick) && !valid_lead_card?(game, card) ->
         {:error, "Tried to play a spade before they were broken"}
 
-      !Enum.empty?(game.trick) && !followed_suit_if_possible(game, seat, card) ->
+      !Enum.empty?(game.trick) && !followed_suit?(game, seat, card) ->
         {:error, "Player could follow suit but didn't"}
 
       true ->
@@ -175,8 +176,11 @@ defmodule SpadesGame.Game do
     end
   end
 
-  @spec followed_suit_if_possible(Game.t(), :north | :east | :west | :south, Card.t()) :: boolean
-  def followed_suit_if_possible(game, seat, card) do
+  # followed_suit?/3 If the player in seat seat played this card, would
+  # they be following the rule of "You have to follow the trick's suit if
+  # possible?"
+  @spec followed_suit?(Game.t(), :north | :east | :west | :south, Card.t()) :: boolean
+  def followed_suit?(game, seat, card) do
     {first_card, _first_player} = List.last(game.trick)
     this_player = Map.get(game, seat)
 
@@ -187,8 +191,9 @@ defmodule SpadesGame.Game do
     end
   end
 
-  @spec valid_first_trick_card(Game.t(), Card.t()) :: boolean
-  def valid_first_trick_card(game, card) do
+  # valid_lead_card?/2 Is this card eligible to begin a trick?
+  @spec valid_lead_card?(Game.t(), Card.t()) :: boolean
+  def valid_lead_card?(game, card) do
     # Invalid card: !game.spades_broken && card.suit == :s
     # Use DeMorgan's Law to invert
     game.spades_broken || card.suit != :s
@@ -226,15 +231,15 @@ defmodule SpadesGame.Game do
 
   @spec break_spades_if_needed(Game.t()) :: Game.t()
   defp break_spades_if_needed(game) do
-    if !game.spades_broken && contains_spade(game.trick) do
+    if !game.spades_broken && has_spade?(game.trick) do
       %Game{game | spades_broken: true}
     else
       game
     end
   end
 
-  @spec contains_spade(list({Card.t(), :north | :east | :west | :south})) :: boolean
-  defp contains_spade(trick) do
+  @spec has_spade?(list({Card.t(), :north | :east | :west | :south})) :: boolean
+  defp has_spade?(trick) do
     trick
     |> Enum.any?(fn {card, _player} -> card.suit == :s end)
   end
