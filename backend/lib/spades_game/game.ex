@@ -174,6 +174,7 @@ defmodule SpadesGame.Game do
         {:error, "Trick too large"}
 
       length(game.trick) == 4 ->
+        _winner = trick_winner(game.trick)
         {:ok, game}
 
       length(game.trick) < 4 ->
@@ -186,6 +187,30 @@ defmodule SpadesGame.Game do
   def rotate(:east), do: :south
   def rotate(:south), do: :west
   def rotate(:west), do: :north
+
+  @spec trick_winner(list({Card.t(), :north | :east | :west | :south})) ::
+          {Card.t(), :north | :east | :west | :south}
+  def trick_winner(trick) when is_list(trick) do
+    # First card = last in list by convention
+    {first_card, _first_player} = List.last(trick)
+    this_priority = suit_priority(first_card.suit)
+
+    trick =
+      Enum.sort_by(
+        trick,
+        fn {card, _seat} ->
+          this_priority[card.suit] + card.rank
+        end,
+        &>=/2
+      )
+
+    List.first(trick)
+  end
+
+  def suit_priority(:s), do: %{s: 200, h: 0, c: 0, d: 0}
+  def suit_priority(:h), do: %{s: 200, h: 100, c: 0, d: 0}
+  def suit_priority(:c), do: %{s: 200, h: 0, c: 100, d: 0}
+  def suit_priority(:d), do: %{s: 200, h: 0, c: 0, d: 100}
 
   @doc """
   discard/1:  Move one card from the draw pile to the discard pile.

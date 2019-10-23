@@ -74,9 +74,59 @@ defmodule GameTest do
 
       assert {:ok, game} = Game.play(game, :east, card_e)
       assert {:ok, game} = Game.play(game, :south, card_s)
-      {:ok, game} = Game.play(game, :west, card_w)
-      {:ok, game} = Game.play(game, :north, card_n)
+      assert {:ok, game} = Game.play(game, :west, card_w)
+      assert {:ok, _game} = Game.play(game, :north, card_n)
       # game |> IO.inspect(label: "label")
+    end
+  end
+
+  describe "trick_winner/1" do
+    test "Simple case" do
+      winner =
+        Game.trick_winner([
+          {%Card{rank: 7, suit: :h}, :north},
+          {%Card{rank: 2, suit: :h}, :west},
+          {%Card{rank: 10, suit: :h}, :south},
+          {%Card{rank: 9, suit: :h}, :east}
+        ])
+
+      assert winner == {%Card{rank: 10, suit: :h}, :south}
+    end
+
+    test "Offsuit high card doesn't win" do
+      winner =
+        Game.trick_winner([
+          {%Card{rank: 7, suit: :h}, :north},
+          {%Card{rank: 2, suit: :h}, :west},
+          {%Card{rank: 12, suit: :c}, :south},
+          {%Card{rank: 9, suit: :h}, :east}
+        ])
+
+      assert winner == {%Card{rank: 9, suit: :h}, :east}
+    end
+
+    test "Low spade wins" do
+      winner =
+        Game.trick_winner([
+          {%Card{rank: 7, suit: :h}, :north},
+          {%Card{rank: 2, suit: :s}, :west},
+          {%Card{rank: 12, suit: :h}, :south},
+          {%Card{rank: 9, suit: :h}, :east}
+        ])
+
+      assert winner == {%Card{rank: 2, suit: :s}, :west}
+    end
+
+    test "Nothing beats spades" do
+      winner =
+        Game.trick_winner([
+          {%Card{rank: 9, suit: :s}, :north},
+          {%Card{rank: 2, suit: :s}, :west},
+          {%Card{rank: 12, suit: :c}, :south},
+          {%Card{rank: 5, suit: :s}, :east}
+        ])
+
+      assert winner == {%Card{rank: 9, suit: :s}, :north}
     end
   end
 end
