@@ -195,16 +195,12 @@ defmodule SpadesGame.Game do
     {first_card, _first_player} = List.last(trick)
     this_priority = suit_priority(first_card.suit)
 
-    trick =
-      Enum.sort_by(
-        trick,
-        fn {card, _seat} ->
-          this_priority[card.suit] + card.rank
-        end,
-        &>=/2
-      )
-
-    List.first(trick)
+    Enum.max_by(
+      trick,
+      fn {card, _seat} ->
+        this_priority[card.suit] + card.rank
+      end
+    )
   end
 
   def suit_priority(:s), do: %{s: 200, h: 0, c: 0, d: 0}
