@@ -7,7 +7,7 @@ defmodule SpadesGame.GameServer do
   require Logger
   @timeout :timer.hours(1)
 
-  alias SpadesGame.{Game}
+  alias SpadesGame.{Game, GameOptions}
 
   #####################################
   ########### PUBLIC API ##############
@@ -20,6 +20,13 @@ defmodule SpadesGame.GameServer do
   # @spec start_link(t.String) :: {:ok, pid} | {:error, any}
   def start_link(game_name) do
     GenServer.start_link(__MODULE__, {game_name}, name: via_tuple(game_name))
+  end
+
+  @doc """
+  start_link/2: Generates a new game server under a provided name with specified options.
+  """
+  def start_link(game_name, %GameOptions{} = game_options) do
+    GenServer.start_link(__MODULE__, {game_name, game_options}, name: via_tuple(game_name))
   end
 
   @doc """
@@ -56,6 +63,19 @@ defmodule SpadesGame.GameServer do
     GenServer.call(via_tuple(game_name), :discard)
   end
 
+  @doc """
+  Bid/3: Place a bid.
+  """
+  @spec bid(String.t(), :west | :north | :east | :south, integer) ::
+          {:ok, Game.t()} | {:error, String.t()}
+  def bid(game_name, seat, bid_amount) do
+    GenServer.call(via_tuple(game_name), {:bid, seat, bid_amount})
+  end
+
+  # def play(game_name, seat, %Card{} = card) do
+  #   GenServer.call(via_tuple(game_name), {:bid, seat, bid_amount})
+  # end
+
   #####################################
   ########### IMPLEMENTATION ##########
   #####################################
@@ -63,6 +83,11 @@ defmodule SpadesGame.GameServer do
   def init({game_name}) do
     Logger.info("GameServer: Starting a server for game named [#{game_name}].")
     _init(game_name, Game.new(game_name))
+  end
+
+  def init({game_name, %GameOptions{} = game_options}) do
+    Logger.info("GameServer: Starting a server for game named [#{game_name}].")
+    _init(game_name, Game.new(game_name, game_options))
   end
 
   defp _init(game_name, new_game) do
@@ -78,6 +103,17 @@ defmodule SpadesGame.GameServer do
       end
 
     {:ok, game, @timeout}
+  end
+
+  def handle_call({:bid, seat, bid_num}, _from, game) do
+    case Game.bid(game, seat, bid_num) do
+      {:ok, new_game} ->
+        :ets.insert(:games, {game.game_name, new_game})
+        {:reply, {:ok, new_game}, new_game, @timeout}
+
+      {:error, msg} ->
+        {:reply, {:error, msg}, game, @timeout}
+    end
   end
 
   def handle_call(:state, _from, game) do
