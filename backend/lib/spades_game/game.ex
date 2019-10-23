@@ -210,7 +210,7 @@ defmodule SpadesGame.Game do
   end
 
   @spec break_spades_if_needed(Game.t()) :: Game.t()
-  def break_spades_if_needed(game) do
+  defp break_spades_if_needed(game) do
     if !game.spades_broken && contains_spade(game.trick) do
       %Game{game | spades_broken: true}
     else
@@ -219,15 +219,16 @@ defmodule SpadesGame.Game do
   end
 
   @spec contains_spade(list({Card.t(), :north | :east | :west | :south})) :: boolean
-  def contains_spade(trick) do
+  defp contains_spade(trick) do
     trick
     |> Enum.any?(fn {card, _player} -> card.suit == :s end)
   end
 
-  def rotate(:north), do: :east
-  def rotate(:east), do: :south
-  def rotate(:south), do: :west
-  def rotate(:west), do: :north
+  # Clockwise rotation
+  defp rotate(:north), do: :east
+  defp rotate(:east), do: :south
+  defp rotate(:south), do: :west
+  defp rotate(:west), do: :north
 
   @spec trick_winner(list({Card.t(), :north | :east | :west | :south})) ::
           {Card.t(), :north | :east | :west | :south}
@@ -244,10 +245,11 @@ defmodule SpadesGame.Game do
     )
   end
 
-  def suit_priority(:s), do: %{s: 200, h: 0, c: 0, d: 0}
-  def suit_priority(:h), do: %{s: 200, h: 100, c: 0, d: 0}
-  def suit_priority(:c), do: %{s: 200, h: 0, c: 100, d: 0}
-  def suit_priority(:d), do: %{s: 200, h: 0, c: 0, d: 100}
+  # Define the priorities of a suit in a trick, based on the first card's suit
+  defp suit_priority(:s), do: %{s: 200, h: 0, c: 0, d: 0}
+  defp suit_priority(:h), do: %{s: 200, h: 100, c: 0, d: 0}
+  defp suit_priority(:c), do: %{s: 200, h: 0, c: 100, d: 0}
+  defp suit_priority(:d), do: %{s: 200, h: 0, c: 0, d: 100}
 
   @doc """
   discard/1:  Move one card from the draw pile to the discard pile.
