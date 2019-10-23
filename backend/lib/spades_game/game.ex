@@ -101,11 +101,18 @@ defmodule SpadesGame.Game do
 
   def play(%Game{} = game, seat, %Card{} = card) do
     {:ok, game}
+    |> ensure_playing()
     |> ensure_active_player(seat)
     |> remove_card_from_hand(seat, card)
     |> add_card_to_trick(seat, card)
     |> check_for_trick_winner_and_advance_turn()
   end
+
+  @spec ensure_playing({:ok, Game.t()} | {:error, String.t()}) ::
+          {:ok, Game.t()} | {:error, String.t()}
+  def ensure_playing({:error, message}), do: {:error, message}
+  def ensure_playing({:ok, %Game{status: :bidding}}), do: {:error, "Can't play while bidding"}
+  def ensure_playing({:ok, game}), do: {:ok, game}
 
   # Ensure_active_player/2: Only continue if the seat is the player
   # whose turn it is.
