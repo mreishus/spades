@@ -166,9 +166,24 @@ defmodule SpadesGame.Game do
       Enum.empty?(game.trick) && !valid_first_trick_card(game, card) ->
         {:error, "Tried to play a spade before they were broken"}
 
+      !Enum.empty?(game.trick) && !followed_suit_if_possible(game, seat, card) ->
+        {:error, "Player could follow suit but didn't"}
+
       true ->
         new_trick = [{card, seat} | game.trick]
         {:ok, %Game{game | trick: new_trick}}
+    end
+  end
+
+  @spec followed_suit_if_possible(Game.t(), :north | :east | :west | :south, Card.t()) :: boolean
+  def followed_suit_if_possible(game, seat, card) do
+    {first_card, _first_player} = List.last(game.trick)
+    this_player = Map.get(game, seat)
+
+    cond do
+      card.suit == first_card.suit -> true
+      not GamePlayer.has_suit?(this_player, first_card.suit) -> true
+      true -> false
     end
   end
 

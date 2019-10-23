@@ -83,6 +83,18 @@ defmodule GameTest do
       # game |> IO.inspect(label: "label")
     end
 
+    test "Forced to follow suit if possible", %{options: options} do
+      game = Game.new("move1 follow suit", options)
+
+      card_e = %Card{rank: 12, suit: :h}
+      card_s = %Card{rank: 9, suit: :h}
+      card_w = %Card{rank: 13, suit: :s}
+
+      assert {:ok, game} = Game.play(game, :east, card_e)
+      assert {:ok, game} = Game.play(game, :south, card_s)
+      assert {:error, _} = Game.play(game, :west, card_w)
+    end
+
     test "Spades must be broken before playing", %{options: options} do
       game = Game.new("move1 spades broken", options)
 

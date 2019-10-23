@@ -59,4 +59,9 @@ defmodule SpadesGame.GamePlayer do
     new_hand = player.hand |> Enum.reject(fn x -> x == card end)
     %{player | hand: new_hand}
   end
+
+  @spec has_suit?(GamePlayer.t(), :s | :h | :c | :d) :: boolean
+  def has_suit?(player, suit) do
+    player.hand |> Enum.any?(fn card -> card.suit == suit end)
+  end
 end
