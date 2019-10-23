@@ -2,7 +2,7 @@ defmodule GameTest do
   use ExUnit.Case, async: true
 
   doctest SpadesGame.Game
-  alias SpadesGame.{Game, GameOptions}
+  alias SpadesGame.{Game, GameOptions, Card}
 
   setup do
     {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
@@ -10,7 +10,7 @@ defmodule GameTest do
   end
 
   describe "new/1" do
-    test "returns a game", %{options: options} do
+    test "returns a game" do
       game = Game.new("asdf")
       assert game.draw |> length == 52
       assert game.discard == []
@@ -30,6 +30,10 @@ defmodule GameTest do
       assert game.east.hand |> length == 13
       assert game.north.hand |> length == 13
       assert game.south.hand |> length == 13
+
+      # Test Hardcoded Cards
+      assert game.west.hand |> Enum.member?(%Card{rank: 7, suit: :h})
+      assert game.north.hand |> Enum.member?(%Card{rank: 2, suit: :h})
     end
   end
 

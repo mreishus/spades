@@ -8,12 +8,25 @@ defmodule SpadesGame.Game do
   alias SpadesGame.{Deck, Game, GamePlayer, GameOptions}
 
   @derive Jason.Encoder
-  defstruct [:game_name, :options, :status, :turn, :draw, :discard, :west, :north, :east, :south]
+  defstruct [
+    :game_name,
+    :options,
+    :dealer,
+    :status,
+    :turn,
+    :draw,
+    :discard,
+    :west,
+    :north,
+    :east,
+    :south
+  ]
 
   @type t :: %Game{
           game_name: String.t(),
           options: GameOptions.t(),
           status: :bidding | :playing,
+          dealer: :west | :north | :east | :south,
           turn: :west | :north | :east | :south,
           draw: Deck.t(),
           discard: Deck.t(),
@@ -45,7 +58,8 @@ defmodule SpadesGame.Game do
       game_name: game_name,
       options: options,
       status: :playing,
-      turn: :north,
+      dealer: :north,
+      turn: :east,
       draw: Deck.new_shuffled(),
       discard: Deck.new_empty(),
       west: w,
