@@ -6,11 +6,12 @@ defmodule SpadesGame.GamePlayer do
   alias SpadesGame.{Deck, Card, GamePlayer}
 
   @derive Jason.Encoder
-  defstruct [:hand, :tricks_won]
+  defstruct [:hand, :tricks_won, :bid]
 
   @type t :: %GamePlayer{
           hand: Deck.t(),
-          tricks_won: integer
+          tricks_won: integer,
+          bid: nil | integer
         }
 
   @doc """
@@ -20,7 +21,8 @@ defmodule SpadesGame.GamePlayer do
   def new() do
     %GamePlayer{
       hand: Deck.new_empty(),
-      tricks_won: 0
+      tricks_won: 0,
+      bid: nil
     }
   end
 
@@ -31,13 +33,22 @@ defmodule SpadesGame.GamePlayer do
   def new(hand) do
     %GamePlayer{
       hand: hand,
-      tricks_won: 0
+      tricks_won: 0,
+      bid: nil
     }
   end
 
+  @doc """
+  won_trick/1: Increment the number of tricks won by 1.
+  """
   @spec won_trick(GamePlayer.t()) :: GamePlayer.t()
   def won_trick(player) do
     %GamePlayer{player | tricks_won: player.tricks_won + 1}
+  end
+
+  @spec set_bid(GamePlayer.t(), nil | integer) :: GamePlayer.t()
+  def set_bid(player, bid) when is_nil(bid) or (bid >= 0 and bid <= 13) do
+    %GamePlayer{player | bid: bid}
   end
 
   @doc """

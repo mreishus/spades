@@ -60,6 +60,26 @@ defmodule GameTest do
     end
   end
 
+  describe "bidding" do
+    test "round of bids", %{options: options} do
+      game = Game.new("bidding", options) |> Game.temp_set_bid_status()
+      assert game.status == :bidding
+      {:ok, game} = Game.bid(game, :east, 3)
+      assert game.status == :bidding
+      {:ok, game} = Game.bid(game, :south, 4)
+      assert game.status == :bidding
+      {:ok, game} = Game.bid(game, :west, 2)
+      assert game.status == :bidding
+      {:ok, game} = Game.bid(game, :north, 0)
+      assert game.status == :playing
+      assert game.east.bid == 3
+      assert game.south.bid == 4
+      assert game.west.bid == 2
+      assert game.north.bid == 0
+      assert game.turn == :east
+    end
+  end
+
   describe "move/1" do
     test "First Trick Works", %{options: options} do
       game = Game.new("move1 first trick", options)
@@ -69,7 +89,7 @@ defmodule GameTest do
       card_w = %Card{rank: 7, suit: :h}
       card_n = %Card{rank: 2, suit: :h}
 
-      assert {:error, "Inactive player attempted to play a card"} =
+      assert {:error, "Inactive player attempted to play a card or bid"} =
                Game.play(game, :south, card_s)
 
       assert {:ok, game} = Game.play(game, :east, card_e)

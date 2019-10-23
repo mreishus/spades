@@ -91,6 +91,59 @@ defmodule SpadesGame.Game do
     end
   end
 
+  def temp_set_bid_status(game) do
+    %Game{game | status: :bidding}
+  end
+
+  @spec bid(Game.t(), :west | :north | :east | :south, integer) ::
+          {:ok, Game.t()} | {:error, String.t()}
+  def bid(game, seat, bid_num) do
+    {:ok, game}
+    |> ensure_bidding()
+    |> ensure_active_player(seat)
+    |> set_bid(seat, bid_num)
+    |> bid_advance()
+  end
+
+  @spec ensure_bidding({:ok, Game.t()} | {:error, String.t()}) ::
+          {:ok, Game.t()} | {:error, String.t()}
+  def ensure_bidding({:error, message}), do: {:error, message}
+  def ensure_bidding({:ok, %Game{status: :playing}}), do: {:error, "Can't bid while playing"}
+  def ensure_bidding({:ok, game}), do: {:ok, game}
+
+  @spec set_bid(
+          {:ok, Game.t()} | {:error, String.t()},
+          :west | :north | :east | :south,
+          nil | integer
+        ) ::
+          {:ok, Game.t()} | {:error, String.t()}
+  def set_bid({:error, message}, _seat, _bid), do: {:error, message}
+
+  def set_bid({:ok, game}, seat, bid) when is_nil(bid) or (bid >= 0 and bid <= 13) do
+    player =
+      Map.get(game, seat)
+      |> GamePlayer.set_bid(bid)
+
+    {:ok, Map.put(game, seat, player)}
+  end
+
+  def bid_advance({:error, message}), do: {:error, message}
+
+  def bid_advance({:ok, game}) do
+    bids =
+      [:west, :north, :east, :south]
+      |> Enum.map(fn seat -> Map.get(game, seat).bid end)
+
+    game = %Game{game | turn: rotate(game.turn)}
+
+    if Enum.any?(bids, fn b -> b == nil end) do
+      {:ok, game}
+    else
+      game = %Game{game | status: :playing}
+      {:ok, game}
+    end
+  end
+
   # play/3: A player puts a card on the table. (Moves from hand to trick.)
   @spec play(Game.t(), :west | :north | :east | :south, Card.t()) ::
           {:ok, Game.t()} | {:error, String.t()}
@@ -127,7 +180,7 @@ defmodule SpadesGame.Game do
     if game.turn == seat do
       {:ok, game}
     else
-      {:error, "Inactive player attempted to play a card"}
+      {:error, "Inactive player attempted to play a card or bid"}
     end
   end
 
