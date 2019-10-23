@@ -62,12 +62,12 @@ defmodule GameTest do
 
   describe "move/1" do
     test "First Trick Works", %{options: options} do
-      game = Game.new("move1", options)
+      game = Game.new("move1 first trick", options)
 
-      card_w = %Card{rank: 7, suit: :h}
-      card_n = %Card{rank: 2, suit: :h}
       card_e = %Card{rank: 12, suit: :h}
       card_s = %Card{rank: 9, suit: :h}
+      card_w = %Card{rank: 7, suit: :h}
+      card_n = %Card{rank: 2, suit: :h}
 
       assert {:error, "Inactive player attempted to play a card"} =
                Game.play(game, :south, card_s)
@@ -81,6 +81,57 @@ defmodule GameTest do
       assert game.turn == :east
       assert game.east.tricks_won == 1
       # game |> IO.inspect(label: "label")
+    end
+
+    test "Spades must be broken before playing", %{options: options} do
+      game = Game.new("move1 spades broken", options)
+
+      card_e = %Card{rank: 9, suit: :s}
+      assert {:error, _x} = Game.play(game, :east, card_e)
+    end
+
+    test "Spades can be broken", %{options: options} do
+      game = Game.new("move1 break spades", options)
+      assert game.spades_broken == false
+
+      card_e = %Card{rank: 12, suit: :h}
+      card_s = %Card{rank: 9, suit: :h}
+      card_w = %Card{rank: 7, suit: :h}
+      card_n = %Card{rank: 2, suit: :h}
+
+      assert {:ok, game} = Game.play(game, :east, card_e)
+      assert {:ok, game} = Game.play(game, :south, card_s)
+      assert {:ok, game} = Game.play(game, :west, card_w)
+      assert {:ok, game} = Game.play(game, :north, card_n)
+
+      assert game.spades_broken == false
+
+      card_e = %Card{rank: 6, suit: :h}
+      card_s = %Card{rank: 4, suit: :h}
+      card_w = %Card{rank: 10, suit: :h}
+      card_n = %Card{rank: 3, suit: :h}
+
+      assert {:ok, game} = Game.play(game, :east, card_e)
+      assert {:ok, game} = Game.play(game, :south, card_s)
+      assert {:ok, game} = Game.play(game, :west, card_w)
+      assert {:ok, game} = Game.play(game, :north, card_n)
+
+      assert game.spades_broken == false
+
+      card_w = %Card{rank: 13, suit: :h}
+      card_n = %Card{rank: 5, suit: :h}
+      card_e = %Card{rank: 2, suit: :s}
+      card_s = %Card{rank: 4, suit: :s}
+
+      assert {:ok, game} = Game.play(game, :west, card_w)
+      assert {:ok, game} = Game.play(game, :north, card_n)
+      assert {:ok, game} = Game.play(game, :east, card_e)
+      assert {:ok, game} = Game.play(game, :south, card_s)
+
+      assert game.east.tricks_won == 1
+      assert game.west.tricks_won == 1
+      assert game.south.tricks_won == 1
+      assert game.spades_broken == true
     end
   end
 

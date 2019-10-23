@@ -22,7 +22,8 @@ defmodule SpadesGame.Game do
     :north,
     :east,
     :south,
-    :trick
+    :trick,
+    :spades_broken
   ]
 
   @type t :: %Game{
@@ -37,7 +38,8 @@ defmodule SpadesGame.Game do
           north: GamePlayer.t(),
           east: GamePlayer.t(),
           south: GamePlayer.t(),
-          trick: list()
+          trick: list(),
+          spades_broken: boolean
         }
 
   @doc """
@@ -70,7 +72,8 @@ defmodule SpadesGame.Game do
       north: n,
       east: e,
       south: s,
-      trick: []
+      trick: [],
+      spades_broken: false
     }
   end
 
@@ -143,7 +146,7 @@ defmodule SpadesGame.Game do
         {:ok, Map.put(game, seat, player)}
 
       {:error, _player} ->
-        {:error, "Unable to remove card"}
+        {:error, "Unable to remove card. Does that player have that card?"}
     end
   end
 
@@ -156,12 +159,24 @@ defmodule SpadesGame.Game do
   def add_card_to_trick({:error, message}, _seat, _card), do: {:error, message}
 
   def add_card_to_trick({:ok, game}, seat, card) do
-    if length(game.trick) >= 4 do
-      {:error, "Too many cards in trick to add another"}
-    else
-      new_trick = [{card, seat} | game.trick]
-      {:ok, %Game{game | trick: new_trick}}
+    cond do
+      length(game.trick) >= 4 ->
+        {:error, "Too many cards in trick to add another"}
+
+      Enum.empty?(game.trick) && !valid_first_trick_card(game, card) ->
+        {:error, "Tried to play a spade before they were broken"}
+
+      true ->
+        new_trick = [{card, seat} | game.trick]
+        {:ok, %Game{game | trick: new_trick}}
     end
+  end
+
+  @spec valid_first_trick_card(Game.t(), Card.t()) :: boolean
+  def valid_first_trick_card(game, card) do
+    # Invalid card: !game.spades_broken && card.suit == :s
+    # Use DeMorgan's Law to invert
+    game.spades_broken || card.suit != :s
   end
 
   @spec check_for_trick_winner_and_advance_turn({:ok, Game.t()} | {:error, String.t()}) ::
@@ -180,8 +195,11 @@ defmodule SpadesGame.Game do
         new_player = Map.get(game, seat) |> GamePlayer.won_trick()
 
         game =
-          %Game{game | turn: seat, trick: []}
+          game
+          |> break_spades_if_needed()
           |> Map.put(seat, new_player)
+          |> Map.put(:turn, seat)
+          |> Map.put(:trick, [])
 
         {:ok, game}
 
@@ -189,6 +207,21 @@ defmodule SpadesGame.Game do
         game = %Game{game | turn: rotate(game.turn)}
         {:ok, game}
     end
+  end
+
+  @spec break_spades_if_needed(Game.t()) :: Game.t()
+  def break_spades_if_needed(game) do
+    if !game.spades_broken && contains_spade(game.trick) do
+      %Game{game | spades_broken: true}
+    else
+      game
+    end
+  end
+
+  @spec contains_spade(list({Card.t(), :north | :east | :west | :south})) :: boolean
+  def contains_spade(trick) do
+    trick
+    |> Enum.any?(fn {card, _player} -> card.suit == :s end)
   end
 
   def rotate(:north), do: :east
