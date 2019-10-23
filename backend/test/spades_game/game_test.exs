@@ -62,7 +62,7 @@ defmodule GameTest do
 
   describe "bidding" do
     test "round of bids", %{options: options} do
-      game = Game.new("bidding", options) |> Game.temp_set_bid_status()
+      game = Game.new("bidding", options)
       assert game.status == :bidding
       {:ok, game} = Game.bid(game, :east, 3)
       assert game.status == :bidding
@@ -89,6 +89,11 @@ defmodule GameTest do
       card_w = %Card{rank: 7, suit: :h}
       card_n = %Card{rank: 2, suit: :h}
 
+      assert {:ok, game} = Game.bid(game, :east, 3)
+      assert {:ok, game} = Game.bid(game, :south, 4)
+      assert {:ok, game} = Game.bid(game, :west, 2)
+      assert {:ok, game} = Game.bid(game, :north, 0)
+
       assert {:error, "Inactive player attempted to play a card or bid"} =
                Game.play(game, :south, card_s)
 
@@ -110,6 +115,11 @@ defmodule GameTest do
       card_s = %Card{rank: 9, suit: :h}
       card_w = %Card{rank: 13, suit: :s}
 
+      assert {:ok, game} = Game.bid(game, :east, 3)
+      assert {:ok, game} = Game.bid(game, :south, 4)
+      assert {:ok, game} = Game.bid(game, :west, 2)
+      assert {:ok, game} = Game.bid(game, :north, 0)
+
       assert {:ok, game} = Game.play(game, :east, card_e)
       assert {:ok, game} = Game.play(game, :south, card_s)
       assert {:error, _} = Game.play(game, :west, card_w)
@@ -118,6 +128,11 @@ defmodule GameTest do
     test "Spades must be broken before playing", %{options: options} do
       game = Game.new("move1 spades broken", options)
 
+      assert {:ok, game} = Game.bid(game, :east, 3)
+      assert {:ok, game} = Game.bid(game, :south, 4)
+      assert {:ok, game} = Game.bid(game, :west, 2)
+      assert {:ok, game} = Game.bid(game, :north, 0)
+
       card_e = %Card{rank: 9, suit: :s}
       assert {:error, _x} = Game.play(game, :east, card_e)
     end
@@ -125,6 +140,11 @@ defmodule GameTest do
     test "Spades can be broken", %{options: options} do
       game = Game.new("move1 break spades", options)
       assert game.spades_broken == false
+
+      assert {:ok, game} = Game.bid(game, :east, 3)
+      assert {:ok, game} = Game.bid(game, :south, 4)
+      assert {:ok, game} = Game.bid(game, :west, 2)
+      assert {:ok, game} = Game.bid(game, :north, 0)
 
       card_e = %Card{rank: 12, suit: :h}
       card_s = %Card{rank: 9, suit: :h}

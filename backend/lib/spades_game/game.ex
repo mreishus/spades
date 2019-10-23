@@ -63,7 +63,7 @@ defmodule SpadesGame.Game do
     %Game{
       game_name: game_name,
       options: options,
-      status: :playing,
+      status: :bidding,
       dealer: :north,
       turn: :east,
       draw: Deck.new_shuffled(),
@@ -89,10 +89,6 @@ defmodule SpadesGame.Game do
       _ ->
         Deck.new_shuffled() |> Enum.chunk_every(13)
     end
-  end
-
-  def temp_set_bid_status(game) do
-    %Game{game | status: :bidding}
   end
 
   @spec bid(Game.t(), :west | :north | :east | :south, integer) ::

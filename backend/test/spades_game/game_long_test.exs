@@ -14,6 +14,11 @@ defmodule GameLongTest do
       game = Game.new("game long test", options)
       assert game.spades_broken == false
 
+      assert {:ok, game} = Game.bid(game, :east, 3)
+      assert {:ok, game} = Game.bid(game, :south, 4)
+      assert {:ok, game} = Game.bid(game, :west, 2)
+      assert {:ok, game} = Game.bid(game, :north, 0)
+
       card_e = %Card{rank: 12, suit: :h}
       card_s = %Card{rank: 9, suit: :h}
       card_w = %Card{rank: 7, suit: :h}
