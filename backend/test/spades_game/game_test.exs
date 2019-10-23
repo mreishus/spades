@@ -11,7 +11,7 @@ defmodule GameTest do
 
   describe "new/1" do
     test "returns a game" do
-      game = Game.new("asdf")
+      game = Game.new("new1")
       assert game.draw |> length == 52
       assert game.discard == []
       assert game.west.hand |> length == 13
@@ -23,7 +23,7 @@ defmodule GameTest do
 
   describe "new/2" do
     test "returns a game", %{options: options} do
-      game = Game.new("asdf", options)
+      game = Game.new("new2", options)
       assert game.draw |> length == 52
       assert game.discard == []
       assert game.west.hand |> length == 13
@@ -39,7 +39,7 @@ defmodule GameTest do
 
   describe "discard/1" do
     test "discards a card", %{options: options} do
-      game = Game.new("discard", options)
+      game = Game.new("discard1", options)
       game2 = Game.discard(game)
       game3 = Game.discard(game2)
 
@@ -57,6 +57,26 @@ defmodule GameTest do
       assert game.discard |> length == 52
       assert game2.draw |> length == 0
       assert game2.discard |> length == 52
+    end
+  end
+
+  describe "move/1" do
+    test "First Trick Works", %{options: options} do
+      game = Game.new("move1", options)
+
+      card_w = %Card{rank: 7, suit: :h}
+      card_n = %Card{rank: 2, suit: :h}
+      card_e = %Card{rank: 12, suit: :h}
+      card_s = %Card{rank: 9, suit: :h}
+
+      assert {:error, "Inactive player attempted to play a card"} =
+               Game.play(game, :south, card_s)
+
+      assert {:ok, game} = Game.play(game, :east, card_e)
+      assert {:ok, game} = Game.play(game, :south, card_s)
+      {:ok, game} = Game.play(game, :west, card_w)
+      {:ok, game} = Game.play(game, :north, card_n)
+      # game |> IO.inspect(label: "label")
     end
   end
 end

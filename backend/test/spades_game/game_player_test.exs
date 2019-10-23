@@ -36,10 +36,10 @@ defmodule GamePlayerTest do
   describe "move/1" do
     test "I can play a card I have", %{west: west} do
       card = %Card{rank: 7, suit: :h}
-      {:ok, west} = GamePlayer.play(west, card)
+      {:ok, west, card_return} = GamePlayer.play(west, card)
       assert west.hand |> length == 12
       refute west.hand |> Enum.member?(card)
-      assert west.trick_card == card
+      assert card_return == card
     end
 
     test "I can't play a card I don't have", %{west: west} do
@@ -47,7 +47,6 @@ defmodule GamePlayerTest do
       {:error, west} = GamePlayer.play(west, card)
       assert west.hand |> length == 13
       refute west.hand |> Enum.member?(card)
-      assert west.trick_card == nil
     end
   end
 end
