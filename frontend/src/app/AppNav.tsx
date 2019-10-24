@@ -34,8 +34,8 @@ export const AppNav: React.FC<Props> = () => {
             className="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
           >
             <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
-              {isOpen && <path fill-rule="evenodd" d={svgPathCloseButton} />}
-              {!isOpen && <path fill-rule="evenodd" d={svgPathHamburger} />}
+              {isOpen && <path fillRule="evenodd" d={svgPathCloseButton} />}
+              {!isOpen && <path fillRule="evenodd" d={svgPathHamburger} />}
             </svg>
           </button>
         </div>

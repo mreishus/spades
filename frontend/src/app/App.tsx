@@ -86,16 +86,18 @@ const App: React.FC = () => {
   );
 
   return (
-    <AuthContext.Provider value={authValue}>
-      <SocketProvider
-        wsUrl={process.env.REACT_APP_WS_URL || "/be/socket"}
-        options={socketParams}
-      >
-        <Router>
-          <AppRouter />
-        </Router>
-      </SocketProvider>
-    </AuthContext.Provider>
+    <React.StrictMode>
+      <AuthContext.Provider value={authValue}>
+        <SocketProvider
+          wsUrl={process.env.REACT_APP_WS_URL || "/be/socket"}
+          options={socketParams}
+        >
+          <Router>
+            <AppRouter />
+          </Router>
+        </SocketProvider>
+      </AuthContext.Provider>
+    </React.StrictMode>
   );
 };
 
