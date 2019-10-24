@@ -7,7 +7,7 @@ defmodule SpadesGame.GameServer do
   require Logger
   @timeout :timer.hours(1)
 
-  alias SpadesGame.{Game, GameOptions}
+  alias SpadesGame.{Card, Game, GameOptions}
 
   #####################################
   ########### PUBLIC API ##############
@@ -72,19 +72,26 @@ defmodule SpadesGame.GameServer do
     GenServer.call(via_tuple(game_name), {:bid, seat, bid_amount})
   end
 
-  # def play(game_name, seat, %Card{} = card) do
-  #   GenServer.call(via_tuple(game_name), {:bid, seat, bid_amount})
-  # end
+  @doc """
+  play/3: Play a card.
+  """
+  @spec play(String.t(), :west | :north | :east | :south, Card.t()) ::
+          {:ok, Game.t()} | {:error, String.t()}
+  def play(game_name, seat, %Card{} = card) do
+    GenServer.call(via_tuple(game_name), {:play, seat, card})
+  end
 
   #####################################
   ########### IMPLEMENTATION ##########
   #####################################
 
+  @impl GenServer
   def init({game_name}) do
     Logger.info("GameServer: Starting a server for game named [#{game_name}].")
     _init(game_name, Game.new(game_name))
   end
 
+  @impl GenServer
   def init({game_name, %GameOptions{} = game_options}) do
     Logger.info("GameServer: Starting a server for game named [#{game_name}].")
     _init(game_name, Game.new(game_name, game_options))
@@ -105,6 +112,7 @@ defmodule SpadesGame.GameServer do
     {:ok, game, @timeout}
   end
 
+  @impl GenServer
   def handle_call({:bid, seat, bid_num}, _from, game) do
     case Game.bid(game, seat, bid_num) do
       {:ok, new_game} ->
@@ -116,10 +124,24 @@ defmodule SpadesGame.GameServer do
     end
   end
 
+  @impl GenServer
+  def handle_call({:play, seat, card}, _from, game) do
+    case Game.play(game, seat, card) do
+      {:ok, new_game} ->
+        :ets.insert(:games, {game.game_name, new_game})
+        {:reply, {:ok, new_game}, new_game, @timeout}
+
+      {:error, msg} ->
+        {:reply, {:error, msg}, game, @timeout}
+    end
+  end
+
+  @impl GenServer
   def handle_call(:state, _from, game) do
     {:reply, game, game, @timeout}
   end
 
+  @impl GenServer
   def handle_call(:discard, _from, game) do
     new_game = Game.discard(game)
     :ets.insert(:games, {game.game_name, new_game})
@@ -127,16 +149,19 @@ defmodule SpadesGame.GameServer do
   end
 
   # When timing out, the order is handle_info(:timeout, _) -> terminate({:shutdown, :timeout}, _)
+  @impl GenServer
   def handle_info(:timeout, game) do
     {:stop, {:shutdown, :timeout}, game}
   end
 
+  @impl GenServer
   def terminate({:shutdown, :timeout}, game) do
     Logger.info("GameServer: Terminate (Timeout) running for #{game.game_name}")
     :ets.delete(:games, game.game_name)
     :ok
   end
 
+  @impl GenServer
   def terminate(_reason, game) do
     Logger.info("GameServer: Strange termination for [#{game.game_name}].")
     :ok

@@ -105,6 +105,37 @@ defmodule GameServerTest do
     end
   end
 
+  describe "play/3" do
+    test "First Trick Works" do
+      game_name = generate_game_name()
+      {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
+
+      assert {:ok, _pid} = GameServer.start_link(game_name, options)
+      game = GameServer.state(game_name)
+      assert game.status == :bidding
+
+      assert {:ok, game} = GameServer.bid(game_name, :east, 3)
+      assert {:ok, game} = GameServer.bid(game_name, :south, 4)
+      assert {:ok, game} = GameServer.bid(game_name, :west, 2)
+      assert {:ok, game} = GameServer.bid(game_name, :north, 0)
+      assert game.status == :playing
+
+      card_e = %Card{rank: 12, suit: :h}
+      card_s = %Card{rank: 9, suit: :h}
+      card_w = %Card{rank: 7, suit: :h}
+      card_n = %Card{rank: 2, suit: :h}
+
+      assert {:ok, game} = GameServer.play(game_name, :east, card_e)
+      assert {:ok, game} = GameServer.play(game_name, :south, card_s)
+      assert {:ok, game} = GameServer.play(game_name, :west, card_w)
+      assert game.trick |> length == 3
+      assert {:ok, game} = GameServer.play(game_name, :north, card_n)
+      assert game.trick |> length == 0
+      assert game.turn == :east
+      assert game.east.tricks_won == 1
+    end
+  end
+
   defp generate_game_name do
     "game-#{:rand.uniform(1_000_000)}"
   end
