@@ -46,7 +46,7 @@ export const RequestResetPassword: React.FC<Props> = () => {
 
   return (
     <Container>
-      <div className="mx-auto max-w-xs mt-20 p-8 bg-gray-100 rounded-lg shadow-lg">
+      <div className="mx-auto max-w-sm mt-20 p-8 bg-gray-100 rounded-lg shadow-lg">
         <h1 className="font-semibold text-green-900 mb-4">Reset Password</h1>
 
         {isSuccess && (

@@ -53,11 +53,13 @@ export const DoResetPassword: React.FC<Props> = ({ match }) => {
   if (isSuccess) {
     return (
       <Container>
-        <div className="alert alert-info max-w-md">
-          <h3>Password reset successfully.</h3>
-          <Link to="/login" className="mt-2 inline-block text-lg">
-            Log In
-          </Link>
+        <div className="mx-auto max-w-sm mt-20 p-8 bg-gray-100 rounded-lg shadow-lg">
+          <div className="text-blue-800 font-semibold">
+            <h1>Password reset successfully.</h1>
+            <Link to="/login" className="mt-2 inline-block text-lg">
+              Log In
+            </Link>
+          </div>
         </div>
       </Container>
     );
@@ -65,45 +67,58 @@ export const DoResetPassword: React.FC<Props> = ({ match }) => {
 
   return (
     <Container>
-      {isLoading && <div>Loading...</div>}
-      {isError && (
-        <div className="alert alert-danger max-w-md">
-          Unable to reset password.
-          {Object.keys(validationErrors)
-            .filter(field => field !== "password_hash")
-            .map((field: string) =>
-              validationErrors[field].map((message: string) => (
-                <div key={field + message}>
-                  <span className="font-semibold">{field}</span>: {message}
-                </div>
-              ))
-            )}
-        </div>
-      )}
+      <div className="mx-auto max-w-xs mt-20 p-8 bg-gray-100 rounded-lg shadow-lg">
+        <h1 className="font-semibold text-green-900 mb-4">Reset Password</h1>
+        {isLoading && <div>Loading...</div>}
+        {isError && (
+          <div className="alert alert-danger max-w-md">
+            Unable to reset password.
+            {Object.keys(validationErrors)
+              .filter(field => field !== "password_hash")
+              .map((field: string) =>
+                validationErrors[field].map((message: string) => (
+                  <div key={field + message}>
+                    <span className="font-semibold">{field}</span>: {message}
+                  </div>
+                ))
+              )}
+          </div>
+        )}
 
-      <form action="POST" onSubmit={handleSubmit}>
-        <fieldset disabled={isLoading} aria-busy={isLoading}>
-          <input
-            type="password"
-            name="password"
-            placeholder="password"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.password || ""}
-          />
-          <input
-            type="password"
-            name="confirm_password"
-            placeholder="confirm password"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.confirm_password || ""}
-          />
-          <Button isSubmit isPrimary className="mt-2">
-            Reset Password
-          </Button>
-        </fieldset>
-      </form>
+        <form action="POST" onSubmit={handleSubmit}>
+          <fieldset disabled={isLoading} aria-busy={isLoading}>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                password
+              </label>
+              <input
+                type="password"
+                name="password"
+                placeholder="password"
+                className="form-control block mt-2"
+                onChange={handleInputChange}
+                value={inputs.password || ""}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                confirm password
+              </label>
+              <input
+                type="password"
+                name="confirm_password"
+                placeholder="confirm password"
+                className="form-control block mt-2"
+                onChange={handleInputChange}
+                value={inputs.confirm_password || ""}
+              />
+            </div>
+            <Button isSubmit isPrimary className="mt-2">
+              Reset Password
+            </Button>
+          </fieldset>
+        </form>
+      </div>
     </Container>
   );
 };
