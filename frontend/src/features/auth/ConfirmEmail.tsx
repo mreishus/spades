@@ -25,24 +25,26 @@ export const ConfirmEmail: React.FC<Props> = ({ match }) => {
 
   return (
     <Container>
-      {isLoading && <div>Loading...</div>}
-      {isError && (
-        <div className="alert alert-danger max-w-md">
-          Sorry, that's an invalid or expired confirmation link.
-        </div>
-      )}
-      {isConfirmed && (
-        <div className="alert alert-info max-w-md">
-          Thank you, your email has been confirmed.
-          {!authToken && (
-            <div className="mt-2">
-              <Link to="/login" className="text-lg">
-                Log In
-              </Link>
-            </div>
-          )}
-        </div>
-      )}
+      <div className="mx-auto max-w-sm mt-20 p-8 bg-gray-100 rounded-lg shadow-lg">
+        {isLoading && <div>Loading...</div>}
+        {isError && (
+          <div className="text-red-800 font-semibold text-xl">
+            Sorry, that's an invalid or expired confirmation link.
+          </div>
+        )}
+        {isConfirmed && (
+          <div className="text-blue-900 font-semibold text-2xl">
+            Thank you, your email has been confirmed.
+            {!authToken && (
+              <div className="mt-2">
+                <Link to="/login" className="text-lg">
+                  Log In
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </Container>
   );
 };

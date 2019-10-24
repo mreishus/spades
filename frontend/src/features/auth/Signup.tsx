@@ -3,7 +3,6 @@ import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 
 import Button from "../../components/basic/Button";
-import Card from "../../components/basic/Card";
 
 import useForm from "../../hooks/useForm";
 import useAuth from "../../hooks/useAuth";
@@ -33,7 +32,7 @@ export const Login: React.FC<Props> = () => {
     try {
       // Not that secure, if you found this, congrats. :)
       if (inputs.signuppw !== "77yh") {
-        alert("Wrong password.  Signups should be open in a month or two.");
+        alert("Wrong sign up code.  Signups should be open in a month or two.");
         return;
       }
       setIsLoading(true);
@@ -99,52 +98,80 @@ export const Login: React.FC<Props> = () => {
   }
 
   return (
-    <Card className="mt-20 p-4 bg-gray-100 rounded-lg shadow-lg">
+    <div className="mx-auto max-w-xs mt-20 p-8 bg-gray-100 rounded-lg shadow-lg">
       {/* <Logo src={logoImg} /> */}
-      <h1 className="font-semibold text-green-900">Sign Up</h1>
+      <h1 className="font-semibold text-green-900 mb-4">Sign Up</h1>
       <form action="POST" onSubmit={handleSubmit}>
         <fieldset disabled={isLoading} aria-busy={isLoading}>
-          <input
-            type="email"
-            name="email"
-            placeholder="email"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.email || ""}
-            ref={emailRef}
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="password"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.password || ""}
-          />
-          <input
-            type="password"
-            name="confirm_password"
-            placeholder="confirm password"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.confirm_password || ""}
-          />
-          <input
-            type="text"
-            name="alias"
-            placeholder="alias"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.alias || ""}
-          />
-          <input
-            type="text"
-            name="signuppw"
-            placeholder="signuppw"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.signuppw || ""}
-          />
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              email
+            </label>
+            <input
+              type="email"
+              name="email"
+              placeholder="email"
+              className="form-control block mt-2"
+              onChange={handleInputChange}
+              value={inputs.email || ""}
+              ref={emailRef}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              password
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="password"
+              className="form-control block mt-2"
+              onChange={handleInputChange}
+              value={inputs.password || ""}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              confirm password
+            </label>
+            <input
+              type="password"
+              name="confirm_password"
+              placeholder="confirm password"
+              className="form-control block mt-2"
+              onChange={handleInputChange}
+              value={inputs.confirm_password || ""}
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              nickname
+            </label>
+            <input
+              type="text"
+              name="alias"
+              placeholder="nickname"
+              className="form-control block mt-2"
+              onChange={handleInputChange}
+              value={inputs.alias || ""}
+            />
+            <div className="mt-2 text-xs italic text-gray-600">
+              This will be visible to all users on the system.
+            </div>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              sign up code
+            </label>
+            <input
+              type="text"
+              name="signuppw"
+              placeholder="signuppw"
+              className="form-control block mt-2"
+              onChange={handleInputChange}
+              value={inputs.signuppw || ""}
+            />
+          </div>
           <Button isSubmit isPrimary className="mt-2">
             Sign Up
           </Button>
@@ -165,10 +192,13 @@ export const Login: React.FC<Props> = () => {
             )}
         </div>
       )}
-      <Link className="mt-2" to="/login">
+      <Link
+        className="mt-4 block text-blue-300 hover:text-blue-500"
+        to="/login"
+      >
         Already have an account?
       </Link>
-    </Card>
+    </div>
   );
 };
 export default Login;
