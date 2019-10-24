@@ -1,46 +1,89 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import cx from "classnames";
 import useAuth from "../hooks/useAuth";
 
 interface Props {}
 
+const svgPathCloseButton =
+  "M18.278 16.864a1 1 0 0 1-1.414 1.414l-4.829-4.828-4.828 4.828a1 1 0 0 1-1.414-1.414l4.828-4.829-4.828-4.828a1 1 0 0 1 1.414-1.414l4.829 4.828 4.828-4.828a1 1 0 1 1 1.414 1.414l-4.828 4.829 4.828 4.828z";
+const svgPathHamburger =
+  "M4 5h16a1 1 0 0 1 0 2H4a1 1 0 1 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2zm0 6h16a1 1 0 0 1 0 2H4a1 1 0 0 1 0-2z";
+
 export const AppNav: React.FC<Props> = () => {
   const { authToken, logOut } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
+  const headerLinkClass =
+    "mt-1 sm:mt-0 sm:ml-2 block px-2 py-1 text-white font-semibold hover:bg-gray-800 rounded";
   return (
-    <nav>
-      <div className="bg-purple-300">AuthToken: [{authToken}]</div>
-      <Link to="/">Home</Link>
-      <Link to="/testme" className="ml-2">
-        TestMe
-      </Link>
-      <Link to="/authtest" className="ml-2">
-        Auth Test
-      </Link>
-      <Link to="/private" className="ml-2 text-green-600">
-        Private Page Test
-      </Link>
-      <Link to="/lobby" className="ml-2 text-purple-600">
-        Lobby
-      </Link>
-      {!authToken && (
-        <>
-          <Link to="/login" className="ml-2">
-            Log In
+    <>
+      <header className=" bg-gray-900 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
+        <div className="flex items-center justify-between px-4 py-3 sm:p-0">
+          <div>
+            <img
+              className="h-8"
+              src="https://placekitten.com/650/150"
+              alt="Logo "
+            />
+          </div>
+          <div className="sm:hidden">
+            <button
+              onClick={() => setIsOpen(open => !open)}
+              type="button"
+              className="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
+            >
+              <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                {isOpen && <path fill-rule="evenodd" d={svgPathCloseButton} />}
+                {!isOpen && <path fill-rule="evenodd" d={svgPathHamburger} />}
+              </svg>
+            </button>
+          </div>
+        </div>
+        <div
+          className={cx({
+            "px-2 pt-2 pb-4 sm:flex sm:p-0": true,
+            block: isOpen,
+            hidden: !isOpen
+          })}
+        >
+          <Link to="/lobby" className={headerLinkClass}>
+            Lobby
           </Link>
-          <Link to="/signup" className="ml-2 ">
-            Sign Up
-          </Link>
-          <Link to="/reset-password" className="ml-2 ">
-            Forgot Password?
-          </Link>
-        </>
-      )}
-      {authToken && (
-        <span className="ml-2 link" onClick={() => logOut()}>
-          Sign out
-        </span>
-      )}
-    </nav>
+          {!authToken && (
+            <>
+              <Link to="/login" className={headerLinkClass}>
+                Log In
+              </Link>
+              <Link to="/signup" className={headerLinkClass}>
+                Sign Up
+              </Link>
+            </>
+          )}
+          {authToken && (
+            <>
+              <Link to="/testme" className={headerLinkClass}>
+                TestMe
+              </Link>
+              <Link to="/authtest" className={headerLinkClass}>
+                Auth Test
+              </Link>
+              <Link to="/private" className={headerLinkClass}>
+                Private Page Test
+              </Link>
+              <span
+                className={headerLinkClass + " underline cursor-pointer"}
+                onClick={() => logOut()}
+              >
+                Sign out
+              </span>
+            </>
+          )}
+        </div>
+      </header>
+      <nav>
+        <Link to="/">Home</Link>
+      </nav>
+    </>
   );
 };
 export default AppNav;

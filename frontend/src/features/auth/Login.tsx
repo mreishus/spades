@@ -109,6 +109,9 @@ export const Login: React.FC<Props> = () => {
       <Link className="mt-2" to="/signup">
         Don't have an account?
       </Link>
+      <Link to="/reset-password" className="ml-2 ">
+        Forgot Password?
+      </Link>
     </Card>
   );
 };
