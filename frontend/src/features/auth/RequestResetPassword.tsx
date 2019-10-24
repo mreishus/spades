@@ -3,6 +3,7 @@ import axios from "axios";
 //import cx from "classnames";
 import Container from "../../components/basic/Container";
 import Button from "../../components/basic/Button";
+import Card from "../../components/basic/Card";
 
 import useForm from "../../hooks/useForm";
 
@@ -46,32 +47,36 @@ export const RequestResetPassword: React.FC<Props> = () => {
 
   return (
     <Container>
-      <h1>Reset Password</h1>
+      <Card className="mt-20 p-4 bg-gray-100 rounded-lg shadow-lg">
+        <h1 className="font-semibold text-green-900">Reset Password</h1>
 
-      {isSuccess && (
-        <div className="alert alert-info mt-4">
-          Email sent with password reset link.
-        </div>
-      )}
-      <form action="POST" onSubmit={handleSubmit}>
-        <fieldset disabled={isLoading} aria-busy={isLoading}>
-          <input
-            type="email"
-            name="email"
-            placeholder="email"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.email || ""}
-            ref={emailRef}
-          />
-          <Button isSubmit isPrimary className="mt-2">
-            Reset Password
-          </Button>
-        </fieldset>
-      </form>
-      {isError && (
-        <div className="alert alert-danger mt-4">Error contacting server.</div>
-      )}
+        {isSuccess && (
+          <div className="alert alert-info mt-4">
+            Email sent with password reset link.
+          </div>
+        )}
+        <form action="POST" onSubmit={handleSubmit}>
+          <fieldset disabled={isLoading} aria-busy={isLoading}>
+            <input
+              type="email"
+              name="email"
+              placeholder="email"
+              className="form-control block mt-2"
+              onChange={handleInputChange}
+              value={inputs.email || ""}
+              ref={emailRef}
+            />
+            <Button isSubmit isPrimary className="mt-4">
+              Reset Password
+            </Button>
+          </fieldset>
+        </form>
+        {isError && (
+          <div className="alert alert-danger mt-4">
+            Error contacting server.
+          </div>
+        )}
+      </Card>
     </Container>
   );
 };

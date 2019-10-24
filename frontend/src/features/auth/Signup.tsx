@@ -94,8 +94,9 @@ export const Login: React.FC<Props> = () => {
   }
 
   return (
-    <Card>
+    <Card className="mt-20 p-4 bg-gray-100 rounded-lg shadow-lg">
       {/* <Logo src={logoImg} /> */}
+      <h1 className="font-semibold text-green-900">Sign Up</h1>
       <form action="POST" onSubmit={handleSubmit}>
         <fieldset disabled={isLoading} aria-busy={isLoading}>
           <input

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 
+import Container from "../../components/basic/Container";
 import Button from "../../components/basic/Button";
 import Card from "../../components/basic/Card";
 
@@ -79,40 +80,47 @@ export const Login: React.FC<Props> = () => {
   }
 
   return (
-    <Card>
-      {/* <Logo src={logoImg} /> */}
-      <form action="POST" onSubmit={handleSubmit}>
-        <fieldset disabled={isLoading} aria-busy={isLoading}>
-          <input
-            type="email"
-            name="email"
-            placeholder="email"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.email || ""}
-            ref={emailRef}
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="password"
-            className="form-control block mt-2"
-            onChange={handleInputChange}
-            value={inputs.password || ""}
-          />
-          <Button isSubmit isPrimary className="mt-2">
-            Sign In
-          </Button>
-        </fieldset>
-      </form>
-      {isError && <div className="alert alert-danger mt-4">{errorMessage}</div>}
-      <Link className="mt-2" to="/signup">
-        Don't have an account?
-      </Link>
-      <Link to="/reset-password" className="ml-2 ">
-        Forgot Password?
-      </Link>
-    </Card>
+    <Container>
+      <Card className="mt-20 p-4 bg-gray-100 rounded-lg shadow-lg">
+        {/* <Logo src={logoImg} /> */}
+        <h1 className="font-semibold text-green-900">Log In</h1>
+        <form action="POST" onSubmit={handleSubmit}>
+          <fieldset disabled={isLoading} aria-busy={isLoading}>
+            <input
+              type="email"
+              name="email"
+              placeholder="email"
+              className="form-control block mt-2"
+              onChange={handleInputChange}
+              value={inputs.email || ""}
+              ref={emailRef}
+            />
+            <input
+              type="password"
+              name="password"
+              placeholder="password"
+              className="form-control block mt-2"
+              onChange={handleInputChange}
+              value={inputs.password || ""}
+            />
+            <Button isSubmit isPrimary className="mt-4">
+              Sign In
+            </Button>
+          </fieldset>
+        </form>
+        {isError && (
+          <div className="alert alert-danger mt-4">{errorMessage}</div>
+        )}
+        <div className="mt-2">
+          <div className="mt-2">
+            <Link to="/reset-password">Forgot Password?</Link>
+          </div>
+          <div className="mt-2">
+            <Link to="/signup">Don't have an account?</Link>
+          </div>
+        </div>
+      </Card>
+    </Container>
   );
 };
 export default Login;
