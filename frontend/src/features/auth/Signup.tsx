@@ -31,6 +31,11 @@ export const Login: React.FC<Props> = () => {
 
   const { inputs, handleSubmit, handleInputChange } = useForm(async () => {
     try {
+      // Not that secure, if you found this, congrats. :)
+      if (inputs.signuppw !== "77yh") {
+        alert("Wrong password.  Signups should be open in a month or two.");
+        return;
+      }
       setIsLoading(true);
       setIsError(false);
       const data = {
@@ -131,6 +136,14 @@ export const Login: React.FC<Props> = () => {
             className="form-control block mt-2"
             onChange={handleInputChange}
             value={inputs.alias || ""}
+          />
+          <input
+            type="text"
+            name="signuppw"
+            placeholder="signuppw"
+            className="form-control block mt-2"
+            onChange={handleInputChange}
+            value={inputs.signuppw || ""}
           />
           <Button isSubmit isPrimary className="mt-2">
             Sign Up
