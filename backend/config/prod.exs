@@ -10,11 +10,11 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :spades, SpadesWeb.Endpoint,
-  url: [host: "api.entwine.xyz", port: 80],
+  url: [host: "api.starspades.com", port: 80],
   cache_static_manifest: "priv/static/cache_manifest.json",
   check_origin: [
-    "//entwine.xyz",
-    "//api.entwine.xyz",
+    "//starspades.com",
+    "//api.starspades.com",
     "//localhost",
     "//172.22.2.30:31231",
     "//172.22.2.31:31231",
@@ -25,8 +25,8 @@ config :spades, SpadesWeb.Endpoint,
     "//172.22.2.32:31232",
     "//172.22.2.33:31232"
   ],
-  front_end_email_confirm_url: "http://entwine.xyz/confirm-email/{token}",
-  front_end_reset_password_url: "http://entwine.xyz/reset-password/{token}"
+  front_end_email_confirm_url: "http://starspades.com/confirm-email/{token}",
+  front_end_reset_password_url: "http://starspades.com/reset-password/{token}"
 
 # Do not print debug messages in production
 config :logger, level: :info
