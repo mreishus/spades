@@ -38,6 +38,11 @@ defmodule Spades.Rooms do
   """
   def get_room!(id), do: Repo.get!(Room, id)
 
+  def get_room_by_name(name) do
+    Room
+    |> Repo.get_by(name: name)
+  end
+
   @doc """
   Creates a room.
 

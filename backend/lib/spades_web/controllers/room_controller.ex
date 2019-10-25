@@ -3,8 +3,8 @@ defmodule SpadesWeb.RoomController do
 
   alias Spades.Rooms
   alias Spades.Rooms.Room
-  alias SpadesUtil.{NameGenerator, Slugify}
-  alias SpadesGame.GameSupervisor
+  # alias SpadesUtil.{NameGenerator, Slugify}
+  # alias SpadesGame.GameSupervisor
 
   action_fallback SpadesWeb.FallbackController
 
@@ -13,22 +13,8 @@ defmodule SpadesWeb.RoomController do
     render(conn, "index.json", rooms: rooms)
   end
 
-  def create(conn, %{"room" => room_params}) do
-    game_name = NameGenerator.generate()
-
-    room_params =
-      room_params
-      |> Map.put("name", game_name)
-      |> Map.put("slug", Slugify.slugify(game_name))
-
-    with {:ok, _pid} <- GameSupervisor.start_game(game_name),
-         {:ok, %Room{} = room} <- Rooms.create_room(room_params) do
-      conn
-      |> put_status(:created)
-      |> put_resp_header("location", Routes.room_path(conn, :show, room))
-      |> render("show.json", room: room)
-    end
-  end
+  # Create: Removed, users no longer able to create rooms by API
+  # Possibly this entire controller should be removed
 
   def show(conn, %{"id" => id}) do
     room = Rooms.get_room!(id)

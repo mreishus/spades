@@ -28,39 +28,6 @@ defmodule SpadesWeb.RoomControllerTest do
     end
   end
 
-  describe "create room" do
-    test "renders room when data is valid", %{conn: conn} do
-      #############
-      # a = Routes.room_path(conn, :create)
-      # a |> IO.inspect(label: "path")
-
-      # @create_attrs
-      # |> IO.inspect(label: "attrs")
-
-      #############
-
-      conn = post(conn, Routes.room_path(conn, :create), room: @create_attrs)
-      assert %{"id" => id} = json_response(conn, 201)["data"]
-
-      conn = get(conn, Routes.room_path(conn, :show, id))
-
-      assert %{
-               "id" => id
-               # "name" => "some name"
-               # Name is automatically generated.
-             } = json_response(conn, 200)["data"]
-    end
-
-    ## Since names are automatically generated, and
-    ## they're the only field right now, we can't
-    ## generate invalid data.
-
-    # test "renders errors when data is invalid", %{conn: conn} do
-    #   conn = post(conn, Routes.room_path(conn, :create), room: @invalid_attrs)
-    #   assert json_response(conn, 422)["errors"] != %{}
-    # end
-  end
-
   describe "update room" do
     setup [:create_room]
 

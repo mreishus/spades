@@ -47,6 +47,7 @@ defmodule SpadesWeb.Router do
 
     # Testing Junk
     get "/authtest", JunkController, :authtest
+    post "/games", GameController, :create
   end
 
   scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do

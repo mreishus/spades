@@ -57,12 +57,14 @@ export const Lobby: React.FC = () => {
         {roomItems && (
           <table className="shadow rounded border bg-gray-100">
             <thead>
-              <th className={thClass}>id</th>
-              <th className={thClass}>name</th>
-              <th className={thClass}>west</th>
-              <th className={thClass}>north</th>
-              <th className={thClass}>east</th>
-              <th className={thClass}>south</th>
+              <tr>
+                <th className={thClass}>id</th>
+                <th className={thClass}>name</th>
+                <th className={thClass}>west</th>
+                <th className={thClass}>north</th>
+                <th className={thClass}>east</th>
+                <th className={thClass}>south</th>
+              </tr>
             </thead>
             <tbody>{roomItems}</tbody>
           </table>

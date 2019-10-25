@@ -1,5 +1,6 @@
 defmodule GameUiServerTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
+  use Spades.DataCase
   alias SpadesGame.{Card, GameOptions, GameUIServer, GameUI, Game}
 
   describe "start_link/2" do

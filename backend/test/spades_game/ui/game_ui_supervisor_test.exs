@@ -1,5 +1,6 @@
 defmodule GameUiSupervisorTest do
-  use ExUnit.Case, async: true
+  use ExUnit.Case
+  use Spades.DataCase
   doctest SpadesGame.GameUISupervisor
 
   alias SpadesGame.{GameUISupervisor, GameUIServer, GameOptions}

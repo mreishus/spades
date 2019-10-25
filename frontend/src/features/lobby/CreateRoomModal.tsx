@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router";
 import axios from "axios";
-//import cx from "classnames";
 import ReactModal from "react-modal";
 import Button from "../../components/basic/Button";
-
-import { getRandomInt } from "../../util/util";
 
 interface Props {
   isOpen: boolean;
@@ -20,17 +17,16 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   const [roomSlugCreated, setRoomSlugCreated] = useState(null);
 
   const createRoom = async () => {
-    const name = "Room Name " + getRandomInt(1, 10000);
-    const data = { room: { name } };
+    const data = { room: { name: "" } };
     setIsLoading(true);
     setIsError(false);
     try {
-      const res = await axios.post("/be/api/rooms", data);
+      const res = await axios.post("/be/api/v1/games", data);
       setIsLoading(false);
       if (res.status !== 201) {
         throw new Error("Room not created");
       }
-      const room = res.data.data;
+      const room = res.data.success.room;
       setRoomSlugCreated(room.slug);
     } catch (err) {
       setIsLoading(false);

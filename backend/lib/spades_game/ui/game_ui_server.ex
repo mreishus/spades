@@ -6,7 +6,7 @@ defmodule SpadesGame.GameUIServer do
   @timeout :timer.hours(1)
 
   require Logger
-  alias SpadesGame.{GameOptions, GameUI}
+  alias SpadesGame.{GameOptions, GameUI, GameRegistry, GameSupervisor}
 
   @doc """
   start_link/2: Generates a new game server under a provided name.
@@ -49,7 +49,7 @@ defmodule SpadesGame.GameUIServer do
 
   def init({game_name, options = %GameOptions{}}) do
     gameui = GameUI.new(game_name, options)
-    # GameRegistry.add(gameui.game_name, game_info(gameui))
+    GameRegistry.add(gameui.game_name, gameui)
     {:ok, gameui, timeout(gameui)}
   end
 
@@ -58,6 +58,9 @@ defmodule SpadesGame.GameUIServer do
     # new_state = ctime(state)
     {:reply, new_state, new_state, timeout(new_state)}
   end
+
+  # In some state updating function:
+  # GameRegistry.update(new_gameui.game_name, gameui)
 
   # timeout/1
   # Given the current state of the game, what should the
@@ -73,15 +76,15 @@ defmodule SpadesGame.GameUIServer do
 
   def terminate({:shutdown, :timeout}, state) do
     Logger.info("Terminate (Timeout) running for #{state.game_name}")
-    # GameSupervisor.stop_game(state.game_name)
-    # GameRegistry.remove(state.game_name)
+    GameSupervisor.stop_game(state.game_name)
+    GameRegistry.remove(state.game_name)
     :ok
   end
 
   # Do I need to trap exits here?
   def terminate(_reason, state) do
     Logger.info("Terminate (Non Timeout) running for #{state.game_name}")
-    # GameRegistry.remove(state.game_name)
+    GameRegistry.remove(state.game_name)
     :ok
   end
 end

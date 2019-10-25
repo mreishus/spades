@@ -10,6 +10,7 @@ defmodule SpadesGame.GameOptions do
           hardcoded_cards: boolean
         }
 
+  @derive {Jason.Encoder, only: [:hardcoded_cards]}
   schema "gameuioptions" do
     field(:hardcoded_cards, :boolean)
   end
