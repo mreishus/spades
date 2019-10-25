@@ -5,7 +5,7 @@ defmodule SpadesGame.GameSupervisor do
 
   use DynamicSupervisor
 
-  alias SpadesGame.GameServer
+  alias SpadesGame.{GameServer, GameOptions}
 
   def start_link(_arg) do
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
@@ -32,10 +32,10 @@ defmodule SpadesGame.GameSupervisor do
   Starts a `GameServer` process and supervises it.
   Uses a hardcoded set of cards (needed for testing).
   """
-  def start_game(game_name, :hardcoded_cards) do
+  def start_game(game_name, %GameOptions{} = options) do
     child_spec = %{
       id: GameServer,
-      start: {GameServer, :start_link, [game_name, :hardcoded_cards]},
+      start: {GameServer, :start_link, [game_name, options]},
       restart: :transient
     }
 

@@ -1,7 +1,7 @@
 defmodule GameSupervisorTest do
   use ExUnit.Case, async: true
 
-  alias SpadesGame.{GameSupervisor, GameServer}
+  alias SpadesGame.{GameSupervisor, GameServer, GameOptions, Card}
 
   describe "start_game/1" do
     test "spawns a game server process" do
@@ -17,6 +17,22 @@ defmodule GameSupervisorTest do
 
       assert {:ok, pid} = GameSupervisor.start_game(game_name)
       assert {:error, {:already_started, ^pid}} = GameSupervisor.start_game(game_name)
+    end
+  end
+
+  describe "start_game/2" do
+    test "spawns a game server process with options" do
+      game_name = "game-#{:rand.uniform(1000)}"
+      {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
+
+      assert {:ok, _pid} = GameSupervisor.start_game(game_name, options)
+
+      via = GameServer.via_tuple(game_name)
+      assert GenServer.whereis(via) |> Process.alive?()
+      game = GameServer.state(game_name)
+      # Test Hardcoded Cards
+      assert game.west.hand |> Enum.member?(%Card{rank: 7, suit: :h})
+      assert game.north.hand |> Enum.member?(%Card{rank: 2, suit: :h})
     end
   end
 
