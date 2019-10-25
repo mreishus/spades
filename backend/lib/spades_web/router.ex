@@ -30,19 +30,23 @@ defmodule SpadesWeb.Router do
   scope "/api", SpadesWeb do
     pipe_through :api
     resources "/rooms", RoomController, except: [:new, :edit]
-    get "/authtest", RoomController, :authtest
   end
 
   scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do
     pipe_through :api
 
+    # Sign up / Sign In
     resources "/registration", RegistrationController, singleton: true, only: [:create]
     resources "/session", SessionController, singleton: true, only: [:create, :delete]
     post "/session/renew", SessionController, :renew
 
+    # Confirm Email / Forgot Password
     resources "/confirm-email", ConfirmationController, only: [:show]
     post "/reset-password", ResetPasswordController, :create
     post "/reset-password/update", ResetPasswordController, :update
+
+    # Testing Junk
+    get "/authtest", JunkController, :authtest
   end
 
   scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do

@@ -7,7 +7,7 @@ interface Props {}
 
 export const AuthTest: React.FC<Props> = () => {
   const { isLoading, isError, data, doFetchHash: setHash } = useAuthDataApi(
-    "/be/api/authtest",
+    "/be/api/v1/authtest",
     null
   );
 
