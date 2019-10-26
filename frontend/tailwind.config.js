@@ -2,6 +2,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        cyan: "#9cdbff",
         "black-80": "rgba(0,0,0,0.8)",
         "black-70": "rgba(0,0,0,0.7)",
         "black-60": "rgba(0,0,0,0.6)",
