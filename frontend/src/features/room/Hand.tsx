@@ -3,28 +3,33 @@ import React from "react";
 interface Props {}
 
 export const Hand: React.FC<Props> = () => {
+  const cards = [
+    "3d",
+    "5d",
+    "9d",
+    "11d",
+    "3c",
+    "5c",
+    "9c",
+    "11c",
+    "3h",
+    "4h",
+    "10h",
+    "13h",
+    "8s",
+    "9s",
+    "12s",
+    "13s"
+  ];
   return (
     <div className="flex">
-      <img
-        src="/images/cards1/3d.png"
-        alt="3 of diamonds"
-        className="h-24 object-cover"
-      />
-      <img
-        src="/images/cards1/13d.png"
-        alt="King of diamonds"
-        className="h-24 object-cover -ml-12"
-      />
-      <img
-        src="/images/cards1/13s.png"
-        alt="13 of spades"
-        className="h-24 object-cover -ml-12"
-      />
-      <img
-        src="/images/cards1/13h.png"
-        alt="13 of hearts"
-        className="h-24 object-cover -ml-12"
-      />
+      {cards.map(card => (
+        <img
+          src={`/images/cards3/${card}.png`}
+          alt=".."
+          className="h-32 object-cover -ml-16"
+        />
+      ))}
     </div>
   );
 };
