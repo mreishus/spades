@@ -14,7 +14,7 @@ export const Home: React.FC<Props> = () => {
           StarSpades is in rapid progress. Keep an eye on this space.
         </div>
         <div>Happy halloween!</div>
-        <div>Last update: 2019-10-24.</div>
+        <div>Last update: 2019-10-27.</div>
       </Card>
     </Container>
   );
