@@ -5,6 +5,7 @@ alias SpadesGame.{
   Card,
   Deck,
   Game,
+  GameRegistry,
   GameServer,
   GameOptions,
   GamePlayer,

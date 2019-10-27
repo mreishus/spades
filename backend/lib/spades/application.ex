@@ -12,8 +12,11 @@ defmodule Spades.Application do
       Spades.Repo,
       # Start the endpoint when the application starts
       SpadesWeb.Endpoint,
+      # GameUISupervisor and Process Registry
       {Registry, keys: :unique, name: SpadesGame.GameUIRegistry},
-      SpadesGame.GameUISupervisor
+      SpadesGame.GameUISupervisor,
+      # Room Cleanup
+      {Periodic, run: &SpadesGame.GameRegistry.cleanup/0, every: :timer.minutes(10)}
       # Starts a worker by calling: Spades.Worker.start_link(arg)
       # {Spades.Worker, arg},
     ]
