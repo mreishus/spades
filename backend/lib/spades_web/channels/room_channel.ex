@@ -3,12 +3,12 @@ defmodule SpadesWeb.RoomChannel do
   This channel will handle individual game rooms.
   """
   use SpadesWeb, :channel
-  alias SpadesGame.{GameServer}
+  alias SpadesGame.{GameUIServer}
   require Logger
 
   def join("room:" <> room_slug, _payload, socket) do
     # if authorized?(payload) do
-    state = GameServer.state(room_slug)
+    state = GameUIServer.state(room_slug)
 
     socket =
       socket
@@ -38,7 +38,7 @@ defmodule SpadesWeb.RoomChannel do
   def handle_in("request_state", _payload, %{assigns: %{room_slug: room_slug}} = socket) do
     # payload |> IO.inspect()
     # Can also send back "{:reply, :ok, socket}" or send back "{:noreply, socket}"
-    state = GameServer.state(room_slug)
+    state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_state, state)
     {:reply, {:ok, client_state(socket)}, socket}
   end
@@ -49,8 +49,8 @@ defmodule SpadesWeb.RoomChannel do
         %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
       ) do
     Logger.info("Discard button pressed by #{user_id}")
-    GameServer.discard(room_slug)
-    state = GameServer.state(room_slug)
+    GameUIServer.discard(room_slug)
+    state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_state, state)
     # Notify and then reply makes the person who clicked it get the
     # message twice

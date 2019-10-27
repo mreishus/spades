@@ -34,8 +34,8 @@ export const RoomGame: React.FC<Props> = ({ gameState, broadcast }) => {
         <div className="w-1/5 xbg-gray-100 h-12"></div>
       </div>
       <div className="mt-4">
-        <div>draw pile: {gameState.draw.length} cards</div>
-        <div>discard pile: {gameState.discard.length} cards</div>
+        <div>draw pile: {gameState.game.draw.length} cards</div>
+        <div>discard pile: {gameState.game.discard.length} cards</div>
         <Button
           className="mt-1"
           isPrimary

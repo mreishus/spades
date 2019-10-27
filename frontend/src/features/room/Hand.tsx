@@ -25,6 +25,7 @@ export const Hand: React.FC<Props> = () => {
     <div className="flex">
       {cards.map(card => (
         <img
+          key={card}
           src={`/images/cards3/${card}.png`}
           alt=".."
           className="h-32 object-cover -ml-16"

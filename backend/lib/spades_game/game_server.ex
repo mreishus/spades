@@ -59,6 +59,7 @@ defmodule SpadesGame.GameServer do
   @doc """
   discard/1: Move a card from the draw pile to the discard pile.
   """
+  @spec discard(String.t()) :: Game.t()
   def discard(game_name) do
     GenServer.call(via_tuple(game_name), :discard)
   end
