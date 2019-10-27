@@ -3,13 +3,12 @@ defmodule SpadesGame.GameUI do
   One level on top of Game.
   """
 
-  alias SpadesGame.{Game, GameUI, GameOptions, GameServer, GameSupervisor}
+  alias SpadesGame.{Game, GameUI, GameOptions}
 
   @derive Jason.Encoder
   defstruct [:game, :game_name, :options, :created_at, :west, :north, :east, :south]
 
   @type t :: %GameUI{
-          # "game" is Duplicated, since GameServer holds the state too
           game: Game.t(),
           game_name: String.t(),
           options: GameOptions.t(),
@@ -22,15 +21,7 @@ defmodule SpadesGame.GameUI do
 
   @spec new(String.t(), GameOptions.t()) :: GameUI.t()
   def new(game_name, %GameOptions{} = options) do
-    game =
-      case GameServer.state(game_name) do
-        nil ->
-          {:ok, _pid} = GameSupervisor.start_game(game_name, options)
-          GameServer.state(game_name)
-
-        game ->
-          game
-      end
+    game = Game.new(game_name, options)
 
     %GameUI{
       game: game,
@@ -42,7 +33,7 @@ defmodule SpadesGame.GameUI do
 
   @spec discard(GameUI.t()) :: GameUI.t()
   def discard(gameui) do
-    game = GameServer.discard(gameui.game_name)
+    game = Game.discard(gameui.game)
     %{gameui | game: game}
   end
 end

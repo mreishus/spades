@@ -6,7 +6,7 @@ defmodule SpadesGame.GameUIServer do
   @timeout :timer.hours(1)
 
   require Logger
-  alias SpadesGame.{GameOptions, GameUI, GameRegistry, GameSupervisor}
+  alias SpadesGame.{GameOptions, GameUI, GameRegistry}
 
   @doc """
   start_link/2: Generates a new game server under a provided name.
@@ -86,7 +86,6 @@ defmodule SpadesGame.GameUIServer do
 
   def terminate({:shutdown, :timeout}, state) do
     Logger.info("Terminate (Timeout) running for #{state.game_name}")
-    GameSupervisor.stop_game(state.game_name)
     GameRegistry.remove(state.game_name)
     :ok
   end
