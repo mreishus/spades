@@ -59,6 +59,18 @@ defmodule SpadesWeb.RoomChannel do
     {:reply, {:ok, client_state(socket)}, socket}
   end
 
+  def handle_in(
+        "sit",
+        %{"whichSeat" => which_seat},
+        %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+      ) do
+    GameUIServer.sit(room_slug, user_id, which_seat)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_state, state)
+    notify(socket)
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
   defp notify(socket) do
     # Fake a phx_reply event to everyone
     payload = %{

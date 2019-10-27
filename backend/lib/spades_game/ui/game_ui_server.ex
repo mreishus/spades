@@ -43,9 +43,22 @@ defmodule SpadesGame.GameUIServer do
     end
   end
 
+  @doc """
+  discard/1: Someone moves a card from the draw pile to the discard pile.
+  (Simple state testing.)
+  """
   @spec discard(String.t()) :: %GameUI{}
   def discard(game_name) do
     GenServer.call(via_tuple(game_name), :discard)
+  end
+
+  @doc """
+  sit/3: User is asking to sit in one of the seats.
+  which_seat is "north", "west", "east" or "south".
+  """
+  @spec sit(String.t(), integer, String.t()) :: %GameUI{}
+  def sit(game_name, user_id, which_seat) do
+    GenServer.call(via_tuple(game_name), {:sit, user_id, which_seat})
   end
 
   #####################################
@@ -78,6 +91,12 @@ defmodule SpadesGame.GameUIServer do
     new_state = GameUI.discard(state)
     :ets.insert(:game_uis, {state.game_name, new_state})
     {:reply, new_state, new_state, timeout(new_state)}
+  end
+
+  def handle_call({:sit, user_id, which_seat}, _from, gameui) do
+    new_gameui = GameUI.sit(gameui, user_id, which_seat)
+    :ets.insert(:game_uis, {gameui.game_name, new_gameui})
+    {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end
 
   # In some state updating function:
