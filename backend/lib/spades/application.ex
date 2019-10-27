@@ -18,7 +18,7 @@ defmodule Spades.Application do
       # {Spades.Worker, arg},
     ]
 
-    :ets.new(:games, [:public, :named_table])
+    :ets.new(:game_uis, [:public, :named_table])
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options

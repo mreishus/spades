@@ -53,7 +53,18 @@ defmodule SpadesGame.GameUIServer do
   #####################################
 
   def init({game_name, options = %GameOptions{}}) do
-    gameui = GameUI.new(game_name, options)
+    gameui =
+      case :ets.lookup(:game_uis, game_name) do
+        [] ->
+          gameui = GameUI.new(game_name, options)
+          :ets.insert(:game_uis, {game_name, gameui})
+          gameui
+
+        [{^game_name, gameui}] ->
+          gameui
+      end
+
+    # ? Might add twice if restoring from crash
     GameRegistry.add(gameui.game_name, gameui)
     {:ok, gameui, timeout(gameui)}
   end
@@ -66,6 +77,7 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call(:discard, _from, state) do
     new_state = GameUI.discard(state)
+    :ets.insert(:game_uis, {state.game_name, new_state})
     {:reply, new_state, new_state, timeout(new_state)}
   end
 
@@ -86,6 +98,7 @@ defmodule SpadesGame.GameUIServer do
 
   def terminate({:shutdown, :timeout}, state) do
     Logger.info("Terminate (Timeout) running for #{state.game_name}")
+    :ets.delete(:game_uis, state.game_name)
     GameRegistry.remove(state.game_name)
     :ok
   end
