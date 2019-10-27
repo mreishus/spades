@@ -18,6 +18,10 @@ defmodule SpadesWeb.PowMailer do
     |> text_body(text)
   end
 
+  # def process(email) do
+  #   Logger.info("E-mail sent: #{inspect(email)}")
+  # end
+
   def process(email) do
     email
     |> deliver()

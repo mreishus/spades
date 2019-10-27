@@ -1,6 +1,7 @@
 import React from "react";
 import PlayerSeat from "./PlayerSeat";
 import Button from "../../components/basic/Button";
+import Table from "./Table";
 import Hand from "./Hand";
 
 interface Props {
@@ -36,8 +37,8 @@ export const RoomGame: React.FC<Props> = ({ gameState, broadcast }) => {
             whichSeat="west"
           />
         </div>
-        <div className="w-3/5 xbg-gray-200 h-56">
-          <div className="h-56 bg-orange-200 border rounded-lg"></div>
+        <div className="w-3/5 xbg-gray-200 h-56 relative">
+          <Table />
         </div>
         <div className="w-1/5 xbg-gray-100 h-32">
           {" "}
