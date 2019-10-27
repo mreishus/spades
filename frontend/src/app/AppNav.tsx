@@ -14,9 +14,9 @@ export const AppNav: React.FC<Props> = () => {
   const { authToken, logOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const headerLinkClass =
-    "mt-1 sm:mt-0 sm:ml-2 block px-2 py-1 text-white font-semibold hover:bg-green-800 rounded";
+    "mt-1 sm:mt-0 sm:ml-2 block px-2 py-1 text-white font-semibold hover:bg-indigo-800 rounded";
   return (
-    <header className=" bg-green-900 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
+    <header className="bg-indigo-900 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
       <div className="flex items-center justify-between px-4 py-3 sm:p-0">
         <div>
           <Link to="/">

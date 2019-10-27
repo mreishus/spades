@@ -111,7 +111,7 @@ export const Login: React.FC<Props> = () => {
               type="email"
               name="email"
               placeholder="email"
-              className="form-control block mt-2"
+              className="form-control block mt-2 w-full"
               onChange={handleInputChange}
               value={inputs.email || ""}
               ref={emailRef}
@@ -125,7 +125,7 @@ export const Login: React.FC<Props> = () => {
               type="password"
               name="password"
               placeholder="password"
-              className="form-control block mt-2"
+              className="form-control block mt-2 w-full"
               onChange={handleInputChange}
               value={inputs.password || ""}
             />
@@ -138,7 +138,7 @@ export const Login: React.FC<Props> = () => {
               type="password"
               name="confirm_password"
               placeholder="confirm password"
-              className="form-control block mt-2"
+              className="form-control block mt-2 w-full"
               onChange={handleInputChange}
               value={inputs.confirm_password || ""}
             />
@@ -151,7 +151,7 @@ export const Login: React.FC<Props> = () => {
               type="text"
               name="alias"
               placeholder="nickname"
-              className="form-control block mt-2"
+              className="form-control block mt-2 w-full"
               onChange={handleInputChange}
               value={inputs.alias || ""}
             />
@@ -167,7 +167,7 @@ export const Login: React.FC<Props> = () => {
               type="text"
               name="signuppw"
               placeholder="signuppw"
-              className="form-control block mt-2"
+              className="form-control block mt-2 w-full"
               onChange={handleInputChange}
               value={inputs.signuppw || ""}
             />

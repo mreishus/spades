@@ -43,6 +43,11 @@ defmodule SpadesGame.GameUIServer do
     end
   end
 
+  @spec discard(String.t()) :: %GameUI{}
+  def discard(game_name) do
+    GenServer.call(via_tuple(game_name), :discard)
+  end
+
   #####################################
   ####### IMPLEMENTATION ##############
   #####################################
@@ -56,6 +61,11 @@ defmodule SpadesGame.GameUIServer do
   def handle_call(:state, _from, state) do
     new_state = state
     # new_state = ctime(state)
+    {:reply, new_state, new_state, timeout(new_state)}
+  end
+
+  def handle_call(:discard, _from, state) do
+    new_state = GameUI.discard(state)
     {:reply, new_state, new_state, timeout(new_state)}
   end
 

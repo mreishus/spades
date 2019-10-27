@@ -6,14 +6,18 @@ defmodule SpadesGame.GameUI do
   alias SpadesGame.{Game, GameUI, GameOptions, GameServer, GameSupervisor}
 
   @derive Jason.Encoder
-  defstruct [:game, :game_name, :options, :created_at]
+  defstruct [:game, :game_name, :options, :created_at, :west, :north, :east, :south]
 
   @type t :: %GameUI{
           # "game" is Duplicated, since GameServer holds the state too
           game: Game.t(),
           game_name: String.t(),
           options: GameOptions.t(),
-          created_at: DateTime.t()
+          created_at: DateTime.t(),
+          west: nil | integer,
+          north: nil | integer,
+          east: nil | integer,
+          south: nil | integer
         }
 
   @spec new(String.t(), GameOptions.t()) :: GameUI.t()
@@ -34,5 +38,11 @@ defmodule SpadesGame.GameUI do
       options: options,
       created_at: DateTime.utc_now()
     }
+  end
+
+  @spec discard(GameUI.t()) :: GameUI.t()
+  def discard(gameui) do
+    game = GameServer.discard(gameui.game_name)
+    %{gameui | game: game}
   end
 end

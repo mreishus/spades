@@ -51,7 +51,7 @@ export const RequestResetPassword: React.FC<Props> = () => {
 
         {isSuccess && (
           <div className="alert alert-info mt-4">
-            Email sent with password reset link.
+            Email sent with password reset link (if that account exists).
           </div>
         )}
         <form action="POST" onSubmit={handleSubmit}>
@@ -64,7 +64,7 @@ export const RequestResetPassword: React.FC<Props> = () => {
                 type="email"
                 name="email"
                 placeholder="email"
-                className="form-control block mt-2"
+                className="form-control block mt-2 w-full"
                 onChange={handleInputChange}
                 value={inputs.email || ""}
                 ref={emailRef}
