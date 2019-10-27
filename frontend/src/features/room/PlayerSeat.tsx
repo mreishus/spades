@@ -14,7 +14,6 @@ export const PlayerSeat: React.FC<Props> = ({
   whichSeat
 }) => {
   const thisSeat = seatState[whichSeat];
-  console.log({ seatState });
   if (thisSeat == null) {
     return <Button onClick={() => broadcast("sit", { whichSeat })}>Sit</Button>;
   } else if (typeof thisSeat == "number") {

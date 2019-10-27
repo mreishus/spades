@@ -1,4 +1,5 @@
 import React from "react";
+import cx from "classnames";
 import PlayerSeat from "./PlayerSeat";
 import Button from "../../components/basic/Button";
 import Table from "./Table";
@@ -13,13 +14,17 @@ export const RoomGame: React.FC<Props> = ({ gameState, broadcast }) => {
   if (gameState == null) {
     return null;
   }
+
   const { seats } = gameState;
+  const rowMaxWidth = "max-w-xl";
+  const showHand = true;
+
   return (
     <>
-      <div className="flex mt-12">
-        <div className="w-1/5 xbg-gray-100 h-12"></div>
-        <div className="w-3/5 xbg-gray-200 h-12">
-          Top Player
+      <div className={cx("flex mt-12", rowMaxWidth)}>
+        <div className="w-1/5 h-12"></div>
+        <div className="w-3/5 h-12 flex justify-center items-center">
+          {/* Top Player */}
           <PlayerSeat
             seatState={seats}
             broadcast={broadcast}
@@ -28,21 +33,20 @@ export const RoomGame: React.FC<Props> = ({ gameState, broadcast }) => {
         </div>
         <div className="w-1/5 xbg-gray-100 h-12"></div>
       </div>
-      <div className="flex my-1 h-56 max-w-xl">
-        <div className="w-1/5 xbg-gray-100 h-32">
-          Left Player
+      <div className={cx("flex my-1 h-56", rowMaxWidth)}>
+        <div className="h-full w-1/5 h-32 flex items-center justify-center">
+          {/* Left Player */}
           <PlayerSeat
             seatState={seats}
             broadcast={broadcast}
             whichSeat="west"
           />
         </div>
-        <div className="w-3/5 xbg-gray-200 h-56 relative">
+        <div className="h-56 w-3/5 relative">
           <Table />
         </div>
-        <div className="w-1/5 xbg-gray-100 h-32">
-          {" "}
-          Right player
+        <div className="h-full w-1/5 h-32 flex items-center justify-center">
+          {/* Right player */}
           <PlayerSeat
             seatState={seats}
             broadcast={broadcast}
@@ -50,18 +54,24 @@ export const RoomGame: React.FC<Props> = ({ gameState, broadcast }) => {
           />
         </div>
       </div>
-      <div className="flex mb-12">
-        <div className="w-1/5 xbg-gray-100 h-12"></div>
-        <div className="w-3/5 xbg-gray-200 h-12">
-          Bottom Player
+
+      {showHand && (
+        <div className={cx(rowMaxWidth, "flex justify-center ml-8")}>
+          <Hand />
+        </div>
+      )}
+
+      <div className={cx("flex mb-12", rowMaxWidth)}>
+        <div className="w-1/5 h-12"></div>
+        <div className="w-3/5 h-12 flex justify-center items-start">
+          {/* Bottom player */}
           <PlayerSeat
             seatState={seats}
             broadcast={broadcast}
             whichSeat="south"
           />
-          <Hand />
         </div>
-        <div className="w-1/5 xbg-gray-100 h-12"></div>
+        <div className="w-1/5 h-12"></div>
       </div>
       <div className="mt-4">
         <div>draw pile: {gameState.game.draw.length} cards</div>
