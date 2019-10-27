@@ -71,7 +71,6 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call(:state, _from, state) do
     new_state = state
-    # new_state = ctime(state)
     {:reply, new_state, new_state, timeout(new_state)}
   end
 
@@ -83,6 +82,7 @@ defmodule SpadesGame.GameUIServer do
 
   # In some state updating function:
   # GameRegistry.update(new_gameui.game_name, gameui)
+  # :ets.insert(:game_uis, {state.game_name, new_state})
 
   # timeout/1
   # Given the current state of the game, what should the
