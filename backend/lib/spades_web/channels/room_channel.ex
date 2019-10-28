@@ -71,6 +71,20 @@ defmodule SpadesWeb.RoomChannel do
     {:reply, {:ok, client_state(socket)}, socket}
   end
 
+  def terminate({:shutdown, :left}, socket) do
+    on_terminate(socket)
+  end
+
+  def terminate({:shutdown, :closed}, socket) do
+    on_terminate(socket)
+  end
+
+  defp on_terminate(%{assigns: %{room_slug: room_slug, user_id: user_id}} = socket) do
+    state = GameUIServer.left(room_slug, user_id)
+    socket = socket |> assign(:game_state, state)
+    notify(socket)
+  end
+
   defp notify(socket) do
     # Fake a phx_reply event to everyone
     payload = %{

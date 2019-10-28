@@ -61,6 +61,16 @@ defmodule SpadesGame.GameUIServer do
     GenServer.call(via_tuple(game_name), {:sit, user_id, which_seat})
   end
 
+  @doc """
+  left/2: User just left the room (Closed browser or clicked out).
+  If they're in a seat, we need to mark them as gone.
+  Maybe eventually there will be some sophisticated disconnect/reconnect
+  system?
+  """
+  def left(game_name, user_id) do
+    GenServer.call(via_tuple(game_name), {:left, user_id})
+  end
+
   #####################################
   ####### IMPLEMENTATION ##############
   #####################################
@@ -95,6 +105,12 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:sit, user_id, which_seat}, _from, gameui) do
     new_gameui = GameUI.sit(gameui, user_id, which_seat)
+    :ets.insert(:game_uis, {gameui.game_name, new_gameui})
+    {:reply, new_gameui, new_gameui, timeout(new_gameui)}
+  end
+
+  def handle_call({:left, user_id}, _from, gameui) do
+    new_gameui = GameUI.left(gameui, user_id)
     :ets.insert(:game_uis, {gameui.game_name, new_gameui})
     {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end
