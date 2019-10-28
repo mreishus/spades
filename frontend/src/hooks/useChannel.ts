@@ -47,9 +47,11 @@ const useChannel = (
   >(mustJoinChannelWarning);
 
   useEffect(() => {
+    let doCleanup: () => void = () => null;
     if (socket != null) {
-      joinChannel(socket, channelTopic, onMessage, setBroadcast);
+      doCleanup = joinChannel(socket, channelTopic, onMessage, setBroadcast);
     }
+    return doCleanup;
   }, [channelTopic, onMessage, socket]);
 
   return broadcast;
@@ -66,7 +68,7 @@ const joinChannel = (
   const channel = socket.channel(channelTopic, { client: "browser" });
 
   channel.onMessage = (event, payload) => {
-    // I think all of these chan_reply_ events are not needed?
+    // I don't think the chan_reply_ events are needed - always duplicates.
     if (event != null && !event.startsWith("chan_reply_")) {
       onMessage(event, payload);
     }
@@ -94,8 +96,8 @@ const joinChannel = (
 };
 
 const mustJoinChannelWarning = (_oldstate: any) => (
-  eventName: string,
-  payload: object
+  _eventName: string,
+  _payload: object
 ) =>
   console.error(
     `useChannel broadcast function cannot be invoked before the channel has been joined`
