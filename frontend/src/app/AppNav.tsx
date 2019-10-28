@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import cx from "classnames";
 import useAuth from "../hooks/useAuth";
+import ProfileLink from "../features/auth/ProfileLink";
 
 interface Props {}
 
@@ -50,6 +51,7 @@ export const AppNav: React.FC<Props> = () => {
         <Link to="/lobby" className={headerLinkClass}>
           Lobby
         </Link>
+        <ProfileLink className={headerLinkClass} />
         {!authToken && (
           <>
             <Link to="/login" className={headerLinkClass}>
