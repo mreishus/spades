@@ -55,18 +55,18 @@ defmodule GameUiTest do
       gameui = GameUI.sit(gameui, 12, "west")
       gameui = GameUI.sit(gameui, 13, "south")
       assert gameui.when_seats_full != nil
-      gameui = GameUI.left(gameui, 12)
+      gameui = GameUI.leave(gameui, 12)
       assert gameui.when_seats_full == nil
     end
   end
 
-  describe "left/2" do
+  describe "leave/2" do
     test "Someone can stand up/leave", %{gameui: gameui} do
       gameui = GameUI.sit(gameui, 10, "north")
       gameui = GameUI.sit(gameui, 11, "east")
       gameui = GameUI.sit(gameui, 12, "west")
       gameui = GameUI.sit(gameui, 13, "south")
-      gameui = GameUI.left(gameui, 12)
+      gameui = GameUI.leave(gameui, 12)
       assert gameui.seats.north == 10
       assert gameui.seats.east == 11
       assert gameui.seats.west == nil

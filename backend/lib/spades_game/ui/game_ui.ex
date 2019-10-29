@@ -105,11 +105,11 @@ defmodule SpadesGame.GameUI do
   defp seat_empty(gameui, which), do: gameui.seats[which] == nil
 
   @doc """
-  left/2: Userid just left the table.  If they were seated, mark
+  leave/2: Userid just leave the table.  If they were seated, mark
   their seat as vacant.
   """
-  @spec left(GameUI.t(), integer) :: GameUI.t()
-  def left(gameui, userid) do
+  @spec leave(GameUI.t(), integer) :: GameUI.t()
+  def leave(gameui, userid) do
     seats = for {k, v} <- gameui.seats, into: %{}, do: {k, if(v == userid, do: nil, else: v)}
 
     %{gameui | seats: seats}

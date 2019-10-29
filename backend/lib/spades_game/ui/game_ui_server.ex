@@ -62,13 +62,13 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  left/2: User just left the room (Closed browser or clicked out).
+  leave/2: User just leave the room (Closed browser or clicked out).
   If they're in a seat, we need to mark them as gone.
   Maybe eventually there will be some sophisticated disconnect/reconnect
   system?
   """
-  def left(game_name, user_id) do
-    GenServer.call(via_tuple(game_name), {:left, user_id})
+  def leave(game_name, user_id) do
+    GenServer.call(via_tuple(game_name), {:leave, user_id})
   end
 
   #####################################
@@ -109,8 +109,8 @@ defmodule SpadesGame.GameUIServer do
     {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end
 
-  def handle_call({:left, user_id}, _from, gameui) do
-    new_gameui = GameUI.left(gameui, user_id)
+  def handle_call({:leave, user_id}, _from, gameui) do
+    new_gameui = GameUI.leave(gameui, user_id)
     :ets.insert(:game_uis, {gameui.game_name, new_gameui})
     {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end

@@ -80,7 +80,7 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   defp on_terminate(%{assigns: %{room_slug: room_slug, user_id: user_id}} = socket) do
-    state = GameUIServer.left(room_slug, user_id)
+    state = GameUIServer.leave(room_slug, user_id)
     socket = socket |> assign(:game_state, state)
     notify(socket)
   end
