@@ -8,7 +8,11 @@ interface Props {
 }
 
 export const ProfileLink: React.FC<Props> = ({ className }) => {
-  const { alias } = useUser();
+  const user = useUser();
+  if (user == null) {
+    return null;
+  }
+  const { alias } = user;
   return (
     <Link to="/" className={cx(className)}>
       {alias}

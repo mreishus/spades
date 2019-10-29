@@ -5,6 +5,7 @@ defmodule Spades.Users.User do
   """
   use Ecto.Schema
   use Pow.Ecto.Schema
+  alias Spades.Users.User
 
   use Pow.Extension.Ecto.Schema,
     extensions: [PowResetPassword, PowEmailConfirmation]
@@ -23,5 +24,20 @@ defmodule Spades.Users.User do
     |> Ecto.Changeset.cast(attrs, [:alias])
     |> Ecto.Changeset.validate_required([:alias])
     |> Ecto.Changeset.unique_constraint(:alias)
+  end
+
+  @doc """
+  to_profile/1:
+  Given a User object, return a UserProfile map that's delivered
+  to the front end via the Profile controller.
+  This way, we don't have to send the entire User object to the frontend.
+  """
+  def to_profile(%User{} = user) do
+    %{
+      id: user.id,
+      alias: user.alias,
+      inserted_at: user.inserted_at,
+      email_confirmed_at: user.email_confirmed_at
+    }
   end
 end
