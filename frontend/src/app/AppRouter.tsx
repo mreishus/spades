@@ -9,6 +9,7 @@ import LobbyIndex from "../pages/LobbyIndex";
 import Home from "../pages/Home";
 import Login from "../features/auth/Login";
 import Signup from "../features/auth/Signup";
+import Profile from "../features/profile/Profile";
 import RequestResetPassword from "../features/auth/RequestResetPassword";
 import DoResetPassword from "../features/auth/DoResetPassword";
 import ConfirmEmail from "../features/auth/ConfirmEmail";
@@ -24,6 +25,7 @@ const AppRouter: React.FC = () => {
       <Switch>
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
+        <Route path="/profile" component={Profile} />
         <Route
           path="/reset-password/:reset_token"
           component={DoResetPassword}

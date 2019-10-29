@@ -4,6 +4,7 @@ defmodule Spades.Users.User do
   Managed by the "pow" library.
   """
   use Ecto.Schema
+  @timestamps_opts [type: :utc_datetime]
   use Pow.Ecto.Schema
   alias Spades.Users.User
 
@@ -27,17 +28,23 @@ defmodule Spades.Users.User do
   end
 
   @doc """
-  to_profile/1:
+  to_my_profile/1:
   Given a User object, return a UserProfile map that's delivered
   to the front end via the Profile controller.
   This way, we don't have to send the entire User object to the frontend.
   """
-  def to_profile(%User{} = user) do
+  def to_my_profile(%User{} = user) do
     %{
       id: user.id,
       alias: user.alias,
+      email: user.email,
       inserted_at: user.inserted_at,
       email_confirmed_at: user.email_confirmed_at
     }
   end
+
+  ## Public profile: If getting info about another user, you shouldn't
+  ## be able to see their emails and such
+  # def to_public_profile(%User{} = user) do
+  # end
 end

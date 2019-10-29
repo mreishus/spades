@@ -16,7 +16,7 @@ export const ProfileLink: React.FC<Props> = ({ className }) => {
   }
   const { alias } = user;
   return (
-    <Link to="/" className={cx(className)}>
+    <Link to="/profile" className={cx(className)}>
       <IconContext.Provider value={{ className: "inline-block align-middle" }}>
         <GoPerson />
       </IconContext.Provider>

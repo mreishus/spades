@@ -64,15 +64,14 @@ export const AppNav: React.FC<Props> = () => {
         )}
         {authToken && (
           <>
-            <Link to="/testme" className={headerLinkClass}>
-              TestMe
-            </Link>
-            <Link to="/authtest" className={headerLinkClass}>
-              Auth Test
-            </Link>
-            <Link to="/private" className={headerLinkClass}>
-              Priv Test
-            </Link>
+            {/*   TestMe */}
+            {/* </Link> */}
+            {/* <Link to="/authtest" className={headerLinkClass}> */}
+            {/*   Auth Test */}
+            {/* </Link> */}
+            {/* <Link to="/private" className={headerLinkClass}> */}
+            {/*   Priv Test */}
+            {/* </Link> */}
             <span
               className={headerLinkClass + " underline cursor-pointer"}
               onClick={() => logOut()}

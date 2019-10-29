@@ -14,7 +14,7 @@ defmodule SpadesWeb.API.V1.ProfileController do
         |> json(%{error: %{code: 401, message: "Not authenticated"}})
 
       _ ->
-        json(conn, %{user_profile: User.to_profile(user)})
+        json(conn, %{user_profile: User.to_my_profile(user)})
     end
   end
 end
