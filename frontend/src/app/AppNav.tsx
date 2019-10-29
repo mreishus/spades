@@ -71,7 +71,7 @@ export const AppNav: React.FC<Props> = () => {
               Auth Test
             </Link>
             <Link to="/private" className={headerLinkClass}>
-              Private Page Test
+              Priv Test
             </Link>
             <span
               className={headerLinkClass + " underline cursor-pointer"}

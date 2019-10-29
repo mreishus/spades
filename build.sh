@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=0.0.17
+VERSION=0.0.19
 
 # exit when any command fails
 set -e
