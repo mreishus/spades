@@ -3,15 +3,15 @@ import UserContext from "../contexts/UserContext";
 import useAuthDataApi from "../hooks/useAuthDataApi";
 import useAuth from "../hooks/useAuth";
 import { User } from "../hooks/useUser";
+import useInterval from "../hooks/useInterval";
+import { format } from "date-fns";
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const UserProvider: React.FC<Props> = ({ children }) => {
-  //const { isLoading, isError, data, doFetchHash: setHash } = useAuthDataApi(
   const { setAuthAndRenewToken } = useAuth();
-
   const onError = useCallback(() => {
     // If we can't load the profile data, we have stale tokens
     // (remember the useAuthDataApi tries to renew automatically)
@@ -19,8 +19,24 @@ export const UserProvider: React.FC<Props> = ({ children }) => {
     console.log("Error fetching profile info.... Resetting tokens!");
     setAuthAndRenewToken(null, null);
   }, [setAuthAndRenewToken]);
+  const { data, doFetchHash } = useAuthDataApi(
+    "/be/api/v1/profile",
+    null,
+    onError
+  );
 
-  const { data } = useAuthDataApi("/be/api/v1/profile", null, onError);
+  // Every 10 minutes, re-check our profile.
+  // This will cause our auth tokens to be refreshed, automatically
+  // if they have expired.
+  // Also, if we're logged out or the backend goes down, the frontend
+  // will know.
+  const fetchProfileEvery10Mins = useCallback(() => {
+    // Make a Timestamp that changes every 10 minutes
+    let ts = format(new Date(), "h:mm");
+    ts = ts.slice(0, -1);
+    doFetchHash(ts);
+  }, [doFetchHash]);
+  useInterval(fetchProfileEvery10Mins, 60 * 1000);
 
   const user: null | User =
     data != null && data.user_profile != null ? data.user_profile : null;
