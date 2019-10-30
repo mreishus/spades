@@ -27,13 +27,14 @@ defmodule SpadesWeb.APIAuthPlug do
     token = Pow.UUID.generate()
     renew_token = Pow.UUID.generate()
 
+    "Inside Create" |> IO.inspect(label: "test")
+
     conn =
       conn
       |> Conn.put_private(:api_auth_token, token)
       |> Conn.put_private(:api_renew_token, renew_token)
 
     CredentialsCache.put(store_config, token, {user, []})
-    user.id |> IO.inspect(label: "id")
     PersistentSessionCache.put(store_config, renew_token, {[id: user.id], []})
 
     {conn, user}
