@@ -94,9 +94,12 @@ const App: React.FC = () => {
           options={socketParams}
         >
           <UserProvider>
-            <Router>
-              <AppRouter />
-            </Router>
+            <>
+              <div>{tokens.authToken}</div>
+              <Router>
+                <AppRouter />
+              </Router>
+            </>
           </UserProvider>
         </SocketProvider>
       </AuthContext.Provider>

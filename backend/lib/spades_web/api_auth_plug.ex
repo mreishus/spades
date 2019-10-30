@@ -16,7 +16,7 @@ defmodule SpadesWeb.APIAuthPlug do
     |> CredentialsCache.get(token)
     |> case do
       :not_found -> {conn, nil}
-      user -> {conn, user}
+      {user, _metadata} -> {conn, user}
     end
   end
 
@@ -33,7 +33,8 @@ defmodule SpadesWeb.APIAuthPlug do
       |> Conn.put_private(:api_renew_token, renew_token)
 
     CredentialsCache.put(store_config, token, {user, []})
-    PersistentSessionCache.put(store_config, renew_token, user.id)
+    user.id |> IO.inspect(label: "id")
+    PersistentSessionCache.put(store_config, renew_token, {[id: user.id], []})
 
     {conn, user}
   end
@@ -59,11 +60,13 @@ defmodule SpadesWeb.APIAuthPlug do
   def renew(conn, config) do
     renew_token = fetch_auth_token(conn)
     store_config = store_config(config)
-    user_id = PersistentSessionCache.get(store_config, renew_token)
+    res = PersistentSessionCache.get(store_config, renew_token)
+    conn = PersistentSessionCache.delete(store_config, renew_token)
 
-    PersistentSessionCache.delete(store_config, renew_token)
-
-    load_and_create_session(user_id, conn, config)
+    case res do
+      :not_found -> {conn, nil}
+      res -> load_and_create_session(conn, res, config)
+    end
   end
 
   @doc """
@@ -80,10 +83,8 @@ defmodule SpadesWeb.APIAuthPlug do
     end
   end
 
-  defp load_and_create_session(:not_found, conn, _config), do: {conn, nil}
-
-  defp load_and_create_session(user_id, conn, config) do
-    case Pow.Operations.get_by([id: user_id], config) do
+  defp load_and_create_session(conn, {clauses, _metadata}, config) do
+    case Pow.Operations.get_by(clauses, config) do
       nil -> {conn, nil}
       user -> create(conn, user, config)
     end

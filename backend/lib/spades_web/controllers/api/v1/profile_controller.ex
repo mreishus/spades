@@ -5,7 +5,7 @@ defmodule SpadesWeb.API.V1.ProfileController do
 
   @spec index(Conn.t(), map()) :: Conn.t()
   def index(conn, _params) do
-    {user, _metadata} = Pow.Plug.current_user(conn)
+    user = Pow.Plug.current_user(conn)
 
     case user do
       nil ->
