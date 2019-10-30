@@ -78,7 +78,7 @@ defmodule SpadesWeb.APIAuthPlug do
     |> CredentialsCache.get(token)
     |> case do
       :not_found -> nil
-      user -> user
+      {user, _metadata} -> user
     end
   end
 
