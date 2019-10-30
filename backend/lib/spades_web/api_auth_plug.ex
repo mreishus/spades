@@ -32,7 +32,7 @@ defmodule SpadesWeb.APIAuthPlug do
       |> Conn.put_private(:api_auth_token, token)
       |> Conn.put_private(:api_renew_token, renew_token)
 
-    CredentialsCache.put(store_config, token, user)
+    CredentialsCache.put(store_config, token, {user, []})
     PersistentSessionCache.put(store_config, renew_token, user.id)
 
     {conn, user}
