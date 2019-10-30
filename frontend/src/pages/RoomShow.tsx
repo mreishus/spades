@@ -5,7 +5,7 @@ import Room from "../features/room/Room";
 type TParams = { slug: string };
 interface Props extends RouteComponentProps<TParams> {}
 
-export const RoomShow: React.FC<Props> = ({ match, location }) => {
+export const RoomShow: React.FC<Props> = ({ match }) => {
   const {
     params: { slug }
   } = match;
