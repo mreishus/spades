@@ -67,6 +67,13 @@ const useAuthDataApi = (
               res.data.data.renew_token
             );
 
+            // Modify the original request if possible
+            if (
+              originalRequest.headers != null &&
+              originalRequest.headers.Authorization != null
+            ) {
+              originalRequest.headers.Authorization = res.data.data.token;
+            }
             return axios(originalRequest);
           }
         })
