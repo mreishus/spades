@@ -10,10 +10,7 @@ export const Profile: React.FC<Props> = () => {
   if (user == null) {
     return null;
   }
-  console.log(user);
   const insertedDate = parseISO(user.inserted_at);
-  console.log(user.inserted_at);
-  console.log(insertedDate);
   const insertedAbsolute = format(insertedDate, "yyyy-MM-dd hh:mm bb");
   const insertedRelative = formatDistanceToNow(insertedDate, {
     addSuffix: true

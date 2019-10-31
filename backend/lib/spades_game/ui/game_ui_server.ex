@@ -93,7 +93,7 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call(:state, _from, state) do
-    new_state = state
+    new_state = GameUI.checks(state)
     {:reply, new_state, new_state, timeout(new_state)}
   end
 
@@ -105,6 +105,11 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:sit, user_id, which_seat}, _from, gameui) do
     new_gameui = GameUI.sit(gameui, user_id, which_seat)
+
+    if new_gameui.when_seats_full != nil do
+      push_state_to_clients_for_12_seconds()
+    end
+
     :ets.insert(:game_uis, {gameui.game_name, new_gameui})
     {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end
@@ -113,6 +118,24 @@ defmodule SpadesGame.GameUIServer do
     new_gameui = GameUI.leave(gameui, user_id)
     :ets.insert(:game_uis, {gameui.game_name, new_gameui})
     {:reply, new_gameui, new_gameui, timeout(new_gameui)}
+  end
+
+  # This is to handle the "Game Start" countdown.
+  # 10 seconds after everyone sits down, the game begins.
+  # We will spawn a process that calls ":state" every second
+  # and pushes that state down to the clients, so they will see
+  # the game status move to playing after 10 seconds.
+  defp push_state_to_clients_for_12_seconds() do
+    pid = self()
+
+    spawn_link(fn ->
+      1..12
+      |> Enum.each(fn _ ->
+        Process.sleep(1000)
+        state = GenServer.call(pid, :state)
+        SpadesWeb.RoomChannel.notify_from_outside(state.game_name)
+      end)
+    end)
   end
 
   # In some state updating function:

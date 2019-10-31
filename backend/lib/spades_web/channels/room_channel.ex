@@ -71,6 +71,19 @@ defmodule SpadesWeb.RoomChannel do
     {:reply, {:ok, client_state(socket)}, socket}
   end
 
+  def notify_from_outside(room_slug) do
+    state = GameUIServer.state(room_slug)
+
+    payload = %{
+      response: %{
+        game_state: state
+      },
+      status: "ok"
+    }
+
+    SpadesWeb.Endpoint.broadcast!("room:" <> room_slug, "phx_reply", payload)
+  end
+
   def terminate({:shutdown, :left}, socket) do
     on_terminate(socket)
   end
