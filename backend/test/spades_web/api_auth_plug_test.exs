@@ -33,8 +33,7 @@ defmodule SpadesWeb.APIAuthPlugTest do
 
     auth_conn = Plug.Conn.put_req_header(conn, "authorization", auth_token)
 
-    assert {_conn, renewed_user} = APIAuthPlug.renew(renew_conn, @pow_config)
-    assert renewed_user.id == user.id
+    assert {_conn, nil} = APIAuthPlug.renew(renew_conn, @pow_config)
     assert {_conn, fetched_user} = APIAuthPlug.fetch(auth_conn, @pow_config)
     assert fetched_user.id == user.id
   end
