@@ -60,7 +60,7 @@ defmodule SpadesWeb.APIAuthPlug do
     renew_token = fetch_auth_token(conn)
     store_config = store_config(config)
     res = PersistentSessionCache.get(store_config, renew_token)
-    PersistentSessionCache.delete(store_config, renew_token)
+    conn = delete(conn, config)
 
     case res do
       :not_found -> {conn, nil}
