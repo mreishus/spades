@@ -8,6 +8,8 @@ defmodule SpadesGame.GamePlayer do
   @derive Jason.Encoder
   defstruct [:hand, :tricks_won, :bid]
 
+  use Accessible
+
   @type t :: %GamePlayer{
           hand: Deck.t(),
           tricks_won: integer,

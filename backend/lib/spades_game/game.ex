@@ -26,6 +26,8 @@ defmodule SpadesGame.Game do
     :spades_broken
   ]
 
+  use Accessible
+
   @type t :: %Game{
           game_name: String.t(),
           options: GameOptions.t(),

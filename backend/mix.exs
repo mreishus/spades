@@ -46,6 +46,7 @@ defmodule Spades.MixProject do
       {:pow, "~> 1.0.13"},
       {:swoosh, "~> 0.24"},
       {:parent, "~> 0.6.0"},
+      {:accessible, "~> 0.2.1"},
       {:ex_check, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, ">= 0.0.0", only: :dev, runtime: false},
       {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},

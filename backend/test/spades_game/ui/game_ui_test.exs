@@ -103,4 +103,14 @@ defmodule GameUiTest do
       assert GameUI.everyone_sitting?(gameui)
     end
   end
+
+  describe "censor_hands/1" do
+    test "censors hands", %{gameui: gameui} do
+      censored = GameUI.censor_hands(gameui)
+      assert censored.game.south.hand == []
+      assert censored.game.west.hand == []
+      assert censored.game.east.hand == []
+      assert censored.game.north.hand == []
+    end
+  end
 end

@@ -8,6 +8,8 @@ defmodule SpadesGame.GameUI do
   @derive Jason.Encoder
   defstruct [:game, :game_name, :options, :created_at, :status, :seats, :when_seats_full]
 
+  use Accessible
+
   @type t :: %GameUI{
           game: Game.t(),
           game_name: String.t(),
@@ -40,6 +42,18 @@ defmodule SpadesGame.GameUI do
         south: nil
       }
     }
+  end
+
+  @doc """
+  Return a version of GameUI with all hands hidden.
+  """
+  @spec censor_hands(GameUI.t()) :: GameUI.t()
+  def censor_hands(gameui) do
+    gameui
+    |> put_in([:game, :east, :hand], [])
+    |> put_in([:game, :north, :hand], [])
+    |> put_in([:game, :south, :hand], [])
+    |> put_in([:game, :west, :hand], [])
   end
 
   @spec discard(GameUI.t()) :: GameUI.t()
