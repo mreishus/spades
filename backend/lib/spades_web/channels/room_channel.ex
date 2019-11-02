@@ -3,7 +3,8 @@ defmodule SpadesWeb.RoomChannel do
   This channel will handle individual game rooms.
   """
   use SpadesWeb, :channel
-  alias SpadesGame.{GameUIServer}
+  alias SpadesGame.{GameUIServer, GameUIView}
+
   require Logger
 
   def join("room:" <> room_slug, _payload, socket) do
@@ -71,17 +72,19 @@ defmodule SpadesWeb.RoomChannel do
     {:reply, {:ok, client_state(socket)}, socket}
   end
 
+  @doc """
+  notify_from_outside/1: Tell everyone in the channel to send a message
+  asking for a state update.
+  This used to broadcast game state to everyone, but game state can contain
+  private information.  So we tell everyone to ask for an update instead. Since
+  we're over a websocket, the extra cost shouldn't be that bad.
+  SERVER: "ask_for_update", %{}
+  CLIENT: "request_state", %{}
+  SERVER: "phx_reply", %{personalized state}
+  """
   def notify_from_outside(room_slug) do
-    state = GameUIServer.state(room_slug)
-
-    payload = %{
-      response: %{
-        game_state: state
-      },
-      status: "ok"
-    }
-
-    SpadesWeb.Endpoint.broadcast!("room:" <> room_slug, "phx_reply", payload)
+    payload = %{}
+    SpadesWeb.Endpoint.broadcast!("room:" <> room_slug, "ask_for_update", payload)
   end
 
   def terminate({:shutdown, :left}, socket) do
@@ -116,6 +119,15 @@ defmodule SpadesWeb.RoomChannel do
   # This is what part of the state gets sent to the client.
   # It can be used to transform or hide it before they get it.
   defp client_state(socket) do
-    socket.assigns
+    cond do
+      Map.has_key?(socket.assigns, :gameui) ->
+        %{
+          socket.assigns
+          | gameui: GameUIView.view_for(socket.assigns.gameui, socket.assigns.user_id)
+        }
+
+      true ->
+        socket.assigns
+    end
   end
 end

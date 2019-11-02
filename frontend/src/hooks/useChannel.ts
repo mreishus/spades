@@ -72,6 +72,13 @@ const joinChannel = (
     if (event != null && !event.startsWith("chan_reply_")) {
       onMessage(event, payload);
     }
+
+    // Specific Hack for Spades
+    // See room_channel.ex for more info
+    if (event != null && event === "ask_for_update") {
+      channel.push("request_state", {});
+    }
+
     // Return the payload since we're using the
     // special onMessage hook
     return payload;
