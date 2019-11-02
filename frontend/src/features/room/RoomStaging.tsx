@@ -1,9 +1,10 @@
 import React from "react";
 import PlayerSeat from "./PlayerSeat";
 import RoomStagingTimer from "./RoomStagingTimer";
+import { GameUI } from "elixir-backend";
 
 interface Props {
-  gameState: any;
+  gameState: GameUI | null;
   broadcast: (eventName: string, payload: object) => void;
 }
 
@@ -14,7 +15,12 @@ const gridStyle = {
 };
 
 export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
+  if (gameState == null) {
+    return null;
+  }
   const { seats } = gameState;
+  console.log("gs");
+  console.log(gameState);
   return (
     <div>
       <div className="bg-white max-w-lg p-4 mx-auto rounded-lg mt-4">

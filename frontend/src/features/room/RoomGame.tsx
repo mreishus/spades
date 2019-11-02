@@ -4,9 +4,10 @@ import PlayerSeat from "./PlayerSeat";
 import Button from "../../components/basic/Button";
 import Table from "./Table";
 import Hand from "./Hand";
+import { GameUI } from "elixir-backend";
 
 interface Props {
-  gameState: any;
+  gameState: GameUI | null;
   broadcast: (eventName: string, payload: object) => void;
 }
 
