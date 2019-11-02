@@ -4,4 +4,8 @@ declare module "elixir-backend" {
     public name: string;
     public slug: string;
   }
+  export declare class GameUIView {
+    public game_ui: any;
+    public my_hand: Array<any>;
+  }
 }

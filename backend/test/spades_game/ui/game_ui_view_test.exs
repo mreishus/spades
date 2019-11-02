@@ -18,6 +18,20 @@ defmodule GameUiViewTest do
       gameui = GameUI.sit(gameui, 12, "west")
       gameui = GameUI.sit(gameui, 13, "south")
 
+      ## Hands hidden while staging
+      north_view = GameUIView.view_for(gameui, 10)
+      east_view = GameUIView.view_for(gameui, 11)
+      west_view = GameUIView.view_for(gameui, 12)
+      south_view = GameUIView.view_for(gameui, 13)
+
+      assert north_view.my_hand == []
+      assert south_view.my_hand == []
+      assert east_view.my_hand == []
+      assert west_view.my_hand == []
+
+      ## Hands not hidden while playing
+      gameui = %GameUI{gameui | status: :playing}
+
       north_view = GameUIView.view_for(gameui, 10)
       east_view = GameUIView.view_for(gameui, 11)
       west_view = GameUIView.view_for(gameui, 12)
@@ -28,10 +42,10 @@ defmodule GameUiViewTest do
       assert east_view.my_hand == gameui.game.east.hand
       assert west_view.my_hand == gameui.game.west.hand
 
-      assert north_view.gameui.game.south.hand == []
-      assert north_view.gameui.game.north.hand == []
-      assert north_view.gameui.game.east.hand == []
-      assert north_view.gameui.game.west.hand == []
+      assert north_view.game_ui.game.south.hand == []
+      assert north_view.game_ui.game.north.hand == []
+      assert north_view.game_ui.game.east.hand == []
+      assert north_view.game_ui.game.west.hand == []
     end
   end
 end

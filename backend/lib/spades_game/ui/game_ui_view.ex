@@ -2,40 +2,52 @@ defmodule SpadesGame.GameUIView do
   @moduledoc """
   One level on top of GameUI.
   Censors hands.
+  Considers which user id we're sending info to
+  and shows their hand if appropriate.
   """
   alias SpadesGame.{GameUI, GameUIView, Deck}
 
   @derive Jason.Encoder
-  defstruct [:gameui, :my_hand]
+  defstruct [:game_ui, :my_hand]
 
   @type t :: %GameUIView{
-          gameui: GameUI.t(),
+          game_ui: GameUI.t(),
           my_hand: Deck.t()
         }
 
-  @spec view_for(GameUI.t(), integer) :: GameUIView.t()
-  def view_for(gameui, user_id) do
+  @spec view_for(nil | GameUI.t(), integer) :: GameUIView.t()
+  def view_for(nil, _user_id), do: nil
+
+  def view_for(%GameUI{} = game_ui, user_id) do
     my_hand =
-      cond do
-        user_id == gameui.seats.east ->
-          gameui.game.east.hand
-
-        user_id == gameui.seats.west ->
-          gameui.game.west.hand
-
-        user_id == gameui.seats.north ->
-          gameui.game.north.hand
-
-        user_id == gameui.seats.south ->
-          gameui.game.south.hand
-
-        true ->
-          []
+      if game_ui.status != :staging do
+        hand_for(game_ui, user_id)
+      else
+        []
       end
 
     %GameUIView{
-      gameui: GameUI.censor_hands(gameui),
+      game_ui: GameUI.censor_hands(game_ui),
       my_hand: my_hand
     }
+  end
+
+  defp hand_for(%GameUI{} = game_ui, user_id) do
+    cond do
+      user_id == game_ui.seats.east ->
+        game_ui.game.east.hand
+
+      user_id == game_ui.seats.west ->
+        game_ui.game.west.hand
+
+      user_id == game_ui.seats.north ->
+        game_ui.game.north.hand
+
+      user_id == game_ui.seats.south ->
+        game_ui.game.south.hand
+
+      true ->
+        []
+    end
   end
 end

@@ -5,35 +5,38 @@ import Container from "../../components/basic/Container";
 import Button from "../../components/basic/Button";
 
 import useChannel from "../../hooks/useChannel";
+import { GameUIView } from "elixir-backend";
 
 interface Props {
   slug: string;
 }
 
 export const Room: React.FC<Props> = ({ slug }) => {
-  const [gameState, setGameState] = useState<any>(null);
+  const [gameUIView, setGameUIView] = useState<GameUIView | null>(null);
+
   const onChannelMessage = useCallback((event, payload) => {
     console.log("[room] Got channel message", event, payload);
     if (
       event === "phx_reply" &&
       payload.response != null &&
-      payload.response.game_state != null
+      payload.response.game_ui_view != null
     ) {
-      const { game_state } = payload.response;
-      console.log("Got new game state: ", game_state);
-      setGameState(game_state);
+      const { game_ui_view } = payload.response;
+      console.log("Got new game state: ", game_ui_view);
+      setGameUIView(game_ui_view);
     }
   }, []);
   const broadcast = useChannel(`room:${slug}`, onChannelMessage);
 
   const statusIs = (targetStatus: string) =>
-    gameState != null &&
-    gameState.status != null &&
-    gameState.status === targetStatus;
+    gameUIView != null &&
+    gameUIView.game_ui.status != null &&
+    gameUIView.game_ui.status === targetStatus;
 
   const isStaging = statusIs("staging");
   const isPlaying = statusIs("playing");
 
+  const game_ui = gameUIView != null ? gameUIView.game_ui : null;
   return (
     <Container>
       <div>
@@ -48,15 +51,13 @@ export const Room: React.FC<Props> = ({ slug }) => {
           </Button>
           <Button
             className="mt-2 text-xs inline-block ml-2"
-            onClick={() => console.log(gameState)}
+            onClick={() => console.log(gameUIView)}
           >
             State to console
           </Button>
         </div>
-        {isStaging && (
-          <RoomStaging gameState={gameState} broadcast={broadcast} />
-        )}
-        {isPlaying && <RoomGame gameState={gameState} broadcast={broadcast} />}
+        {isStaging && <RoomStaging gameState={game_ui} broadcast={broadcast} />}
+        {isPlaying && <RoomGame gameState={game_ui} broadcast={broadcast} />}
       </div>
     </Container>
   );

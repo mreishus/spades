@@ -14,7 +14,7 @@ defmodule SpadesWeb.RoomChannel do
     socket =
       socket
       |> assign(:room_slug, room_slug)
-      |> assign(:game_state, state)
+      |> assign(:game_ui, state)
 
     # {:ok, socket}
     {:ok, client_state(socket), socket}
@@ -40,7 +40,7 @@ defmodule SpadesWeb.RoomChannel do
     # payload |> IO.inspect()
     # Can also send back "{:reply, :ok, socket}" or send back "{:noreply, socket}"
     state = GameUIServer.state(room_slug)
-    socket = socket |> assign(:game_state, state)
+    socket = socket |> assign(:game_ui, state)
     {:reply, {:ok, client_state(socket)}, socket}
   end
 
@@ -52,7 +52,7 @@ defmodule SpadesWeb.RoomChannel do
     Logger.info("Discard button pressed by #{user_id}")
     GameUIServer.discard(room_slug)
     state = GameUIServer.state(room_slug)
-    socket = socket |> assign(:game_state, state)
+    socket = socket |> assign(:game_ui, state)
     # Notify and then reply makes the person who clicked it get the
     # message twice
     notify(socket)
@@ -67,7 +67,7 @@ defmodule SpadesWeb.RoomChannel do
       ) do
     GameUIServer.sit(room_slug, user_id, which_seat)
     state = GameUIServer.state(room_slug)
-    socket = socket |> assign(:game_state, state)
+    socket = socket |> assign(:game_ui, state)
     notify(socket)
     {:reply, {:ok, client_state(socket)}, socket}
   end
@@ -97,7 +97,7 @@ defmodule SpadesWeb.RoomChannel do
 
   defp on_terminate(%{assigns: %{room_slug: room_slug, user_id: user_id}} = socket) do
     state = GameUIServer.leave(room_slug, user_id)
-    socket = socket |> assign(:game_state, state)
+    socket = socket |> assign(:game_ui, state)
     notify(socket)
   end
 
@@ -119,15 +119,17 @@ defmodule SpadesWeb.RoomChannel do
   # This is what part of the state gets sent to the client.
   # It can be used to transform or hide it before they get it.
   defp client_state(socket) do
-    cond do
-      Map.has_key?(socket.assigns, :gameui) ->
-        %{
-          socket.assigns
-          | gameui: GameUIView.view_for(socket.assigns.gameui, socket.assigns.user_id)
-        }
+    user_id = Map.get(socket.assigns, :user_id) || 0
 
-      true ->
-        socket.assigns
+    if Map.has_key?(socket.assigns, :game_ui) do
+      socket.assigns
+      |> Map.put(
+        :game_ui_view,
+        GameUIView.view_for(socket.assigns.game_ui, user_id)
+      )
+      |> Map.delete(:game_ui)
+    else
+      socket.assigns
     end
   end
 end
