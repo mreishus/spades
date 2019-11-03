@@ -1,29 +1,36 @@
 import React from "react";
+import { Card } from "elixir-backend";
 
-interface Props {}
+const suitValues = {
+  s: 400,
+  h: 300,
+  c: 200,
+  d: 100
+};
 
-export const Hand: React.FC<Props> = () => {
-  const cards = [
-    "3d",
-    "5d",
-    "9d",
-    "11d",
-    "3c",
-    "5c",
-    "9c",
-    "11c",
-    "3h",
-    "4h",
-    "10h",
-    "13h",
-    "8s",
-    "9s",
-    "12s",
-    "13s"
-  ];
+const handSort = (a: Card, b: Card) => {
+  const aVal = suitValues[a.suit] + a.rank;
+  const bVal = suitValues[b.suit] + b.rank;
+  if (aVal < bVal) {
+    return -1;
+  }
+  if (aVal > bVal) {
+    return 1;
+  }
+  return 0;
+};
+
+interface Props {
+  cards: Array<Card>;
+}
+
+export const Hand: React.FC<Props> = ({ cards }) => {
+  cards.sort(handSort);
+  const cards_string = cards.map(card => card.rank.toString() + card.suit);
+
   return (
     <div className="flex">
-      {cards.map(card => (
+      {cards_string.map(card => (
         <img
           key={card}
           src={`/images/cards3/${card}.png`}

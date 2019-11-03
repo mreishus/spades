@@ -4,19 +4,19 @@ import PlayerSeat from "./PlayerSeat";
 import Button from "../../components/basic/Button";
 import Table from "./Table";
 import Hand from "./Hand";
-import { GameUI } from "elixir-backend";
+import { GameUIView } from "elixir-backend";
 
 interface Props {
-  gameState: GameUI | null;
+  gameUIView: GameUIView | null;
   broadcast: (eventName: string, payload: object) => void;
 }
 
-export const RoomGame: React.FC<Props> = ({ gameState, broadcast }) => {
-  if (gameState == null) {
+ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
+  if (gameUIView == null) {
     return null;
   }
 
-  const { seats } = gameState;
+  const { seats } = gameUIView.game_ui;
   const rowMaxWidth = "max-w-xl";
   const showHand = true;
 
@@ -58,7 +58,7 @@ export const RoomGame: React.FC<Props> = ({ gameState, broadcast }) => {
 
       {showHand && (
         <div className={cx(rowMaxWidth, "flex justify-center ml-8")}>
-          <Hand />
+          <Hand cards={gameUIView.my_hand} />
         </div>
       )}
 
@@ -75,8 +75,8 @@ export const RoomGame: React.FC<Props> = ({ gameState, broadcast }) => {
         <div className="w-1/5 h-12"></div>
       </div>
       <div className="mt-4">
-        <div>draw pile: {gameState.game.draw.length} cards</div>
-        <div>discard pile: {gameState.game.discard.length} cards</div>
+        <div>draw pile: {gameUIView.game_ui.game.draw.length} cards</div>
+        <div>discard pile: {gameUIView.game_ui.game.discard.length} cards</div>
         <Button
           className="mt-1"
           isPrimary

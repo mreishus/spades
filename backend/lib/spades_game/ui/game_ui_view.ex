@@ -33,6 +33,8 @@ defmodule SpadesGame.GameUIView do
   end
 
   defp hand_for(%GameUI{} = game_ui, user_id) do
+    game_ui |> IO.inspect(label: "hand_for: game_ui")
+
     cond do
       user_id == game_ui.seats.east ->
         game_ui.game.east.hand

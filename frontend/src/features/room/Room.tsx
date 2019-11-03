@@ -57,7 +57,9 @@ export const Room: React.FC<Props> = ({ slug }) => {
           </Button>
         </div>
         {isStaging && <RoomStaging gameState={game_ui} broadcast={broadcast} />}
-        {isPlaying && <RoomGame gameState={game_ui} broadcast={broadcast} />}
+        {isPlaying && (
+          <RoomGame gameUIView={gameUIView} broadcast={broadcast} />
+        )}
       </div>
     </Container>
   );

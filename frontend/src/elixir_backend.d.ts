@@ -7,7 +7,12 @@ declare module "elixir-backend" {
 
   export declare class GameUIView {
     public game_ui: any;
-    public my_hand: Array<any>;
+    public my_hand: Array<Card>;
+  }
+
+  export declare class Card {
+    public rank: number;
+    public suit: "s" | "c" | "h" | "d";
   }
 
   export declare class GameUI {

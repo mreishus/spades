@@ -335,8 +335,8 @@ defmodule SpadesGame.Game do
   @spec discard(Game.t()) :: Game.t()
   def discard(%Game{draw: []} = game), do: game
 
-  def discard(%Game{draw: draw, discard: discard}) do
+  def discard(%Game{draw: draw, discard: discard} = game) do
     [top_card | new_draw] = draw
-    %Game{draw: new_draw, discard: [top_card | discard]}
+    %Game{game | draw: new_draw, discard: [top_card | discard]}
   end
 end
