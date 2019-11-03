@@ -102,13 +102,14 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   defp notify(socket) do
-    # Fake a phx_reply event to everyone
-    payload = %{
-      response: client_state(socket),
-      status: "ok"
-    }
+    # # Fake a phx_reply event to everyone
+    # payload = %{
+    #   response: client_state(socket),
+    #   status: "ok"
+    # }
 
-    broadcast!(socket, "phx_reply", payload)
+    # broadcast!(socket, "phx_reply", payload)
+    broadcast!(socket, "ask_for_update", %{})
   end
 
   # Add authorization logic here as required.
