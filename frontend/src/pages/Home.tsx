@@ -1,6 +1,4 @@
 import React from "react";
-//import React, { useState, useEffect, useContext } from "react";
-//import cx from "classnames";
 import Container from "../components/basic/Container";
 import Card from "../components/basic/Card";
 
@@ -11,10 +9,10 @@ export const Home: React.FC<Props> = () => {
     <Container>
       <Card className="mt-20 p-4 bg-gray-100 rounded-lg shadow-lg">
         <div className="text-lg my-2">
-          StarSpades is in rapid progress. Keep an eye on this space.
+          StarSpades is still WIP, and not available. The current goal is to
+          have a minimally playable version ready on Nov 13, 2019.
         </div>
-        <div>Happy halloween!</div>
-        <div>Last update: 2019-10-27.</div>
+        <div>Last update: 2019-11-04.</div>
       </Card>
     </Container>
   );
