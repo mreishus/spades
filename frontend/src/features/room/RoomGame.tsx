@@ -4,6 +4,7 @@ import PlayerSeat from "./PlayerSeat";
 import Button from "../../components/basic/Button";
 import Table from "./Table";
 import Hand from "./Hand";
+import Bid from "./Bid";
 import { GameUIView } from "elixir-backend";
 
 interface Props {
@@ -11,7 +12,7 @@ interface Props {
   broadcast: (eventName: string, payload: object) => void;
 }
 
- const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
+const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
   if (gameUIView == null) {
     return null;
   }
@@ -53,6 +54,12 @@ interface Props {
             broadcast={broadcast}
             whichSeat="east"
           />
+        </div>
+      </div>
+
+      <div className={cx("flex mb-2", rowMaxWidth)}>
+        <div className="w-3/5 mx-auto">
+          <Bid broadcast={broadcast} />
         </div>
       </div>
 

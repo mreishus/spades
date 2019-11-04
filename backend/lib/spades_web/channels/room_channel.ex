@@ -72,6 +72,19 @@ defmodule SpadesWeb.RoomChannel do
     {:reply, {:ok, client_state(socket)}, socket}
   end
 
+  def handle_in(
+        "bid",
+        %{"bidNum" => bid_num},
+        %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+      ) do
+    GameUIServer.bid(room_slug, user_id, bid_num)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
   @doc """
   notify_from_outside/1: Tell everyone in the channel to send a message
   asking for a state update.

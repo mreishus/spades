@@ -125,6 +125,9 @@ defmodule SpadesGame.Game do
     {:ok, Map.put(game, seat, player)}
   end
 
+  # bid_advance/1: Used as the last step in a bid.
+  # Advance the game turn, then move the status to playing
+  # if everyone has bid.
   def bid_advance({:error, message}), do: {:error, message}
 
   def bid_advance({:ok, game}) do

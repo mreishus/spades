@@ -35,7 +35,7 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   state/1:  Retrieves the game state for the game under a provided name.
   """
-  @spec state(String.t()) :: %GameUI{} | nil
+  @spec state(String.t()) :: GameUI.t() | nil
   def state(game_name) do
     case gameui_pid(game_name) do
       nil -> nil
@@ -47,16 +47,34 @@ defmodule SpadesGame.GameUIServer do
   discard/1: Someone moves a card from the draw pile to the discard pile.
   (Simple state testing.)
   """
-  @spec discard(String.t()) :: %GameUI{}
+  @spec discard(String.t()) :: GameUI.t()
   def discard(game_name) do
     GenServer.call(via_tuple(game_name), :discard)
+  end
+
+  @doc """
+  bid/3: A player just submitted a bid.
+  """
+  @spec bid(String.t(), integer, integer) :: GameUI.t()
+  def bid(game_name, user_id, bid_amount) do
+    GenServer.call(via_tuple(game_name), {:bid, user_id, bid_amount})
+  end
+
+  @doc """
+  rewind_countdown_devtest/1: Make the "game start" countdown happen
+  instantly.
+  Works by moving back the "everyone sat down" timestamp by 10 minutes.
+  Should be used in dev+test only.
+  """
+  def rewind_countdown_devtest(game_name) do
+    GenServer.call(via_tuple(game_name), :rewind_countdown_devtest)
   end
 
   @doc """
   sit/3: User is asking to sit in one of the seats.
   which_seat is "north", "west", "east" or "south".
   """
-  @spec sit(String.t(), integer, String.t()) :: %GameUI{}
+  @spec sit(String.t(), integer, String.t()) :: GameUI.t()
   def sit(game_name, user_id, which_seat) do
     GenServer.call(via_tuple(game_name), {:sit, user_id, which_seat})
   end
@@ -93,14 +111,23 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call(:state, _from, state) do
-    new_state = GameUI.checks(state)
-    {:reply, new_state, new_state, timeout(new_state)}
+    GameUI.checks(state)
+    |> save_and_reply()
   end
 
   def handle_call(:discard, _from, state) do
-    new_state = GameUI.discard(state)
-    :ets.insert(:game_uis, {state.game_name, new_state})
-    {:reply, new_state, new_state, timeout(new_state)}
+    GameUI.discard(state)
+    |> save_and_reply()
+  end
+
+  def handle_call(:rewind_countdown_devtest, _from, state) do
+    GameUI.rewind_countdown_devtest(state)
+    |> save_and_reply()
+  end
+
+  def handle_call({:bid, user_id, bid_amount}, _from, gameui) do
+    GameUI.bid(gameui, user_id, bid_amount)
+    |> save_and_reply()
   end
 
   def handle_call({:sit, user_id, which_seat}, _from, gameui) do
@@ -110,13 +137,16 @@ defmodule SpadesGame.GameUIServer do
       push_state_to_clients_for_12_seconds()
     end
 
-    :ets.insert(:game_uis, {gameui.game_name, new_gameui})
-    {:reply, new_gameui, new_gameui, timeout(new_gameui)}
+    save_and_reply(new_gameui)
   end
 
   def handle_call({:leave, user_id}, _from, gameui) do
-    new_gameui = GameUI.leave(gameui, user_id)
-    :ets.insert(:game_uis, {gameui.game_name, new_gameui})
+    GameUI.leave(gameui, user_id)
+    |> save_and_reply()
+  end
+
+  defp save_and_reply(new_gameui) do
+    :ets.insert(:game_uis, {new_gameui.game_name, new_gameui})
     {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end
 

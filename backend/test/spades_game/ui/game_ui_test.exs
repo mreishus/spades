@@ -90,6 +90,32 @@ defmodule GameUiTest do
     end
   end
 
+  describe "bid/3" do
+    test "Round of bidding", %{gameui: gameui} do
+      ## First, move to playing status by having everyone sit
+      gameui = GameUI.sit(gameui, 10, "north")
+      gameui = GameUI.sit(gameui, 11, "east")
+      gameui = GameUI.sit(gameui, 12, "west")
+      gameui = GameUI.sit(gameui, 13, "south")
+      assert gameui.when_seats_full != nil
+      one_minute_ago = DateTime.utc_now() |> DateTime.add(-1 * 60, :second)
+      gameui = %{gameui | when_seats_full: one_minute_ago}
+      gameui = GameUI.check_status_advance(gameui)
+      assert gameui.status == :playing
+      ## Now, do a round of bids
+      assert gameui.game.status == :bidding
+      gameui = GameUI.bid(gameui, 11, 5)
+      gameui = GameUI.bid(gameui, 13, 4)
+      gameui = GameUI.bid(gameui, 12, 3)
+      gameui = GameUI.bid(gameui, 10, 2)
+      assert gameui.game.status == :playing
+      assert gameui.game.east.bid == 5
+      assert gameui.game.south.bid == 4
+      assert gameui.game.west.bid == 3
+      assert gameui.game.north.bid == 2
+    end
+  end
+
   describe "everyone_sitting?/1" do
     test "works", %{gameui: gameui} do
       refute GameUI.everyone_sitting?(gameui)

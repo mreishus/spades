@@ -60,6 +60,75 @@ defmodule GameUiServerTest do
     end
   end
 
+  describe "sit/3" do
+    test "people can sit" do
+      game_name = generate_game_name()
+      {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
+
+      assert {:ok, _pid} = GameUIServer.start_link(game_name, options)
+      GameUIServer.state(game_name)
+      GameUIServer.sit(game_name, 11, "west")
+      GameUIServer.sit(game_name, 12, "north")
+      GameUIServer.sit(game_name, 13, "east")
+      state = GameUIServer.sit(game_name, 14, "south")
+      assert state.seats.west == 11
+      assert state.seats.north == 12
+      assert state.seats.east == 13
+      assert state.seats.south == 14
+    end
+
+    test "game advances status after everyone sits" do
+      game_name = generate_game_name()
+      {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
+
+      assert {:ok, _pid} = GameUIServer.start_link(game_name, options)
+      GameUIServer.state(game_name)
+      GameUIServer.sit(game_name, 11, "west")
+      GameUIServer.sit(game_name, 12, "north")
+      GameUIServer.sit(game_name, 13, "east")
+      GameUIServer.sit(game_name, 14, "south")
+      state = GameUIServer.rewind_countdown_devtest(game_name)
+      assert state.seats.west == 11
+      assert state.seats.north == 12
+      assert state.seats.east == 13
+      assert state.seats.south == 14
+      assert state.status == :playing
+      assert state.game.status == :bidding
+    end
+  end
+
+  describe "bid/3" do
+    test "round of bidding" do
+      # Get everyone playing
+      game_name = generate_game_name()
+      {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
+
+      assert {:ok, _pid} = GameUIServer.start_link(game_name, options)
+      GameUIServer.state(game_name)
+      GameUIServer.sit(game_name, 11, "west")
+      GameUIServer.sit(game_name, 12, "north")
+      GameUIServer.sit(game_name, 13, "east")
+      GameUIServer.sit(game_name, 14, "south")
+      state = GameUIServer.rewind_countdown_devtest(game_name)
+      assert state.seats.west == 11
+      assert state.seats.north == 12
+      assert state.seats.east == 13
+      assert state.seats.south == 14
+      assert state.status == :playing
+      assert state.game.status == :bidding
+      GameUIServer.bid(game_name, 13, 4)
+      GameUIServer.bid(game_name, 14, 3)
+      GameUIServer.bid(game_name, 11, 2)
+      state = GameUIServer.bid(game_name, 12, 0)
+      assert state.status == :playing
+      assert state.game.status == :playing
+      assert state.game.east.bid == 4
+      assert state.game.south.bid == 3
+      assert state.game.west.bid == 2
+      assert state.game.north.bid == 0
+    end
+  end
+
   defp generate_game_name do
     "game-#{:rand.uniform(1_000_000)}"
   end

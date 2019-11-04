@@ -45,7 +45,7 @@ defmodule SpadesGame.GameUI do
   end
 
   @doc """
-  Return a version of GameUI with all hands hidden.
+  censor_hands/1: Return a version of GameUI with all hands hidden.
   """
   @spec censor_hands(GameUI.t()) :: GameUI.t()
   def censor_hands(gameui) do
@@ -56,6 +56,42 @@ defmodule SpadesGame.GameUI do
     |> put_in([:game, :west, :hand], [])
   end
 
+  @doc """
+  bid/3: User bid `bid_amount` of tricks.
+  """
+  @spec bid(GameUI.t(), number, number) :: GameUI.t()
+  def bid(game_ui, user_id, bid_amount) do
+    seat = user_id_to_seat(game_ui, user_id)
+
+    if seat == nil do
+      game_ui
+    else
+      case Game.bid(game_ui.game, seat, bid_amount) do
+        {:ok, new_game} ->
+          %{game_ui | game: new_game}
+          |> checks
+
+        {:error, _msg} ->
+          game_ui
+      end
+    end
+  end
+
+  @doc """
+  user_id_to_seat/2: Which seat is this user sitting in?
+  """
+  @spec user_id_to_seat(GameUI.t(), number) :: nil | :west | :east | :north | :south
+  def user_id_to_seat(game_ui, user_id) do
+    game_ui.seats
+    |> Map.new(fn {k, v} -> {v, k} end)
+    |> Map.delete(nil)
+    |> Map.get(user_id)
+  end
+
+  @doc """
+  discard/1: Someone moved a card from the draw pile to the discard pile.
+  Function for testing simple UI state that should eventually be removed.
+  """
   @spec discard(GameUI.t()) :: GameUI.t()
   def discard(gameui) do
     game = Game.discard(gameui.game)
@@ -63,7 +99,8 @@ defmodule SpadesGame.GameUI do
   end
 
   @doc """
-  checks/1
+  checks/1: Applies checks to GameUI and return an updated copy.
+
   Generally, all "checks" we append to all outputs.
   These are all derived state updates.  If something
   needs to fire off a timer or something, it will be here.
@@ -91,7 +128,7 @@ defmodule SpadesGame.GameUI do
 
   @spec do_sit(GameUI.t(), integer, :north | :south | :east | :west) :: GameUI.t()
   defp do_sit(gameui, userid, which) do
-    if check_sit(gameui, userid, which) do
+    if sit_allowed?(gameui, userid, which) do
       seats = gameui.seats |> Map.put(which, userid)
 
       %GameUI{gameui | seats: seats}
@@ -103,23 +140,23 @@ defmodule SpadesGame.GameUI do
   end
 
   # Is this user allowed to sit in this seat?
-  @spec check_sit(GameUI.t(), integer, :north | :south | :east | :west) :: boolean
-  defp check_sit(gameui, userid, which) do
-    !already_sitting(gameui, userid) && seat_empty(gameui, which)
+  @spec sit_allowed?(GameUI.t(), integer, :north | :south | :east | :west) :: boolean
+  defp sit_allowed?(gameui, userid, which) do
+    !already_sitting?(gameui, userid) && seat_empty?(gameui, which)
   end
 
   # Is this user sitting in a seat?
-  @spec seat_empty(GameUI.t(), integer) :: boolean
-  defp already_sitting(gameui, userid) do
+  @spec seat_empty?(GameUI.t(), integer) :: boolean
+  defp already_sitting?(gameui, userid) do
     gameui.seats |> Map.values() |> Enum.member?(userid)
   end
 
   # Is this seat empty?
-  @spec seat_empty(GameUI.t(), :north | :south | :east | :west) :: boolean
-  defp seat_empty(gameui, which), do: gameui.seats[which] == nil
+  @spec seat_empty?(GameUI.t(), :north | :south | :east | :west) :: boolean
+  defp seat_empty?(gameui, which), do: gameui.seats[which] == nil
 
   @doc """
-  leave/2: Userid just leave the table.  If they were seated, mark
+  leave/2: Userid just left the table.  If they were seated, mark
   their seat as vacant.
   """
   @spec leave(GameUI.t(), integer) :: GameUI.t()
@@ -194,5 +231,19 @@ defmodule SpadesGame.GameUI do
     time_elapsed = DateTime.diff(DateTime.utc_now(), when_seats_full, :millisecond)
     # 10 seconds
     time_elapsed >= 10 * 1000
+  end
+
+  @spec rewind_countdown_devtest(GameUI.t()) :: GameUI.t()
+  def rewind_countdown_devtest(%GameUI{when_seats_full: when_seats_full} = game_ui) do
+    if when_seats_full == nil do
+      game_ui
+      |> checks
+    else
+      ten_mins_in_seconds = 60 * 10
+      nt = DateTime.add(when_seats_full, -1 * ten_mins_in_seconds, :second)
+
+      %GameUI{game_ui | when_seats_full: nt}
+      |> checks
+    end
   end
 end
