@@ -15,7 +15,8 @@ config :spades, :pow,
   repo: Spades.Repo,
   extensions: [PowEmailConfirmation, PowResetPassword],
   controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
-  mailer_backend: SpadesWeb.PowMailer
+  mailer_backend: SpadesWeb.PowMailer,
+  cache_store_backend: Pow.Store.Backend.MnesiaCache
 
 # Configures the endpoint
 config :spades, SpadesWeb.Endpoint,
