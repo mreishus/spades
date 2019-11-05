@@ -2,7 +2,7 @@ import React from "react";
 import cx from "classnames";
 import PlayerSeat from "./PlayerSeat";
 import Button from "../../components/basic/Button";
-import Table from "./Table";
+import SmartTable from "./SmartTable";
 import Hand from "./Hand";
 import Bid from "./Bid";
 import { GameUIView } from "elixir-backend";
@@ -45,7 +45,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
           />
         </div>
         <div className="h-56 w-3/5 relative">
-          <Table />
+          <SmartTable />
         </div>
         <div className="h-full w-1/5 h-32 flex items-center justify-center">
           {/* Right player */}

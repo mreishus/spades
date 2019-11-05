@@ -1,8 +1,18 @@
 import React from "react";
 
-interface Props {}
+interface Props {
+  topCard?: null | string;
+  bottomCard?: null | string;
+  leftCard?: null | string;
+  rightCard?: null | string;
+}
 
-export const Table: React.FC<Props> = () => {
+export const Table: React.FC<Props> = ({
+  topCard,
+  bottomCard,
+  leftCard,
+  rightCard
+}) => {
   const cardHeight = "h-24";
 
   return (
@@ -12,11 +22,13 @@ export const Table: React.FC<Props> = () => {
         <div className="absolute inset-x-0 top-0 h-0 p-1 flex">
           <div className="mx-auto flex">
             <div className="w-20 px-2 text-right text-sm">Bid: 4 Tricks: 2</div>
-            <img
-              src={`/images/cards3/2c.png`}
-              alt=".."
-              className={cardHeight + " object-cover"}
-            />
+            {topCard && (
+              <img
+                src={topCard}
+                alt=".."
+                className={cardHeight + " object-cover rotate-1/2"}
+              />
+            )}
             <div className="w-20"></div>
           </div>
         </div>
@@ -25,11 +37,13 @@ export const Table: React.FC<Props> = () => {
         <div className="absolute inset-x-0 bottom-0 h-0 p-1 flex">
           <div className="mx-auto flex -mt-24 items-end">
             <div className="w-20"></div>
-            <img
-              src={`/images/cards3/8c.png`}
-              alt=".."
-              className={cardHeight + " object-cover"}
-            />
+            {bottomCard && (
+              <img
+                src={bottomCard}
+                alt=".."
+                className={cardHeight + " object-cover"}
+              />
+            )}
             <div className="w-20 px-2 text-sm">
               Bid: 4
               <br />
@@ -43,11 +57,13 @@ export const Table: React.FC<Props> = () => {
           <div className="my-auto flex flex-col">
             <div className="h-12"></div>
             <div className="h-24 ml-4">
-              <img
-                src={`/images/cards3/11c.png`}
-                alt=".."
-                className={cardHeight + " object-cover rotate-1/4"}
-              />
+              {leftCard && (
+                <img
+                  src={leftCard}
+                  alt=".."
+                  className={cardHeight + " object-cover rotate-1/4"}
+                />
+              )}
             </div>
             <div className="h-12 text-sm -mt-4 mb-4">
               Bid: 4<br />
@@ -66,11 +82,13 @@ export const Table: React.FC<Props> = () => {
               </div>
             </div>
             <div className="h-24 mr-4">
-              <img
-                src={`/images/cards3/13c.png`}
-                alt=".."
-                className={cardHeight + " object-cover rotate-1/4"}
-              />
+              {rightCard && (
+                <img
+                  src={rightCard}
+                  alt=".."
+                  className={cardHeight + " object-cover rotate-3/4"}
+                />
+              )}
             </div>
             <div className="h-12"></div>
           </div>
