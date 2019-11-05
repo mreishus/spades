@@ -21,6 +21,7 @@ export const SmartTable: React.FC<Props> = ({ game }) => {
         topPlayer={game.north}
         rightPlayer={game.east}
         bottomPlayer={game.south}
+        emphasizeBidding
       />
     );
   }

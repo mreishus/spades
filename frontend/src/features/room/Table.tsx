@@ -1,7 +1,9 @@
 import React from "react";
+import cx from "classnames";
 import { GamePlayer } from "elixir-backend";
 
 interface Props {
+  emphasizeBidding?: boolean;
   topCard?: null | string;
   bottomCard?: null | string;
   leftCard?: null | string;
@@ -27,18 +29,24 @@ export const Table: React.FC<Props> = ({
   leftPlayer,
   topPlayer,
   rightPlayer,
-  bottomPlayer
+  bottomPlayer,
+  emphasizeBidding
 }) => {
   const cardHeight = "h-24";
+  const bidClasses = {
+    "font-semibold text-lg text-blue-800": emphasizeBidding
+  };
 
   return (
     <div className="h-full w-full relative">
-      <div className="h-56 bg-orange-200 border rounded-lg">
+      <div className="h-56 bg-orange-200 border rounded-lg shadow-lg">
         {/* Top row/card */}
         <div className="absolute inset-x-0 top-0 h-0 p-1 flex">
           <div className="mx-auto flex">
             <div className="w-20 px-2 text-right text-sm">
-              Bid: {qNull(topPlayer.bid)}
+              <span className={cx(bidClasses)}>
+                Bid: {qNull(topPlayer.bid)}
+              </span>
               <br />
               Tricks: {qNull(topPlayer.tricks_won)}
             </div>
@@ -65,7 +73,9 @@ export const Table: React.FC<Props> = ({
               />
             )}
             <div className="w-20 px-2 text-sm">
-              Bid: {qNull(bottomPlayer.bid)}
+              <span className={cx(bidClasses)}>
+                Bid: {qNull(bottomPlayer.bid)}
+              </span>
               <br />
               Tricks: {qNull(bottomPlayer.tricks_won)}
             </div>
@@ -86,7 +96,9 @@ export const Table: React.FC<Props> = ({
               )}
             </div>
             <div className="h-12 text-sm -mt-4 mb-4">
-              Bid: {qNull(leftPlayer.bid)}
+              <span className={cx(bidClasses)}>
+                Bid: {qNull(leftPlayer.bid)}
+              </span>
               <br />
               Tricks: {qNull(leftPlayer.tricks_won)}
             </div>
@@ -98,7 +110,9 @@ export const Table: React.FC<Props> = ({
           <div className="my-auto flex flex-col">
             <div className="h-12 mt-4 -mb-4 flex items-end">
               <div className="text-right w-full text-sm pb-1">
-                Bid: {qNull(rightPlayer.bid)}
+                <span className={cx(bidClasses)}>
+                  Bid: {qNull(rightPlayer.bid)}
+                </span>
                 <br />
                 Tricks: {qNull(rightPlayer.tricks_won)}
               </div>
