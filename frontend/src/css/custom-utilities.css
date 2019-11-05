@@ -1,4 +1,15 @@
-/* */
+/* Selected Card Animations */
+.hand-card-animate {
+  transition: margin 110ms ease-in-out, transform 110ms ease-in-out;
+}
+
+.hand-card-selected {
+  filter: drop-shadow(6px 6px 6px #8899dd);
+  transform: rotate(1deg);
+}
+
+/* Fade animation for modal  */
+
 .ReactModal__Overlay {
     opacity: 0;
     transition: opacity 200ms ease-in-out;
@@ -11,6 +22,8 @@
 .ReactModal__Overlay--before-close{
     opacity: 0;
 }
+
+/* Rotate */
 
 .rotate-1\/4 {
   transform: rotate(90deg);

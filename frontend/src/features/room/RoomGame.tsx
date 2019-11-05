@@ -68,7 +68,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
 
       {showHand && (
         <div className={cx(rowMaxWidth, "flex justify-center ml-8")}>
-          <Hand cards={gameUIView.my_hand} />
+          <Hand cards={gameUIView.my_hand} broadcast={broadcast} />
         </div>
       )}
 

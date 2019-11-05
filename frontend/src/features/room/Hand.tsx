@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import cx from "classnames";
 import { Card } from "elixir-backend";
 
 const suitValues = {
@@ -22,11 +23,15 @@ const handSort = (a: Card, b: Card) => {
 
 interface Props {
   cards: Array<Card>;
+  broadcast: (eventName: string, payload: object) => void;
 }
 
+const cardToString = (card: Card) => card.rank.toString() + card.suit;
+
 export const Hand: React.FC<Props> = ({ cards }) => {
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
   cards.sort(handSort);
-  const cards_string = cards.map(card => card.rank.toString() + card.suit);
+  const cards_string = cards.map(cardToString);
 
   return (
     <div className="flex">
@@ -35,7 +40,21 @@ export const Hand: React.FC<Props> = ({ cards }) => {
           key={card}
           src={`/images/cards3/${card}.png`}
           alt=".."
-          className="h-32 object-cover -ml-16"
+          draggable={false}
+          unselectable="on"
+          className={cx({
+            "h-32 object-cover -ml-16 z-30 hand-card-animate": true,
+            "-mt-5 mr-5 hand-card-selected": selectedCard === card
+          })}
+          onClick={() => {
+            if (selectedCard === card) {
+              // Send play command
+              // Display error message only if it's my turn(?)
+              setSelectedCard(null);
+            } else {
+              setSelectedCard(card);
+            }
+          }}
         />
       ))}
     </div>
