@@ -1,7 +1,7 @@
 defmodule GameUiTest do
   use ExUnit.Case, async: true
 
-  alias SpadesGame.{GameUI, GameOptions, Card}
+  alias SpadesGame.{Card, GameOptions, GameUI}
 
   setup do
     game_name = "game-#{:rand.uniform(1000)}"
@@ -113,6 +113,43 @@ defmodule GameUiTest do
       assert gameui.game.south.bid == 4
       assert gameui.game.west.bid == 3
       assert gameui.game.north.bid == 2
+    end
+  end
+
+  describe "play/3" do
+    test "Round of playing", %{gameui: gameui} do
+      ## First, move to playing status by having everyone sit
+      gameui = GameUI.sit(gameui, 10, "north")
+      gameui = GameUI.sit(gameui, 11, "east")
+      gameui = GameUI.sit(gameui, 12, "west")
+      gameui = GameUI.sit(gameui, 13, "south")
+      assert gameui.when_seats_full != nil
+      one_minute_ago = DateTime.utc_now() |> DateTime.add(-1 * 60, :second)
+      gameui = %{gameui | when_seats_full: one_minute_ago}
+      gameui = GameUI.check_status_advance(gameui)
+      assert gameui.status == :playing
+      ## Now, do a round of bids
+      assert gameui.game.status == :bidding
+      gameui = GameUI.bid(gameui, 11, 5)
+      gameui = GameUI.bid(gameui, 13, 4)
+      gameui = GameUI.bid(gameui, 12, 3)
+      gameui = GameUI.bid(gameui, 10, 2)
+      assert gameui.game.status == :playing
+      ## Next, let's play some cards
+
+      card_e = %Card{rank: 12, suit: :h}
+      card_s = %Card{rank: 9, suit: :h}
+      card_w = %Card{rank: 7, suit: :h}
+      card_n = %Card{rank: 2, suit: :h}
+
+      gameui = GameUI.play(gameui, 11, card_e)
+      gameui = GameUI.play(gameui, 13, card_s)
+      gameui = GameUI.play(gameui, 12, card_w)
+      assert gameui.game.trick |> length == 3
+      gameui = GameUI.play(gameui, 10, card_n)
+      assert gameui.game.trick |> length == 0
+      assert gameui.game.east.tricks_won == 1
+      assert gameui.game.turn == :east
     end
   end
 

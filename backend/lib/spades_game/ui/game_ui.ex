@@ -3,7 +3,7 @@ defmodule SpadesGame.GameUI do
   One level on top of Game.
   """
 
-  alias SpadesGame.{Game, GameUI, GameOptions}
+  alias SpadesGame.{Card, Game, GameUI, GameOptions}
 
   @derive Jason.Encoder
   defstruct [:game, :game_name, :options, :created_at, :status, :seats, :when_seats_full]
@@ -67,6 +67,27 @@ defmodule SpadesGame.GameUI do
       game_ui
     else
       case Game.bid(game_ui.game, seat, bid_amount) do
+        {:ok, new_game} ->
+          %{game_ui | game: new_game}
+          |> checks
+
+        {:error, _msg} ->
+          game_ui
+      end
+    end
+  end
+
+  @doc """
+  play/3: A player puts a card on the table. (Moves from hand to trick.)
+  """
+  @spec bid(GameUI.t(), number, Card.t()) :: GameUI.t()
+  def play(game_ui, user_id, card) do
+    seat = user_id_to_seat(game_ui, user_id)
+
+    if seat == nil do
+      game_ui
+    else
+      case Game.play(game_ui.game, seat, card) do
         {:ok, new_game} ->
           %{game_ui | game: new_game}
           |> checks
