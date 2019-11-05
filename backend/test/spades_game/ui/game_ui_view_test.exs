@@ -23,11 +23,14 @@ defmodule GameUiViewTest do
       east_view = GameUIView.view_for(gameui, 11)
       west_view = GameUIView.view_for(gameui, 12)
       south_view = GameUIView.view_for(gameui, 13)
+      observer_view = GameUIView.view_for(gameui, 99)
 
+      ### (View) Hands hidden - game hasn't started
       assert north_view.my_hand == []
       assert south_view.my_hand == []
       assert east_view.my_hand == []
       assert west_view.my_hand == []
+      assert observer_view.my_hand == []
 
       ## Hands not hidden while playing
       gameui = %GameUI{gameui | status: :playing}
@@ -37,15 +40,29 @@ defmodule GameUiViewTest do
       west_view = GameUIView.view_for(gameui, 12)
       south_view = GameUIView.view_for(gameui, 13)
 
+      ### (View) Hands Displayed - Game has started
       assert north_view.my_hand == gameui.game.north.hand
       assert south_view.my_hand == gameui.game.south.hand
       assert east_view.my_hand == gameui.game.east.hand
       assert west_view.my_hand == gameui.game.west.hand
+      assert observer_view.my_hand == []
 
+      ### (Non-View, Game) Hands hidden - Observers can't see
       assert north_view.game_ui.game.south.hand == []
       assert north_view.game_ui.game.north.hand == []
       assert north_view.game_ui.game.east.hand == []
       assert north_view.game_ui.game.west.hand == []
+      assert observer_view.game_ui.game.south.hand == []
+      assert observer_view.game_ui.game.north.hand == []
+      assert observer_view.game_ui.game.east.hand == []
+      assert observer_view.game_ui.game.west.hand == []
+
+      ## "my_seat" is a quick shortcut to see where I'm sitting
+      assert north_view.my_seat == :north
+      assert south_view.my_seat == :south
+      assert east_view.my_seat == :east
+      assert west_view.my_seat == :west
+      assert observer_view.my_seat == nil
     end
   end
 end

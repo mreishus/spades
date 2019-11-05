@@ -20,7 +20,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
   const { seats, game } = gameUIView.game_ui;
   const rowMaxWidth = "max-w-xl";
   const showHand = true;
-  const showBid = game.status === "bidding";
+  const showBid = game.status === "bidding" && game.turn === gameUIView.my_seat;
 
   return (
     <>

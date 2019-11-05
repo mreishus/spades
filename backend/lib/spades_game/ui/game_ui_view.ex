@@ -8,11 +8,12 @@ defmodule SpadesGame.GameUIView do
   alias SpadesGame.{GameUI, GameUIView, Deck}
 
   @derive Jason.Encoder
-  defstruct [:game_ui, :my_hand]
+  defstruct [:game_ui, :my_hand, :my_seat]
 
   @type t :: %GameUIView{
           game_ui: GameUI.t(),
-          my_hand: Deck.t()
+          my_hand: Deck.t(),
+          my_seat: nil | :east | :west | :north | :south
         }
 
   @spec view_for(nil | GameUI.t(), integer) :: GameUIView.t()
@@ -26,9 +27,12 @@ defmodule SpadesGame.GameUIView do
         []
       end
 
+    my_seat = seat_for(game_ui, user_id)
+
     %GameUIView{
       game_ui: GameUI.censor_hands(game_ui),
-      my_hand: my_hand
+      my_hand: my_hand,
+      my_seat: my_seat
     }
   end
 
@@ -48,6 +52,25 @@ defmodule SpadesGame.GameUIView do
 
       true ->
         []
+    end
+  end
+
+  def seat_for(%GameUI{} = game_ui, user_id) do
+    cond do
+      user_id == game_ui.seats.east ->
+        :east
+
+      user_id == game_ui.seats.west ->
+        :west
+
+      user_id == game_ui.seats.north ->
+        :north
+
+      user_id == game_ui.seats.south ->
+        :south
+
+      true ->
+        nil
     end
   end
 end

@@ -8,6 +8,7 @@ declare module "elixir-backend" {
   export declare class GameUIView {
     public game_ui: GameUI;
     public my_hand: Array<Card>;
+    public my_seat: null | "west" | "east" | "south" | "north";
   }
 
   export declare class Card {
