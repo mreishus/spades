@@ -17,9 +17,10 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
     return null;
   }
 
-  const { seats } = gameUIView.game_ui;
+  const { seats, game } = gameUIView.game_ui;
   const rowMaxWidth = "max-w-xl";
   const showHand = true;
+  const showBid = game.status === "bidding";
 
   return (
     <>
@@ -45,7 +46,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
           />
         </div>
         <div className="h-56 w-3/5 relative">
-          <SmartTable />
+          <SmartTable game={game} />
         </div>
         <div className="h-full w-1/5 h-32 flex items-center justify-center">
           {/* Right player */}
@@ -57,11 +58,13 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
         </div>
       </div>
 
-      <div className={cx("flex mb-2", rowMaxWidth)}>
-        <div className="w-3/5 mx-auto">
-          <Bid broadcast={broadcast} />
+      {showBid && (
+        <div className={cx("flex mb-2", rowMaxWidth)}>
+          <div className="w-3/5 mx-auto">
+            <Bid broadcast={broadcast} />
+          </div>
         </div>
-      </div>
+      )}
 
       {showHand && (
         <div className={cx(rowMaxWidth, "flex justify-center ml-8")}>

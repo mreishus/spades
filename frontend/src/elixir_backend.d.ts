@@ -6,7 +6,7 @@ declare module "elixir-backend" {
   }
 
   export declare class GameUIView {
-    public game_ui: any;
+    public game_ui: GameUI;
     public my_hand: Array<Card>;
   }
 
@@ -21,7 +21,7 @@ declare module "elixir-backend" {
     game_name: string;
     options: any;
     seats: GameUISeats;
-    status: string; // staging, playing, done
+    status: "staging" | "playing" | "done";
     when_seats_full: null | string; // timestamp
   }
 
@@ -42,9 +42,15 @@ declare module "elixir-backend" {
     options: any;
     south: any; // GamePlayer
     spades_broken: boolean;
-    status: string; // "bidding"
+    status: "bidding" | "playing";
     trick: Array<any>;
-    turn: string; // "east"
+    turn: "west" | "north" | "east" | "south";
     west: any; // GamePlayer
+  }
+
+  export declare class GamePlayer {
+    bid: null | number;
+    hand: Array<Card>;
+    tricks_won: number;
   }
 }

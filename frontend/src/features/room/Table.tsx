@@ -1,17 +1,33 @@
 import React from "react";
+import { GamePlayer } from "elixir-backend";
 
 interface Props {
   topCard?: null | string;
   bottomCard?: null | string;
   leftCard?: null | string;
   rightCard?: null | string;
+  leftPlayer: GamePlayer;
+  topPlayer: GamePlayer;
+  rightPlayer: GamePlayer;
+  bottomPlayer: GamePlayer;
 }
 
+const qNull = (input: number | null) => {
+  if (input == null) {
+    return "?";
+  }
+  return input;
+};
+
 export const Table: React.FC<Props> = ({
-  topCard,
-  bottomCard,
   leftCard,
-  rightCard
+  topCard,
+  rightCard,
+  bottomCard,
+  leftPlayer,
+  topPlayer,
+  rightPlayer,
+  bottomPlayer
 }) => {
   const cardHeight = "h-24";
 
@@ -21,7 +37,11 @@ export const Table: React.FC<Props> = ({
         {/* Top row/card */}
         <div className="absolute inset-x-0 top-0 h-0 p-1 flex">
           <div className="mx-auto flex">
-            <div className="w-20 px-2 text-right text-sm">Bid: 4 Tricks: 2</div>
+            <div className="w-20 px-2 text-right text-sm">
+              Bid: {qNull(topPlayer.bid)}
+              <br />
+              Tricks: {qNull(topPlayer.tricks_won)}
+            </div>
             {topCard && (
               <img
                 src={topCard}
@@ -45,9 +65,9 @@ export const Table: React.FC<Props> = ({
               />
             )}
             <div className="w-20 px-2 text-sm">
-              Bid: 4
+              Bid: {qNull(bottomPlayer.bid)}
               <br />
-              Tricks: 8
+              Tricks: {qNull(bottomPlayer.tricks_won)}
             </div>
           </div>
         </div>
@@ -66,8 +86,9 @@ export const Table: React.FC<Props> = ({
               )}
             </div>
             <div className="h-12 text-sm -mt-4 mb-4">
-              Bid: 4<br />
-              Tricks: 0
+              Bid: {qNull(leftPlayer.bid)}
+              <br />
+              Tricks: {qNull(leftPlayer.tricks_won)}
             </div>
           </div>
         </div>
@@ -77,8 +98,9 @@ export const Table: React.FC<Props> = ({
           <div className="my-auto flex flex-col">
             <div className="h-12 mt-4 -mb-4 flex items-end">
               <div className="text-right w-full text-sm pb-1">
-                Bid: 4<br />
-                Tricks: 2
+                Bid: {qNull(rightPlayer.bid)}
+                <br />
+                Tricks: {qNull(rightPlayer.tricks_won)}
               </div>
             </div>
             <div className="h-24 mr-4">
