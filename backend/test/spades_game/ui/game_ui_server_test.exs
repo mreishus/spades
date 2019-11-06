@@ -129,6 +129,30 @@ defmodule GameUiServerTest do
     end
   end
 
+  describe "play/3" do
+    test "round of playing" do
+      # Get everyone playing
+      game_name = generate_game_name()
+      {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
+
+      assert {:ok, _pid} = GameUIServer.start_link(game_name, options)
+      GameUIServer.state(game_name)
+      GameUIServer.sit(game_name, 11, "west")
+      GameUIServer.sit(game_name, 12, "north")
+      GameUIServer.sit(game_name, 13, "east")
+      GameUIServer.sit(game_name, 14, "south")
+      state = GameUIServer.rewind_countdown_devtest(game_name)
+      assert state.status == :playing
+      assert state.game.status == :bidding
+      GameUIServer.bid(game_name, 13, 4)
+      GameUIServer.bid(game_name, 14, 3)
+      GameUIServer.bid(game_name, 11, 2)
+      state = GameUIServer.bid(game_name, 12, 0)
+      assert state.status == :playing
+      assert state.game.status == :playing
+    end
+  end
+
   defp generate_game_name do
     "game-#{:rand.uniform(1_000_000)}"
   end

@@ -5,7 +5,7 @@ defmodule SpadesGame.Game do
   some toy game used to test everything around it.
   Right now, it's a simple draw pile and a discard pile.
   """
-  alias SpadesGame.{Deck, Game, GamePlayer, GameOptions, Card}
+  alias SpadesGame.{Card, Deck, Game, GamePlayer, GameOptions, TrickCard}
 
   require Logger
 
@@ -40,7 +40,7 @@ defmodule SpadesGame.Game do
           north: GamePlayer.t(),
           east: GamePlayer.t(),
           south: GamePlayer.t(),
-          trick: list(),
+          trick: list(TrickCard.t()),
           spades_broken: boolean
         }
 
@@ -181,6 +181,7 @@ defmodule SpadesGame.Game do
     if game.turn == seat do
       {:ok, game}
     else
+      # %{turn: game.turn, seat: seat} |> IO.inspect(label: "error_details")
       {:error, "Inactive player attempted to play a card or bid"}
     end
   end
@@ -232,7 +233,8 @@ defmodule SpadesGame.Game do
         {:error, "Player could follow suit but didn't"}
 
       true ->
-        new_trick = [{card, seat} | game.trick]
+        trick_card = %TrickCard{card: card, seat: seat}
+        new_trick = [trick_card | game.trick]
         {:ok, %Game{game | trick: new_trick}}
     end
   end
@@ -242,7 +244,7 @@ defmodule SpadesGame.Game do
   # possible?"
   @spec followed_suit?(Game.t(), :north | :east | :west | :south, Card.t()) :: boolean
   def followed_suit?(game, seat, card) do
-    {first_card, _first_player} = List.last(game.trick)
+    %TrickCard{card: first_card, seat: _first_player} = List.last(game.trick)
     this_player = Map.get(game, seat)
 
     cond do
@@ -271,7 +273,7 @@ defmodule SpadesGame.Game do
 
       length(game.trick) == 4 ->
         # Compute trick winner
-        {_card, seat} = trick_winner(game.trick)
+        %TrickCard{card: _card, seat: seat} = trick_winner(game.trick)
         # Give them +1 tricks, clear the current trick, set the turn
         new_player = Map.get(game, seat) |> GamePlayer.won_trick()
 
@@ -302,7 +304,7 @@ defmodule SpadesGame.Game do
   @spec has_spade?(list({Card.t(), :north | :east | :west | :south})) :: boolean
   defp has_spade?(trick) do
     trick
-    |> Enum.any?(fn {card, _player} -> card.suit == :s end)
+    |> Enum.any?(fn %TrickCard{card: card, seat: _player} -> card.suit == :s end)
   end
 
   # Clockwise rotation
@@ -311,16 +313,15 @@ defmodule SpadesGame.Game do
   defp rotate(:south), do: :west
   defp rotate(:west), do: :north
 
-  @spec trick_winner(list({Card.t(), :north | :east | :west | :south})) ::
-          {Card.t(), :north | :east | :west | :south}
+  @spec trick_winner(list(TrickCard.t())) :: TrickCard.t()
   def trick_winner(trick) when is_list(trick) do
     # First card = last in list by convention
-    {first_card, _first_player} = List.last(trick)
+    %TrickCard{card: first_card, seat: _first_player} = List.last(trick)
     this_priority = suit_priority(first_card.suit)
 
     Enum.max_by(
       trick,
-      fn {card, _seat} ->
+      fn %TrickCard{card: card, seat: _seat} ->
         this_priority[card.suit] + card.rank
       end
     )

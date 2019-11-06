@@ -28,35 +28,39 @@ interface Props {
 
 const cardToString = (card: Card) => card.rank.toString() + card.suit;
 
-export const Hand: React.FC<Props> = ({ cards }) => {
+export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   cards.sort(handSort);
-  const cards_string = cards.map(cardToString);
 
   return (
     <div className="flex">
-      {cards_string.map(card => (
-        <img
-          key={card}
-          src={`/images/cards3/${card}.png`}
-          alt=".."
-          draggable={false}
-          unselectable="on"
-          className={cx({
-            "h-32 object-cover -ml-16 z-30 hand-card-animate": true,
-            "-mt-5 mr-5 hand-card-selected": selectedCard === card
-          })}
-          onClick={() => {
-            if (selectedCard === card) {
-              // Send play command
-              // Display error message only if it's my turn(?)
-              setSelectedCard(null);
-            } else {
-              setSelectedCard(card);
-            }
-          }}
-        />
-      ))}
+      {cards.map(card => {
+        let cardStr = cardToString(card);
+
+        return (
+          <img
+            key={cardStr}
+            src={`/images/cards3/${cardStr}.png`}
+            alt=".."
+            draggable={false}
+            unselectable="on"
+            className={cx({
+              "h-32 object-cover -ml-16 z-30 hand-card-animate": true,
+              "-mt-5 mr-5 hand-card-selected": selectedCard === cardStr
+            })}
+            onClick={() => {
+              if (selectedCard === cardStr) {
+                // Send play command
+                // Display error message only if it's my turn(?)
+                broadcast("play", { card });
+                setSelectedCard(null);
+              } else {
+                setSelectedCard(cardStr);
+              }
+            }}
+          />
+        );
+      })}
     </div>
   );
 };

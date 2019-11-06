@@ -2,7 +2,7 @@ defmodule GameTest do
   use ExUnit.Case, async: true
 
   doctest SpadesGame.Game
-  alias SpadesGame.{Game, GameOptions, Card}
+  alias SpadesGame.{Card, Game, GameOptions, TrickCard}
 
   setup do
     {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
@@ -191,49 +191,49 @@ defmodule GameTest do
     test "Simple case" do
       winner =
         Game.trick_winner([
-          {%Card{rank: 7, suit: :h}, :north},
-          {%Card{rank: 2, suit: :h}, :west},
-          {%Card{rank: 10, suit: :h}, :south},
-          {%Card{rank: 9, suit: :h}, :east}
+          %TrickCard{card: %Card{rank: 7, suit: :h}, seat: :north},
+          %TrickCard{card: %Card{rank: 2, suit: :h}, seat: :west},
+          %TrickCard{card: %Card{rank: 10, suit: :h}, seat: :south},
+          %TrickCard{card: %Card{rank: 9, suit: :h}, seat: :east}
         ])
 
-      assert winner == {%Card{rank: 10, suit: :h}, :south}
+      assert winner == %TrickCard{card: %Card{rank: 10, suit: :h}, seat: :south}
     end
 
     test "Offsuit high card doesn't win" do
       winner =
         Game.trick_winner([
-          {%Card{rank: 7, suit: :h}, :north},
-          {%Card{rank: 2, suit: :h}, :west},
-          {%Card{rank: 12, suit: :c}, :south},
-          {%Card{rank: 9, suit: :h}, :east}
+          %TrickCard{card: %Card{rank: 7, suit: :h}, seat: :north},
+          %TrickCard{card: %Card{rank: 2, suit: :h}, seat: :west},
+          %TrickCard{card: %Card{rank: 12, suit: :c}, seat: :south},
+          %TrickCard{card: %Card{rank: 9, suit: :h}, seat: :east}
         ])
 
-      assert winner == {%Card{rank: 9, suit: :h}, :east}
+      assert winner == %TrickCard{card: %Card{rank: 9, suit: :h}, seat: :east}
     end
 
     test "Low spade wins" do
       winner =
         Game.trick_winner([
-          {%Card{rank: 7, suit: :h}, :north},
-          {%Card{rank: 2, suit: :s}, :west},
-          {%Card{rank: 12, suit: :h}, :south},
-          {%Card{rank: 9, suit: :h}, :east}
+          %TrickCard{card: %Card{rank: 7, suit: :h}, seat: :north},
+          %TrickCard{card: %Card{rank: 2, suit: :s}, seat: :west},
+          %TrickCard{card: %Card{rank: 12, suit: :h}, seat: :south},
+          %TrickCard{card: %Card{rank: 9, suit: :h}, seat: :east}
         ])
 
-      assert winner == {%Card{rank: 2, suit: :s}, :west}
+      assert winner == %TrickCard{card: %Card{rank: 2, suit: :s}, seat: :west}
     end
 
     test "Nothing beats spades" do
       winner =
         Game.trick_winner([
-          {%Card{rank: 9, suit: :s}, :north},
-          {%Card{rank: 2, suit: :s}, :west},
-          {%Card{rank: 12, suit: :c}, :south},
-          {%Card{rank: 5, suit: :s}, :east}
+          %TrickCard{card: %Card{rank: 9, suit: :s}, seat: :north},
+          %TrickCard{card: %Card{rank: 2, suit: :s}, seat: :west},
+          %TrickCard{card: %Card{rank: 12, suit: :c}, seat: :south},
+          %TrickCard{card: %Card{rank: 5, suit: :s}, seat: :east}
         ])
 
-      assert winner == {%Card{rank: 9, suit: :s}, :north}
+      assert winner == %TrickCard{card: %Card{rank: 9, suit: :s}, seat: :north}
     end
   end
 end

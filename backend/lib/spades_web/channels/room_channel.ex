@@ -3,7 +3,7 @@ defmodule SpadesWeb.RoomChannel do
   This channel will handle individual game rooms.
   """
   use SpadesWeb, :channel
-  alias SpadesGame.{GameUIServer, GameUIView}
+  alias SpadesGame.{Card, GameUIServer, GameUIView}
 
   require Logger
 
@@ -78,6 +78,22 @@ defmodule SpadesWeb.RoomChannel do
         %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
       ) do
     GameUIServer.bid(room_slug, user_id, bid_num)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+        "play",
+        %{"card" => card},
+        %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+      ) do
+    card = Card.from_map(card)
+    # Ignoring return value; could work on passing an error up
+    GameUIServer.play(room_slug, user_id, card)
+
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)

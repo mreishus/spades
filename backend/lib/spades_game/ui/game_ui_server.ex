@@ -6,7 +6,7 @@ defmodule SpadesGame.GameUIServer do
   @timeout :timer.hours(1)
 
   require Logger
-  alias SpadesGame.{GameOptions, GameUI, GameRegistry}
+  alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry}
 
   @doc """
   start_link/2: Generates a new game server under a provided name.
@@ -58,6 +58,14 @@ defmodule SpadesGame.GameUIServer do
   @spec bid(String.t(), integer, integer) :: GameUI.t()
   def bid(game_name, user_id, bid_amount) do
     GenServer.call(via_tuple(game_name), {:bid, user_id, bid_amount})
+  end
+
+  @doc """
+  play/3: A player just played a card.
+  """
+  @spec play(String.t(), integer, Card.t()) :: GameUI.t()
+  def play(game_name, user_id, card) do
+    GenServer.call(via_tuple(game_name), {:play, user_id, card})
   end
 
   @doc """
@@ -127,6 +135,11 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:bid, user_id, bid_amount}, _from, gameui) do
     GameUI.bid(gameui, user_id, bid_amount)
+    |> save_and_reply()
+  end
+
+  def handle_call({:play, user_id, card}, _from, gameui) do
+    GameUI.play(gameui, user_id, card)
     |> save_and_reply()
   end
 
