@@ -1,4 +1,6 @@
 declare module "elixir-backend" {
+  export type Seat = "west" | "east" | "south" | "north";
+
   export declare class Room {
     public id: number;
     public name: string;
@@ -8,7 +10,7 @@ declare module "elixir-backend" {
   export declare class GameUIView {
     public game_ui: GameUI;
     public my_hand: Array<Card>;
-    public my_seat: null | "west" | "east" | "south" | "north";
+    public my_seat: null | Seat;
   }
 
   export declare class Card {
@@ -44,8 +46,8 @@ declare module "elixir-backend" {
     south: any; // GamePlayer
     spades_broken: boolean;
     status: "bidding" | "playing";
-    trick: Array<any>;
-    turn: "west" | "north" | "east" | "south";
+    trick: Array<TrickCard>;
+    turn: Seat;
     west: any; // GamePlayer
   }
 
@@ -53,5 +55,11 @@ declare module "elixir-backend" {
     bid: null | number;
     hand: Array<Card>;
     tricks_won: number;
+  }
+
+  // game_ui.game.trick --> array TrickCard
+  export declare class TrickCard {
+    card: Card;
+    seat: Seat;
   }
 }
