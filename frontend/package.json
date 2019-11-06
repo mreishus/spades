@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@types/classnames": "^2.2.9",
-    "@types/jest": "24.0.21",
-    "@types/node": "12.12.5",
+    "@types/jest": "24.0.22",
+    "@types/node": "12.12.6",
     "@types/phoenix": "^1.4.3",
     "@types/react": "16.9.11",
     "@types/react-dom": "16.9.3",
@@ -23,7 +23,7 @@
     "react-modal": "^3.11.1",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
-    "typescript": "3.6.4"
+    "typescript": "3.7.2"
   },
   "scripts": {
     "start-elixir": "REACT_APP_WS_URL=ws://172.22.2.174:4000/socket npm-run-all -p start:css start:js",
