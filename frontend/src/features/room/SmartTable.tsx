@@ -1,9 +1,9 @@
 import React from "react";
 import Table from "./Table";
-import { Card, Game, Seat, TrickCard } from "elixir-backend";
+import { Card, GameUIView, Seat, TrickCard } from "elixir-backend";
 
 interface Props {
-  game: Game;
+  gameUIView: GameUIView;
 }
 
 let arrow = `/images/cards3/red-arrow-down.png`;
@@ -22,46 +22,102 @@ const cardFromTrick = (trick: Array<TrickCard>, seat: Seat) => {
   return imageUrlForCard(thisCard);
 };
 
-export const SmartTable: React.FC<Props> = ({ game }) => {
+const clockwise90 = (input: Seat): Seat => {
+  // Done this way so TS can analyze
+  if (input === "south") {
+    return "west";
+  } else if (input === "west") {
+    return "north";
+  } else if (input === "north") {
+    return "east";
+  } else if (input === "east") {
+    return "south";
+  }
+  throw new Error("clockwise90: Clockwise of what?");
+};
+
+const counter_clockwise90 = (input: Seat): Seat => {
+  // Done this way so TS can analyze
+  if (input === "south") {
+    return "east";
+  } else if (input === "east") {
+    return "north";
+  } else if (input === "north") {
+    return "west";
+  } else if (input === "west") {
+    return "south";
+  }
+  throw new Error("counter_clockwise90: Clockwise of what?");
+};
+
+const translate = (objective_seat: Seat, perspective: Seat | null): Seat => {
+  if (perspective === null || perspective === "south") {
+    return objective_seat;
+  } else if (perspective === "west") {
+    //North should appear to my LEFT (West)
+    //South should appear to my RIGHT (East)
+    return clockwise90(objective_seat);
+  } else if (perspective === "north") {
+    return clockwise90(clockwise90(objective_seat));
+  } else if (perspective === "east") {
+    return counter_clockwise90(objective_seat);
+  }
+  throw new Error("translate: What perspective?");
+};
+
+export const SmartTable: React.FC<Props> = ({ gameUIView }) => {
+  const { my_seat } = gameUIView;
+  const { game } = gameUIView.game_ui;
   const { trick } = game;
 
+  // Seats with directions translated - Sitting at bottom
+  const bottomSeat = translate("south", my_seat);
+  const topSeat = translate("north", my_seat);
+  const rightSeat = translate("east", my_seat);
+  const leftSeat = translate("west", my_seat);
+
+  const bottomPlayer = game[bottomSeat];
+  const topPlayer = game[topSeat];
+  const rightPlayer = game[rightSeat];
+  const leftPlayer = game[leftSeat];
+
   // Arrow indicators if it's that seat's turn
-  const southTurn = game.turn === "south" ? arrow : null;
-  const northTurn = game.turn === "north" ? arrow : null;
-  const eastTurn = game.turn === "east" ? arrow : null;
-  const westTurn = game.turn === "west" ? arrow : null;
+  const bottomTurn = game.turn === bottomSeat ? arrow : null;
+  const topTurn = game.turn === topSeat ? arrow : null;
+  const rightTurn = game.turn === rightSeat ? arrow : null;
+  const leftTurn = game.turn === leftSeat ? arrow : null;
 
   // The card they played during the trick
-  const southCard = cardFromTrick(trick, "south");
-  const northCard = cardFromTrick(trick, "north");
-  const eastCard = cardFromTrick(trick, "east");
-  const westCard = cardFromTrick(trick, "west");
+  const bottomCard = cardFromTrick(trick, bottomSeat);
+  const topCard = cardFromTrick(trick, topSeat);
+  const rightCard = cardFromTrick(trick, rightSeat);
+  const leftCard = cardFromTrick(trick, leftSeat);
 
   if (game.status === "bidding") {
     return (
       <Table
-        leftCard={westTurn}
-        topCard={northTurn}
-        rightCard={eastTurn}
-        bottomCard={southTurn}
-        leftPlayer={game.west}
-        topPlayer={game.north}
-        rightPlayer={game.east}
-        bottomPlayer={game.south}
+        leftCard={leftTurn}
+        topCard={topTurn}
+        rightCard={rightTurn}
+        bottomCard={bottomTurn}
+        leftPlayer={leftPlayer}
+        topPlayer={topPlayer}
+        rightPlayer={rightPlayer}
+        bottomPlayer={bottomPlayer}
         emphasizeBidding
       />
     );
   }
   return (
     <Table
-      bottomCard={southTurn || southCard}
-      topCard={northTurn || northCard}
-      leftCard={westTurn || westCard}
-      rightCard={eastTurn || eastCard}
-      leftPlayer={game.west}
-      topPlayer={game.north}
-      rightPlayer={game.east}
-      bottomPlayer={game.south}
+      leftCard={leftTurn || leftCard}
+      topCard={topTurn || topCard}
+      rightCard={rightTurn || rightCard}
+      bottomCard={bottomTurn || bottomCard}
+      leftPlayer={leftPlayer}
+      topPlayer={topPlayer}
+      rightPlayer={rightPlayer}
+      bottomPlayer={bottomPlayer}
     />
   );
 };
