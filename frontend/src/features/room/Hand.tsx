@@ -28,12 +28,16 @@ interface Props {
 
 const cardToString = (card: Card) => card.rank.toString() + card.suit;
 
+const minWSix = {
+  minWidth: "6rem"
+};
+
 export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
   cards.sort(handSort);
 
   return (
-    <div className="flex">
+    <div className="flex justify-center" style={minWSix}>
       {cards.map(card => {
         let cardStr = cardToString(card);
 

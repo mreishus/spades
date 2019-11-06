@@ -14,8 +14,8 @@ const imageUrlForCard = (card: Card) => {
 };
 
 const cardFromTrick = (trick: Array<TrickCard>, seat: Seat) => {
-  const thisCardA = trick.filter(tc => tc.seat == seat);
-  if (thisCardA.length == 0) {
+  const thisCardA = trick.filter(tc => tc.seat === seat);
+  if (thisCardA.length === 0) {
     return null;
   }
   const thisCard = thisCardA[0].card;
