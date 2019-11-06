@@ -93,21 +93,6 @@ export const SmartTable: React.FC<Props> = ({ gameUIView }) => {
   const rightCard = cardFromTrick(trick, rightSeat);
   const leftCard = cardFromTrick(trick, leftSeat);
 
-  if (game.status === "bidding") {
-    return (
-      <Table
-        leftCard={leftTurn}
-        topCard={topTurn}
-        rightCard={rightTurn}
-        bottomCard={bottomTurn}
-        leftPlayer={leftPlayer}
-        topPlayer={topPlayer}
-        rightPlayer={rightPlayer}
-        bottomPlayer={bottomPlayer}
-        emphasizeBidding
-      />
-    );
-  }
   return (
     <Table
       leftCard={leftTurn || leftCard}
@@ -118,6 +103,7 @@ export const SmartTable: React.FC<Props> = ({ gameUIView }) => {
       topPlayer={topPlayer}
       rightPlayer={rightPlayer}
       bottomPlayer={bottomPlayer}
+      emphasizeBidding={game.status === "bidding"}
     />
   );
 };
