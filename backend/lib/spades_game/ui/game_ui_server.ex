@@ -139,7 +139,14 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:play, user_id, card}, _from, gameui) do
-    GameUI.play(gameui, user_id, card)
+    gameui = GameUI.play(gameui, user_id, card)
+
+    # A full trick takes a little while to go away
+    if GameUI.trick_full?(gameui) do
+      push_state_to_clients(2, 700)
+    end
+
+    gameui
     |> save_and_reply()
   end
 
@@ -169,12 +176,16 @@ defmodule SpadesGame.GameUIServer do
   # and pushes that state down to the clients, so they will see
   # the game status move to playing after 10 seconds.
   defp push_state_to_clients_for_12_seconds() do
+    push_state_to_clients(12, 1000)
+  end
+
+  defp push_state_to_clients(repeat_times, delay_ms) do
     pid = self()
 
     spawn_link(fn ->
-      1..12
+      1..repeat_times
       |> Enum.each(fn _ ->
-        Process.sleep(1000)
+        Process.sleep(delay_ms)
         state = GenServer.call(pid, :state)
         SpadesWeb.RoomChannel.notify_from_outside(state.game_name)
       end)

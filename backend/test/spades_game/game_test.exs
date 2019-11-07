@@ -102,6 +102,8 @@ defmodule GameTest do
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert game.trick |> length == 3
       assert {:ok, game} = Game.play(game, :north, card_n)
+      assert game.trick |> length == 4
+      game = Game.rewind_trickfull_devtest(game)
       assert game.trick |> length == 0
       assert game.turn == :east
       assert game.east.tricks_won == 1
@@ -155,6 +157,7 @@ defmodule GameTest do
       assert {:ok, game} = Game.play(game, :south, card_s)
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.spades_broken == false
 
@@ -167,6 +170,7 @@ defmodule GameTest do
       assert {:ok, game} = Game.play(game, :south, card_s)
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.spades_broken == false
 
@@ -179,6 +183,7 @@ defmodule GameTest do
       assert {:ok, game} = Game.play(game, :north, card_n)
       assert {:ok, game} = Game.play(game, :east, card_e)
       assert {:ok, game} = Game.play(game, :south, card_s)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 1
       assert game.west.tricks_won == 1

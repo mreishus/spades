@@ -132,6 +132,7 @@ defmodule SpadesGame.GameUI do
     gameui
     |> check_full_seats
     |> check_status_advance
+    |> check_game
   end
 
   @doc """
@@ -209,6 +210,18 @@ defmodule SpadesGame.GameUI do
   end
 
   @doc """
+  check_game/1: 
+  Run the series of checks on the Game object.
+  Similar to GameUI's checks(), but running on the embedded
+  game_ui.game object/level instead.
+  """
+  @spec check_game(GameUI.t()) :: GameUI.t()
+  def check_game(%GameUI{} = game_ui) do
+    {:ok, game} = Game.checks(game_ui.game)
+    %GameUI{game_ui | game: game}
+  end
+
+  @doc """
   check_status_advance/1: Move a game's status when appropriate.
   :staging -> :playing -> :done
   """
@@ -231,12 +244,25 @@ defmodule SpadesGame.GameUI do
     gameui
   end
 
+  @doc """
+  everyone_sitting?/1:
+  Does each seat have a person sitting in it?
+  """
   @spec everyone_sitting?(GameUI.t()) :: boolean
   def everyone_sitting?(gameui) do
     [:north, :west, :south, :east]
     |> Enum.reduce(true, fn seat, acc ->
       acc and gameui.seats[seat] != nil
     end)
+  end
+
+  @doc """
+  trick_full?/1:
+  Does the game's current trick have one card for each player?
+  """
+  @spec trick_full?(GameUI.t()) :: boolean
+  def trick_full?(game_ui) do
+    Game.trick_full?(game_ui.game)
   end
 
   @doc """
@@ -254,6 +280,12 @@ defmodule SpadesGame.GameUI do
     time_elapsed >= 10 * 1000
   end
 
+  @doc """
+  rewind_countdown_devtest/1:
+  If a "when_trick_full" timestamp is set, rewind it to be
+  10 minutes ago.  Also run check_for_trick_winner.  Used in
+  dev and testing for instant trick advance only.
+  """
   @spec rewind_countdown_devtest(GameUI.t()) :: GameUI.t()
   def rewind_countdown_devtest(%GameUI{when_seats_full: when_seats_full} = game_ui) do
     if when_seats_full == nil do
@@ -266,5 +298,11 @@ defmodule SpadesGame.GameUI do
       %GameUI{game_ui | when_seats_full: nt}
       |> checks
     end
+  end
+
+  @spec rewind_trickfull_devtest(GameUI.t()) :: GameUI.t()
+  def rewind_trickfull_devtest(game_ui) do
+    %GameUI{game_ui | game: Game.rewind_trickfull_devtest(game_ui.game)}
+    |> checks
   end
 end

@@ -9,6 +9,9 @@ defmodule SpadesGame.Game do
 
   require Logger
 
+  # trick_full_time: How many ms a "full" trick stays on the table
+  @trick_full_time 700
+
   @derive Jason.Encoder
   defstruct [
     :game_name,
@@ -23,6 +26,7 @@ defmodule SpadesGame.Game do
     :east,
     :south,
     :trick,
+    :when_trick_full,
     :spades_broken
   ]
 
@@ -33,7 +37,7 @@ defmodule SpadesGame.Game do
           options: GameOptions.t(),
           status: :bidding | :playing,
           dealer: :west | :north | :east | :south,
-          turn: :west | :north | :east | :south,
+          turn: nil | :west | :north | :east | :south,
           draw: Deck.t(),
           discard: Deck.t(),
           west: GamePlayer.t(),
@@ -41,6 +45,7 @@ defmodule SpadesGame.Game do
           east: GamePlayer.t(),
           south: GamePlayer.t(),
           trick: list(TrickCard.t()),
+          when_trick_full: nil | DateTime.t(),
           spades_broken: boolean
         }
 
@@ -75,6 +80,7 @@ defmodule SpadesGame.Game do
       east: e,
       south: s,
       trick: [],
+      when_trick_full: nil,
       spades_broken: false
     }
   end
@@ -159,7 +165,21 @@ defmodule SpadesGame.Game do
     |> ensure_active_player(seat)
     |> remove_card_from_hand(seat, card)
     |> add_card_to_trick(seat, card)
-    |> check_for_trick_winner_and_advance_turn()
+    |> advance_turn()
+    |> check_for_trick_winner()
+  end
+
+  @doc """
+  checks/1:  Checks for time-based changes.
+  Checks is safe to call at any time, as many times as you would like.
+
+  The only time-based change: After a trick is filled, it doesn't clear out
+  until a second or two later.
+  """
+  @spec checks(Game.t()) :: {:ok, Game.t()} | {:error, String.t()}
+  def checks(%Game{} = game) do
+    {:ok, game}
+    |> check_for_trick_winner()
   end
 
   @spec ensure_playing({:ok, Game.t()} | {:error, String.t()}) ::
@@ -235,7 +255,16 @@ defmodule SpadesGame.Game do
       true ->
         trick_card = %TrickCard{card: card, seat: seat}
         new_trick = [trick_card | game.trick]
-        {:ok, %Game{game | trick: new_trick}}
+
+        # Set when_trick_full timestamp if adding the 4th card
+        when_trick_full =
+          if length(new_trick) >= 4 and length(game.trick) < 4 do
+            DateTime.utc_now()
+          else
+            game.when_trick_full
+          end
+
+        {:ok, %Game{game | trick: new_trick, when_trick_full: when_trick_full}}
     end
   end
 
@@ -262,16 +291,45 @@ defmodule SpadesGame.Game do
     game.spades_broken || card.suit != :s
   end
 
-  @spec check_for_trick_winner_and_advance_turn({:ok, Game.t()} | {:error, String.t()}) ::
+  @doc """
+  advance_turn/1: Make the game.turn variable advance clockwise
+  """
+  @spec advance_turn({:ok, Game.t()} | {:error, String.t()}) ::
           {:ok, Game.t()} | {:error, String.t()}
-  def check_for_trick_winner_and_advance_turn({:error, message}), do: {:error, message}
+  def advance_turn({:error, message}), do: {:error, message}
 
-  def check_for_trick_winner_and_advance_turn({:ok, game}) do
+  def advance_turn({:ok, game}) do
+    if length(game.trick) < 4 do
+      game = %Game{game | turn: rotate(game.turn)}
+      {:ok, game}
+    else
+      {:ok, game}
+    end
+  end
+
+  @doc """
+  check_for_trick_winner/1:
+    No trick winner: Do nothing.
+    Trick winner, but not enough time has elasped: Set turn to nil.
+    Trick winner, enough time has elapsed: Set up for the next trick.
+  """
+  @spec check_for_trick_winner({:ok, Game.t()} | {:error, String.t()}) ::
+          {:ok, Game.t()} | {:error, String.t()}
+  def check_for_trick_winner({:error, message}), do: {:error, message}
+
+  def check_for_trick_winner({:ok, game}) do
     cond do
       length(game.trick) > 4 ->
         {:error, "Trick too large"}
 
-      length(game.trick) == 4 ->
+      length(game.trick) == 4 && game.when_trick_full == nil ->
+        {:error, "Trick is full, but no timestamp is set"}
+
+      length(game.trick) == 4 && ms_elapsed_since(game.when_trick_full) < @trick_full_time ->
+        game = %Game{game | turn: nil}
+        {:ok, game}
+
+      length(game.trick) == 4 && ms_elapsed_since(game.when_trick_full) >= @trick_full_time ->
         # Compute trick winner
         %TrickCard{card: _card, seat: seat} = trick_winner(game.trick)
         # Give them +1 tricks, clear the current trick, set the turn
@@ -283,13 +341,37 @@ defmodule SpadesGame.Game do
           |> Map.put(seat, new_player)
           |> Map.put(:turn, seat)
           |> Map.put(:trick, [])
+          |> Map.put(:when_trick_full, nil)
 
         {:ok, game}
 
       length(game.trick) < 4 ->
-        game = %Game{game | turn: rotate(game.turn)}
         {:ok, game}
     end
+  end
+
+  @doc """
+  rewind_trickfull_devtest/1: 
+  If a "when_trick_full" timestamp is set, rewind it to be
+  10 minutes ago.  Also run check_for_trick_winner.  Used in
+  dev and testing for instant trick advance only.
+  """
+  @spec rewind_trickfull_devtest(Game.t()) :: Game.t()
+  def rewind_trickfull_devtest(%Game{when_trick_full: nil} = game), do: game
+
+  def rewind_trickfull_devtest(%Game{} = game) do
+    ten_mins_in_seconds = 60 * 10
+    nt = DateTime.add(game.when_trick_full, -1 * ten_mins_in_seconds, :second)
+    game = %Game{game | when_trick_full: nt}
+    {:ok, game} = check_for_trick_winner({:ok, game})
+    game
+  end
+
+  # ms_elapsed_since/1: How many MS have elapsed since the provided datetime?
+  defp ms_elapsed_since(nil), do: 0
+
+  defp ms_elapsed_since(%DateTime{} = dt) do
+    DateTime.diff(DateTime.utc_now(), dt, :millisecond)
   end
 
   @spec break_spades_if_needed(Game.t()) :: Game.t()
@@ -301,6 +383,7 @@ defmodule SpadesGame.Game do
     end
   end
 
+  ## XXX TODO Incorrect spec
   @spec has_spade?(list({Card.t(), :north | :east | :west | :south})) :: boolean
   defp has_spade?(trick) do
     trick
@@ -342,5 +425,14 @@ defmodule SpadesGame.Game do
   def discard(%Game{draw: draw, discard: discard} = game) do
     [top_card | new_draw] = draw
     %Game{game | draw: new_draw, discard: [top_card | discard]}
+  end
+
+  @doc """
+  trick_full?/1
+  Does the game's current trick have one card for each player?
+  """
+  @spec trick_full?(Game.t()) :: boolean
+  def trick_full?(%Game{} = game) do
+    length(game.trick) >= 4
   end
 end

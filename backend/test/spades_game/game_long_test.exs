@@ -28,6 +28,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :south, card_s)
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.spades_broken == false
 
@@ -40,6 +41,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :south, card_s)
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.spades_broken == false
 
@@ -53,6 +55,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :east, card_e)
       # Winner
       assert {:ok, game} = Game.play(game, :south, card_s)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 1
       assert game.west.tricks_won == 1
@@ -69,6 +72,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :north, card_n)
       # Winner
       assert {:ok, game} = Game.play(game, :east, card_e)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 2
       assert game.west.tricks_won == 1
@@ -84,6 +88,7 @@ defmodule GameLongTest do
       # Winner
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 2
       assert game.west.tricks_won == 2
@@ -99,6 +104,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :east, card_e)
       # Winner
       assert {:ok, game} = Game.play(game, :south, card_s)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 2
       assert game.west.tricks_won == 2
@@ -114,6 +120,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
       assert {:ok, game} = Game.play(game, :east, card_e)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 2
       assert game.west.tricks_won == 3
@@ -129,6 +136,7 @@ defmodule GameLongTest do
       # Winner
       assert {:ok, game} = Game.play(game, :east, card_e)
       assert {:ok, game} = Game.play(game, :south, card_s)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 3
       assert game.west.tricks_won == 3
@@ -144,6 +152,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :south, card_s)
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 4
       assert game.west.tricks_won == 3
@@ -159,6 +168,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :south, card_s)
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 5
       assert game.west.tricks_won == 3
@@ -174,6 +184,7 @@ defmodule GameLongTest do
       # Winner
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 5
       assert game.west.tricks_won == 4
@@ -189,6 +200,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :east, card_e)
       # Winner
       assert {:ok, game} = Game.play(game, :south, card_s)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 5
       assert game.west.tricks_won == 4
@@ -204,6 +216,7 @@ defmodule GameLongTest do
       assert {:ok, game} = Game.play(game, :west, card_w)
       assert {:ok, game} = Game.play(game, :north, card_n)
       assert {:ok, game} = Game.play(game, :east, card_e)
+      game = Game.rewind_trickfull_devtest(game)
 
       assert game.east.tricks_won == 5
       assert game.west.tricks_won == 5

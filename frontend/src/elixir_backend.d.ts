@@ -47,8 +47,9 @@ declare module "elixir-backend" {
     spades_broken: boolean;
     status: "bidding" | "playing";
     trick: Array<TrickCard>;
-    turn: Seat;
+    turn: null | Seat;
     west: any; // GamePlayer
+    when_trick_full: null | string; // timestamp
   }
 
   export declare class GamePlayer {

@@ -147,6 +147,8 @@ defmodule GameUiTest do
       gameui = GameUI.play(gameui, 12, card_w)
       assert gameui.game.trick |> length == 3
       gameui = GameUI.play(gameui, 10, card_n)
+      assert gameui.game.trick |> length == 4
+      gameui = GameUI.rewind_trickfull_devtest(gameui)
       assert gameui.game.trick |> length == 0
       assert gameui.game.east.tricks_won == 1
       assert gameui.game.turn == :east
