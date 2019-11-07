@@ -383,8 +383,7 @@ defmodule SpadesGame.Game do
     end
   end
 
-  ## XXX TODO Incorrect spec
-  @spec has_spade?(list({Card.t(), :north | :east | :west | :south})) :: boolean
+  @spec has_spade?(list(TrickCard.t())) :: boolean
   defp has_spade?(trick) do
     trick
     |> Enum.any?(fn %TrickCard{card: card, seat: _player} -> card.suit == :s end)
