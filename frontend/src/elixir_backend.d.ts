@@ -37,8 +37,6 @@ declare module "elixir-backend" {
 
   export declare class Game {
     dealer: string; // "north"
-    discard: Array<any>;
-    draw: Array<any>;
     east: any; // GamePlayer
     game_name: string;
     north: any; // GamePlayer

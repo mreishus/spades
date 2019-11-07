@@ -3,7 +3,6 @@ defmodule SpadesGame.Game do
   Represents a game of spades.
   In early stages of the app, it only represents a
   some toy game used to test everything around it.
-  Right now, it's a simple draw pile and a discard pile.
   """
   alias SpadesGame.{Card, Deck, Game, GamePlayer, GameOptions, TrickCard}
 
@@ -19,8 +18,6 @@ defmodule SpadesGame.Game do
     :dealer,
     :status,
     :turn,
-    :draw,
-    :discard,
     :west,
     :north,
     :east,
@@ -38,8 +35,6 @@ defmodule SpadesGame.Game do
           status: :bidding | :playing,
           dealer: :west | :north | :east | :south,
           turn: nil | :west | :north | :east | :south,
-          draw: Deck.t(),
-          discard: Deck.t(),
           west: GamePlayer.t(),
           north: GamePlayer.t(),
           east: GamePlayer.t(),
@@ -73,8 +68,6 @@ defmodule SpadesGame.Game do
       status: :bidding,
       dealer: :north,
       turn: :east,
-      draw: Deck.new_shuffled(),
-      discard: Deck.new_empty(),
       west: w,
       north: n,
       east: e,
@@ -414,17 +407,6 @@ defmodule SpadesGame.Game do
   defp suit_priority(:h), do: %{s: 200, h: 100, c: 0, d: 0}
   defp suit_priority(:c), do: %{s: 200, h: 0, c: 100, d: 0}
   defp suit_priority(:d), do: %{s: 200, h: 0, c: 0, d: 100}
-
-  @doc """
-  discard/1:  Move one card from the draw pile to the discard pile.
-  """
-  @spec discard(Game.t()) :: Game.t()
-  def discard(%Game{draw: []} = game), do: game
-
-  def discard(%Game{draw: draw, discard: discard} = game) do
-    [top_card | new_draw] = draw
-    %Game{game | draw: new_draw, discard: [top_card | discard]}
-  end
 
   @doc """
   trick_full?/1

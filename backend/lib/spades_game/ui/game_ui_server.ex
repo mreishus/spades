@@ -44,15 +44,6 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  discard/1: Someone moves a card from the draw pile to the discard pile.
-  (Simple state testing.)
-  """
-  @spec discard(String.t()) :: GameUI.t()
-  def discard(game_name) do
-    GenServer.call(via_tuple(game_name), :discard)
-  end
-
-  @doc """
   bid/3: A player just submitted a bid.
   """
   @spec bid(String.t(), integer, integer) :: GameUI.t()
@@ -120,11 +111,6 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call(:state, _from, state) do
     GameUI.checks(state)
-    |> save_and_reply()
-  end
-
-  def handle_call(:discard, _from, state) do
-    GameUI.discard(state)
     |> save_and_reply()
   end
 

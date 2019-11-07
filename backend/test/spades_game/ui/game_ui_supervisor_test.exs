@@ -45,9 +45,11 @@ defmodule GameUiSupervisorTest do
       game_name = "game-#{:rand.uniform(1000)}"
       {:ok, pid} = GameUISupervisor.start_game(game_name, default_options())
 
-      # # discard a single card, and record the state before/after
+      # have a few people sit, and record the state before/after
       initial_state = GameUIServer.state(game_name)
-      GameUIServer.discard(game_name)
+      GameUIServer.sit(game_name, 11, "west")
+      GameUIServer.sit(game_name, 12, "north")
+      GameUIServer.sit(game_name, 13, "east")
       new_state = GameUIServer.state(game_name)
       assert initial_state != new_state
 

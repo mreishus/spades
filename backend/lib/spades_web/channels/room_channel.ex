@@ -45,22 +45,6 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
-        "discard_card",
-        _payload,
-        %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
-      ) do
-    Logger.info("Discard button pressed by #{user_id}")
-    GameUIServer.discard(room_slug)
-    state = GameUIServer.state(room_slug)
-    socket = socket |> assign(:game_ui, state)
-    # Notify and then reply makes the person who clicked it get the
-    # message twice
-    notify(socket)
-
-    {:reply, {:ok, client_state(socket)}, socket}
-  end
-
-  def handle_in(
         "sit",
         %{"whichSeat" => which_seat},
         %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket

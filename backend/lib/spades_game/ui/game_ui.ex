@@ -110,16 +110,6 @@ defmodule SpadesGame.GameUI do
   end
 
   @doc """
-  discard/1: Someone moved a card from the draw pile to the discard pile.
-  Function for testing simple UI state that should eventually be removed.
-  """
-  @spec discard(GameUI.t()) :: GameUI.t()
-  def discard(gameui) do
-    game = Game.discard(gameui.game)
-    %{gameui | game: game}
-  end
-
-  @doc """
   checks/1: Applies checks to GameUI and return an updated copy.
 
   Generally, all "checks" we append to all outputs.

@@ -1,7 +1,6 @@
 import React from "react";
 import cx from "classnames";
 import PlayerSeat from "./PlayerSeat";
-import Button from "../../components/basic/Button";
 import SmartTable from "./SmartTable";
 import Hand from "./Hand";
 import Bid from "./Bid";
@@ -83,17 +82,6 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
           />
         </div>
         <div className="w-1/5 h-12"></div>
-      </div>
-      <div className="mt-4">
-        <div>draw pile: {gameUIView.game_ui.game.draw.length} cards</div>
-        <div>discard pile: {gameUIView.game_ui.game.discard.length} cards</div>
-        <Button
-          className="mt-1"
-          isPrimary
-          onClick={() => broadcast("discard_card", {})}
-        >
-          Discard
-        </Button>
       </div>
     </>
   );

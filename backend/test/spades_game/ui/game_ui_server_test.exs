@@ -44,22 +44,6 @@ defmodule GameUiServerTest do
     end
   end
 
-  describe "discard/1" do
-    test "discard discards a card" do
-      game_name = generate_game_name()
-      {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
-
-      assert {:ok, _pid} = GameUIServer.start_link(game_name, options)
-      state = GameUIServer.state(game_name)
-      assert %GameUI{} = state
-      assert state.game.draw |> length == 52
-
-      state2 = GameUIServer.discard(game_name)
-      assert %GameUI{} = state2
-      assert state2.game.draw |> length == 51
-    end
-  end
-
   describe "sit/3" do
     test "people can sit" do
       game_name = generate_game_name()
