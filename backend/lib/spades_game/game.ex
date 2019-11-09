@@ -4,7 +4,7 @@ defmodule SpadesGame.Game do
   In early stages of the app, it only represents a
   some toy game used to test everything around it.
   """
-  alias SpadesGame.{Card, Deck, Game, GamePlayer, GameOptions, TrickCard}
+  alias SpadesGame.{Card, Deck, Game, GamePlayer, GameOptions, GameScore, TrickCard}
 
   require Logger
 
@@ -24,7 +24,8 @@ defmodule SpadesGame.Game do
     :south,
     :trick,
     :when_trick_full,
-    :spades_broken
+    :spades_broken,
+    :score
   ]
 
   use Accessible
@@ -41,7 +42,8 @@ defmodule SpadesGame.Game do
           south: GamePlayer.t(),
           trick: list(TrickCard.t()),
           when_trick_full: nil | DateTime.t(),
-          spades_broken: boolean
+          spades_broken: boolean,
+          score: GameScore.t()
         }
 
   @doc """
@@ -74,7 +76,8 @@ defmodule SpadesGame.Game do
       south: s,
       trick: [],
       when_trick_full: nil,
-      spades_broken: false
+      spades_broken: false,
+      score: GameScore.new()
     }
   end
 
@@ -160,6 +163,7 @@ defmodule SpadesGame.Game do
     |> add_card_to_trick(seat, card)
     |> advance_turn()
     |> check_for_trick_winner()
+    |> check_for_new_round()
   end
 
   @doc """
@@ -173,6 +177,7 @@ defmodule SpadesGame.Game do
   def checks(%Game{} = game) do
     {:ok, game}
     |> check_for_trick_winner()
+    |> check_for_new_round()
   end
 
   @spec ensure_playing({:ok, Game.t()} | {:error, String.t()}) ::
@@ -344,7 +349,54 @@ defmodule SpadesGame.Game do
   end
 
   @doc """
-  rewind_trickfull_devtest/1: 
+  check_for_new_round/1:
+    People still have cards: Do nothing.
+    Hands are empty:
+      - Tally Score
+      - Deal new hands or declare winner
+  """
+  @spec check_for_new_round({:ok, Game.t()} | {:error, String.t()}) ::
+          {:ok, Game.t()} | {:error, String.t()}
+  def check_for_new_round({:error, message}), do: {:error, message}
+
+  def check_for_new_round({:ok, game}) do
+    if tricks_played(game) >= 13 do
+      # Round is over, compute score
+      game = compute_score(game)
+
+      # Get new hands
+      [w, n, e, s] =
+        get_initial_hands(game.options)
+        |> Enum.map(fn d -> GamePlayer.new(d) end)
+
+      # Dealer position rotates, first to bid is left of new dealer
+      dealer = rotate(game.dealer)
+      turn = rotate(dealer)
+
+      game = %Game{
+        game
+        | west: w,
+          north: n,
+          east: e,
+          south: s,
+          status: :bidding,
+          dealer: dealer,
+          turn: turn
+      }
+
+      {:ok, game}
+    else
+      {:ok, game}
+    end
+  end
+
+  @spec tricks_played(Game.t()) :: integer()
+  def tricks_played(%Game{} = game) do
+    game.north.tricks_won + game.east.tricks_won + game.west.tricks_won + game.south.tricks_won
+  end
+
+  @doc """
+  rewind_trickfull_devtest/1:
   If a "when_trick_full" timestamp is set, rewind it to be
   10 minutes ago.  Also run check_for_trick_winner.  Used in
   dev and testing for instant trick advance only.
@@ -415,5 +467,11 @@ defmodule SpadesGame.Game do
   @spec trick_full?(Game.t()) :: boolean
   def trick_full?(%Game{} = game) do
     length(game.trick) >= 4
+  end
+
+  @spec compute_score(Game.t()) :: Game.t()
+  def compute_score(%Game{} = game) do
+    score = GameScore.update(game.score, game)
+    %{game | score: score}
   end
 end

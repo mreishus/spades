@@ -48,12 +48,33 @@ declare module "elixir-backend" {
     turn: null | Seat;
     west: any; // GamePlayer
     when_trick_full: null | string; // timestamp
+    score: GameScore;
   }
 
   export declare class GamePlayer {
     bid: null | number;
     hand: Array<Card>;
     tricks_won: number;
+  }
+
+  export declare class GameScore {
+    north_south_rounds: Array<GameScoreRoundTeam>;
+    north_south_score: number;
+    east_west_rounds: Array<GameScoreRoundTeam>;
+    east_west_score: number;
+  }
+
+  export declare class GameScoreRoundTeam {
+    before_score: number;
+    before_bags: number;
+    bid: number;
+    won: number;
+    adj_successful_bid: null | number;
+    adj_failed_bid: null | number;
+    adj_bags: number;
+    bag_penalty: number;
+    after_score: number;
+    after_bags: number;
   }
 
   // game_ui.game.trick --> array TrickCard

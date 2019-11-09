@@ -227,6 +227,7 @@ defmodule GameLongTest do
       assert game.north.hand |> length == 0
       assert game.south.hand |> length == 0
 
+      # game |> IO.inspect(label: "game")
       ## Need bidding, scoring, etc
     end
   end
