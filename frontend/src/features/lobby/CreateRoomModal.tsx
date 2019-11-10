@@ -44,7 +44,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
       isOpen={isOpen}
       onRequestClose={closeModal}
       contentLabel="Minimal Modal Example"
-      overlayClassName="fixed inset-0 bg-black-50"
+      overlayClassName="fixed inset-0 bg-black-50 z-50"
       className="insert-auto overflow-auto p-5 bg-gray-100 border max-w-lg mx-auto my-12 rounded-lg outline-none"
     >
       <h1 id="heading">Create Room</h1>
