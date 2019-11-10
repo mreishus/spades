@@ -77,4 +77,12 @@ defmodule SpadesGame.GamePlayer do
   def has_suit?(player, suit) do
     player.hand |> Enum.any?(fn card -> card.suit == suit end)
   end
+
+  def hand_length(player) do
+    player.hand |> length()
+  end
+
+  def spades_length(player) do
+    player.hand |> Enum.filter(fn card -> card.suit == :s end) |> length()
+  end
 end

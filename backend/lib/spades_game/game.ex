@@ -244,7 +244,7 @@ defmodule SpadesGame.Game do
       length(game.trick) >= 4 ->
         {:error, "Too many cards in trick to add another"}
 
-      Enum.empty?(game.trick) && !valid_lead_card?(game, card) ->
+      Enum.empty?(game.trick) && !valid_lead_card?(game, seat, card) ->
         {:error, "Tried to play a spade before they were broken"}
 
       !Enum.empty?(game.trick) && !followed_suit?(game, seat, card) ->
@@ -282,11 +282,18 @@ defmodule SpadesGame.Game do
   end
 
   # valid_lead_card?/2 Is this card eligible to begin a trick?
-  @spec valid_lead_card?(Game.t(), Card.t()) :: boolean
-  def valid_lead_card?(game, card) do
+  @spec valid_lead_card?(Game.t(), :north | :east | :west | :south, Card.t()) :: boolean
+  def valid_lead_card?(game, seat, card) do
     # Invalid card: !game.spades_broken && card.suit == :s
     # Use DeMorgan's Law to invert
-    game.spades_broken || card.suit != :s
+    game.spades_broken || card.suit != :s || only_spades_left?(game, seat)
+  end
+
+  @spec only_spades_left?(Game.t(), :north | :east | :west | :south) :: boolean
+  def only_spades_left?(game, seat) do
+    hand_length = Map.get(game, seat) |> GamePlayer.hand_length()
+    spades_length = Map.get(game, seat) |> GamePlayer.spades_length()
+    hand_length == spades_length
   end
 
   @doc """

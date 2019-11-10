@@ -2,7 +2,7 @@ defmodule GameTest do
   use ExUnit.Case, async: true
 
   doctest SpadesGame.Game
-  alias SpadesGame.{Card, Game, GameOptions, TrickCard}
+  alias SpadesGame.{Card, Game, GameOptions, GamePlayer, TrickCard}
 
   setup do
     {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
@@ -110,6 +110,31 @@ defmodule GameTest do
 
       card_e = %Card{rank: 9, suit: :s}
       assert {:error, _x} = Game.play(game, :east, card_e)
+    end
+
+    test "it's ok to play a spade if that's all you have left", %{options: options} do
+      game = Game.new("move1 spades only cards in hand", options)
+
+      assert {:ok, game} = Game.bid(game, :east, 3)
+      assert {:ok, game} = Game.bid(game, :south, 4)
+      assert {:ok, game} = Game.bid(game, :west, 2)
+      assert {:ok, game} = Game.bid(game, :north, 0)
+
+      game = %{
+        game
+        | east: %GamePlayer{
+            bid: 3,
+            tricks_won: 0,
+            hand: [
+              %SpadesGame.Card{rank: 2, suit: :s},
+              %SpadesGame.Card{rank: 3, suit: :s},
+              %SpadesGame.Card{rank: 9, suit: :s}
+            ]
+          }
+      }
+
+      card_e = %Card{rank: 9, suit: :s}
+      assert {:ok, game} = Game.play(game, :east, card_e)
     end
 
     test "Spades can be broken", %{options: options} do
