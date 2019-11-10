@@ -24,8 +24,11 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
 
   return (
     <>
-      <div className={cx("flex mt-12", rowMaxWidth)}>
-        <ScoreHeader score={gameUIView.game_ui.game.score} />
+      <div className={cx("flex mt-6", rowMaxWidth)}>
+        <ScoreHeader
+          round_number={game.round_number}
+          score={gameUIView.game_ui.game.score}
+        />
       </div>
       <div className={cx("flex mt-2", rowMaxWidth)}>
         <div className="w-1/5 h-12"></div>

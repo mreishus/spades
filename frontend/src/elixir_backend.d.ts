@@ -49,6 +49,7 @@ declare module "elixir-backend" {
     west: any; // GamePlayer
     when_trick_full: null | string; // timestamp
     score: GameScore;
+    round_number: number;
   }
 
   export declare class GamePlayer {

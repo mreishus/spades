@@ -25,7 +25,8 @@ defmodule SpadesGame.Game do
     :trick,
     :when_trick_full,
     :spades_broken,
-    :score
+    :score,
+    :round_number
   ]
 
   use Accessible
@@ -43,7 +44,8 @@ defmodule SpadesGame.Game do
           trick: list(TrickCard.t()),
           when_trick_full: nil | DateTime.t(),
           spades_broken: boolean,
-          score: GameScore.t()
+          score: GameScore.t(),
+          round_number: integer
         }
 
   @doc """
@@ -77,7 +79,8 @@ defmodule SpadesGame.Game do
       trick: [],
       when_trick_full: nil,
       spades_broken: false,
-      score: GameScore.new()
+      score: GameScore.new(),
+      round_number: 1
     }
   end
 
@@ -228,9 +231,11 @@ defmodule SpadesGame.Game do
     end
   end
 
-  # add_card_to_trick/3: Add the card specified to the current trick.
-  # Or start a new trick if no trick is in progress.
-  # Checks to ensure it's a valid play.
+  @doc """
+  add_card_to_trick/3: Add the card specified to the current trick.
+  Or start a new trick if no trick is in progress.
+  Checks to ensure it's a valid play.
+  """
   @spec add_card_to_trick(
           {:ok, Game.t()} | {:error, String.t()},
           :west | :north | :east | :south,
@@ -266,9 +271,11 @@ defmodule SpadesGame.Game do
     end
   end
 
-  # followed_suit?/3 If the player in seat seat played this card, would
-  # they be following the rule of "You have to follow the trick's suit if
-  # possible?"
+  @doc """
+  followed_suit?/3 If the player in seat seat played this card, would
+  they be following the rule of "You have to follow the trick's suit if
+  possible?"
+  """
   @spec followed_suit?(Game.t(), :north | :east | :west | :south, Card.t()) :: boolean
   def followed_suit?(game, seat, card) do
     %TrickCard{card: first_card, seat: _first_player} = List.last(game.trick)
@@ -281,7 +288,9 @@ defmodule SpadesGame.Game do
     end
   end
 
-  # valid_lead_card?/2 Is this card eligible to begin a trick?
+  @doc """
+  valid_lead_card?/3 Is this card eligible to begin a trick?
+  """
   @spec valid_lead_card?(Game.t(), :north | :east | :west | :south, Card.t()) :: boolean
   def valid_lead_card?(game, seat, card) do
     # Invalid card: !game.spades_broken && card.suit == :s
@@ -289,6 +298,9 @@ defmodule SpadesGame.Game do
     game.spades_broken || card.suit != :s || only_spades_left?(game, seat)
   end
 
+  @doc """
+  only_spades_left?/2 Does this player only have spades in their hand?
+  """
   @spec only_spades_left?(Game.t(), :north | :east | :west | :south) :: boolean
   def only_spades_left?(game, seat) do
     hand_length = Map.get(game, seat) |> GamePlayer.hand_length()
@@ -388,7 +400,8 @@ defmodule SpadesGame.Game do
           south: s,
           status: :bidding,
           dealer: dealer,
-          turn: turn
+          turn: turn,
+          round_number: game.round_number + 1
       }
 
       {:ok, game}
@@ -426,6 +439,7 @@ defmodule SpadesGame.Game do
     DateTime.diff(DateTime.utc_now(), dt, :millisecond)
   end
 
+  # break_spades_if_needed/1 Mark spades as broken if they were broken.
   @spec break_spades_if_needed(Game.t()) :: Game.t()
   defp break_spades_if_needed(game) do
     if !game.spades_broken && has_spade?(game.trick) do
@@ -435,6 +449,7 @@ defmodule SpadesGame.Game do
     end
   end
 
+  # has_spade?/1 Does this trick contain a spade?
   @spec has_spade?(list(TrickCard.t())) :: boolean
   defp has_spade?(trick) do
     trick
@@ -447,6 +462,9 @@ defmodule SpadesGame.Game do
   defp rotate(:south), do: :west
   defp rotate(:west), do: :north
 
+  @doc """
+  trick_winner/1: Out of a trick (list of TrickCards), which card (TrickCard) won?
+  """
   @spec trick_winner(list(TrickCard.t())) :: TrickCard.t()
   def trick_winner(trick) when is_list(trick) do
     # First card = last in list by convention
@@ -476,6 +494,10 @@ defmodule SpadesGame.Game do
     length(game.trick) >= 4
   end
 
+  @doc """
+  compute_score/1 Add a round of scoring to the Game.
+  Call only when a round has ended.
+  """
   @spec compute_score(Game.t()) :: Game.t()
   def compute_score(%Game{} = game) do
     score = GameScore.update(game.score, game)
