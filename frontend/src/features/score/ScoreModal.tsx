@@ -1,7 +1,7 @@
 import React from "react";
 import ReactModal from "react-modal";
 import Button from "../../components/basic/Button";
-import ScoreTable from "../score/ScoreTable";
+import ScoreTable from "./ScoreTable";
 import { GameScore } from "elixir-backend";
 
 interface Props {

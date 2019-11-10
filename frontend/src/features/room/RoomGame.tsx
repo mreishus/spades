@@ -4,7 +4,7 @@ import PlayerSeat from "./PlayerSeat";
 import SmartTable from "./SmartTable";
 import Hand from "./Hand";
 import Bid from "./Bid";
-import ScoreHeader from "./ScoreHeader";
+import ScoreHeader from "../score/ScoreHeader";
 import { GameUIView } from "elixir-backend";
 
 interface Props {
