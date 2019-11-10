@@ -13,6 +13,9 @@ export const ScoreTable: React.FC<Props> = ({ score }) => {
     );
   }
   let numRounds = score.east_west_rounds.length;
+  if (numRounds === 0) {
+    return <div className="my-4">No scored rounds yet.</div>;
+  }
   return (
     <div className="overflow-y-auto" style={{ maxHeight: "75vh" }}>
       <table className="mt-2 mb-4">
@@ -45,6 +48,11 @@ interface PropsRound {
 export const ScoreTableRound: React.FC<PropsRound> = ({ team1, team2 }) => {
   const showAdjBags = team1.adj_bags > 0 || team2.adj_bags > 0;
   const showBagPenalty = team1.bag_penalty < 0 || team2.bag_penalty < 0;
+  const showNilRow =
+    team1.adj_successful_nil !== 0 ||
+    team1.adj_failed_nil !== 0 ||
+    team2.adj_successful_nil !== 0 ||
+    team2.adj_failed_nil !== 0;
 
   const rowClass = ["text-right text-gray-700"];
   const cellClass = ["p-1 text-sm"];
@@ -81,6 +89,33 @@ export const ScoreTableRound: React.FC<PropsRound> = ({ team1, team2 }) => {
           )}
         </td>
       </tr>
+
+      {showNilRow && (
+        <tr className={cx(rowClass)}>
+          <td className={cx(firstCellClass)}>Nil Score:</td>
+          <td className={cx(cellClass)}>
+            {team1.adj_successful_nil !== 0 && (
+              <span className="text-green-800">
+                +{team1.adj_successful_nil}
+              </span>
+            )}
+            {team1.adj_failed_nil !== 0 && (
+              <span className="text-red-800">{team1.adj_failed_nil}</span>
+            )}
+          </td>
+          <td className={cx(cellClass)}>
+            {team2.adj_successful_nil !== 0 && (
+              <span className="text-green-800">
+                +{team2.adj_successful_nil}
+              </span>
+            )}
+            {team2.adj_failed_nil !== 0 && (
+              <span className="text-red-800">{team2.adj_failed_nil}</span>
+            )}
+          </td>
+        </tr>
+      )}
+
       {showAdjBags && (
         <tr className={cx(rowClass)}>
           <td className={cx(firstCellClass)}>Bags:</td>
