@@ -69,8 +69,10 @@ declare module "elixir-backend" {
     before_bags: number;
     bid: number;
     won: number;
-    adj_successful_bid: null | number;
-    adj_failed_bid: null | number;
+    adj_successful_nil: number;
+    adj_failed_nil: number;
+    adj_successful_bid: number;
+    adj_failed_bid: number;
     adj_bags: number;
     bag_penalty: number;
     after_score: number;

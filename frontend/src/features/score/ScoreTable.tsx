@@ -65,18 +65,18 @@ export const ScoreTableRound: React.FC<PropsRound> = ({ team1, team2 }) => {
       <tr className={cx(rowClass)}>
         <td className={cx(firstCellClass)}>Bid Score:</td>
         <td className={cx(cellClass)}>
-          {team1.adj_successful_bid != null && (
+          {team1.adj_successful_bid !== 0 && (
             <span className="text-green-800">+{team1.adj_successful_bid}</span>
           )}
-          {team1.adj_failed_bid != null && (
+          {team1.adj_failed_bid !== 0 && (
             <span className="text-red-800">{team1.adj_failed_bid}</span>
           )}
         </td>
         <td className={cx(cellClass)}>
-          {team2.adj_successful_bid != null && (
+          {team2.adj_successful_bid !== 0 && (
             <span className="text-green-800">+{team2.adj_successful_bid}</span>
           )}
-          {team2.adj_failed_bid != null && (
+          {team2.adj_failed_bid !== 0 && (
             <span className="text-red-800">{team2.adj_failed_bid}</span>
           )}
         </td>

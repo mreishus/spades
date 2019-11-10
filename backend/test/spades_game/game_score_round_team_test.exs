@@ -11,7 +11,7 @@ defmodule GameScoreRoundTeamTest do
       assert gsrt.bid == 6
       assert gsrt.won == 6
       assert gsrt.adj_successful_bid == 60
-      assert gsrt.adj_failed_bid == nil
+      assert gsrt.adj_failed_bid == 0
       assert gsrt.after_score == 60
     end
 
@@ -23,7 +23,7 @@ defmodule GameScoreRoundTeamTest do
       assert gsrt.bid == 6
       assert gsrt.won == 6
       assert gsrt.adj_successful_bid == 60
-      assert gsrt.adj_failed_bid == nil
+      assert gsrt.adj_failed_bid == 0
       assert gsrt.after_score == 60
     end
 
@@ -34,9 +34,53 @@ defmodule GameScoreRoundTeamTest do
       gsrt = GameScoreRoundTeam.new(0, 0, player1, player2)
       assert gsrt.bid == 6
       assert gsrt.won == 5
-      assert gsrt.adj_successful_bid == nil
+      assert gsrt.adj_successful_bid == 0
       assert gsrt.adj_failed_bid == -60
       assert gsrt.after_score == -60
+    end
+  end
+
+  describe "nil" do
+    test "player1 successful nil" do
+      player1 = player(0, 0)
+      player2 = player(2, 2)
+      gsrt = GameScoreRoundTeam.new(0, 0, player1, player2)
+      assert gsrt.bid == 2
+      assert gsrt.won == 2
+      assert gsrt.adj_successful_nil == 100
+      assert gsrt.adj_failed_nil == 0
+      assert gsrt.after_score == 120
+    end
+
+    test "both players nil (lol)" do
+      player1 = player(0, 0)
+      player2 = player(0, 0)
+      gsrt = GameScoreRoundTeam.new(0, 0, player1, player2)
+      assert gsrt.bid == 0
+      assert gsrt.won == 0
+      assert gsrt.adj_successful_nil == 200
+      assert gsrt.adj_failed_nil == 0
+      assert gsrt.after_score == 200
+    end
+
+    test "failed nil" do
+      player1 = player(0, 1)
+      player2 = player(2, 2)
+      gsrt = GameScoreRoundTeam.new(0, 0, player1, player2)
+      assert gsrt.bid == 2
+      assert gsrt.won == 3
+      assert gsrt.adj_successful_nil == 0
+      assert gsrt.adj_failed_nil == -100
+      assert gsrt.after_score == -79
+    end
+
+    test "regular round has no nil scores" do
+      player1 = player(3, 3)
+      player2 = player(3, 2)
+
+      gsrt = GameScoreRoundTeam.new(0, 0, player1, player2)
+      assert gsrt.adj_successful_nil == 0
+      assert gsrt.adj_failed_nil == 0
     end
   end
 
@@ -49,7 +93,7 @@ defmodule GameScoreRoundTeamTest do
       assert gsrt.bid == 6
       assert gsrt.won == 7
       assert gsrt.adj_successful_bid == 60
-      assert gsrt.adj_failed_bid == nil
+      assert gsrt.adj_failed_bid == 0
       assert gsrt.after_bags == 1
       assert gsrt.after_score == 61
     end
@@ -62,7 +106,7 @@ defmodule GameScoreRoundTeamTest do
       assert gsrt.bid == 6
       assert gsrt.won == 7
       assert gsrt.adj_successful_bid == 60
-      assert gsrt.adj_failed_bid == nil
+      assert gsrt.adj_failed_bid == 0
       assert gsrt.after_bags == 6
       assert gsrt.after_score == 116
     end
@@ -75,7 +119,7 @@ defmodule GameScoreRoundTeamTest do
       assert gsrt.bid == 6
       assert gsrt.won == 8
       assert gsrt.adj_successful_bid == 60
-      assert gsrt.adj_failed_bid == nil
+      assert gsrt.adj_failed_bid == 0
       assert gsrt.bag_penalty == -100
       assert gsrt.after_bags == 1
       assert gsrt.after_score == 21

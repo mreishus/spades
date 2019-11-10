@@ -15,6 +15,10 @@ defmodule SpadesGame.GameScoreRoundTeam do
     :bid,
     # How many tricks they won.
     :won,
+    # How many points gained from successful nil(s), or 0
+    :adj_successful_nil,
+    # How many points lost from failed nil(s), or 0
+    :adj_failed_nil,
     # How many points they gained from a successful bid, or nil if N/A.
     :adj_successful_bid,
     # How many points they lost from a missed bid, or nil if N/A.
@@ -36,8 +40,10 @@ defmodule SpadesGame.GameScoreRoundTeam do
           before_bags: integer(),
           bid: non_neg_integer(),
           won: non_neg_integer(),
-          adj_successful_bid: nil | integer(),
-          adj_failed_bid: nil | integer(),
+          adj_successful_nil: integer(),
+          adj_failed_nil: integer(),
+          adj_successful_bid: integer(),
+          adj_failed_bid: integer(),
           adj_bags: integer(),
           bag_penalty: integer(),
           after_score: integer(),
@@ -51,6 +57,8 @@ defmodule SpadesGame.GameScoreRoundTeam do
     adj_successful_bid = successful_bid(player1, player2)
     adj_failed_bid = failed_bid(player1, player2)
     adj_bags = adj_bags(player1, player2)
+    adj_successful_nil = successful_nil(player1, player2)
+    adj_failed_nil = failed_nil(player1, player2)
     {after_bags, bag_penalty} = increment_bags(before_bags, adj_bags)
 
     %GameScoreRoundTeam{
@@ -58,12 +66,15 @@ defmodule SpadesGame.GameScoreRoundTeam do
       before_bags: before_bags,
       bid: player1.bid + player2.bid,
       won: player1.tricks_won + player2.tricks_won,
+      adj_successful_nil: adj_successful_nil,
+      adj_failed_nil: adj_failed_nil,
       adj_successful_bid: adj_successful_bid,
       adj_failed_bid: adj_failed_bid,
       adj_bags: adj_bags,
       bag_penalty: bag_penalty,
       after_score:
-        before_score + (adj_successful_bid || 0) + (adj_failed_bid || 0) + adj_bags + bag_penalty,
+        before_score + adj_successful_nil + adj_failed_nil + adj_successful_bid +
+          adj_failed_bid + adj_bags + bag_penalty,
       after_bags: after_bags
     }
   end
@@ -71,7 +82,7 @@ defmodule SpadesGame.GameScoreRoundTeam do
   @doc """
   successful_bid/2:
   """
-  @spec successful_bid(GamePlayer.t(), GamePlayer.t()) :: nil | integer()
+  @spec successful_bid(GamePlayer.t(), GamePlayer.t()) :: integer()
   def successful_bid(player1, player2) do
     won = player1.tricks_won + player2.tricks_won
     bid = player1.bid + player2.bid
@@ -79,14 +90,42 @@ defmodule SpadesGame.GameScoreRoundTeam do
     if won >= bid do
       10 * bid
     else
-      nil
+      0
+    end
+  end
+
+  @spec successful_nil(GamePlayer.t(), GamePlayer.t()) :: integer()
+  def successful_nil(player1, player2) do
+    successful_nil(player1) + successful_nil(player2)
+  end
+
+  @spec successful_nil(GamePlayer.t()) :: integer()
+  defp successful_nil(player) do
+    if player.bid == 0 and player.tricks_won == 0 do
+      100
+    else
+      0
+    end
+  end
+
+  @spec failed_nil(GamePlayer.t(), GamePlayer.t()) :: nil | integer()
+  def failed_nil(player1, player2) do
+    failed_nil(player1) + failed_nil(player2)
+  end
+
+  @spec failed_nil(GamePlayer.t()) :: integer()
+  defp failed_nil(player) do
+    if player.bid == 0 and player.tricks_won > 0 do
+      -100
+    else
+      0
     end
   end
 
   @doc """
   failed_bid/2:
   """
-  @spec failed_bid(GamePlayer.t(), GamePlayer.t()) :: nil | integer()
+  @spec failed_bid(GamePlayer.t(), GamePlayer.t()) :: integer()
   def failed_bid(player1, player2) do
     won = player1.tricks_won + player2.tricks_won
     bid = player1.bid + player2.bid
@@ -94,7 +133,7 @@ defmodule SpadesGame.GameScoreRoundTeam do
     if won < bid do
       -10 * bid
     else
-      nil
+      0
     end
   end
 
