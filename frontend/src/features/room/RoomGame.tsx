@@ -4,6 +4,7 @@ import PlayerSeat from "./PlayerSeat";
 import SmartTable from "./SmartTable";
 import Hand from "./Hand";
 import Bid from "./Bid";
+import ScoreHeader from "./ScoreHeader";
 import { GameUIView } from "elixir-backend";
 
 interface Props {
@@ -24,6 +25,9 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
   return (
     <>
       <div className={cx("flex mt-12", rowMaxWidth)}>
+        <ScoreHeader score={gameUIView.game_ui.game.score} />
+      </div>
+      <div className={cx("flex mt-2", rowMaxWidth)}>
         <div className="w-1/5 h-12"></div>
         <div className="w-3/5 h-12 flex justify-center items-center">
           {/* Top Player */}
