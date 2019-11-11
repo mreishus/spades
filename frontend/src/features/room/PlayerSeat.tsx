@@ -1,9 +1,10 @@
 import React from "react";
 import UserSitting from "./UserSitting";
 import Button from "../../components/basic/Button";
+/* import { GameUISeats } from "elixir-backend"; */
 
 interface Props {
-  seatState: any;
+  seatState: any; // GameUISeats;
   broadcast: (eventName: string, payload: object) => void;
   whichSeat: string; // north | west | east | south
 }

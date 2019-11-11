@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import RotateTableProvider from "./RotateTableProvider";
 import RoomGame from "./RoomGame";
 import RoomStaging from "./RoomStaging";
 import Container from "../../components/basic/Container";
@@ -57,8 +58,10 @@ export const Room: React.FC<Props> = ({ slug }) => {
           </Button>
         </div>
         {isStaging && <RoomStaging gameState={game_ui} broadcast={broadcast} />}
-        {isPlaying && (
-          <RoomGame gameUIView={gameUIView} broadcast={broadcast} />
+        {isPlaying && gameUIView != null && (
+          <RotateTableProvider gameUIView={gameUIView}>
+            <RoomGame gameUIView={gameUIView} broadcast={broadcast} />
+          </RotateTableProvider>
         )}
       </div>
     </Container>

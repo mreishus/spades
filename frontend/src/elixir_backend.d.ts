@@ -85,4 +85,15 @@ declare module "elixir-backend" {
     card: Card;
     seat: Seat;
   }
+
+  export declare class RotateTableContextType {
+    bottomSeat: Seat;
+    topSeat: Seat;
+    rightSeat: Seat;
+    leftSeat: Seat;
+    bottomPlayer: any;
+    topPlayer: any;
+    rightPlayer: any;
+    leftPlayer: any;
+  }
 }

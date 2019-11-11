@@ -8,15 +8,11 @@ import ScoreHeader from "../score/ScoreHeader";
 import { GameUIView } from "elixir-backend";
 
 interface Props {
-  gameUIView: GameUIView | null;
+  gameUIView: GameUIView;
   broadcast: (eventName: string, payload: object) => void;
 }
 
 const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
-  if (gameUIView == null) {
-    return null;
-  }
-
   const { seats, game } = gameUIView.game_ui;
   const rowMaxWidth = "max-w-xl";
   const showHand = true;

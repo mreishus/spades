@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext } from "react";
 import Table from "./Table";
 import { Card, GameUIView, Seat, TrickCard } from "elixir-backend";
+import RotateTableContext from "../../contexts/RotateTableContext";
 
 interface Props {
   gameUIView: GameUIView;
@@ -22,64 +23,24 @@ const cardFromTrick = (trick: Array<TrickCard>, seat: Seat) => {
   return imageUrlForCard(thisCard);
 };
 
-const clockwise90 = (input: Seat): Seat => {
-  // Done this way so TS can analyze
-  if (input === "south") {
-    return "west";
-  } else if (input === "west") {
-    return "north";
-  } else if (input === "north") {
-    return "east";
-  } else if (input === "east") {
-    return "south";
-  }
-  throw new Error("clockwise90: Clockwise of what?");
-};
-
-const counter_clockwise90 = (input: Seat): Seat => {
-  // Done this way so TS can analyze
-  if (input === "south") {
-    return "east";
-  } else if (input === "east") {
-    return "north";
-  } else if (input === "north") {
-    return "west";
-  } else if (input === "west") {
-    return "south";
-  }
-  throw new Error("counter_clockwise90: Clockwise of what?");
-};
-
-const translate = (objective_seat: Seat, perspective: Seat | null): Seat => {
-  if (perspective === null || perspective === "south") {
-    return objective_seat;
-  } else if (perspective === "west") {
-    //North should appear to my LEFT (West)
-    //South should appear to my RIGHT (East)
-    return clockwise90(objective_seat);
-  } else if (perspective === "north") {
-    return clockwise90(clockwise90(objective_seat));
-  } else if (perspective === "east") {
-    return counter_clockwise90(objective_seat);
-  }
-  throw new Error("translate: What perspective?");
-};
-
 export const SmartTable: React.FC<Props> = ({ gameUIView }) => {
-  const { my_seat } = gameUIView;
   const { game } = gameUIView.game_ui;
   const { trick } = game;
 
-  // Seats with directions translated - Sitting at bottom
-  const bottomSeat = translate("south", my_seat);
-  const topSeat = translate("north", my_seat);
-  const rightSeat = translate("east", my_seat);
-  const leftSeat = translate("west", my_seat);
-
-  const bottomPlayer = game[bottomSeat];
-  const topPlayer = game[topSeat];
-  const rightPlayer = game[rightSeat];
-  const leftPlayer = game[leftSeat];
+  const rtcv = useContext(RotateTableContext);
+  if (rtcv == null) {
+    return null;
+  }
+  const {
+    bottomSeat,
+    topSeat,
+    rightSeat,
+    leftSeat,
+    bottomPlayer,
+    topPlayer,
+    rightPlayer,
+    leftPlayer
+  } = rtcv;
 
   // Arrow indicators if it's that seat's turn
   const bottomTurn = game.turn === bottomSeat ? arrow : null;
