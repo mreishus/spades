@@ -49,7 +49,7 @@ export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
             draggable={false}
             unselectable="on"
             className={cx({
-              "h-32 object-cover -ml-16 z-30 hand-card-animate": true,
+              "noselect h-32 object-cover -ml-16 z-30 hand-card-animate": true,
               "-mt-5 mr-5 hand-card-selected": selectedCard === cardStr
             })}
             onClick={() => {
