@@ -72,15 +72,9 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
         </div>
       )}
 
-      {showHand && (
-        <div className={cx(rowMaxWidth, "flex justify-center ml-8")}>
-          <Hand cards={gameUIView.my_hand} broadcast={broadcast} />
-        </div>
-      )}
-
-      <div className={cx("flex mb-12", rowMaxWidth)}>
-        <div className="w-1/5 h-12"></div>
-        <div className="w-3/5 h-12 flex justify-center items-start">
+      <div className={cx("flex mb-2", rowMaxWidth)}>
+        <div className="w-1/5"></div>
+        <div className="w-3/5 flex justify-center items-start">
           {/* Bottom player */}
           <PlayerSeat
             seatState={seats}
@@ -88,8 +82,13 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
             whichSeat="south"
           />
         </div>
-        <div className="w-1/5 h-12"></div>
+        <div className="w-1/5"></div>
       </div>
+      {showHand && (
+        <div className={cx(rowMaxWidth, "flex justify-center ml-8")}>
+          <Hand cards={gameUIView.my_hand} broadcast={broadcast} />
+        </div>
+      )}
     </>
   );
 };
