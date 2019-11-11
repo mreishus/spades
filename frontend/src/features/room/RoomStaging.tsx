@@ -31,8 +31,8 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             North
             <div>
               <PlayerSeat
-                seatState={seats}
                 broadcast={broadcast}
+                userId={seats.north}
                 whichSeat="north"
               />
             </div>
@@ -43,8 +43,8 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             West
             <div>
               <PlayerSeat
-                seatState={seats}
                 broadcast={broadcast}
+                userId={seats.west}
                 whichSeat="west"
               />
             </div>
@@ -54,8 +54,8 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             East
             <div>
               <PlayerSeat
-                seatState={seats}
                 broadcast={broadcast}
+                userId={seats.east}
                 whichSeat="east"
               />
             </div>
@@ -66,8 +66,8 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             South
             <div>
               <PlayerSeat
-                seatState={seats}
                 broadcast={broadcast}
+                userId={seats.south}
                 whichSeat="south"
               />
             </div>

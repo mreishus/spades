@@ -1,6 +1,11 @@
 import React from "react";
 import RotateTableContext from "../../contexts/RotateTableContext";
-import { GameUIView, RotateTableContextType, Seat } from "elixir-backend";
+import {
+  GamePlayer,
+  GameUIView,
+  RotateTableContextType,
+  Seat
+} from "elixir-backend";
 
 interface Props {
   gameUIView: GameUIView;
@@ -54,8 +59,8 @@ export const RotateTableProvider: React.FC<Props> = ({
   gameUIView,
   children
 }) => {
-  const { my_seat } = gameUIView;
-  const { game } = gameUIView.game_ui;
+  const { my_seat, game_ui } = gameUIView;
+  const { game, seats } = game_ui;
 
   // Seats with directions translated - Sitting at bottom
   const bottomSeat = translate("south", my_seat);
@@ -63,10 +68,15 @@ export const RotateTableProvider: React.FC<Props> = ({
   const rightSeat = translate("east", my_seat);
   const leftSeat = translate("west", my_seat);
 
-  const bottomPlayer = game[bottomSeat];
-  const topPlayer = game[topSeat];
-  const rightPlayer = game[rightSeat];
-  const leftPlayer = game[leftSeat];
+  const bottomPlayer: GamePlayer = game[bottomSeat];
+  const topPlayer: GamePlayer = game[topSeat];
+  const rightPlayer: GamePlayer = game[rightSeat];
+  const leftPlayer: GamePlayer = game[leftSeat];
+
+  const bottomUserId = seats[bottomSeat];
+  const topUserId = seats[topSeat];
+  const rightUserId = seats[rightSeat];
+  const leftUserId = seats[leftSeat];
 
   const value: RotateTableContextType = {
     bottomSeat,
@@ -76,7 +86,11 @@ export const RotateTableProvider: React.FC<Props> = ({
     bottomPlayer,
     topPlayer,
     rightPlayer,
-    leftPlayer
+    leftPlayer,
+    bottomUserId,
+    topUserId,
+    rightUserId,
+    leftUserId
   };
 
   return (

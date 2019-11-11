@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import cx from "classnames";
 import PlayerSeat from "./PlayerSeat";
 import SmartTable from "./SmartTable";
 import Hand from "./Hand";
 import Bid from "./Bid";
 import ScoreHeader from "../score/ScoreHeader";
+import RotateTableContext from "../../contexts/RotateTableContext";
 import { GameUIView } from "elixir-backend";
 
 interface Props {
@@ -13,10 +14,25 @@ interface Props {
 }
 
 const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
-  const { seats, game } = gameUIView.game_ui;
+  const { game } = gameUIView.game_ui;
   const rowMaxWidth = "max-w-xl";
   const showHand = true;
   const showBid = game.status === "bidding" && game.turn === gameUIView.my_seat;
+
+  const rtcv = useContext(RotateTableContext);
+  if (rtcv == null) {
+    return null;
+  }
+  const {
+    bottomSeat,
+    topSeat,
+    rightSeat,
+    leftSeat,
+    bottomUserId,
+    topUserId,
+    rightUserId,
+    leftUserId
+  } = rtcv;
 
   return (
     <>
@@ -31,9 +47,9 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
         <div className="w-3/5 h-12 flex justify-center items-center">
           {/* Top Player */}
           <PlayerSeat
-            seatState={seats}
             broadcast={broadcast}
-            whichSeat="north"
+            whichSeat={topSeat}
+            userId={topUserId}
           />
         </div>
         <div className="w-1/5 xbg-gray-100 h-12"></div>
@@ -42,9 +58,9 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
         <div className="h-full w-1/5 h-32 flex items-center justify-center">
           {/* Left Player */}
           <PlayerSeat
-            seatState={seats}
             broadcast={broadcast}
-            whichSeat="west"
+            whichSeat={leftSeat}
+            userId={leftUserId}
           />
         </div>
         <div className="h-56 w-3/5 relative">
@@ -53,9 +69,9 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
         <div className="h-full w-1/5 h-32 flex items-center justify-center">
           {/* Right player */}
           <PlayerSeat
-            seatState={seats}
             broadcast={broadcast}
-            whichSeat="east"
+            whichSeat={rightSeat}
+            userId={rightUserId}
           />
         </div>
       </div>
@@ -73,9 +89,9 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
         <div className="w-3/5 flex justify-center items-start">
           {/* Bottom player */}
           <PlayerSeat
-            seatState={seats}
             broadcast={broadcast}
-            whichSeat="south"
+            whichSeat={bottomSeat}
+            userId={bottomUserId}
           />
         </div>
         <div className="w-1/5"></div>

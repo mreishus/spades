@@ -91,9 +91,13 @@ declare module "elixir-backend" {
     topSeat: Seat;
     rightSeat: Seat;
     leftSeat: Seat;
-    bottomPlayer: any;
-    topPlayer: any;
-    rightPlayer: any;
-    leftPlayer: any;
+    bottomPlayer: GamePlayer;
+    topPlayer: GamePlayer;
+    rightPlayer: GamePlayer;
+    leftPlayer: GamePlayer;
+    bottomUserId: null | number;
+    topUserId: null | number;
+    rightUserId: null | number;
+    leftUserId: null | number;
   }
 }

@@ -1,24 +1,23 @@
 import React from "react";
 import UserSitting from "./UserSitting";
 import Button from "../../components/basic/Button";
-/* import { GameUISeats } from "elixir-backend"; */
+import { Seat } from "elixir-backend";
 
 interface Props {
-  seatState: any; // GameUISeats;
+  whichSeat: Seat;
   broadcast: (eventName: string, payload: object) => void;
-  whichSeat: string; // north | west | east | south
+  userId: null | number;
 }
 
 export const PlayerSeat: React.FC<Props> = ({
-  seatState,
   broadcast,
+  userId,
   whichSeat
 }) => {
-  const thisSeat = seatState[whichSeat];
-  if (thisSeat == null) {
+  if (userId == null) {
     return <Button onClick={() => broadcast("sit", { whichSeat })}>Sit</Button>;
-  } else if (typeof thisSeat == "number") {
-    return <UserSitting userId={thisSeat} />;
+  } else if (typeof userId == "number") {
+    return <UserSitting userId={userId} />;
   } else {
     return <div>Unknown</div>;
   }
