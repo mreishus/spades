@@ -57,6 +57,27 @@ defmodule SpadesGame.GameScore do
     {last_round.after_score, last_round.after_bags}
   end
 
+  @spec won_game?(GameScore.t()) :: boolean
+  def won_game?(%GameScore{} = score) do
+    win_score = 500
+    above_threshold = score.north_south_score >= win_score or score.east_west_score >= win_score
+    different_scores = score.north_south_score != score.east_west_score
+    above_threshold and different_scores
+  end
+
+  @spec winner(GameScore.t()) :: nil | :north_south | :east_west
+  def winner(%GameScore{} = score) do
+    if won_game?(score) do
+      if score.north_south_score > score.east_west_score do
+        :north_south
+      else
+        :east_west
+      end
+    else
+      nil
+    end
+  end
+
   #               You and Bill     Mike and Lisa
   # Combined Bid       6                 5
   # Tricks Won         7                 6

@@ -50,6 +50,7 @@ declare module "elixir-backend" {
     when_trick_full: null | string; // timestamp
     score: GameScore;
     round_number: number;
+    winner: null | "north_south" | "east_west";
   }
 
   export declare class GamePlayer {

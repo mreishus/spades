@@ -26,7 +26,8 @@ defmodule SpadesGame.Game do
     :when_trick_full,
     :spades_broken,
     :score,
-    :round_number
+    :round_number,
+    :winner
   ]
 
   use Accessible
@@ -45,7 +46,8 @@ defmodule SpadesGame.Game do
           when_trick_full: nil | DateTime.t(),
           spades_broken: boolean,
           score: GameScore.t(),
-          round_number: integer
+          round_number: integer,
+          winner: nil | :north_south | :east_west
         }
 
   @doc """
@@ -80,7 +82,8 @@ defmodule SpadesGame.Game do
       when_trick_full: nil,
       spades_broken: false,
       score: GameScore.new(),
-      round_number: 1
+      round_number: 1,
+      winner: nil
     }
   end
 
@@ -369,8 +372,8 @@ defmodule SpadesGame.Game do
 
   @doc """
   check_for_new_round/1:
-    People still have cards: Do nothing.
-    Hands are empty:
+    If players still have cards: Do nothing.
+    If hands are empty:
       - Tally Score
       - Deal new hands or declare winner
   """
@@ -392,22 +395,30 @@ defmodule SpadesGame.Game do
       dealer = rotate(game.dealer)
       turn = rotate(dealer)
 
-      game = %Game{
-        game
-        | west: w,
-          north: n,
-          east: e,
-          south: s,
-          status: :bidding,
-          dealer: dealer,
-          turn: turn,
-          round_number: game.round_number + 1
-      }
+      game =
+        %Game{
+          game
+          | west: w,
+            north: n,
+            east: e,
+            south: s,
+            status: :bidding,
+            dealer: dealer,
+            turn: turn,
+            round_number: game.round_number + 1,
+            spades_broken: false
+        }
+        |> check_for_game_winner()
 
       {:ok, game}
     else
       {:ok, game}
     end
+  end
+
+  @spec check_for_game_winner(Game.t()) :: Game.t()
+  def check_for_game_winner(%Game{score: score} = game) do
+    %Game{game | winner: GameScore.winner(score)}
   end
 
   @spec tricks_played(Game.t()) :: integer()
@@ -428,7 +439,7 @@ defmodule SpadesGame.Game do
     ten_mins_in_seconds = 60 * 10
     nt = DateTime.add(game.when_trick_full, -1 * ten_mins_in_seconds, :second)
     game = %Game{game | when_trick_full: nt}
-    {:ok, game} = check_for_trick_winner({:ok, game})
+    {:ok, game} = checks(game)
     game
   end
 
