@@ -26,7 +26,7 @@ export const Lobby: React.FC = () => {
     [setData]
   );
 
-  const broadcast = useChannel("lobby:lobby", onChannelMessage);
+  useChannel("lobby:lobby", onChannelMessage);
   const rooms = data != null && data.data != null ? data.data : [];
 
   return (
@@ -39,14 +39,6 @@ export const Lobby: React.FC = () => {
         <div className="mt-4">
           <Button isPrimary onClick={() => setShowModal(true)}>
             Create Room
-          </Button>
-          <Button
-            className="ml-4"
-            onClick={() =>
-              broadcast("test_message_from_javascript", { stuff: 1 })
-            }
-          >
-            Broadcast
           </Button>
         </div>
         <CreateRoomModal
