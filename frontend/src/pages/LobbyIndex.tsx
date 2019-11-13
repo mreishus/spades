@@ -1,6 +1,4 @@
 import React from "react";
-//import React, { useState, useEffect, useContext } from "react";
-//import cx from "classnames";
 import Lobby from "../features/lobby/Lobby";
 
 interface Props {}

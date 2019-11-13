@@ -11,7 +11,7 @@ interface Props {}
 
 export const Lobby: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
-  const { isLoading, isError, data, setData } = useDataApi(
+  const { isLoading, isError, data, setData } = useDataApi<any>(
     "/be/api/rooms",
     null
   );

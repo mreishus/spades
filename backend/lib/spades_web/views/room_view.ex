@@ -11,6 +11,14 @@ defmodule SpadesWeb.RoomView do
   end
 
   def render("room.json", %{room: room}) do
-    %{id: room.id, name: room.name, slug: room.slug}
+    %{
+      id: room.id,
+      name: room.name,
+      slug: room.slug,
+      west: room.west,
+      east: room.east,
+      south: room.south,
+      north: room.north
+    }
   end
 end

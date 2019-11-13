@@ -15,10 +15,10 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
       <td className={tdClass}>
         <Link to={"/room/" + room.slug}>{room.name}</Link>
       </td>
-      <td className={tdClass}>empty</td>
-      <td className={tdClass}>empty</td>
-      <td className={tdClass}>empty</td>
-      <td className={tdClass}>empty</td>
+      <td className={tdClass}>{room.west}</td>
+      <td className={tdClass}>{room.north}</td>
+      <td className={tdClass}>{room.east}</td>
+      <td className={tdClass}>{room.south}</td>
     </tr>
   ));
 

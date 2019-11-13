@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const useDataApi = (initialUrl: string, initialData: any) => {
+const useDataApi = <T extends any>(initialUrl: string, initialData: T) => {
   const [data, setData] = useState(initialData);
   const [url, setUrl] = useState(initialUrl); // Mechanism to refetch by changing url
   const [hash, setHash] = useState<any>(null); // Mechanism to refrech same url, by changing hash

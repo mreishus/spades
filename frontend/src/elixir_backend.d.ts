@@ -5,6 +5,10 @@ declare module "elixir-backend" {
     public id: number;
     public name: string;
     public slug: string;
+    public west: null | number;
+    public east: null | number;
+    public north: null | number;
+    public south: null | number;
   }
 
   export declare class GameUIView {

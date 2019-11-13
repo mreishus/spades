@@ -12,7 +12,9 @@ defmodule SpadesGame.GameRegistry do
   Register a GameUI.  We will create a Room in the database
   so it can be found in the lobby.
   """
-  def add(_game_name, %GameUI{} = gameui) do
+  def add(game_name, %GameUI{} = gameui) do
+    remove(game_name)
+
     gameui
     |> to_room_param()
     |> Rooms.create_room()
@@ -50,7 +52,11 @@ defmodule SpadesGame.GameRegistry do
   defp to_room_param(%GameUI{} = gameui) do
     # created_at: DateTime.t()
     %{
-      name: gameui.game_name
+      name: gameui.game_name,
+      west: gameui.seats.west,
+      east: gameui.seats.east,
+      north: gameui.seats.north,
+      south: gameui.seats.south
     }
   end
 

@@ -16,7 +16,7 @@ export const ConfirmEmail: React.FC<Props> = ({ match }) => {
 
   // TODO: make useDataApi check for specific error messages
   // coming from the API, the way the login post does.
-  const { isLoading, isError, data } = useDataApi(
+  const { isLoading, isError, data } = useDataApi<any>(
     `/be/api/v1/confirm-email/${confirm_token}`,
     null
   );

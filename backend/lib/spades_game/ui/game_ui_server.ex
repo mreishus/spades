@@ -104,7 +104,6 @@ defmodule SpadesGame.GameUIServer do
           gameui
       end
 
-    # ? Might add twice if restoring from crash
     GameRegistry.add(gameui.game_name, gameui)
     {:ok, gameui, timeout(gameui)}
   end
@@ -152,7 +151,16 @@ defmodule SpadesGame.GameUIServer do
   end
 
   defp save_and_reply(new_gameui) do
-    :ets.insert(:game_uis, {new_gameui.game_name, new_gameui})
+    # Async GameRegistry.update Should improve performance, 
+    # but causes tests to fail.  Not sure it's a real failure
+    # spawn_link(fn ->
+    GameRegistry.update(new_gameui.game_name, new_gameui)
+    # end)
+
+    spawn_link(fn ->
+      :ets.insert(:game_uis, {new_gameui.game_name, new_gameui})
+    end)
+
     {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end
 
@@ -177,10 +185,6 @@ defmodule SpadesGame.GameUIServer do
       end)
     end)
   end
-
-  # In some state updating function:
-  # GameRegistry.update(new_gameui.game_name, gameui)
-  # :ets.insert(:game_uis, {state.game_name, new_state})
 
   # timeout/1
   # Given the current state of the game, what should the
