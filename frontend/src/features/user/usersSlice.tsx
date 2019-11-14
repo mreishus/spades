@@ -5,7 +5,7 @@ import { AuthContextType } from "../../contexts/AuthContext";
 import { User } from "elixir-backend";
 
 interface UsersState {
-  usersById: Record<number, any>;
+  usersById: Record<number, User>;
 }
 
 const initialState: UsersState = {
@@ -38,12 +38,19 @@ export default usersSlice.reducer;
 export const fetchUser = (
   userId: number,
   authCtx: AuthContextType
-): AppThunk => async dispatch => {
+): AppThunk => async (dispatch, getState) => {
   try {
-    console.log("Getting users for id: " + userId);
+    const { users } = getState();
+    if (isUserExist(users, userId)) {
+      console.log(`Already have info for userId ${userId}, not fetching`);
+      return;
+    }
     const user = await getUser(userId, authCtx);
     dispatch(setUser({ userId, user }));
   } catch (err) {
     console.log("Error loading user: ", err);
   }
 };
+
+const isUserExist = (users: UsersState, userId: number) =>
+  users.usersById[userId] != null;

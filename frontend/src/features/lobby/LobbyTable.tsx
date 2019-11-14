@@ -19,9 +19,15 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
       <td className={tdClass}>
         <UserName userId={room.west} />
       </td>
-      <td className={tdClass}>{room.north}</td>
-      <td className={tdClass}>{room.east}</td>
-      <td className={tdClass}>{room.south}</td>
+      <td className={tdClass}>
+        <UserName userId={room.north} />
+      </td>
+      <td className={tdClass}>
+        <UserName userId={room.east} />
+      </td>
+      <td className={tdClass}>
+        <UserName userId={room.south} />
+      </td>
     </tr>
   ));
 
