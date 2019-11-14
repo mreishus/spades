@@ -1,6 +1,6 @@
 import { createContext } from "react";
 
-interface AuthContextType {
+export interface AuthContextType {
   setAuthAndRenewToken: (
     authTokenData: null | string,
     renewTokenData: null | string

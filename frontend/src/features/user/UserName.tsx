@@ -1,24 +1,33 @@
 import React, { useEffect } from "react";
-//import React, { useState, useEffect, useContext } from "react";
-//import cx from "classnames";
-import useUser from "../../hooks/useUser";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchUser } from "./usersSlice";
+import useAuth from "../../hooks/useAuth";
+import { RootState } from "../../rootReducer";
 
 interface Props {
   userId: number | null;
 }
 
 export const UserName: React.FC<Props> = ({ userId }) => {
-  const users = useUser();
-
+  const dispatch = useDispatch();
+  const authContext = useAuth();
   useEffect(() => {
-    users.fetchUser(userId);
-  }, [userId, users]);
+    if (userId == null) {
+      return;
+    }
+    dispatch(fetchUser(userId, authContext));
+  }, [authContext, dispatch, userId]);
+
+  const user = useSelector(
+    (state: RootState) => state.users.usersById[userId || 0]
+  );
 
   if (userId === null) {
     return null;
   }
-  console.log("--users");
-  console.log(users);
+  if (user != null) {
+    return <span>{user.alias}</span>;
+  }
   return <div>user #{userId}</div>;
 };
 export default UserName;
