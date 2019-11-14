@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import cx from "classnames";
-import useUser from "../../hooks/useUser";
+import useProfile from "../../hooks/useProfile";
 import { IconContext } from "react-icons";
 import { GoPerson } from "react-icons/go";
 
@@ -10,7 +10,7 @@ interface Props {
 }
 
 export const ProfileLink: React.FC<Props> = ({ className }) => {
-  const user = useUser();
+  const user = useProfile();
   if (user == null) {
     return null;
   }

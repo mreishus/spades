@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from "react";
 import axios from "axios";
 
 import SocketProvider from "../components/SocketProvider";
-import UserProvider from "../components/UserProvider";
+import ProfileProvider from "../components/ProfileProvider";
 import AppRouter from "./AppRouter";
 import AuthContext from "../contexts/AuthContext";
 
@@ -93,11 +93,11 @@ const App: React.FC = () => {
           wsUrl={process.env.REACT_APP_WS_URL || "/be/socket"}
           options={socketParams}
         >
-          <UserProvider>
+          <ProfileProvider>
             <Router>
               <AppRouter />
             </Router>
-          </UserProvider>
+          </ProfileProvider>
         </SocketProvider>
       </AuthContext.Provider>
     </React.StrictMode>

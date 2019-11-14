@@ -1,8 +1,8 @@
 import React, { useCallback } from "react";
-import UserContext from "../contexts/UserContext";
+import ProfileContext from "../contexts/ProfileContext";
 import useAuthDataApi from "../hooks/useAuthDataApi";
 import useAuth from "../hooks/useAuth";
-import { User } from "../hooks/useUser";
+import { Profile } from "../hooks/useProfile";
 import useInterval from "../hooks/useInterval";
 import { format } from "date-fns";
 
@@ -10,7 +10,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const UserProvider: React.FC<Props> = ({ children }) => {
+export const ProfileProvider: React.FC<Props> = ({ children }) => {
   const { setAuthAndRenewToken } = useAuth();
   const onError = useCallback(() => {
     // If we can't load the profile data, we have stale tokens
@@ -38,8 +38,10 @@ export const UserProvider: React.FC<Props> = ({ children }) => {
   }, [doFetchHash]);
   useInterval(fetchProfileEvery10Mins, 60 * 1000);
 
-  const user: null | User =
+  const user: null | Profile =
     data != null && data.user_profile != null ? data.user_profile : null;
-  return <UserContext.Provider value={user}>{children}</UserContext.Provider>;
+  return (
+    <ProfileContext.Provider value={user}>{children}</ProfileContext.Provider>
+  );
 };
-export default UserProvider;
+export default ProfileProvider;

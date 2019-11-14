@@ -91,7 +91,7 @@ const useAuthDataApi = (
     const fetchData = async () => {
       // Do not request if we don't have auth tokens loaded
       // Also, clear data (Unsure about this, but needed for the logout
-      // button to clear the UserProvider context)
+      // button to clear the ProfileProvider context)
       if (authOptions.headers.Authorization == null) {
         setData(initialData);
         return;

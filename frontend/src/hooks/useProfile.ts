@@ -1,7 +1,7 @@
 import { useContext } from "react";
-import UserContext from "../contexts/UserContext";
+import ProfileContext from "../contexts/ProfileContext";
 
-export declare class User {
+export declare class Profile {
   public id: number;
   public email: string;
   public alias: string;
@@ -9,5 +9,5 @@ export declare class User {
   public email_confirmed_at: null | string; // Actually contains a timestamp
 }
 
-const useUser = () => useContext(UserContext);
-export default useUser;
+const useProfile = () => useContext(ProfileContext);
+export default useProfile;

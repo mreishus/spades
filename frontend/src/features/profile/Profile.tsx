@@ -1,12 +1,12 @@
 import React from "react";
 import Container from "../../components/basic/Container";
-import useUser from "../../hooks/useUser";
+import useProfile from "../../hooks/useProfile";
 import { parseISO, format, formatDistanceToNow } from "date-fns";
 
 interface Props {}
 
 export const Profile: React.FC<Props> = () => {
-  const user = useUser();
+  const user = useProfile();
   if (user == null) {
     return null;
   }
