@@ -18,6 +18,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
   const rowMaxWidth = "max-w-xl";
   const showHand = true;
   const showBid = game.status === "bidding" && game.turn === gameUIView.my_seat;
+  const isWinner = game.winner !== null;
 
   const rtcv = useContext(RotateTableContext);
   if (rtcv == null) {
@@ -50,6 +51,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
             broadcast={broadcast}
             whichSeat={topSeat}
             userId={topUserId}
+            isWinner={isWinner}
           />
         </div>
         <div className="w-1/5 xbg-gray-100 h-12"></div>
@@ -61,6 +63,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
             broadcast={broadcast}
             whichSeat={leftSeat}
             userId={leftUserId}
+            isWinner={isWinner}
           />
         </div>
         <div className="h-56 w-3/5 relative">
@@ -72,6 +75,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
             broadcast={broadcast}
             whichSeat={rightSeat}
             userId={rightUserId}
+            isWinner={isWinner}
           />
         </div>
       </div>
@@ -92,6 +96,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
             broadcast={broadcast}
             whichSeat={bottomSeat}
             userId={bottomUserId}
+            isWinner={isWinner}
           />
         </div>
         <div className="w-1/5"></div>

@@ -7,6 +7,7 @@ defmodule SpadesGame.GameUIServer do
 
   require Logger
   alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry}
+  alias SpadesGame.{Game}
 
   @doc """
   start_link/2: Generates a new game server under a provided name.
@@ -88,6 +89,11 @@ defmodule SpadesGame.GameUIServer do
     GenServer.call(via_tuple(game_name), {:leave, user_id})
   end
 
+  ## Temp function to set winner flag on a game
+  def winner(game_name, winner_val) do
+    GenServer.call(via_tuple(game_name), {:winner, winner_val})
+  end
+
   #####################################
   ####### IMPLEMENTATION ##############
   #####################################
@@ -147,6 +153,14 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:leave, user_id}, _from, gameui) do
     GameUI.leave(gameui, user_id)
+    |> save_and_reply()
+  end
+
+  def handle_call({:winner, winner_val}, _from, gameui) do
+    game = gameui.game
+    game = %Game{game | winner: winner_val}
+
+    %GameUI{gameui | game: game}
     |> save_and_reply()
   end
 

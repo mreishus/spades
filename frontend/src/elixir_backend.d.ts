@@ -1,5 +1,6 @@
 declare module "elixir-backend" {
   export type Seat = "west" | "east" | "south" | "north";
+  export type Winner = null | "north_south" | "east_west";
 
   export declare class Room {
     public id: number;
@@ -54,7 +55,7 @@ declare module "elixir-backend" {
     when_trick_full: null | string; // timestamp
     score: GameScore;
     round_number: number;
-    winner: null | "north_south" | "east_west";
+    winner: Winner;
   }
 
   export declare class GamePlayer {

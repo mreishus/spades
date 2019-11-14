@@ -54,6 +54,8 @@ export const SmartTable: React.FC<Props> = ({ gameUIView }) => {
   const rightCard = cardFromTrick(trick, rightSeat);
   const leftCard = cardFromTrick(trick, leftSeat);
 
+  const a = game.winner;
+
   return (
     <Table
       leftCard={leftTurn || leftCard}
@@ -65,6 +67,7 @@ export const SmartTable: React.FC<Props> = ({ gameUIView }) => {
       rightPlayer={rightPlayer}
       bottomPlayer={bottomPlayer}
       emphasizeBidding={game.status === "bidding"}
+      winner={game.winner}
     />
   );
 };

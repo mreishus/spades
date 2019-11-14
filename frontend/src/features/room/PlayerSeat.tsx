@@ -7,15 +7,23 @@ interface Props {
   whichSeat: Seat;
   broadcast: (eventName: string, payload: object) => void;
   userId: null | number;
+  isWinner?: boolean;
 }
 
 export const PlayerSeat: React.FC<Props> = ({
   broadcast,
   userId,
-  whichSeat
+  whichSeat,
+  isWinner
 }) => {
   if (userId == null) {
-    return <Button onClick={() => broadcast("sit", { whichSeat })}>Sit</Button>;
+    if (!isWinner) {
+      return (
+        <Button onClick={() => broadcast("sit", { whichSeat })}>Sit</Button>
+      );
+    } else {
+      return null;
+    }
   } else if (typeof userId == "number") {
     return <UserSitting userId={userId} />;
   } else {
