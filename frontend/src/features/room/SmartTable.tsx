@@ -66,7 +66,6 @@ export const SmartTable: React.FC<Props> = ({ gameUIView }) => {
       bottomPlayer={bottomPlayer}
       emphasizeBidding={game.status === "bidding"}
       winner={game.winner}
-      score={game.score}
     />
   );
 };

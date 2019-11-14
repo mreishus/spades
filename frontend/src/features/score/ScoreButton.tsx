@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import Button from "../../components/basic/Button";
 import ScoreModal from "./ScoreModal";
-import { GameScore } from "elixir-backend";
+import useGameUIView from "../../hooks/useGameUIView";
 
-interface Props {
-  score: GameScore;
-}
+interface Props {}
 
-export const ScoreButton: React.FC<Props> = ({ score }) => {
+export const ScoreButton: React.FC<Props> = () => {
+  const gameUIView = useGameUIView();
   const [showModal, setShowModal] = useState(false);
+  if (gameUIView === null) {
+    return null;
+  }
+  const score = gameUIView.game_ui.game.score;
   return (
     <>
       <Button isPrimary onClick={() => setShowModal(true)}>

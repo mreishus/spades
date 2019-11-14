@@ -5,6 +5,7 @@ import RoomStaging from "./RoomStaging";
 import Container from "../../components/basic/Container";
 import Button from "../../components/basic/Button";
 
+import GameUIViewContext from "../../contexts/GameUIViewContext";
 import useChannel from "../../hooks/useChannel";
 import { GameUIView } from "elixir-backend";
 
@@ -59,9 +60,11 @@ export const Room: React.FC<Props> = ({ slug }) => {
         </div>
         {isStaging && <RoomStaging gameState={game_ui} broadcast={broadcast} />}
         {isPlaying && gameUIView != null && (
-          <RotateTableProvider gameUIView={gameUIView}>
-            <RoomGame gameUIView={gameUIView} broadcast={broadcast} />
-          </RotateTableProvider>
+          <GameUIViewContext.Provider value={gameUIView}>
+            <RotateTableProvider gameUIView={gameUIView}>
+              <RoomGame gameUIView={gameUIView} broadcast={broadcast} />
+            </RotateTableProvider>
+          </GameUIViewContext.Provider>
         )}
       </div>
     </Container>
