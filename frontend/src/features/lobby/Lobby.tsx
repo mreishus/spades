@@ -3,6 +3,7 @@ import CreateRoomModal from "./CreateRoomModal";
 import LobbyTable from "./LobbyTable";
 import Button from "../../components/basic/Button";
 import Container from "../../components/basic/Container";
+import UsersTest from "../../features/user/UsersTest";
 
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
@@ -40,6 +41,9 @@ export const Lobby: React.FC = () => {
           <Button isPrimary onClick={() => setShowModal(true)}>
             Create Room
           </Button>
+        </div>
+        <div className="mt-4">
+          <UsersTest />
         </div>
         <CreateRoomModal
           isOpen={showModal}
