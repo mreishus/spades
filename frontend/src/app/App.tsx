@@ -3,6 +3,7 @@ import axios from "axios";
 
 import SocketProvider from "../components/SocketProvider";
 import ProfileProvider from "../components/ProfileProvider";
+import UserProvider from "../components/UserProvider";
 import AppRouter from "./AppRouter";
 import AuthContext from "../contexts/AuthContext";
 
@@ -94,9 +95,11 @@ const App: React.FC = () => {
           options={socketParams}
         >
           <ProfileProvider>
-            <Router>
-              <AppRouter />
-            </Router>
+            <UserProvider>
+              <Router>
+                <AppRouter />
+              </Router>
+            </UserProvider>
           </ProfileProvider>
         </SocketProvider>
       </AuthContext.Provider>
