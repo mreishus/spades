@@ -165,7 +165,7 @@ defmodule SpadesGame.GameUIServer do
   end
 
   defp save_and_reply(new_gameui) do
-    # Async GameRegistry.update Should improve performance, 
+    # Async GameRegistry.update Should improve performance,
     # but causes tests to fail.  Not sure it's a real failure
     # spawn_link(fn ->
     GameRegistry.update(new_gameui.game_name, new_gameui)

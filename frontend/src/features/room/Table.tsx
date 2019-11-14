@@ -1,7 +1,8 @@
 import React from "react";
 import cx from "classnames";
 import ScoreButton from "../score/ScoreButton";
-import { GamePlayer, Winner } from "elixir-backend";
+import useGameUIView from "../../hooks/useGameUIView";
+import { GamePlayer } from "elixir-backend";
 
 interface Props {
   emphasizeBidding?: boolean;
@@ -13,7 +14,6 @@ interface Props {
   topPlayer: GamePlayer;
   rightPlayer: GamePlayer;
   bottomPlayer: GamePlayer;
-  winner: Winner;
 }
 
 const qNull = (input: number | null) => {
@@ -32,9 +32,10 @@ export const Table: React.FC<Props> = ({
   topPlayer,
   rightPlayer,
   bottomPlayer,
-  emphasizeBidding,
-  winner
+  emphasizeBidding
 }) => {
+  const gameUIView = useGameUIView();
+  const winner = gameUIView != null ? gameUIView.game_ui.game.winner : null;
   const cardHeight = "h-24";
   const bidClasses = {
     "font-semibold text-lg text-blue-800": emphasizeBidding
