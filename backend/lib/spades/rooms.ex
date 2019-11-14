@@ -23,8 +23,7 @@ defmodule Spades.Rooms do
   end
 
   @doc """
-  Gets a single room.
-
+  Gets a single room by id.
   Raises `Ecto.NoResultsError` if the Room does not exist.
 
   ## Examples

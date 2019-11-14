@@ -2,9 +2,9 @@ import React, { useCallback } from "react";
 import ProfileContext from "../contexts/ProfileContext";
 import useAuthDataApi from "../hooks/useAuthDataApi";
 import useAuth from "../hooks/useAuth";
-import { Profile } from "../hooks/useProfile";
 import useInterval from "../hooks/useInterval";
 import { format } from "date-fns";
+import { Profile } from "elixir-backend";
 
 interface Props {
   children: React.ReactNode;

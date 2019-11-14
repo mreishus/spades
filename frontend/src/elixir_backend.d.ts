@@ -105,4 +105,19 @@ declare module "elixir-backend" {
     rightUserId: null | number;
     leftUserId: null | number;
   }
+
+  // Profile: Private information about your own account.
+  export declare class Profile {
+    public id: number;
+    public email: string;
+    public alias: string;
+    public inserted_at: string; // Actually contains a timestamp
+    public email_confirmed_at: null | string; // Actually contains a timestamp
+  }
+
+  // User: Public information about other users.
+  export declare class User {
+    public id: number;
+    public alias: string;
+  }
 }

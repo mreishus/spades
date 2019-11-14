@@ -31,7 +31,8 @@ defmodule Spades.Users.User do
   to_my_profile/1:
   Given a User object, return a UserProfile map that's delivered
   to the front end via the Profile controller.
-  This way, we don't have to send the entire User object to the frontend.
+  This way, we can customize what fields we send to the frontend.
+  This is called a "Profile" in the JS backend (private info about you.)
   """
   def to_my_profile(%User{} = user) do
     %{
@@ -43,8 +44,16 @@ defmodule Spades.Users.User do
     }
   end
 
-  ## Public profile: If getting info about another user, you shouldn't
-  ## be able to see their emails and such
-  # def to_public_profile(%User{} = user) do
-  # end
+  @doc """
+  to_public_profile/1:
+  Public profile: If getting info about another user, you shouldn't
+  be able to see their emails and such
+  This is called a "User" in the JS backend (public info about seomeone else.)
+  """
+  def to_public_profile(%User{} = user) do
+    %{
+      id: user.id,
+      alias: user.alias
+    }
+  end
 end
