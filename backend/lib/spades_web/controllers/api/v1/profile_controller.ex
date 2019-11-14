@@ -17,4 +17,9 @@ defmodule SpadesWeb.API.V1.ProfileController do
         json(conn, %{user_profile: User.to_my_profile(user)})
     end
   end
+
+  @spec show(Conn.t(), map()) :: Conn.t()
+  def show(conn, _params) do
+    json(conn, %{success: "yes"})
+  end
 end

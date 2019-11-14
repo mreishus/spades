@@ -47,6 +47,7 @@ defmodule SpadesWeb.Router do
 
     # Profile
     get("/profile", ProfileController, :index)
+    get("/profile/:id", ProfileController, :show)
 
     # Testing Junk
     get("/authtest", JunkController, :authtest)

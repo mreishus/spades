@@ -1,4 +1,5 @@
 import React from "react";
+import UserName from "../user/UserName";
 import { Link } from "react-router-dom";
 import { Room } from "elixir-backend";
 
@@ -15,7 +16,9 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
       <td className={tdClass}>
         <Link to={"/room/" + room.slug}>{room.name}</Link>
       </td>
-      <td className={tdClass}>{room.west}</td>
+      <td className={tdClass}>
+        <UserName userId={room.west} />
+      </td>
       <td className={tdClass}>{room.north}</td>
       <td className={tdClass}>{room.east}</td>
       <td className={tdClass}>{room.south}</td>
