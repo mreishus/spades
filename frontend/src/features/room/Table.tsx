@@ -1,6 +1,7 @@
 import React from "react";
 import cx from "classnames";
-import { GamePlayer, Winner } from "elixir-backend";
+import ScoreButton from "../score/ScoreButton";
+import { GamePlayer, GameScore, Winner } from "elixir-backend";
 
 interface Props {
   emphasizeBidding?: boolean;
@@ -13,6 +14,7 @@ interface Props {
   rightPlayer: GamePlayer;
   bottomPlayer: GamePlayer;
   winner: Winner;
+  score: GameScore;
 }
 
 const qNull = (input: number | null) => {
@@ -32,7 +34,8 @@ export const Table: React.FC<Props> = ({
   rightPlayer,
   bottomPlayer,
   emphasizeBidding,
-  winner
+  winner,
+  score
 }) => {
   const cardHeight = "h-24";
   const bidClasses = {
@@ -44,8 +47,9 @@ export const Table: React.FC<Props> = ({
       {winner && (
         <div className="p-6 w-full h-full absolute inset-0 z-40">
           <div className="p-3 bg-white border rounded w-full h-full">
-            <h2 className="text-purple-800 font-semibold">Winner!</h2>
-            Team: {winner} won.
+            <h2 className="text-purple-800 font-semibold mb-4">Winner!</h2>
+            <div className="mb-2">Team: {winner} won.</div>
+            <ScoreButton score={score} />
           </div>
         </div>
       )}
