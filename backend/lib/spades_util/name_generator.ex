@@ -17,100 +17,250 @@ defmodule SpadesUtil.NameGenerator do
 
   defp adj do
     ~w[
-becoming
-bucolic
-chatoyant
-comely
-demure
-desultory
-diaphanous
-dulcet
-effervescent
-ephemeral
-ethereal
-evanescent
-evocative
-fetching
-fugacious
-furtive
-gossamer
-halcyon
-incipient
-ineffable
-labyrinthine
-lissome
-lithe
-mellifluous
-murmurous
-opulent
-pyrrhic
-quintessential
-redolent
-riparian
-sempiternal
-summery
-sumptuous
-surreptitious
-susurrous
-untoward
-vestigial
-woebegone
+      adorable
+      amazing
+      amused
+      animated
+      average
+      beautiful
+      belligerent
+      bizarre
+      blue
+      bored
+      brave
+      broken
+      charming
+      cosy
+      cowardly
+      crazy
+      dashing
+      delicious
+      divergent
+      elated
+      enchanted
+      energetic
+      ethereal
+      famous
+      fantastic
+      fast
+      festive
+      fetching
+      flabbergasted
+      flashy
+      flawless
+      flowery
+      fumbling
+      giddy
+      gothic
+      grateful
+      gullible
+      halcyon
+      healthy
+      hilarious
+      icy
+      illustrious
+      imaginary
+      inky
+      interesting
+      itchy
+      jejune
+      kind
+      languid
+      lavish
+      lazy
+      lively
+      lucky
+      lush
+      maniacal
+      massive
+      modern
+      murky
+      nice
+      nostalgic
+      observant
+      odd
+      offbeat
+      ordinary
+      overrated
+      profuse
+      proud
+      quaint
+      quiet
+      quirky
+      remarkable
+      responsible
+      romantic
+      rustic
+      scary
+      scintillating
+      silly
+      slow
+      smashing
+      smiling
+      somber
+      starry
+      statuesque
+      steep
+      super
+      superb
+      swanky
+      tame
+      tenuous
+      towering
+      unbiased
+      unique
+      unruly
+      unusual
+      valuable
+      warm
+      whimsical
+      windy
+      woebegone
+      wooden
+      zany
     ]
   end
 
   defp noun do
     ~w[
-ailurophile
-assemblage
-brood
-bungalow
-cynosure
-dalliance
-demesne
-denouement
-desuetude
-ebullience
-elision
-elixir
-eloquence
-epiphany
-felicity
-forbearance
-glamour
-harbinger
-imbrication
-imbroglio
-ingénue
-inglenook
-insouciance
-lagniappe
-lagoon
-languor
-lassitude
-leisure
-love
-moiety
-mondegreen
-nemesis
-offing
-onomatopoeia
-palimpsest
-panacea
-panoply
-pastiche
-penumbra
-petrichor
-plethora
-propinquity
-ratatouille
-ripple
-scintilla
-serendipity
-susquehanna
-talisman
-tintinnabulation
-umbrella
-wafture
+      afternoon
+      airport
+      ant
+      arch
+      beach
+      bells
+      bike
+      book
+      brooch
+      bubble
+      bucket
+      camera
+      camp
+      car
+      card
+      cave
+      cellar
+      channel
+      chant
+      circuit
+      cloud
+      cloud
+      club
+      coach
+      coconut
+      cub
+      curtain
+      day
+      data
+      delicacy
+      destiny
+      dock
+      drum
+      duck
+      egg
+      eggnog
+      elixir
+      fairy
+      fall
+      festival
+      field
+      fire
+      fish
+      flame
+      floor
+      forest
+      fortress
+      friend
+      garden
+      gazebo
+      ghost
+      giant
+      glockenspiel
+      grape
+      guide
+      guitar
+      gum
+      guru
+      harbinger
+      hour
+      ice
+      icicle
+      island
+      journey
+      jungle
+      kangaroo
+      key
+      kitten
+      ladybug
+      lake
+      language
+      laugh
+      lettuce
+      light
+      liquid
+      locket
+      love
+      magic
+      memory
+      mermaid
+      mind
+      mint
+      muscle
+      night
+      oblivion
+      ocean
+      page
+      pail
+      pancake
+      paradox
+      parcel
+      pasture
+      pen
+      pendulum
+      pirate
+      pizza
+      playground
+      potato
+      pumpkin
+      rain
+      reason
+      receipt
+      ripple
+      river
+      riverbank
+      root
+      rose
+      science
+      ship
+      shirt
+      sidewalk
+      skeleton
+      snake
+      song
+      spell
+      spoon
+      spring
+      spy
+      stage
+      star
+      stream
+      summer
+      talisman
+      tanker
+      telecaster
+      territory
+      thread
+      thunder
+      toothbrush
+      train
+      umbrella
+      vest
+      voyage
+      weather
+      wheel
+      winter
+      yak
+      year
     ]
   end
 end
