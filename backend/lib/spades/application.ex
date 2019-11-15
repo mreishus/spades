@@ -18,7 +18,10 @@ defmodule Spades.Application do
       {Registry, keys: :unique, name: SpadesGame.GameUIRegistry},
       SpadesGame.GameUISupervisor,
       # Room Cleanup
-      {Periodic, run: &SpadesGame.GameRegistry.cleanup/0, every: :timer.minutes(10)}
+      {Periodic,
+       run: &SpadesGame.GameRegistry.cleanup/0,
+       initial_delay: :timer.seconds(1),
+       every: :timer.minutes(5)}
       # Starts a worker by calling: Spades.Worker.start_link(arg)
       # {Spades.Worker, arg},
     ]
