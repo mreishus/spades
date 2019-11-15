@@ -20,9 +20,6 @@ const App: React.FC = () => {
 
   const setAuthAndRenewToken = useCallback(
     (authTokenData: any, renewTokenData: any) => {
-      console.log(
-        `Trying to set auth and renew tokens to [${authTokenData}] [${renewTokenData}] `
-      );
       localStorage.setItem("authToken", JSON.stringify(authTokenData));
       localStorage.setItem("renewToken", JSON.stringify(renewTokenData));
       setTokens({
@@ -59,18 +56,14 @@ const App: React.FC = () => {
     }),
     [logOut, setAuthAndRenewToken, tokens.authToken, tokens.renewToken]
   );
-  console.log({ authValue });
 
   useEffect(() => {
-    console.log("first load");
     const at_raw = localStorage.getItem("authToken");
     const rt_raw = localStorage.getItem("renewToken");
     if (typeof at_raw == "string" && typeof rt_raw == "string") {
       const at = JSON.parse(at_raw);
       const rt = JSON.parse(rt_raw);
-      console.log({ at, rt });
       if (at && rt) {
-        console.log("Setting token");
         setTokens({
           authToken: at,
           renewToken: rt

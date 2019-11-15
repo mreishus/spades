@@ -18,7 +18,6 @@ export const Lobby: React.FC = () => {
 
   const onChannelMessage = useCallback(
     (event, payload) => {
-      console.log("Got channel message", event, payload);
       if (event === "rooms_update" && payload.rooms != null) {
         setData({ data: payload.rooms });
       }

@@ -46,22 +46,13 @@ const useAuthDataApi = (
         return Promise.reject(error);
       }
 
-      console.log("Interceptor: Doing work");
-      console.log(originalRequest);
+      // Interceptor doing work (Trying to renew)
 
       originalRequest._retry = true;
-      console.log("+++ Interceptor trying to renew", renewOptions);
       return axios
         .post(renewUrl, null, renewOptions)
         .then(res => {
-          console.log("+++ After renew");
-          console.log(res);
           if (res.status === 200) {
-            console.log("+++!!! Got 201, here's data");
-            console.log(res.data);
-            console.log(res.data.data.renew_token);
-            console.log(res.data.data.token);
-
             setAuthAndRenewToken(
               res.data.data.token,
               res.data.data.renew_token
@@ -81,7 +72,7 @@ const useAuthDataApi = (
           if (onError != null) {
             onError();
           }
-          console.log("+?? interceptor error after renew");
+          // Interceptor error after renew
         });
     },
     [onError, renewOptions, setAuthAndRenewToken]

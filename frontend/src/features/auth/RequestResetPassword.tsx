@@ -36,8 +36,6 @@ export const RequestResetPassword: React.FC<Props> = () => {
       const res = await axios.post("/be/api/v1/reset-password", data);
       setIsLoading(false);
       setIsSuccess(true);
-      console.log("got res");
-      console.log(res);
     } catch (e) {
       setIsLoading(false);
       setIsError(true);

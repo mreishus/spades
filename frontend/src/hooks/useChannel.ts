@@ -87,7 +87,7 @@ const joinChannel = (
   channel
     .join()
     .receive("ok", ({ messages }) =>
-      console.log("successfully joined channel", messages || "")
+      //console.log("successfully joined channel", messages || "")
     )
     .receive("error", ({ reason }) =>
       console.error("failed to join channel", reason)

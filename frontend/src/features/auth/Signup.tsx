@@ -46,8 +46,6 @@ export const Login: React.FC<Props> = () => {
         }
       };
       const res = await axios.post("/be/api/v1/registration", data);
-      console.log("got res");
-      console.log(res);
       setIsLoading(false);
 
       if (
@@ -57,16 +55,12 @@ export const Login: React.FC<Props> = () => {
         res.data.data.token != null
       ) {
         const { renew_token, token } = res.data.data;
-        console.log("Signed up successfully");
-        console.log({ renew_token, token });
         setAuthAndRenewToken(token, renew_token);
         setLoggedIn(true);
       } else {
         throw new Error("Invalid response from Register API");
       }
     } catch (e) {
-      console.log("catch response");
-      console.log(e.response);
       setIsLoading(false);
       setIsError(true);
       const res = e.response;

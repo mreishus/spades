@@ -15,12 +15,6 @@ export const ScoreButton: React.FC<Props> = ({ round_number }) => {
   // Open score modal when a new round starts
   const previous_round_number = usePrevious(round_number);
   useEffect(() => {
-    console.log({
-      tprn: typeof previous_round_number,
-      trn: typeof round_number,
-      round_number,
-      previous_round_number
-    });
     if (
       typeof round_number == "number" &&
       typeof previous_round_number == "number" &&

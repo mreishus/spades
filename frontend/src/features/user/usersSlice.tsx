@@ -42,7 +42,7 @@ export const fetchUser = (
   try {
     const { users } = getState();
     if (isUserExist(users, userId)) {
-      console.log(`Already have info for userId ${userId}, not fetching`);
+      // Already have info for this user, not fetching
       return;
     }
     const user = await getUser(userId, authCtx);
