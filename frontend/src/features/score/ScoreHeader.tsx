@@ -17,7 +17,7 @@ export const ScoreHeader: React.FC<Props> = ({ round_number, score }) => {
       <span className="ml-4">East/West: {east_west_score}</span>
       {showButton && (
         <span className="ml-4">
-          <ScoreButton />
+          <ScoreButton round_number={round_number} />
         </span>
       )}
     </div>

@@ -10,8 +10,6 @@ export const RoomStagingTimer: React.FC<Props> = ({ when_seats_full }) => {
   const [showTimer, setShowTimer] = useState(false);
   const previous_when_seats_full = usePrevious(when_seats_full);
   useEffect(() => {
-    console.log("When full", when_seats_full);
-    console.log("Previous when full", previous_when_seats_full);
     if (previous_when_seats_full == null && when_seats_full != null) {
       setShowTimer(true);
     }

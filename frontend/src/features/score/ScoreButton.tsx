@@ -1,13 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Button from "../../components/basic/Button";
 import ScoreModal from "./ScoreModal";
 import useGameUIView from "../../hooks/useGameUIView";
+import usePrevious from "../../hooks/usePrevious";
 
-interface Props {}
+interface Props {
+  round_number?: number;
+}
 
-export const ScoreButton: React.FC<Props> = () => {
+export const ScoreButton: React.FC<Props> = ({ round_number }) => {
   const gameUIView = useGameUIView();
   const [showModal, setShowModal] = useState(false);
+
+  // Open score modal when a new round starts
+  const previous_round_number = usePrevious(round_number);
+  useEffect(() => {
+    console.log({
+      tprn: typeof previous_round_number,
+      trn: typeof round_number,
+      round_number,
+      previous_round_number
+    });
+    if (
+      typeof round_number == "number" &&
+      typeof previous_round_number == "number" &&
+      round_number > previous_round_number &&
+      previous_round_number >= 1
+    ) {
+      setShowModal(true);
+    }
+  }, [round_number, previous_round_number]);
   if (gameUIView === null) {
     return null;
   }
