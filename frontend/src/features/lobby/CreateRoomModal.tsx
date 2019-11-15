@@ -49,7 +49,17 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
     >
       <h1 id="heading">Create Room</h1>
       <div id="full_description" className="mt-2">
-        <p>Description goes here.</p>
+        <p>No options available yet.</p>
+        <p className="mt-4">
+          <span className="font-semibold">Basic spades.</span> 4 players, 2
+          teams of 2 each.
+          <br />
+          First team to 500 points wins.
+          <br />
+          Nils worth +100 or -100 points. Blind Nil not available.
+          <br />
+          10 bags are worth -100 points.
+        </p>
       </div>
 
       <div className="mt-4">
