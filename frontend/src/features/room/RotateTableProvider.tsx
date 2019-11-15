@@ -73,10 +73,10 @@ export const RotateTableProvider: React.FC<Props> = ({
   const rightPlayer: GamePlayer = game[rightSeat];
   const leftPlayer: GamePlayer = game[leftSeat];
 
-  const bottomUserId = seats[bottomSeat];
-  const topUserId = seats[topSeat];
-  const rightUserId = seats[rightSeat];
-  const leftUserId = seats[leftSeat];
+  const bottomUserId = seats[bottomSeat].sitting;
+  const topUserId = seats[topSeat].sitting;
+  const rightUserId = seats[rightSeat].sitting;
+  const leftUserId = seats[leftSeat].sitting;
 
   const value: RotateTableContextType = {
     bottomSeat,

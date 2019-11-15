@@ -26,13 +26,13 @@ defmodule GameUiTest do
   describe "sit/3" do
     test "Someone can sit", %{gameui: gameui} do
       gameui = GameUI.sit(gameui, 10, "north")
-      assert gameui.seats.north == 10
+      assert gameui.seats.north.sitting == 10
     end
 
     test "A taken seat can't be sat in", %{gameui: gameui} do
       gameui = GameUI.sit(gameui, 11, "south")
       gameui = GameUI.sit(gameui, 12, "south")
-      assert gameui.seats.south == 11
+      assert gameui.seats.south.sitting == 11
     end
   end
 
@@ -67,10 +67,10 @@ defmodule GameUiTest do
       gameui = GameUI.sit(gameui, 12, "west")
       gameui = GameUI.sit(gameui, 13, "south")
       gameui = GameUI.leave(gameui, 12)
-      assert gameui.seats.north == 10
-      assert gameui.seats.east == 11
-      assert gameui.seats.west == nil
-      assert gameui.seats.south == 13
+      assert gameui.seats.north.sitting == 10
+      assert gameui.seats.east.sitting == 11
+      assert gameui.seats.west.sitting == nil
+      assert gameui.seats.south.sitting == 13
     end
   end
 

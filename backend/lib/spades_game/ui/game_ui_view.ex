@@ -38,16 +38,16 @@ defmodule SpadesGame.GameUIView do
 
   defp hand_for(%GameUI{} = game_ui, user_id) do
     cond do
-      user_id == game_ui.seats.east ->
+      user_id == game_ui.seats.east.sitting ->
         game_ui.game.east.hand
 
-      user_id == game_ui.seats.west ->
+      user_id == game_ui.seats.west.sitting ->
         game_ui.game.west.hand
 
-      user_id == game_ui.seats.north ->
+      user_id == game_ui.seats.north.sitting ->
         game_ui.game.north.hand
 
-      user_id == game_ui.seats.south ->
+      user_id == game_ui.seats.south.sitting ->
         game_ui.game.south.hand
 
       true ->
@@ -57,16 +57,16 @@ defmodule SpadesGame.GameUIView do
 
   def seat_for(%GameUI{} = game_ui, user_id) do
     cond do
-      user_id == game_ui.seats.east ->
+      user_id == game_ui.seats.east.sitting ->
         :east
 
-      user_id == game_ui.seats.west ->
+      user_id == game_ui.seats.west.sitting ->
         :west
 
-      user_id == game_ui.seats.north ->
+      user_id == game_ui.seats.north.sitting ->
         :north
 
-      user_id == game_ui.seats.south ->
+      user_id == game_ui.seats.south.sitting ->
         :south
 
       true ->

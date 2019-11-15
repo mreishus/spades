@@ -34,10 +34,16 @@ declare module "elixir-backend" {
   }
 
   export declare class GameUISeats {
-    east: null | number;
-    west: null | number;
-    north: null | number;
-    south: null | number;
+    east: GameUISeat;
+    west: GameUISeat;
+    north: GameUISeat;
+    south: GameUISeat;
+  }
+
+  export declare class GameUISeat {
+    sitting: null | number;
+    recently_sitting: null | number;
+    when_left_seat: null | string; // Actually contains a timestamp
   }
 
   export declare class Game {

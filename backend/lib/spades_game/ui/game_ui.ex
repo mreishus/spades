@@ -3,7 +3,7 @@ defmodule SpadesGame.GameUI do
   One level on top of Game.
   """
 
-  alias SpadesGame.{Card, Game, GameUI, GameOptions}
+  alias SpadesGame.{Card, Game, GameOptions, GameUI, GameUISeat}
 
   @derive Jason.Encoder
   defstruct [:game, :game_name, :options, :created_at, :status, :seats, :when_seats_full]
@@ -17,10 +17,10 @@ defmodule SpadesGame.GameUI do
           created_at: DateTime.t(),
           status: :staging | :playing | :done,
           seats: %{
-            west: nil | integer,
-            north: nil | integer,
-            east: nil | integer,
-            south: nil | integer
+            west: GameUISeat.t(),
+            north: GameUISeat.t(),
+            east: GameUISeat.t(),
+            south: GameUISeat.t()
           },
           when_seats_full: nil | DateTime.t()
         }
@@ -36,10 +36,10 @@ defmodule SpadesGame.GameUI do
       created_at: DateTime.utc_now(),
       status: :staging,
       seats: %{
-        west: nil,
-        north: nil,
-        east: nil,
-        south: nil
+        west: GameUISeat.new_blank(),
+        north: GameUISeat.new_blank(),
+        east: GameUISeat.new_blank(),
+        south: GameUISeat.new_blank()
       }
     }
   end
@@ -104,7 +104,7 @@ defmodule SpadesGame.GameUI do
   @spec user_id_to_seat(GameUI.t(), number) :: nil | :west | :east | :north | :south
   def user_id_to_seat(game_ui, user_id) do
     game_ui.seats
-    |> Map.new(fn {k, v} -> {v, k} end)
+    |> Map.new(fn {k, %GameUISeat{} = v} -> {v.sitting, k} end)
     |> Map.delete(nil)
     |> Map.get(user_id)
   end
@@ -141,7 +141,8 @@ defmodule SpadesGame.GameUI do
   @spec do_sit(GameUI.t(), integer, :north | :south | :east | :west) :: GameUI.t()
   defp do_sit(gameui, userid, which) do
     if sit_allowed?(gameui, userid, which) do
-      seats = gameui.seats |> Map.put(which, userid)
+      seat = gameui.seats[which] |> GameUISeat.sit(userid)
+      seats = gameui.seats |> Map.put(which, seat)
 
       %GameUI{gameui | seats: seats}
       |> checks
@@ -160,12 +161,15 @@ defmodule SpadesGame.GameUI do
   # Is this user sitting in a seat?
   @spec seat_empty?(GameUI.t(), integer) :: boolean
   defp already_sitting?(gameui, userid) do
-    gameui.seats |> Map.values() |> Enum.member?(userid)
+    gameui.seats
+    |> Map.values()
+    |> Enum.map(fn %GameUISeat{} = seat -> seat.sitting end)
+    |> Enum.member?(userid)
   end
 
   # Is this seat empty?
   @spec seat_empty?(GameUI.t(), :north | :south | :east | :west) :: boolean
-  defp seat_empty?(gameui, which), do: gameui.seats[which] == nil
+  defp seat_empty?(gameui, which), do: gameui.seats[which].sitting == nil
 
   @doc """
   leave/2: Userid just left the table.  If they were seated, mark
@@ -173,7 +177,10 @@ defmodule SpadesGame.GameUI do
   """
   @spec leave(GameUI.t(), integer) :: GameUI.t()
   def leave(gameui, userid) do
-    seats = for {k, v} <- gameui.seats, into: %{}, do: {k, if(v == userid, do: nil, else: v)}
+    seats =
+      for {k, v} <- gameui.seats,
+          into: %{},
+          do: {k, if(v.sitting == userid, do: GameUISeat.new_blank(), else: v)}
 
     %{gameui | seats: seats}
     |> checks
@@ -200,7 +207,7 @@ defmodule SpadesGame.GameUI do
   end
 
   @doc """
-  check_game/1: 
+  check_game/1:
   Run the series of checks on the Game object.
   Similar to GameUI's checks(), but running on the embedded
   game_ui.game object/level instead.
@@ -242,7 +249,7 @@ defmodule SpadesGame.GameUI do
   def everyone_sitting?(gameui) do
     [:north, :west, :south, :east]
     |> Enum.reduce(true, fn seat, acc ->
-      acc and gameui.seats[seat] != nil
+      acc and gameui.seats[seat].sitting != nil
     end)
   end
 

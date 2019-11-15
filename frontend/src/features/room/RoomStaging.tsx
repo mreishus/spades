@@ -19,8 +19,6 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
     return null;
   }
   const { seats } = gameState;
-  console.log("gs");
-  console.log(gameState);
   return (
     <div>
       <div className="bg-white max-w-lg p-4 mx-auto rounded-lg mt-4">
@@ -32,7 +30,7 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <div>
               <PlayerSeat
                 broadcast={broadcast}
-                userId={seats.north}
+                userId={seats.north.sitting}
                 whichSeat="north"
               />
             </div>
@@ -44,7 +42,7 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <div>
               <PlayerSeat
                 broadcast={broadcast}
-                userId={seats.west}
+                userId={seats.west.sitting}
                 whichSeat="west"
               />
             </div>
@@ -55,7 +53,7 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <div>
               <PlayerSeat
                 broadcast={broadcast}
-                userId={seats.east}
+                userId={seats.east.sitting}
                 whichSeat="east"
               />
             </div>
@@ -67,7 +65,7 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <div>
               <PlayerSeat
                 broadcast={broadcast}
-                userId={seats.south}
+                userId={seats.south.sitting}
                 whichSeat="south"
               />
             </div>

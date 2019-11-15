@@ -53,10 +53,10 @@ defmodule SpadesGame.GameRegistry do
     # created_at: DateTime.t()
     %{
       name: gameui.game_name,
-      west: gameui.seats.west,
-      east: gameui.seats.east,
-      north: gameui.seats.north,
-      south: gameui.seats.south
+      west: gameui.seats.west.sitting,
+      east: gameui.seats.east.sitting,
+      north: gameui.seats.north.sitting,
+      south: gameui.seats.south.sitting
     }
   end
 

@@ -55,10 +55,10 @@ defmodule GameUiServerTest do
       GameUIServer.sit(game_name, 12, "north")
       GameUIServer.sit(game_name, 13, "east")
       state = GameUIServer.sit(game_name, 14, "south")
-      assert state.seats.west == 11
-      assert state.seats.north == 12
-      assert state.seats.east == 13
-      assert state.seats.south == 14
+      assert state.seats.west.sitting == 11
+      assert state.seats.north.sitting == 12
+      assert state.seats.east.sitting == 13
+      assert state.seats.south.sitting == 14
     end
 
     test "game advances status after everyone sits" do
@@ -72,10 +72,10 @@ defmodule GameUiServerTest do
       GameUIServer.sit(game_name, 13, "east")
       GameUIServer.sit(game_name, 14, "south")
       state = GameUIServer.rewind_countdown_devtest(game_name)
-      assert state.seats.west == 11
-      assert state.seats.north == 12
-      assert state.seats.east == 13
-      assert state.seats.south == 14
+      assert state.seats.west.sitting == 11
+      assert state.seats.north.sitting == 12
+      assert state.seats.east.sitting == 13
+      assert state.seats.south.sitting == 14
       assert state.status == :playing
       assert state.game.status == :bidding
     end
@@ -94,10 +94,10 @@ defmodule GameUiServerTest do
       GameUIServer.sit(game_name, 13, "east")
       GameUIServer.sit(game_name, 14, "south")
       state = GameUIServer.rewind_countdown_devtest(game_name)
-      assert state.seats.west == 11
-      assert state.seats.north == 12
-      assert state.seats.east == 13
-      assert state.seats.south == 14
+      assert state.seats.west.sitting == 11
+      assert state.seats.north.sitting == 12
+      assert state.seats.east.sitting == 13
+      assert state.seats.south.sitting == 14
       assert state.status == :playing
       assert state.game.status == :bidding
       GameUIServer.bid(game_name, 13, 4)
