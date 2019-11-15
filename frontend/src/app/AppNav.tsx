@@ -64,8 +64,6 @@ export const AppNav: React.FC<Props> = () => {
         )}
         {authToken && (
           <>
-            {/*   TestMe */}
-            {/* </Link> */}
             {/* <Link to="/authtest" className={headerLinkClass}> */}
             {/*   Auth Test */}
             {/* </Link> */}

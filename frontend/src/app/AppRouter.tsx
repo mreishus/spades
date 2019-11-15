@@ -2,7 +2,6 @@ import React from "react";
 import { Switch, Route } from "react-router-dom";
 import AppNav from "./AppNav";
 import PrivateRoute from "./PrivateRoute";
-import TestMe from "../components/TestMe";
 import AuthTest from "../components/AuthTest";
 import RoomShow from "../pages/RoomShow";
 import LobbyIndex from "../pages/LobbyIndex";
@@ -33,9 +32,6 @@ const AppRouter: React.FC = () => {
         <Route path="/reset-password" component={RequestResetPassword} />
         <Route path="/confirm-email/:confirm_token" component={ConfirmEmail} />
         <Route path="/authtest" component={AuthTest} />
-        <Route path="/testme">
-          <TestMe />
-        </Route>
         <PrivateRoute path="/private" component={PrivatePage} />
         <Route path="/room/:slug" component={RoomShow} />
         <Route path="/lobby" component={LobbyIndex} />
