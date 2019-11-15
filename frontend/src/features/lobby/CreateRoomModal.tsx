@@ -43,16 +43,15 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
       closeTimeoutMS={200}
       isOpen={isOpen}
       onRequestClose={closeModal}
-      contentLabel="Minimal Modal Example"
+      contentLabel="Create New Game"
       overlayClassName="fixed inset-0 bg-black-50 z-50"
       className="insert-auto overflow-auto p-5 bg-gray-100 border max-w-lg mx-auto my-12 rounded-lg outline-none"
     >
-      <h1 id="heading">Create Room</h1>
-      <div id="full_description" className="mt-2">
-        <p>No options available yet.</p>
-        <p className="mt-4">
-          <span className="font-semibold">Basic spades.</span> 4 players, 2
-          teams of 2 each.
+      <h1 className="mb-2">Create Room</h1>
+      <div className="">
+        <p className="mb-4">
+          <div className="font-semibold mb-2">Basic spades.</div>
+          4 players, 2 teams of 2 each.
           <br />
           First team to 500 points wins.
           <br />
@@ -60,6 +59,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
           <br />
           10 bags are worth -100 points.
         </p>
+        <p className="italic text-gray-600">No options available yet.</p>
       </div>
 
       <div className="mt-4">
