@@ -103,6 +103,10 @@ defmodule SpadesGame.Game do
 
   @spec bid(Game.t(), :west | :north | :east | :south, integer) ::
           {:ok, Game.t()} | {:error, String.t()}
+  def bid(%Game{winner: winner}, _seat, _bid_num) when winner != nil do
+    {:error, "Cannot bid in a won game"}
+  end
+
   def bid(game, seat, bid_num) do
     {:ok, game}
     |> ensure_bidding()
@@ -160,6 +164,10 @@ defmodule SpadesGame.Game do
   # Should I add these for pipelining?
   # def play({:ok, game}, seat, card), do: play(game, seat, card)
   # def play({:error, _message}, _seat, _card), do: raise("Can't play on an error tuple")
+
+  def play(%Game{winner: winner}, _seat, _card) when winner != nil do
+    {:error, "Cannot play in a won game"}
+  end
 
   def play(%Game{} = game, seat, %Card{} = card) do
     {:ok, game}
