@@ -27,7 +27,8 @@ defmodule SpadesGame.Game do
     :spades_broken,
     :score,
     :round_number,
-    :winner
+    :winner,
+    :hand_size
   ]
 
   use Accessible
@@ -47,7 +48,8 @@ defmodule SpadesGame.Game do
           spades_broken: boolean,
           score: GameScore.t(),
           round_number: integer,
-          winner: nil | :north_south | :east_west
+          winner: nil | :north_south | :east_west,
+          hand_size: integer
         }
 
   @doc """
@@ -83,7 +85,8 @@ defmodule SpadesGame.Game do
       spades_broken: false,
       score: GameScore.new(),
       round_number: 1,
-      winner: nil
+      winner: nil,
+      hand_size: 13
     }
   end
 
@@ -98,6 +101,10 @@ defmodule SpadesGame.Game do
 
       _ ->
         Deck.new_shuffled() |> Enum.chunk_every(13)
+
+        # For testing: 5 card hands
+        # change hand_size above as well
+        # Deck.new_shuffled() |> Enum.chunk_every(13) |> Enum.map(fn x -> Enum.take(x, 5) end)
     end
   end
 
@@ -390,7 +397,7 @@ defmodule SpadesGame.Game do
   def check_for_new_round({:error, message}), do: {:error, message}
 
   def check_for_new_round({:ok, game}) do
-    if tricks_played(game) >= 13 do
+    if tricks_played(game) >= game.hand_size do
       # Round is over, compute score
       game = compute_score(game)
 
