@@ -30,11 +30,6 @@ export const Login: React.FC<Props> = () => {
 
   const { inputs, handleSubmit, handleInputChange } = useForm(async () => {
     try {
-      // Not that secure, if you found this, congrats. :)
-      if (inputs.signuppw !== "77yh") {
-        alert("Wrong sign up code.  Signups should be open in a month or two.");
-        return;
-      }
       setIsLoading(true);
       setIsError(false);
       const data = {
@@ -152,19 +147,6 @@ export const Login: React.FC<Props> = () => {
             <div className="mt-2 text-xs italic text-gray-600">
               This will be visible to all users on the system.
             </div>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              sign up code
-            </label>
-            <input
-              type="text"
-              name="signuppw"
-              placeholder="signuppw"
-              className="form-control block mt-2 w-full"
-              onChange={handleInputChange}
-              value={inputs.signuppw || ""}
-            />
           </div>
           <Button isSubmit isPrimary className="mt-2">
             Sign Up
