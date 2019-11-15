@@ -1,5 +1,6 @@
 import React from "react";
 import ScoreButton from "./ScoreButton";
+import GameTeam from "../room/GameTeam";
 import { GameScore } from "elixir-backend";
 
 interface Props {
@@ -12,9 +13,11 @@ export const ScoreHeader: React.FC<Props> = ({ round_number, score }) => {
   const showButton = east_west_rounds.length > 0;
   return (
     <div>
-      <span className="mr-2">Round Number: {round_number}</span> North/South:{" "}
-      {north_south_score}
-      <span className="ml-4">East/West: {east_west_score}</span>
+      <span className="mr-2">Hand: {round_number}</span>{" "}
+      <GameTeam isNorthSouth />: {north_south_score}
+      <span className="ml-4">
+        <GameTeam isEastWest />: {east_west_score}
+      </span>
       {showButton && (
         <span className="ml-4">
           <ScoreButton round_number={round_number} />

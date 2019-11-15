@@ -1,5 +1,6 @@
 import React from "react";
 import cx from "classnames";
+import GameTeam from "../room/GameTeam";
 import { GameScore, GameScoreRoundTeam } from "elixir-backend";
 
 interface Props {
@@ -22,8 +23,12 @@ export const ScoreTable: React.FC<Props> = ({ score }) => {
         <thead>
           <tr className={""}>
             <td></td>
-            <td className={"text-right p-1 font-semibold"}>North/South</td>
-            <td className={"text-right p-1 font-semibold"}>East/West</td>
+            <td className={"text-right p-1 font-semibold"}>
+              <GameTeam isNorthSouth />
+            </td>
+            <td className={"text-right p-1 font-semibold"}>
+              <GameTeam isEastWest />
+            </td>
           </tr>
         </thead>
         <tbody>
