@@ -20,12 +20,18 @@ export const AppNav: React.FC<Props> = () => {
     <header className="bg-indigo-900 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
       <div className="flex items-center justify-between px-4 py-3 sm:p-0">
         <div>
-          <Link to="/">
+          <Link
+            to="/"
+            className="text-purple-400 font-semibold text-lg tracking-tight no-underline"
+          >
+            {/*
             <img
               className="h-8 rounded"
               src="https://placekitten.com/650/150"
               alt="Logo "
             />
+                */}
+            StarSpades
           </Link>
         </div>
         <div className="sm:hidden">

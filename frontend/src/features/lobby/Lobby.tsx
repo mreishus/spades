@@ -74,7 +74,7 @@ export const Lobby: React.FC = () => {
             If you have any suggestions or encounter any problems, please email
             me: <AdminContact />
           </p>
-          <p>Last Update: 2019-11-15.</p>
+          <p>Last Update: 2019-11-16. Version: 0.1.0.</p>
         </div>
         <CreateRoomModal
           isOpen={showModal}
