@@ -49,6 +49,9 @@ defmodule SpadesWeb.Router do
     get("/profile", ProfileController, :index)
     get("/profile/:id", ProfileController, :show)
 
+    # Admin Contact
+    get("/admin_contact", AdminContactController, :index)
+
     # Testing Junk
     get("/authtest", JunkController, :authtest)
     post("/games", GameController, :create)

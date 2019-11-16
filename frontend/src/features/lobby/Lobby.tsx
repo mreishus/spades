@@ -4,6 +4,7 @@ import CreateRoomModal from "./CreateRoomModal";
 import LobbyTable from "./LobbyTable";
 import Button from "../../components/basic/Button";
 import Container from "../../components/basic/Container";
+import AdminContact from "../../components/AdminContact";
 
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
@@ -68,6 +69,10 @@ export const Lobby: React.FC = () => {
             old yahoo games. It was just launched, and there are no bots to play
             with, so you might find it difficult to find an opponent. Invite
             your friends!
+          </p>
+          <p className="mb-2">
+            If you have any suggestions or encounter any problems, please email
+            me: <AdminContact />
           </p>
           <p>Last Update: 2019-11-15.</p>
         </div>
