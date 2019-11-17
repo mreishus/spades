@@ -1,3 +1,8 @@
+# Matt
+.sobelow
+Mnesia.nonode@nohost/
+Session.vim
+
 # Dev Secret config - api keys
 config/dev.secret.exs
 
