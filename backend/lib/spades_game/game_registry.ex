@@ -69,7 +69,7 @@ defmodule SpadesGame.GameRegistry do
   """
   def cleanup() do
     Rooms.list_rooms()
-    |> Enum.filter(fn room -> GameUIServer.state(room.name) == nil end)
+    |> Enum.filter(fn room -> not GameUIServer.game_exists?(room.name) end)
     |> Enum.each(fn room ->
       Rooms.delete_room(room)
     end)

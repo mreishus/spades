@@ -3,7 +3,7 @@ defmodule SpadesGame.GameUIServer do
   GenServer for holding GameUI state.
   """
   use GenServer
-  @timeout :timer.hours(1)
+  @timeout :timer.minutes(12)
 
   require Logger
   alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry}
@@ -42,6 +42,11 @@ defmodule SpadesGame.GameUIServer do
       nil -> nil
       _ -> GenServer.call(via_tuple(game_name), :state)
     end
+  end
+
+  @spec game_exists?(String.t()) :: boolean
+  def game_exists?(game_name) do
+    gameui_pid(game_name) != nil
   end
 
   @doc """
