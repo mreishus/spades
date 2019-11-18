@@ -52,7 +52,7 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   bid/3: A player just submitted a bid.
   """
-  @spec bid(String.t(), integer, integer) :: GameUI.t()
+  @spec bid(String.t(), integer | :bot, integer) :: GameUI.t()
   def bid(game_name, user_id, bid_amount) do
     GenServer.call(via_tuple(game_name), {:bid, user_id, bid_amount})
   end
@@ -60,7 +60,7 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   play/3: A player just played a card.
   """
-  @spec play(String.t(), integer, Card.t()) :: GameUI.t()
+  @spec play(String.t(), integer | :bot, Card.t()) :: GameUI.t()
   def play(game_name, user_id, card) do
     GenServer.call(via_tuple(game_name), {:play, user_id, card})
   end
@@ -73,6 +73,15 @@ defmodule SpadesGame.GameUIServer do
   """
   def rewind_countdown_devtest(game_name) do
     GenServer.call(via_tuple(game_name), :rewind_countdown_devtest)
+  end
+
+  @doc """
+  rewind_trickfull_devtest/1: Make a full trick advance to the next
+  trick instantly.
+  Should be used in dev+test only.
+  """
+  def rewind_trickfull_devtest(game_name) do
+    GenServer.call(via_tuple(game_name), :rewind_trickfull_devtest)
   end
 
   @doc """
@@ -134,6 +143,11 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call(:rewind_countdown_devtest, _from, state) do
     GameUI.rewind_countdown_devtest(state)
+    |> save_and_reply()
+  end
+
+  def handle_call(:rewind_trickfull_devtest, _from, state) do
+    GameUI.rewind_trickfull_devtest(state)
     |> save_and_reply()
   end
 

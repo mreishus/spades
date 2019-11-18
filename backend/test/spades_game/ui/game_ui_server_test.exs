@@ -137,6 +137,43 @@ defmodule GameUiServerTest do
     end
   end
 
+  describe "bot stuff" do
+    test "round of playing with bots" do
+      game_name = generate_game_name()
+      {:ok, options} = GameOptions.validate(%{"hardcoded_cards" => true})
+
+      assert {:ok, _pid} = GameUIServer.start_link(game_name, options)
+      GameUIServer.state(game_name)
+      GameUIServer.sit(game_name, 10, "north")
+      GameUIServer.invite_bots(game_name)
+      state = GameUIServer.rewind_countdown_devtest(game_name)
+      assert state.status == :playing
+      assert state.game.status == :bidding
+      GameUIServer.bid(game_name, :bot, 4)
+      GameUIServer.bid(game_name, :bot, 3)
+      GameUIServer.bid(game_name, :bot, 2)
+      state = GameUIServer.bid(game_name, 10, 0)
+      assert state.status == :playing
+      assert state.game.status == :playing
+
+      card_e = %Card{rank: 12, suit: :h}
+      card_s = %Card{rank: 9, suit: :h}
+      card_w = %Card{rank: 7, suit: :h}
+      card_n = %Card{rank: 2, suit: :h}
+
+      GameUIServer.play(game_name, :bot, card_e)
+      GameUIServer.play(game_name, :bot, card_s)
+      GameUIServer.play(game_name, :bot, card_w)
+      state = GameUIServer.state(game_name)
+      assert state.game.trick |> length == 3
+      GameUIServer.play(game_name, 10, card_n)
+      state = GameUIServer.state(game_name)
+      assert state.game.trick |> length == 4
+      state = GameUIServer.rewind_trickfull_devtest(game_name)
+      assert state.game.trick |> length == 0
+    end
+  end
+
   defp generate_game_name do
     "game-#{:rand.uniform(1_000_000)}"
   end

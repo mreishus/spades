@@ -45,9 +45,9 @@ defmodule SpadesGame.GameAIServer do
   #####################################
   ####### IMPLEMENTATION ##############
   #####################################
-  def init({_game_name}) do
+  def init({game_name}) do
     :timer.send_interval(1000, :tick)
-    gameai = %{this_is_a: :game_ai_i_guess}
+    gameai = %{game_name: game_name}
     {:ok, gameai, @timeout}
   end
 
@@ -55,9 +55,12 @@ defmodule SpadesGame.GameAIServer do
     {:reply, state, state, @timeout}
   end
 
-  def handle_info(:tick, state) do
+  def handle_info(:tick, %{game_name: _game_name} = state) do
     # "GameAI Server: TICK!"
     # |> IO.inspect()
+
+    # def bid(game_name, user_id, bid_amount) do
+    # def play(game_name, user_id, card) do
 
     {:noreply, state}
   end

@@ -41,4 +41,8 @@ defmodule SpadesGame.GameUISeat do
   def seat_empty?(%GameUISeat{} = seat) do
     seat.sitting == nil
   end
+
+  def is_bot?(%GameUISeat{} = seat) do
+    seat.sitting == :bot
+  end
 end

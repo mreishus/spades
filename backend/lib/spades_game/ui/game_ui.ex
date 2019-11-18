@@ -59,7 +59,7 @@ defmodule SpadesGame.GameUI do
   @doc """
   bid/3: User bid `bid_amount` of tricks.
   """
-  @spec bid(GameUI.t(), number, number) :: GameUI.t()
+  @spec bid(GameUI.t(), number | :bot, number) :: GameUI.t()
   def bid(game_ui, user_id, bid_amount) do
     seat = user_id_to_seat(game_ui, user_id)
 
@@ -80,7 +80,7 @@ defmodule SpadesGame.GameUI do
   @doc """
   play/3: A player puts a card on the table. (Moves from hand to trick.)
   """
-  @spec bid(GameUI.t(), number, Card.t()) :: GameUI.t()
+  @spec play(GameUI.t(), number | :bot, Card.t()) :: GameUI.t()
   def play(game_ui, user_id, card) do
     seat = user_id_to_seat(game_ui, user_id)
 
@@ -100,8 +100,24 @@ defmodule SpadesGame.GameUI do
 
   @doc """
   user_id_to_seat/2: Which seat is this user sitting in?
+  If :bot, check if the active turn seat belongs to a bot, return that seat if so.
   """
-  @spec user_id_to_seat(GameUI.t(), number) :: nil | :west | :east | :north | :south
+  @spec user_id_to_seat(GameUI.t(), number | :bot) :: nil | :west | :east | :north | :south
+  def user_id_to_seat(game_ui, :bot) do
+    turn = game_ui.game.turn
+
+    if turn != nil do
+      is_bot =
+        game_ui.seats
+        |> Map.get(turn)
+        |> GameUISeat.is_bot?()
+
+      if is_bot, do: turn, else: nil
+    else
+      nil
+    end
+  end
+
   def user_id_to_seat(game_ui, user_id) do
     game_ui.seats
     |> Map.new(fn {k, %GameUISeat{} = v} -> {v.sitting, k} end)
@@ -279,7 +295,7 @@ defmodule SpadesGame.GameUI do
 
   @doc """
   rewind_countdown_devtest/1:
-  If a "when_trick_full" timestamp is set, rewind it to be
+  If a "when_seats_full" timestamp is set, rewind it to be
   10 minutes ago.  Also run check_for_trick_winner.  Used in
   dev and testing for instant trick advance only.
   """
@@ -314,5 +330,6 @@ defmodule SpadesGame.GameUI do
       |> Enum.into(%{})
 
     %GameUI{game_ui | seats: seats}
+    |> checks
   end
 end

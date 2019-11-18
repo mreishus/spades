@@ -178,4 +178,55 @@ defmodule GameUiTest do
       assert censored.game.north.hand == []
     end
   end
+
+  describe "bot stuff" do
+    test "invite_bots", %{gameui: gameui} do
+      gameui = GameUI.sit(gameui, 10, "north")
+      assert gameui.when_seats_full == nil
+      gameui = GameUI.invite_bots(gameui)
+      assert gameui.when_seats_full != nil
+    end
+
+    test "bid, play and user_id_to_seat for bots", %{gameui: gameui} do
+      gameui = GameUI.sit(gameui, 10, "north")
+      assert gameui.when_seats_full == nil
+      gameui = GameUI.invite_bots(gameui)
+      assert gameui.when_seats_full != nil
+      one_minute_ago = DateTime.utc_now() |> DateTime.add(-1 * 60, :second)
+      gameui = %{gameui | when_seats_full: one_minute_ago}
+      gameui = GameUI.check_status_advance(gameui)
+      assert gameui.status == :playing
+
+      ## Now, do a round of bids
+      assert gameui.game.status == :bidding
+
+      ## Current :bot is east
+      assert :east == GameUI.user_id_to_seat(gameui, :bot)
+      gameui = GameUI.bid(gameui, :bot, 3)
+      ## Current :bot is south
+      assert :south == GameUI.user_id_to_seat(gameui, :bot)
+      gameui = GameUI.bid(gameui, :bot, 3)
+      ## Current :bot is west
+      assert :west == GameUI.user_id_to_seat(gameui, :bot)
+      gameui = GameUI.bid(gameui, :bot, 3)
+      ## North, a real player bids
+      gameui = GameUI.bid(gameui, 10, 2)
+      assert gameui.game.status == :playing
+
+      ## Do a trick with bots
+      card_e = %Card{rank: 12, suit: :h}
+      card_s = %Card{rank: 9, suit: :h}
+      card_w = %Card{rank: 7, suit: :h}
+      card_n = %Card{rank: 2, suit: :h}
+
+      gameui = GameUI.play(gameui, :bot, card_e)
+      gameui = GameUI.play(gameui, :bot, card_s)
+      gameui = GameUI.play(gameui, :bot, card_w)
+      assert gameui.game.trick |> length == 3
+      gameui = GameUI.play(gameui, 10, card_n)
+      assert gameui.game.trick |> length == 4
+      gameui = GameUI.rewind_trickfull_devtest(gameui)
+      assert gameui.game.trick |> length == 0
+    end
+  end
 end
