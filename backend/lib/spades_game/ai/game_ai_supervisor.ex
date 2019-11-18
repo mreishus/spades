@@ -32,8 +32,6 @@ defmodule SpadesGame.GameAISupervisor do
   Terminates the `GameAIServer` process normally. It won't be restarted.
   """
   def stop_game(game_name) do
-    # :ets.delete(:games, game_name)
-
     child_pid = GameAIServer.gameai_pid(game_name)
     DynamicSupervisor.terminate_child(__MODULE__, child_pid)
   end

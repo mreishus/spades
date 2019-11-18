@@ -6,7 +6,7 @@ defmodule SpadesGame.GameUIServer do
   @timeout :timer.minutes(12)
 
   require Logger
-  alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry}
+  alias SpadesGame.{Card, GameOptions, GameAISupervisor, GameUI, GameRegistry}
   alias SpadesGame.{Game}
 
   @doc """
@@ -114,6 +114,7 @@ defmodule SpadesGame.GameUIServer do
     gameui =
       case :ets.lookup(:game_uis, game_name) do
         [] ->
+          {:ok, _pid} = GameAISupervisor.start_game(game_name)
           gameui = GameUI.new(game_name, options)
           :ets.insert(:game_uis, {game_name, gameui})
           gameui
@@ -233,6 +234,7 @@ defmodule SpadesGame.GameUIServer do
     Logger.info("Terminate (Timeout) running for #{state.game_name}")
     :ets.delete(:game_uis, state.game_name)
     GameRegistry.remove(state.game_name)
+    GameAISupervisor.stop_game(state.game_name)
     :ok
   end
 
@@ -240,6 +242,7 @@ defmodule SpadesGame.GameUIServer do
   def terminate(_reason, state) do
     Logger.info("Terminate (Non Timeout) running for #{state.game_name}")
     GameRegistry.remove(state.game_name)
+    GameAISupervisor.stop_game(state.game_name)
     :ok
   end
 end

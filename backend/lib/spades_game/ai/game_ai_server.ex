@@ -3,7 +3,7 @@ defmodule SpadesGame.GameAIServer do
   ..
   """
   use GenServer
-  @timeout :timer.minutes(15)
+  @timeout :timer.minutes(60)
 
   require Logger
 
@@ -46,11 +46,19 @@ defmodule SpadesGame.GameAIServer do
   ####### IMPLEMENTATION ##############
   #####################################
   def init({_game_name}) do
+    :timer.send_interval(1000, :tick)
     gameai = %{this_is_a: :game_ai_i_guess}
     {:ok, gameai, @timeout}
   end
 
   def handle_call(:state, _from, state) do
     {:reply, state, state, @timeout}
+  end
+
+  def handle_info(:tick, state) do
+    # "GameAI Server: TICK!"
+    # |> IO.inspect()
+
+    {:noreply, state}
   end
 end
