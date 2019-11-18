@@ -239,4 +239,29 @@ defmodule GameTest do
       assert winner == %TrickCard{card: %Card{rank: 9, suit: :s}, seat: :north}
     end
   end
+
+  describe "valid_cards/2" do
+    test "works", %{options: options} do
+      game = Game.new("valid_cards abc", options)
+
+      assert {:ok, game} = Game.bid(game, :east, 3)
+      assert {:ok, game} = Game.bid(game, :south, 4)
+      assert {:ok, game} = Game.bid(game, :west, 2)
+      assert {:ok, game} = Game.bid(game, :north, 0)
+
+      # Check east valid's cards (Lead)
+      {:ok, east_valid_cards} = Game.valid_cards(game, :east)
+      assert length(east_valid_cards) == 10
+      assert east_valid_cards |> Enum.filter(fn card -> card.suit == :s end) |> length == 0
+
+      # East plays hearts
+      card_e = %Card{rank: 12, suit: :h}
+      assert {:ok, game} = Game.play(game, :east, card_e)
+
+      # Check south's valid cards - forced to follow heart
+      {:ok, south_valid_cards} = Game.valid_cards(game, :south)
+      assert length(south_valid_cards) == 2
+      assert south_valid_cards |> Enum.filter(fn card -> card.suit == :h end) |> length == 2
+    end
+  end
 end

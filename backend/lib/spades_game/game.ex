@@ -529,4 +529,39 @@ defmodule SpadesGame.Game do
     score = GameScore.update(game.score, game)
     %{game | score: score}
   end
+
+  @doc """
+  valid_cards/2 : Which cards are valid for this player
+  to play?  Only works if game is playing.
+  """
+  @spec valid_cards(Game.t(), :west | :north | :east | :south) ::
+          {:ok, Deck.t()} | {:error, String.t()}
+  def valid_cards(%Game{status: :bidding}, _seat) do
+    {:error, "Can't play while bidding"}
+  end
+
+  def valid_cards(%Game{turn: current_turn, status: :playing}, seat) when current_turn != seat do
+    {:error, "Not that player's turn"}
+  end
+
+  def valid_cards(%Game{turn: current_turn, status: :playing} = game, seat)
+      when current_turn == seat do
+    cards =
+      Map.get(game, seat).hand
+      |> Enum.filter(fn card ->
+        case play(game, seat, card) do
+          {:ok, _game} ->
+            true
+
+          {:error, _msg} ->
+            false
+        end
+      end)
+
+    {:ok, cards}
+  end
+
+  def valid_cards(_, _) do
+    {:error, "Unspecified error"}
+  end
 end
