@@ -50,7 +50,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
           <PlayerSeat
             broadcast={broadcast}
             whichSeat={topSeat}
-            userId={topUserId}
+            sittingPlayer={topUserId}
             isWinner={isWinner}
           />
         </div>
@@ -62,7 +62,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
           <PlayerSeat
             broadcast={broadcast}
             whichSeat={leftSeat}
-            userId={leftUserId}
+            sittingPlayer={leftUserId}
             isWinner={isWinner}
           />
         </div>
@@ -74,7 +74,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
           <PlayerSeat
             broadcast={broadcast}
             whichSeat={rightSeat}
-            userId={rightUserId}
+            sittingPlayer={rightUserId}
             isWinner={isWinner}
           />
         </div>
@@ -95,7 +95,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
           <PlayerSeat
             broadcast={broadcast}
             whichSeat={bottomSeat}
-            userId={bottomUserId}
+            sittingPlayer={bottomUserId}
             isWinner={isWinner}
           />
         </div>

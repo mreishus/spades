@@ -94,6 +94,13 @@ defmodule SpadesGame.GameUIServer do
     GenServer.call(via_tuple(game_name), {:leave, user_id})
   end
 
+  @doc """
+  invite_bots/1: Invite bots to fill the remaining seats.
+  """
+  def invite_bots(game_name) do
+    GenServer.call(via_tuple(game_name), :invite_bots)
+  end
+
   ## Temp function to set winner flag on a game
   def winner(game_name, winner_val) do
     GenServer.call(via_tuple(game_name), {:winner, winner_val})
@@ -126,6 +133,11 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call(:rewind_countdown_devtest, _from, state) do
     GameUI.rewind_countdown_devtest(state)
+    |> save_and_reply()
+  end
+
+  def handle_call(:invite_bots, _from, state) do
+    GameUI.invite_bots(state)
     |> save_and_reply()
   end
 

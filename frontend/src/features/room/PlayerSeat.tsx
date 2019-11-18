@@ -3,27 +3,27 @@ import { Link } from "react-router-dom";
 import UserSitting from "./UserSitting";
 import Button from "../../components/basic/Button";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
-import { Seat } from "elixir-backend";
+import { Seat, SittingPlayer } from "elixir-backend";
 
 interface Props {
   whichSeat: Seat;
   broadcast: (eventName: string, payload: object) => void;
-  userId: null | number;
+  sittingPlayer: SittingPlayer;
   isWinner?: boolean;
 }
 
 export const PlayerSeat: React.FC<Props> = ({
   broadcast,
-  userId,
+  sittingPlayer,
   whichSeat,
   isWinner
 }) => {
-  const loggedIn = useIsLoggedIn();
-  if (userId == null) {
+  const isLoggedIn = useIsLoggedIn();
+  if (sittingPlayer == null) {
     // Empty Seat
     if (!isWinner) {
       // Empty Seat + Game not over yet
-      if (loggedIn) {
+      if (isLoggedIn) {
         return (
           <Button onClick={() => broadcast("sit", { whichSeat })}>Sit</Button>
         );
@@ -41,8 +41,10 @@ export const PlayerSeat: React.FC<Props> = ({
       // Empty seat + Game is over
       return null;
     }
-  } else if (typeof userId == "number") {
-    return <UserSitting userId={userId} />;
+  } else if (sittingPlayer === "bot") {
+    return <div>Bot</div>;
+  } else if (typeof sittingPlayer == "number") {
+    return <UserSitting userId={sittingPlayer} />;
   } else {
     return <div>Unknown</div>;
   }

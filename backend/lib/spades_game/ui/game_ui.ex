@@ -302,4 +302,17 @@ defmodule SpadesGame.GameUI do
     %GameUI{game_ui | game: Game.rewind_trickfull_devtest(game_ui.game)}
     |> checks
   end
+
+  @doc """
+  invite_bots/1: Invite bots to sit on the remaining seats.
+  """
+  @spec invite_bots(GameUI.t()) :: GameUI.t()
+  def invite_bots(game_ui) do
+    seats =
+      game_ui.seats
+      |> Enum.map(fn {where, seat} -> {where, GameUISeat.bot_sit_if_empty(seat)} end)
+      |> Enum.into(%{})
+
+    %GameUI{game_ui | seats: seats}
+  end
 end

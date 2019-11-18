@@ -1,6 +1,8 @@
 import React from "react";
 import PlayerSeat from "./PlayerSeat";
 import RoomStagingTimer from "./RoomStagingTimer";
+import Button from "../../components/basic/Button";
+import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { GameUI } from "elixir-backend";
 
 interface Props {
@@ -15,6 +17,7 @@ const gridStyle = {
 };
 
 export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
+  const isLoggedIn = useIsLoggedIn();
   if (gameState == null) {
     return null;
   }
@@ -23,6 +26,7 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
     <div>
       <div className="bg-white max-w-lg p-4 mx-auto rounded-lg mt-4">
         <h2 className="text-blue-800 font-semibold">Waiting For Players</h2>
+
         <div className="mt-4" style={gridStyle}>
           <div></div>
           <div className="text-center">
@@ -30,7 +34,7 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <div>
               <PlayerSeat
                 broadcast={broadcast}
-                userId={seats.north.sitting}
+                sittingPlayer={seats.north.sitting}
                 whichSeat="north"
               />
             </div>
@@ -42,7 +46,7 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <div>
               <PlayerSeat
                 broadcast={broadcast}
-                userId={seats.west.sitting}
+                sittingPlayer={seats.west.sitting}
                 whichSeat="west"
               />
             </div>
@@ -53,7 +57,7 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <div>
               <PlayerSeat
                 broadcast={broadcast}
-                userId={seats.east.sitting}
+                sittingPlayer={seats.east.sitting}
                 whichSeat="east"
               />
             </div>
@@ -65,13 +69,24 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <div>
               <PlayerSeat
                 broadcast={broadcast}
-                userId={seats.south.sitting}
+                sittingPlayer={seats.south.sitting}
                 whichSeat="south"
               />
             </div>
           </div>
           <div></div>
         </div>
+
+        {isLoggedIn && (
+          <div>
+            {/* Only show button if I am sitting? */}
+            {/* Hide disable if seats are full, or timer is running */}
+            <Button onClick={() => broadcast("invite_bots", {})}>
+              Invite bots
+            </Button>
+          </div>
+        )}
+
         <RoomStagingTimer when_seats_full={gameState.when_seats_full} />
       </div>
     </div>

@@ -1,6 +1,7 @@
 declare module "elixir-backend" {
   export type Seat = "west" | "east" | "south" | "north";
   export type Winner = null | "north_south" | "east_west";
+  export type SittingPlayer = null | number | "bot";
 
   export declare class Room {
     public id: number;
@@ -41,8 +42,8 @@ declare module "elixir-backend" {
   }
 
   export declare class GameUISeat {
-    sitting: null | number;
-    recently_sitting: null | number;
+    sitting: SittingPlayer;
+    recently_sitting: SittingPlayer;
     when_left_seat: null | string; // Actually contains a timestamp
   }
 
@@ -107,10 +108,10 @@ declare module "elixir-backend" {
     topPlayer: GamePlayer;
     rightPlayer: GamePlayer;
     leftPlayer: GamePlayer;
-    bottomUserId: null | number;
-    topUserId: null | number;
-    rightUserId: null | number;
-    leftUserId: null | number;
+    bottomUserId: SittingPlayer;
+    topUserId: SittingPlayer;
+    rightUserId: SittingPlayer;
+    leftUserId: SittingPlayer;
   }
 
   // Profile: Private information about your own account.

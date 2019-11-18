@@ -23,21 +23,37 @@ export const GameTeam: React.FC<Props> = ({ isNorthSouth, isEastWest }) => {
   if (isNorthSouth) {
     const { north, south } = seats;
     let [northName, southName] = ["North", "South"];
-    if (north.sitting != null && usersById[north.sitting] != null) {
-      northName = usersById[north.sitting].alias;
+    if (north.sitting != null) {
+      if (north.sitting === "bot") {
+        northName = "bot";
+      } else if (usersById[north.sitting] != null) {
+        northName = usersById[north.sitting].alias;
+      }
     }
-    if (south.sitting != null && usersById[south.sitting] != null) {
-      southName = usersById[south.sitting].alias;
+    if (south.sitting != null) {
+      if (south.sitting === "bot") {
+        southName = "bot";
+      } else if (usersById[south.sitting] != null) {
+        southName = usersById[south.sitting].alias;
+      }
     }
     [name1, name2] = [northName, southName];
   } else if (isEastWest) {
     const { east, west } = seats;
     let [eastName, westName] = ["East", "West"];
-    if (east.sitting != null && usersById[east.sitting] != null) {
-      eastName = usersById[east.sitting].alias;
+    if (east.sitting != null) {
+      if (east.sitting === "bot") {
+        eastName = "bot";
+      } else if (usersById[east.sitting] != null) {
+        eastName = usersById[east.sitting].alias;
+      }
     }
-    if (west.sitting != null && usersById[west.sitting] != null) {
-      westName = usersById[west.sitting].alias;
+    if (west.sitting != null) {
+      if (west.sitting === "bot") {
+        westName = "bot";
+      } else if (usersById[west.sitting] != null) {
+        westName = usersById[west.sitting].alias;
+      }
     }
     [name1, name2] = [eastName, westName];
   } else {

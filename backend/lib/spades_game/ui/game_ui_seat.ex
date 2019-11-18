@@ -12,8 +12,8 @@ defmodule SpadesGame.GameUISeat do
   use Accessible
 
   @type t :: %GameUISeat{
-          sitting: nil | integer,
-          recently_sitting: nil | integer,
+          sitting: nil | integer | :bot,
+          recently_sitting: nil | integer | :bot,
           when_left_seat: nil | DateTime.t()
         }
 
@@ -28,5 +28,17 @@ defmodule SpadesGame.GameUISeat do
 
   def sit(%GameUISeat{} = seat, userid) do
     %GameUISeat{seat | sitting: userid}
+  end
+
+  def bot_sit_if_empty(%GameUISeat{} = seat) do
+    if seat_empty?(seat) do
+      %GameUISeat{seat | sitting: :bot}
+    else
+      seat
+    end
+  end
+
+  def seat_empty?(%GameUISeat{} = seat) do
+    seat.sitting == nil
   end
 end
