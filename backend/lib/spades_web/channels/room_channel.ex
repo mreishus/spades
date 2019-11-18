@@ -88,7 +88,7 @@ defmodule SpadesWeb.RoomChannel do
   def handle_in(
         "invite_bots",
         _params,
-        %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+        %{assigns: %{room_slug: room_slug, user_id: _user_id}} = socket
       ) do
     GameUIServer.invite_bots(room_slug)
 

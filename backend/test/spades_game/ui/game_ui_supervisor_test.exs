@@ -1,4 +1,4 @@
-defmodule GameUiSupervisorTest do
+defmodule GameUISupervisorTest do
   use ExUnit.Case
   use Spades.DataCase
   doctest SpadesGame.GameUISupervisor

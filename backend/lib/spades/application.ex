@@ -17,6 +17,9 @@ defmodule Spades.Application do
       # GameUISupervisor and Process Registry
       {Registry, keys: :unique, name: SpadesGame.GameUIRegistry},
       SpadesGame.GameUISupervisor,
+      # GameAISupervisor and Process Registry
+      {Registry, keys: :unique, name: SpadesGame.GameAIRegistry},
+      SpadesGame.GameAISupervisor,
       # Room Cleanup
       {Periodic,
        run: &SpadesGame.GameRegistry.cleanup/0,
