@@ -78,12 +78,17 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
         </div>
 
         {isLoggedIn && (
-          <div>
+          <div className="mt-6">
             {/* Only show button if I am sitting? */}
             {/* Hide disable if seats are full, or timer is running */}
             <Button onClick={() => broadcast("invite_bots", {})}>
               Invite bots
             </Button>
+            <div className="text-xs text-gray-700 max-w-xs">
+              Note: The bots are currently{" "}
+              <span className="font-semibold">stupid.</span> They always bid 3,
+              don't understand nils, and pick random cards to play.
+            </div>
           </div>
         )}
 
