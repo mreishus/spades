@@ -19,6 +19,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed idle rooms not automatically deleting.
 
+## [0.1.0] - 2019-11-16
+
+Initial release. Rough, but playable with 4 people.
+
 [unreleased]: https://github.com/mreishus/spades/compare/v0.2.0...HEAD
 [0.2.0]: https://github.com/mreishus/spades/compare/v0.1.1...v0.2.0
-[0.1.1]: https://github.com/mreishus/spades/releases/tag/v0.1.1
+[0.1.1]: https://github.com/mreishus/spades/compare/v0.1.0...v0.1.1
+[0.1.0]: https://github.com/mreishus/spades/releases/tag/v0.1.0
