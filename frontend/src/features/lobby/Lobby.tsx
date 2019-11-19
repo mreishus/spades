@@ -65,16 +65,30 @@ export const Lobby: React.FC = () => {
         <h3 className="font-semibold mb-2">About</h3>
         <div className="max-w-lg">
           <p className="mb-2">
-            StarSpades is a free online multiplayer spades game, inspired by the
-            old yahoo games. It was just launched, and there are no bots to play
-            with, so you might find it difficult to find an opponent. Invite
-            your friends!
+            StarSpades is a{" "}
+            <span className="font-semibold">
+              free online multiplayer spades game
+            </span>
+            , inspired by the old yahoo games. It was just launched; you might
+            find it difficult to find an opponent. Invite your friends!
+            <br />
+            There are bots to play against, but they are quite dumb. They pick
+            random cards. I will be improving them.
           </p>
           <p className="mb-2">
             If you have any suggestions or encounter any problems, please email
             me: <AdminContact />
           </p>
-          <p>Last Update: 2019-11-17. Version: 0.1.1.</p>
+          <p className="text-sm text-gray-700">
+            Last Update: 2019-11-18. Version: 0.2.0.{" "}
+            <a
+              href="https://github.com/mreishus/spades/blob/master/CHANGELOG.md"
+              target="_blank"
+            >
+              Changelog
+            </a>
+            .
+          </p>
         </div>
         <CreateRoomModal
           isOpen={showModal}
