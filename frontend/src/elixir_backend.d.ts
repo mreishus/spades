@@ -128,4 +128,11 @@ declare module "elixir-backend" {
     public id: number;
     public alias: string;
   }
+
+  export declare class ChatMessage {
+    public text: string;
+    public sent_by: number | null;
+    public when: string; // Actually a timestamp
+    public shortcode: string;
+  }
 }

@@ -21,5 +21,6 @@ alias SpadesGame.{
 alias SpadesChat.{
   Chat,
   ChatServer,
-  ChatSupervisor
+  ChatSupervisor,
+  ChatMessage
 }

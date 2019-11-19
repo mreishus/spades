@@ -1,11 +1,10 @@
 import React from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import ChatMessagesInner from "./ChatMessagesInner";
-//import React, { useState, useEffect, useContext } from "react";
-//import cx from "classnames";
+import { ChatMessage } from "elixir-backend";
 
 interface Props {
-  messages: Array<string>;
+  messages: Array<ChatMessage>;
 }
 
 export const ChatMessages: React.FC<Props> = ({ messages }) => {
@@ -14,12 +13,5 @@ export const ChatMessages: React.FC<Props> = ({ messages }) => {
       <ChatMessagesInner messages={messages} />
     </ScrollToBottom>
   );
-  /*
-  return (
-    <div className="bg-white border rounded max-w-md p-2 h-32 overflow-y-auto">
-      <ChatMessagesInner messages={messages} />
-    </div>
-  );
-   */
 };
 export default ChatMessages;

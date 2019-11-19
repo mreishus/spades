@@ -1,16 +1,16 @@
 import React from "react";
-//import React, { useState, useEffect, useContext } from "react";
-//import cx from "classnames";
+import ChatLine from "./ChatLine";
+import { ChatMessage } from "elixir-backend";
 
 interface Props {
-  messages: Array<string>;
+  messages: Array<ChatMessage>;
 }
 
 export const ChatMessagesInner: React.FC<Props> = ({ messages }) => {
   return (
     <>
       {messages.map((m, i) => (
-        <div key={i}>{m}</div>
+        <ChatLine key={m.shortcode} message={m} />
       ))}
     </>
   );
