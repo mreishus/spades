@@ -20,6 +20,9 @@ defmodule Spades.Application do
       # GameAISupervisor and Process Registry
       {Registry, keys: :unique, name: SpadesGame.GameAIRegistry},
       SpadesGame.GameAISupervisor,
+      # ChatSupervisor and Process Registry
+      {Registry, keys: :unique, name: SpadesChat.ChatRegistry},
+      SpadesChat.ChatSupervisor,
       # Room Cleanup
       {Periodic,
        run: &SpadesGame.GameRegistry.cleanup/0,

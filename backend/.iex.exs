@@ -17,3 +17,9 @@ alias SpadesGame.{
   GameUIServer,
   GameUISupervisor
 }
+
+alias SpadesChat.{
+  Chat,
+  ChatServer,
+  ChatSupervisor
+}

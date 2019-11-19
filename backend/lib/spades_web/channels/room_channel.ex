@@ -108,6 +108,11 @@ defmodule SpadesWeb.RoomChannel do
   SERVER: "ask_for_update", %{}
   CLIENT: "request_state", %{}
   SERVER: "phx_reply", %{personalized state}
+
+  Note 1: After making this, I found a Phoenix Channel mechanism that lets
+  you intercept and change outgoing messages.  That might be better.
+  Note 2: "Outside" here means a caller from anywhere in the system can call
+  this, unlike "notify".
   """
   def notify_from_outside(room_slug) do
     payload = %{}
@@ -146,6 +151,8 @@ defmodule SpadesWeb.RoomChannel do
 
   # This is what part of the state gets sent to the client.
   # It can be used to transform or hide it before they get it.
+  #
+  # Here, we are using GameUIView to hide the other player's hands.
   defp client_state(socket) do
     user_id = Map.get(socket.assigns, :user_id) || 0
 

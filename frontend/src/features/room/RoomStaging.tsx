@@ -2,6 +2,7 @@ import React from "react";
 import PlayerSeat from "./PlayerSeat";
 import RoomStagingTimer from "./RoomStagingTimer";
 import Button from "../../components/basic/Button";
+import Chat from "../chat/Chat";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { GameUI } from "elixir-backend";
 
@@ -93,6 +94,9 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
         )}
 
         <RoomStagingTimer when_seats_full={gameState.when_seats_full} />
+      </div>
+      <div className=" bg-white max-w-lg p-4 mx-auto rounded-lg mt-4 ">
+        <Chat roomName={gameState.game_name} />
       </div>
     </div>
   );

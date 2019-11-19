@@ -68,7 +68,7 @@ const joinChannel = (
   const channel = socket.channel(channelTopic, { client: "browser" });
 
   channel.onMessage = (event, payload) => {
-    // I don't think the chan_reply_ events are needed - always duplicates.
+    // I don't think the chan_reply_ events are needed - always duplicates of phx_reply?
     if (event != null && !event.startsWith("chan_reply_")) {
       onMessage(event, payload);
     }

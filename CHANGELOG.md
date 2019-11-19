@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Chat windows in the lobby and game rooms. Very rough state.
+
 ## [0.2.0] - 2019-11-18
 
 ### Added
