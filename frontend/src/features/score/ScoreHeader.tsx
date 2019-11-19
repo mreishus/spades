@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const ScoreHeader: React.FC<Props> = ({ round_number, score }) => {
-  const { north_south_score, east_west_score, east_west_rounds } = score;
+  const { north_south_score, east_west_score } = score;
   return (
     <div>
       <span className="mr-2">Round: {round_number}</span>{" "}
