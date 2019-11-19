@@ -10,7 +10,6 @@ interface Props {
 
 export const ScoreHeader: React.FC<Props> = ({ round_number, score }) => {
   const { north_south_score, east_west_score, east_west_rounds } = score;
-  const showButton = east_west_rounds.length > 0;
   return (
     <div>
       <span className="mr-2">Hand: {round_number}</span>{" "}
@@ -18,11 +17,9 @@ export const ScoreHeader: React.FC<Props> = ({ round_number, score }) => {
       <span className="ml-4">
         <GameTeam isEastWest />: {east_west_score}
       </span>
-      {showButton && (
-        <span className="ml-4">
-          <ScoreButton round_number={round_number} />
-        </span>
-      )}
+      <span className="ml-4">
+        <ScoreButton round_number={round_number} />
+      </span>
     </div>
   );
 };
