@@ -111,7 +111,17 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
+  bots_leave/1: All bots will leave the table.
+  Should be called after the GameAIServer is killed.
+  """
+  def bots_leave(game_name) do
+    GenServer.call(via_tuple(game_name), :bots_leave)
+  end
+
+  @doc """
   bot_notify/1: Notify other players to get new state.
+  Should this be reworked, so the caller doesn't need to care about 
+  using this after a bot move?
   """
   def bot_notify(game_name) do
     GenServer.call(via_tuple(game_name), :bot_notify)
@@ -162,6 +172,13 @@ defmodule SpadesGame.GameUIServer do
     push_state_to_clients_for_12_seconds()
 
     GameUI.invite_bots(state)
+    |> save_and_reply()
+  end
+
+  def handle_call(:bots_leave, _from, state) do
+    push_state_to_clients(3, 1000)
+
+    GameUI.bots_leave(state)
     |> save_and_reply()
   end
 

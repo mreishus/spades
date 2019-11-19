@@ -30,12 +30,26 @@ defmodule SpadesGame.GameUISeat do
     %GameUISeat{seat | sitting: userid}
   end
 
+  # XXX TODO Not used everywhere, should be.
+  def leave(%GameUISeat{} = seat) do
+    %GameUISeat{
+      seat
+      | sitting: nil,
+        recently_sitting: seat.sitting,
+        when_left_seat: DateTime.utc_now()
+    }
+  end
+
   def bot_sit_if_empty(%GameUISeat{} = seat) do
     if seat_empty?(seat) do
       %GameUISeat{seat | sitting: :bot}
     else
       seat
     end
+  end
+
+  def bot_leave_if_sitting(%GameUISeat{} = seat) do
+    if is_bot?(seat), do: leave(seat), else: seat
   end
 
   def seat_empty?(%GameUISeat{} = seat) do

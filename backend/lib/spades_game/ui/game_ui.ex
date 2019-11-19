@@ -323,6 +323,20 @@ defmodule SpadesGame.GameUI do
   end
 
   @doc """
+  bots_leave/1: Bots have left the table (server terminated).
+  """
+  @spec bots_leave(GameUI.t()) :: GameUI.t()
+  def bots_leave(game_ui) do
+    seats =
+      game_ui.seats
+      |> Enum.map(fn {where, seat} -> {where, GameUISeat.bot_leave_if_sitting(seat)} end)
+      |> Enum.into(%{})
+
+    %GameUI{game_ui | seats: seats}
+    |> checks
+  end
+
+  @doc """
   bot_turn?/1 : Is it currently a bot's turn?
   """
   @spec bot_turn?(GameUI.t()) :: boolean

@@ -1,6 +1,8 @@
 defmodule SpadesGame.GameAIServer do
   @moduledoc """
-  ..
+  Server that polls a GameUIServer, looking for bot turns.
+  If it's a bot's turn, computes the bot move and sends it to
+  the GameUIServer.
   """
   use GenServer
   @timeout :timer.minutes(60)
@@ -48,7 +50,7 @@ defmodule SpadesGame.GameAIServer do
   #####################################
   def init({game_name}) do
     :timer.send_interval(1000, :tick)
-    gameai = %{game_name: game_name}
+    gameai = %{game_name: game_name, last_action: DateTime.utc_now()}
     {:ok, gameai, @timeout}
   end
 
@@ -56,27 +58,60 @@ defmodule SpadesGame.GameAIServer do
     {:reply, state, state, @timeout}
   end
 
-  def handle_info(:tick, %{game_name: game_name} = state) do
-    # "GameAI Server: TICK!"
-    # |> IO.inspect()
+  def handle_call(:kill_me_pls, _from, %{game_name: game_name} = state) do
+    GameUIServer.bots_leave(game_name)
+    {:stop, :normal, state}
+  end
 
+  # When ticking, check to see if the game is waiting on a bot move,
+  # and if so, perform it
+  def handle_info(:tick, %{game_name: game_name} = state) do
     game_ui = GameUIServer.state(game_name)
 
-    cond do
-      GameAI.waiting_bot_bid?(game_ui) ->
-        bid_amount = GameAI.bid_amount(game_ui)
-        GameUIServer.bid(game_name, :bot, bid_amount)
-        GameUIServer.bot_notify(game_name)
+    new_state =
+      cond do
+        GameAI.waiting_bot_bid?(game_ui) ->
+          bid_amount = GameAI.bid_amount(game_ui)
+          GameUIServer.bid(game_name, :bot, bid_amount)
+          GameUIServer.bot_notify(game_name)
+          update_last_action(state)
 
-      GameAI.waiting_bot_play?(game_ui) ->
-        card = GameAI.play_card(game_ui)
-        GameUIServer.play(game_name, :bot, card)
-        GameUIServer.bot_notify(game_name)
+        GameAI.waiting_bot_play?(game_ui) ->
+          card = GameAI.play_card(game_ui)
+          GameUIServer.play(game_name, :bot, card)
+          GameUIServer.bot_notify(game_name)
+          update_last_action(state)
 
-      true ->
-        nil
+        true ->
+          state
+      end
+
+    check_inactivity(new_state)
+
+    {:noreply, new_state}
+  end
+
+  # Update the "last_action" timestamp in state to be now
+  defp update_last_action(%{} = state) do
+    %{state | last_action: DateTime.utc_now()}
+  end
+
+  # If a bot hasn't made a move in 15 minutes, kill the bot server
+  defp check_inactivity(state) do
+    if inactive_too_long(state) do
+      pid = self()
+
+      spawn_link(fn ->
+        GenServer.call(pid, :kill_me_pls)
+      end)
     end
+  end
 
-    {:noreply, state}
+  defp inactive_too_long(%{last_action: last_action} = _state) do
+    time_elapsed = DateTime.diff(DateTime.utc_now(), last_action, :millisecond)
+
+    # times in ms
+    one_minute = 60 * 1000
+    time_elapsed >= 15 * one_minute
   end
 end
