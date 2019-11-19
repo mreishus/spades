@@ -110,6 +110,13 @@ defmodule SpadesGame.GameUIServer do
     GenServer.call(via_tuple(game_name), :invite_bots)
   end
 
+  @doc """
+  bot_notify/1: Notify other players to get new state.
+  """
+  def bot_notify(game_name) do
+    GenServer.call(via_tuple(game_name), :bot_notify)
+  end
+
   ## Temp function to set winner flag on a game
   def winner(game_name, winner_val) do
     GenServer.call(via_tuple(game_name), {:winner, winner_val})
@@ -138,7 +145,7 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call(:state, _from, state) do
     GameUI.checks(state)
-    |> save_and_reply()
+    |> reply()
   end
 
   def handle_call(:rewind_countdown_devtest, _from, state) do
@@ -152,7 +159,16 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call(:invite_bots, _from, state) do
+    push_state_to_clients_for_12_seconds()
+
     GameUI.invite_bots(state)
+    |> save_and_reply()
+  end
+
+  def handle_call(:bot_notify, _from, state) do
+    push_state_to_clients(1, 0)
+
+    state
     |> save_and_reply()
   end
 
@@ -194,6 +210,10 @@ defmodule SpadesGame.GameUIServer do
 
     %GameUI{gameui | game: game}
     |> save_and_reply()
+  end
+
+  defp reply(new_gameui) do
+    {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end
 
   defp save_and_reply(new_gameui) do

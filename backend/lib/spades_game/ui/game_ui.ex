@@ -103,19 +103,8 @@ defmodule SpadesGame.GameUI do
   If :bot, check if the active turn seat belongs to a bot, return that seat if so.
   """
   @spec user_id_to_seat(GameUI.t(), number | :bot) :: nil | :west | :east | :north | :south
-  def user_id_to_seat(game_ui, :bot) do
-    turn = game_ui.game.turn
-
-    if turn != nil do
-      is_bot =
-        game_ui.seats
-        |> Map.get(turn)
-        |> GameUISeat.is_bot?()
-
-      if is_bot, do: turn, else: nil
-    else
-      nil
-    end
+  def user_id_to_seat(%GameUI{game: %Game{turn: turn}} = game_ui, :bot) do
+    if bot_turn?(game_ui), do: turn, else: nil
   end
 
   def user_id_to_seat(game_ui, user_id) do
@@ -331,5 +320,18 @@ defmodule SpadesGame.GameUI do
 
     %GameUI{game_ui | seats: seats}
     |> checks
+  end
+
+  @doc """
+  bot_turn?/1 : Is it currently a bot's turn?
+  """
+  @spec bot_turn?(GameUI.t()) :: boolean
+  def bot_turn?(%GameUI{game: %Game{winner: winner}}) when winner != nil, do: false
+  def bot_turn?(%GameUI{game: %Game{turn: nil}}), do: false
+
+  def bot_turn?(%GameUI{game: %Game{turn: turn}, seats: seats}) do
+    seats
+    |> Map.get(turn)
+    |> GameUISeat.is_bot?()
   end
 end

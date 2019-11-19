@@ -4,6 +4,7 @@ defmodule SpadesGame.GameAIServer do
   """
   use GenServer
   @timeout :timer.minutes(60)
+  alias SpadesGame.{GameAI, GameUIServer}
 
   require Logger
 
@@ -55,12 +56,26 @@ defmodule SpadesGame.GameAIServer do
     {:reply, state, state, @timeout}
   end
 
-  def handle_info(:tick, %{game_name: _game_name} = state) do
+  def handle_info(:tick, %{game_name: game_name} = state) do
     # "GameAI Server: TICK!"
     # |> IO.inspect()
 
-    # def bid(game_name, user_id, bid_amount) do
-    # def play(game_name, user_id, card) do
+    game_ui = GameUIServer.state(game_name)
+
+    cond do
+      GameAI.waiting_bot_bid?(game_ui) ->
+        bid_amount = GameAI.bid_amount(game_ui)
+        GameUIServer.bid(game_name, :bot, bid_amount)
+        GameUIServer.bot_notify(game_name)
+
+      GameAI.waiting_bot_play?(game_ui) ->
+        card = GameAI.play_card(game_ui)
+        GameUIServer.play(game_name, :bot, card)
+        GameUIServer.bot_notify(game_name)
+
+      true ->
+        nil
+    end
 
     {:noreply, state}
   end
