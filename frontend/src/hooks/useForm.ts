@@ -23,7 +23,8 @@ const useForm = (submitCallback: () => void) => {
   return {
     handleSubmit,
     handleInputChange,
-    inputs
+    inputs,
+    setInputs
   };
 };
 export default useForm;

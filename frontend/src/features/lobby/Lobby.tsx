@@ -5,6 +5,7 @@ import LobbyTable from "./LobbyTable";
 import Button from "../../components/basic/Button";
 import Container from "../../components/basic/Container";
 import AdminContact from "../../components/AdminContact";
+import Chat from "../chat/Chat";
 
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
@@ -91,6 +92,8 @@ export const Lobby: React.FC = () => {
             .
           </p>
         </div>
+        <span className="text-sm text-red-800"> Todo: Fix layout</span>
+        <Chat roomName="lobby" />
         <CreateRoomModal
           isOpen={showModal}
           closeModal={() => setShowModal(false)}

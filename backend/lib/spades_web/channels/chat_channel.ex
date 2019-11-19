@@ -3,13 +3,30 @@ defmodule SpadesWeb.ChatChannel do
   Channel for chatrooms
   """
   use SpadesWeb, :channel
+  alias SpadesChat.{ChatServer, ChatSupervisor}
 
-  def join("chat:lobby", _payload, socket) do
-    # if authorized?(payload) do
-    {:ok, socket}
-    # else
-    #   {:error, %{reason: "unauthorized"}}
-    # end
+  def join("chat:" <> room_slug, _payload, socket) do
+    {:ok, _pid} = ChatSupervisor.start_chat_if_needed(room_slug)
+    messages = ChatServer.messages(room_slug)
+
+    socket =
+      socket
+      |> assign(:room_slug, room_slug)
+      |> assign(:messages, messages)
+
+    {:ok, client_state(socket), socket}
+  end
+
+  def handle_in("message", %{"message" => message}, %{assigns: %{room_slug: room_slug}} = socket) do
+    messages = ChatServer.add_message(room_slug, message)
+
+    socket =
+      socket
+      |> assign(:messages, messages)
+
+    notify(socket)
+    # use noreply - Notify will send them a reply
+    {:noreply, socket}
   end
 
   # Channels can be used in a request/response fashion
@@ -25,8 +42,19 @@ defmodule SpadesWeb.ChatChannel do
     {:noreply, socket}
   end
 
-  # Add authorization logic here as required.
-  # defp authorized?(_payload) do
-  #   true
-  # end
+  defp notify(socket) do
+    # # Fake a phx_reply event to everyone
+    payload = %{
+      response: client_state(socket),
+      status: "ok"
+    }
+
+    broadcast!(socket, "phx_reply", payload)
+  end
+
+  # This is what part of the state gets sent to the client.
+  # It can be used to transform or hide it before they get it.
+  defp client_state(socket) do
+    socket.assigns
+  end
 end
