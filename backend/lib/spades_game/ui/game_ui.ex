@@ -313,13 +313,10 @@ defmodule SpadesGame.GameUI do
   """
   @spec invite_bots(GameUI.t()) :: GameUI.t()
   def invite_bots(game_ui) do
-    seats =
-      game_ui.seats
-      |> Enum.map(fn {where, seat} -> {where, GameUISeat.bot_sit_if_empty(seat)} end)
-      |> Enum.into(%{})
-
-    %GameUI{game_ui | seats: seats}
-    |> checks
+    game_ui
+    |> map_seats(fn seat ->
+      GameUISeat.bot_sit_if_empty(seat)
+    end)
   end
 
   @doc """
@@ -327,9 +324,21 @@ defmodule SpadesGame.GameUI do
   """
   @spec bots_leave(GameUI.t()) :: GameUI.t()
   def bots_leave(game_ui) do
+    game_ui
+    |> map_seats(fn seat ->
+      GameUISeat.bot_leave_if_sitting(seat)
+    end)
+  end
+
+  @doc """
+  map_seats/2: Apply a 1 arity function to all seats
+  should probably only be used internally
+  """
+  @spec map_seats(GameUI.t(), (GameUISeat.t() -> GameUISeat.t())) :: GameUI.t()
+  def map_seats(game_ui, f) do
     seats =
       game_ui.seats
-      |> Enum.map(fn {where, seat} -> {where, GameUISeat.bot_leave_if_sitting(seat)} end)
+      |> Enum.map(fn {where, seat} -> {where, f.(seat)} end)
       |> Enum.into(%{})
 
     %GameUI{game_ui | seats: seats}

@@ -31,6 +31,7 @@ defmodule SpadesGame.GameUISeat do
   end
 
   # XXX TODO Not used everywhere, should be.
+  @spec leave(GameUISeat.t()) :: GameUISeat.t()
   def leave(%GameUISeat{} = seat) do
     %GameUISeat{
       seat
@@ -40,6 +41,7 @@ defmodule SpadesGame.GameUISeat do
     }
   end
 
+  @spec bot_sit_if_empty(GameUISeat.t()) :: GameUISeat.t()
   def bot_sit_if_empty(%GameUISeat{} = seat) do
     if seat_empty?(seat) do
       %GameUISeat{seat | sitting: :bot}
@@ -48,14 +50,17 @@ defmodule SpadesGame.GameUISeat do
     end
   end
 
+  @spec bot_leave_if_sitting(GameUISeat.t()) :: GameUISeat.t()
   def bot_leave_if_sitting(%GameUISeat{} = seat) do
     if is_bot?(seat), do: leave(seat), else: seat
   end
 
+  @spec seat_empty?(GameUISeat.t()) :: boolean
   def seat_empty?(%GameUISeat{} = seat) do
     seat.sitting == nil
   end
 
+  @spec is_bot?(GameUISeat.t()) :: boolean
   def is_bot?(%GameUISeat{} = seat) do
     seat.sitting == :bot
   end

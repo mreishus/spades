@@ -113,5 +113,7 @@ defmodule SpadesGame.GameAIServer do
     # times in ms
     one_minute = 60 * 1000
     time_elapsed >= 15 * one_minute
+    # time_elapsed >= 1 * one_minute
+    # time_elapsed >= 20 * 1000
   end
 end
