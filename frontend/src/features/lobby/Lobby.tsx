@@ -84,6 +84,7 @@ export const Lobby: React.FC = () => {
             <a
               href="https://github.com/mreishus/spades/blob/master/CHANGELOG.md"
               target="_blank"
+              rel="noopener noreferrer"
             >
               Changelog
             </a>
