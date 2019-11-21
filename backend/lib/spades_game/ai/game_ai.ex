@@ -3,7 +3,7 @@ defmodule SpadesGame.GameAI do
   ...
   """
   alias SpadesGame.{Card, GameUI, Game}
-  alias SpadesGame.GameAI.Bid
+  alias SpadesGame.GameAI.{Bid, Play}
 
   # partner(:north) = :south
   # partner(:west) = :east
@@ -15,17 +15,24 @@ defmodule SpadesGame.GameAI do
     |> Game.rotate()
   end
 
+  @spec bid_amount(GameUI.t()) :: integer
   def bid_amount(%GameUI{game: game} = _game_ui) do
     # "Need to bid" |> IO.inspect()
-    hand = game[game.turn].hand
+
+    # hand = game[game.turn].hand  # Old way
+    # New way
+    hand = Game.hand(game, game.turn)
+
     partner_bid = game[partner(game.turn)].bid
 
     Bid.bid(hand, partner_bid)
   end
 
+  @spec play_card(GameUI.t()) :: Card.t()
   def play_card(%GameUI{game: %Game{turn: turn} = game} = _game_ui) do
-    {:ok, hand} = Game.valid_cards(game, turn)
-    hand |> Enum.random()
+    hand = Game.hand(game, turn)
+    {:ok, valid_cards} = Game.valid_cards(game, turn)
+    Play.play(game.trick, valid_cards, hand)
   end
 
   def waiting_bot_bid?(%GameUI{game: game} = game_ui) do

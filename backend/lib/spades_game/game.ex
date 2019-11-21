@@ -564,4 +564,12 @@ defmodule SpadesGame.Game do
   def valid_cards(_, _) do
     {:error, "Unspecified error"}
   end
+
+  @doc """
+  Get the hand (list of cards) for a specific seat.
+  """
+  @spec hand(Game.t(), :west | :north | :east | :south) :: Deck.t()
+  def hand(%Game{} = game, seat) do
+    Map.get(game, seat).hand
+  end
 end
