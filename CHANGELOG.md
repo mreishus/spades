@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Bots learned how to bid by looking at their hands. They can bid nil, but
+  they don't know how to play it yet.
+
 ## [0.2.1] - 2019-11-19
 
 ### Added

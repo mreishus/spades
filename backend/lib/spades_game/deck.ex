@@ -34,6 +34,35 @@ defmodule SpadesGame.Deck do
     Enum.shuffle(deck)
   end
 
+  @doc """
+  sort/1: basic sort for console display
+  """
+  @spec sort(Deck.t()) :: Deck.t()
+  def sort(deck) do
+    deck
+    |> Enum.sort_by(fn %Card{rank: rank, suit: suit} -> {suit, rank} end)
+  end
+
+  @doc """
+  count_rank/1: How many cards with this rank are in the hand?
+  """
+  @spec count_rank(Deck.t(), integer) :: integer
+  def count_rank(hand, rank) do
+    hand
+    |> Enum.filter(fn %Card{rank: r} -> rank == r end)
+    |> Enum.count()
+  end
+
+  @doc """
+  count_suit/1: How many cards with this suit are in the hand?
+  """
+  @spec count_suit(Deck.t(), :d | :c | :s | :h) :: integer
+  def count_suit(hand, suit) do
+    hand
+    |> Enum.filter(fn %Card{suit: r} -> suit == r end)
+    |> Enum.count()
+  end
+
   @spec hardcoded_cards() :: list(Deck.t())
   def hardcoded_cards do
     [

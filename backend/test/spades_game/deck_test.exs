@@ -2,7 +2,7 @@ defmodule DeckTest do
   use ExUnit.Case, async: true
 
   doctest SpadesGame.Deck
-  alias SpadesGame.{Deck}
+  alias SpadesGame.{Card, Deck}
 
   describe "new_shuffled/1" do
     test "returns a new deck with 52 cards" do
@@ -29,6 +29,54 @@ defmodule DeckTest do
       deck1 = Deck.new_shuffled()
       deck2 = Deck.shuffle(deck1)
       assert deck1 != deck2
+    end
+  end
+
+  describe "count_rank/2" do
+    test "works" do
+      h = [
+        %Card{rank: 4, suit: :h},
+        %Card{rank: 9, suit: :h},
+        %Card{rank: 3, suit: :c},
+        %Card{rank: 10, suit: :c},
+        %Card{rank: 13, suit: :c},
+        %Card{rank: 2, suit: :d},
+        %Card{rank: 8, suit: :d},
+        %Card{rank: 11, suit: :d},
+        %Card{rank: 4, suit: :s},
+        %Card{rank: 6, suit: :s},
+        %Card{rank: 8, suit: :s},
+        %Card{rank: 11, suit: :s},
+        %Card{rank: 14, suit: :s}
+      ]
+
+      got = h |> Deck.count_rank(11)
+      want = 2
+      assert got == want
+    end
+  end
+
+  describe "count_suit/2" do
+    test "works" do
+      h = [
+        %Card{rank: 4, suit: :h},
+        %Card{rank: 9, suit: :h},
+        %Card{rank: 3, suit: :c},
+        %Card{rank: 10, suit: :c},
+        %Card{rank: 13, suit: :c},
+        %Card{rank: 2, suit: :d},
+        %Card{rank: 8, suit: :d},
+        %Card{rank: 11, suit: :d},
+        %Card{rank: 4, suit: :s},
+        %Card{rank: 6, suit: :s},
+        %Card{rank: 8, suit: :s},
+        %Card{rank: 11, suit: :s},
+        %Card{rank: 14, suit: :s}
+      ]
+
+      got = h |> Deck.count_suit(:s)
+      want = 5
+      assert got == want
     end
   end
 

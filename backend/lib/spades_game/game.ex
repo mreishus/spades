@@ -483,10 +483,10 @@ defmodule SpadesGame.Game do
   end
 
   # Clockwise rotation
-  defp rotate(:north), do: :east
-  defp rotate(:east), do: :south
-  defp rotate(:south), do: :west
-  defp rotate(:west), do: :north
+  def rotate(:north), do: :east
+  def rotate(:east), do: :south
+  def rotate(:south), do: :west
+  def rotate(:west), do: :north
 
   @doc """
   trick_winner/1: Out of a trick (list of TrickCards), which card (TrickCard) won?
