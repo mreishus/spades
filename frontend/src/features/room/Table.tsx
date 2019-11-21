@@ -1,6 +1,7 @@
 import React from "react";
 import cx from "classnames";
 import ScoreButton from "../score/ScoreButton";
+import GameTeam from "../room/GameTeam";
 import useGameUIView from "../../hooks/useGameUIView";
 import { GamePlayer } from "elixir-backend";
 
@@ -47,7 +48,14 @@ export const Table: React.FC<Props> = ({
         <div className="p-6 w-full h-full absolute inset-0 z-40">
           <div className="p-3 bg-white border rounded w-full h-full">
             <h2 className="text-purple-800 font-semibold mb-4">Winner!</h2>
-            <div className="mb-2">Team: {winner} won.</div>
+            <div className="mb-2">
+              Team:{" "}
+              <span className="font-semibold">
+                {winner === "east_west" && <GameTeam isEastWest />}
+                {winner === "north_south" && <GameTeam isNorthSouth />}
+              </span>{" "}
+              won.
+            </div>
             <ScoreButton />
           </div>
         </div>
