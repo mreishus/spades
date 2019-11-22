@@ -506,10 +506,10 @@ defmodule SpadesGame.Game do
   end
 
   # Define the priorities of a suit in a trick, based on the first card's suit
-  defp suit_priority(:s), do: %{s: 200, h: 0, c: 0, d: 0}
-  defp suit_priority(:h), do: %{s: 200, h: 100, c: 0, d: 0}
-  defp suit_priority(:c), do: %{s: 200, h: 0, c: 100, d: 0}
-  defp suit_priority(:d), do: %{s: 200, h: 0, c: 0, d: 100}
+  def suit_priority(:s), do: %{s: 200, h: 0, c: 0, d: 0}
+  def suit_priority(:h), do: %{s: 200, h: 100, c: 0, d: 0}
+  def suit_priority(:c), do: %{s: 200, h: 0, c: 100, d: 0}
+  def suit_priority(:d), do: %{s: 200, h: 0, c: 0, d: 100}
 
   @doc """
   trick_full?/1
