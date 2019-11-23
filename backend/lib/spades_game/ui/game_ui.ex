@@ -236,11 +236,11 @@ defmodule SpadesGame.GameUI do
     end
   end
 
-  ## Don't have winners yet
-  # def check_status_advance(%GameUI{status: :playing, game: %Game{winner: winner}} = gameui)
-  #     when not is_nil(winner) do
-  #   %{gameui | status: :done}
-  # end
+  # This doesn't seem to work
+  def check_status_advance(%GameUI{status: :playing, game: %Game{winner: winner}} = gameui)
+      when not is_nil(winner) do
+    %{gameui | status: :done}
+  end
 
   def check_status_advance(gameui) do
     gameui
