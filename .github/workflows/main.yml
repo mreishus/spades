@@ -22,4 +22,6 @@ jobs:
           otp-version: 22.x
           elixir-version: 1.9.x
       - run: mix deps.get
+        working-directory: ./backend
       - run: mix test
+        working-directory: ./backend
