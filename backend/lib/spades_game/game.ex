@@ -488,6 +488,16 @@ defmodule SpadesGame.Game do
   def rotate(:south), do: :west
   def rotate(:west), do: :north
 
+  # partner(:north) = :south
+  # partner(:west) = :east
+  # etc
+  @spec partner(:north | :east | :west | :south) :: :north | :east | :west | :south
+  def partner(seat) do
+    seat
+    |> rotate()
+    |> rotate()
+  end
+
   @doc """
   trick_winner/1: Out of a trick (list of TrickCards), which card (TrickCard) won?
   """
@@ -503,6 +513,20 @@ defmodule SpadesGame.Game do
         this_priority[card.suit] + card.rank
       end
     )
+  end
+
+  @doc """
+  trick_winner_index/1: Out of a trick (list of TrickCards), which card (TrickCard) won?
+  Return the 0 based index instead of the TrickCard.
+  """
+  @spec trick_winner_index(list(TrickCard.t())) :: nil | integer
+  def trick_winner_index([]), do: nil
+
+  def trick_winner_index(trick) when is_list(trick) do
+    winner = trick_winner(trick)
+
+    trick
+    |> Enum.find_index(fn x -> x == winner end)
   end
 
   # Define the priorities of a suit in a trick, based on the first card's suit
