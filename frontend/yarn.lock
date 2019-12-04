@@ -1150,10 +1150,10 @@
   resolved "https://registry.yarnpkg.com/@nodelib/fs.stat/-/fs.stat-1.1.3.tgz#2b5a3ab3f918cca48a8c754c08168e3f03eba61b"
   integrity sha512-shAmDyaQC4H92APFoIaVDHCx5bStIocgvbwQyxPRrbUY20V1EYTbSDchWbuwlMG3V17cprZhA6+78JfB+3DTPw==
 
-"@reduxjs/toolkit@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.0.4.tgz#cec88446a22a98b48808af7ab19a58aa93e6f5f9"
-  integrity sha512-nyCZ9/CpnMXFZ//0wm1mNPSEl0J0bCghY2qeHM8zuubaBBMBr6KsIaLLms1jThbOJ1O+Ej0Tl11z5naE9czfzA==
+"@reduxjs/toolkit@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@reduxjs/toolkit/-/toolkit-1.1.0.tgz#16ee944782e8f716a9a062f55bea3e2435f3d490"
+  integrity sha512-ttAoBieIxa/08MmL/SFKCx/xXJVF7ALolun5yNaPSixA73ueEUUYQhupmxlOJ/n6HgN3i4xs8HMgkm6XT4G6sA==
   dependencies:
     immer "^4.0.1"
     redux "^4.0.0"
