@@ -108,7 +108,6 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
         </div>
       )}
       <div className=" bg-white max-w-lg p-4 mx-auto rounded-lg mt-4 ">
-        <span className="text-sm text-red-800"> Todo: Fix layout</span>
         <Chat roomName={gameUIView.game_ui.game_name} />
       </div>
     </>

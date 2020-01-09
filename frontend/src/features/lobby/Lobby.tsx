@@ -92,7 +92,6 @@ export const Lobby: React.FC = () => {
             .
           </p>
         </div>
-        <span className="text-sm text-red-800"> Todo: Fix layout</span>
         <Chat roomName="lobby" />
         <CreateRoomModal
           isOpen={showModal}
