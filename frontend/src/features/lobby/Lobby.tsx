@@ -35,68 +35,77 @@ export const Lobby: React.FC = () => {
 
   return (
     <Container>
-      <div>
-        <h1 className="mb-4">Lobby</h1>
-        {isLoading && <div>Loading..</div>}
-        {isError && <div>Error..</div>}
-        <div className="mb-6">
-          <h3 className="font-semibold mb-2">New Game</h3>
+      <div className="flex flex-wrap">
+        <div className="w-full lg:w-3/4 xl:w-4/6 mb-4">
           <div>
-            {isLoggedIn && (
-              <Button isPrimary onClick={() => setShowModal(true)}>
-                Create Room
-              </Button>
-            )}
-            {!isLoggedIn && (
-              <span className="text-gray-600 bg-gray-100 border rounded p-2">
-                <Link to="/login" className="mr-1">
-                  Log In
-                </Link>
-                To Create a Room
-              </span>
-            )}
+            <h1 className="mb-4">Lobby</h1>
+            {isLoading && <div>Loading..</div>}
+            {isError && <div>Error..</div>}
+            <div className="mb-6">
+              <h3 className="font-semibold mb-2">New Game</h3>
+              <div>
+                {isLoggedIn && (
+                  <Button isPrimary onClick={() => setShowModal(true)}>
+                    Create Room
+                  </Button>
+                )}
+                {!isLoggedIn && (
+                  <span className="text-gray-600 bg-gray-100 border rounded p-2">
+                    <Link to="/login" className="mr-1">
+                      Log In
+                    </Link>
+                    To Create a Room
+                  </span>
+                )}
+              </div>
+            </div>
+            <div className="mb-6">
+              <h3 className="font-semibold mb-2">Current Games</h3>
+              <div className="mb-4">
+                <LobbyTable rooms={rooms} />
+              </div>
+            </div>
+            <h3 className="font-semibold mb-2">About</h3>
+            <div className="max-w-lg">
+              <p className="mb-2">
+                StarSpades is a{" "}
+                <span className="font-semibold">
+                  free online multiplayer spades game
+                </span>
+                , inspired by the old yahoo games. It was just launched; you
+                might find it difficult to find an opponent. Invite your
+                friends!
+                <br />
+                There are bots to play against, but they are quite dumb. They
+                pick random cards. I will be improving them.
+              </p>
+              <p className="mb-2">
+                If you have any suggestions or encounter any problems, please
+                email me: <AdminContact />
+              </p>
+              <p className="text-sm text-gray-700">
+                Last Update: 2019-11-22. Version: 0.3.0.{" "}
+                <a
+                  href="https://github.com/mreishus/spades/blob/master/CHANGELOG.md"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Changelog
+                </a>
+                .
+              </p>
+            </div>
+            <CreateRoomModal
+              isOpen={showModal}
+              closeModal={() => setShowModal(false)}
+            />
           </div>
         </div>
-        <div className="mb-6">
-          <h3 className="font-semibold mb-2">Current Games</h3>
-          <div className="mb-4">
-            <LobbyTable rooms={rooms} />
+        <div className="w-full lg:w-1/4 xl:w-2/6 mb-4">
+          <div className="flex items-end h-full">
+            <Chat roomName="lobby" />
           </div>
         </div>
-        <h3 className="font-semibold mb-2">About</h3>
-        <div className="max-w-lg">
-          <p className="mb-2">
-            StarSpades is a{" "}
-            <span className="font-semibold">
-              free online multiplayer spades game
-            </span>
-            , inspired by the old yahoo games. It was just launched; you might
-            find it difficult to find an opponent. Invite your friends!
-            <br />
-            There are bots to play against, but they are quite dumb. They pick
-            random cards. I will be improving them.
-          </p>
-          <p className="mb-2">
-            If you have any suggestions or encounter any problems, please email
-            me: <AdminContact />
-          </p>
-          <p className="text-sm text-gray-700">
-            Last Update: 2019-11-22. Version: 0.3.0.{" "}
-            <a
-              href="https://github.com/mreishus/spades/blob/master/CHANGELOG.md"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Changelog
-            </a>
-            .
-          </p>
-        </div>
-        <Chat roomName="lobby" />
-        <CreateRoomModal
-          isOpen={showModal}
-          closeModal={() => setShowModal(false)}
-        />
       </div>
     </Container>
   );

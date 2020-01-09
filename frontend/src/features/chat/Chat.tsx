@@ -24,10 +24,10 @@ export const Chat: React.FC<Props> = ({ roomName }) => {
   const broadcast = useChannel(`chat:${roomName}`, onChannelMessage);
 
   return (
-    <div>
+    <div className="w-full">
       Chat
       <div className="mb-2">
-        <ChatMessages messages={messages} />
+        <ChatMessages messages={messages} className="h-64" />
       </div>
       {isLoggedIn && <ChatInput broadcast={broadcast} />}
     </div>
