@@ -85,11 +85,6 @@ export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {
             <Button onClick={() => broadcast("invite_bots", {})}>
               Invite bots
             </Button>
-            <div className="text-xs text-gray-700 max-w-xs">
-              Note: The bots are currently{" "}
-              <span className="font-semibold">stupid.</span> They always bid 3,
-              don't understand nils, and pick random cards to play.
-            </div>
           </div>
         )}
 
