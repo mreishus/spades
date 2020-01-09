@@ -75,9 +75,6 @@ export const Lobby: React.FC = () => {
                 , inspired by the old yahoo games. It was just launched; you
                 might find it difficult to find an opponent. Invite your
                 friends!
-                <br />
-                There are bots to play against, but they are quite dumb. They
-                pick random cards. I will be improving them.
               </p>
               <p className="mb-2">
                 If you have any suggestions or encounter any problems, please
