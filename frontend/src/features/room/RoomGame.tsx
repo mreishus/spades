@@ -4,7 +4,6 @@ import PlayerSeat from "./PlayerSeat";
 import SmartTable from "./SmartTable";
 import Hand from "./Hand";
 import Bid from "./Bid";
-import Chat from "../chat/Chat";
 import ScoreHeader from "../score/ScoreHeader";
 import RotateTableContext from "../../contexts/RotateTableContext";
 import { GameUIView } from "elixir-backend";
@@ -107,9 +106,6 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
           <Hand cards={gameUIView.my_hand} broadcast={broadcast} />
         </div>
       )}
-      <div className=" bg-white max-w-lg p-4 mx-auto rounded-lg mt-4 ">
-        <Chat roomName={gameUIView.game_ui.game_name} />
-      </div>
     </>
   );
 };

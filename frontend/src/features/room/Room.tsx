@@ -3,6 +3,7 @@ import RotateTableProvider from "./RotateTableProvider";
 import RoomGame from "./RoomGame";
 import RoomStaging from "./RoomStaging";
 import Container from "../../components/basic/Container";
+import Chat from "../chat/Chat";
 
 import GameUIViewContext from "../../contexts/GameUIViewContext";
 import useChannel from "../../hooks/useChannel";
@@ -46,7 +47,16 @@ export const Room: React.FC<Props> = ({ slug }) => {
         {isPlaying && gameUIView != null && (
           <GameUIViewContext.Provider value={gameUIView}>
             <RotateTableProvider gameUIView={gameUIView}>
-              <RoomGame gameUIView={gameUIView} broadcast={broadcast} />
+              <div className="flex flex-wrap">
+                <div className="w-full lg:w-3/4 xl:w-4/6 mb-4">
+                  <RoomGame gameUIView={gameUIView} broadcast={broadcast} />
+                </div>
+                <div className="w-full lg:w-1/4 xl:w-2/6 mb-4">
+                  <div className=" bg-white max-w-lg p-4 mx-auto rounded-lg mt-4 ">
+                    <Chat roomName={gameUIView.game_ui.game_name} />
+                  </div>
+                </div>
+              </div>
             </RotateTableProvider>
           </GameUIViewContext.Provider>
         )}
