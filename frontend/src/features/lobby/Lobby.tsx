@@ -36,13 +36,13 @@ export const Lobby: React.FC = () => {
   return (
     <Container>
       <div className="flex flex-wrap">
-        <div className="w-full lg:w-3/4 xl:w-4/6 mb-4">
+        <div className="w-full mb-4 lg:w-3/4 xl:w-4/6">
           <div>
             <h1 className="mb-4">Lobby</h1>
             {isLoading && <div>Loading..</div>}
             {isError && <div>Error..</div>}
             <div className="mb-6">
-              <h3 className="font-semibold mb-2">New Game</h3>
+              <h3 className="mb-2 font-semibold">New Game</h3>
               <div>
                 {isLoggedIn && (
                   <Button isPrimary onClick={() => setShowModal(true)}>
@@ -50,7 +50,7 @@ export const Lobby: React.FC = () => {
                   </Button>
                 )}
                 {!isLoggedIn && (
-                  <span className="text-gray-600 bg-gray-100 border rounded p-2">
+                  <span className="p-2 text-gray-600 bg-gray-100 border rounded">
                     <Link to="/login" className="mr-1">
                       Log In
                     </Link>
@@ -60,12 +60,12 @@ export const Lobby: React.FC = () => {
               </div>
             </div>
             <div className="mb-6">
-              <h3 className="font-semibold mb-2">Current Games</h3>
+              <h3 className="mb-2 font-semibold">Current Games</h3>
               <div className="mb-4">
                 <LobbyTable rooms={rooms} />
               </div>
             </div>
-            <h3 className="font-semibold mb-2">About</h3>
+            <h3 className="mb-2 font-semibold">About</h3>
             <div className="max-w-lg">
               <p className="mb-2">
                 StarSpades is a{" "}
@@ -81,7 +81,7 @@ export const Lobby: React.FC = () => {
                 email me: <AdminContact />
               </p>
               <p className="text-sm text-gray-700">
-                Last Update: 2020-01-09. Version: 0.3.1.{" "}
+                Last Update: 2020-01-20. Version: 0.3.2.{" "}
                 <a
                   href="https://github.com/mreishus/spades/blob/master/CHANGELOG.md"
                   target="_blank"
@@ -98,7 +98,7 @@ export const Lobby: React.FC = () => {
             />
           </div>
         </div>
-        <div className="w-full lg:w-1/4 xl:w-2/6 mb-4">
+        <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">
           <div className="flex items-end h-full">
             <Chat roomName="lobby" />
           </div>
