@@ -1,7 +1,7 @@
 FROM elixir:1.9.4-alpine as build
 
 # install build dependencies
-RUN apk add --update git build-base nodejs yarn python npm
+RUN apk add --update git build-base nodejs python npm
 
 # prepare build dir
 RUN mkdir /app
@@ -24,7 +24,7 @@ RUN mix deps.compile
 COPY assets assets
 COPY priv priv
 COPY lib lib
-RUN cd assets && yarn install && yarn run deploy
+RUN cd assets && npm install && npm run deploy
 RUN mix phx.digest
 
 # build project
