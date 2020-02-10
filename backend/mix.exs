@@ -43,7 +43,7 @@ defmodule Spades.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:pow, "~> 1.0.13"},
+      {:pow, "~> 1.0.17"},
       {:swoosh, "~> 0.24"},
       {:parent, "~> 0.8.0"},
       {:accessible, "~> 0.2.1"},
