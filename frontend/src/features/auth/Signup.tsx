@@ -36,7 +36,7 @@ export const Login: React.FC<Props> = () => {
         user: {
           email: inputs.email,
           password: inputs.password,
-          confirm_password: inputs.confirm_password,
+          password_confirmation: inputs.password_confirmation,
           alias: inputs.alias
         }
       };
@@ -125,11 +125,11 @@ export const Login: React.FC<Props> = () => {
             </label>
             <input
               type="password"
-              name="confirm_password"
+              name="password_confirmation"
               placeholder="confirm password"
               className="block w-full mt-2 form-control"
               onChange={handleInputChange}
-              value={inputs.confirm_password || ""}
+              value={inputs.password_confirmation || ""}
             />
           </div>
           <div className="mb-4">

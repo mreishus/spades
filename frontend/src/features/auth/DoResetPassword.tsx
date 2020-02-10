@@ -29,7 +29,7 @@ export const DoResetPassword: React.FC<Props> = ({ match }) => {
         id: reset_token,
         user: {
           password: inputs.password,
-          confirm_password: inputs.confirm_password
+          password_confirmation: inputs.password_confirmation
         }
       };
       const res = await axios.post("/be/api/v1/reset-password/update", data);
@@ -106,11 +106,11 @@ export const DoResetPassword: React.FC<Props> = ({ match }) => {
               </label>
               <input
                 type="password"
-                name="confirm_password"
+                name="password_confirmation"
                 placeholder="confirm password"
                 className="block mt-2 form-control"
                 onChange={handleInputChange}
-                value={inputs.confirm_password || ""}
+                value={inputs.password_confirmation || ""}
               />
             </div>
             <Button isSubmit isPrimary className="mt-2">

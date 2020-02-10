@@ -6,7 +6,7 @@ defmodule SpadesWeb.API.V1.RegistrationControllerTest do
       "user" => %{
         "email" => "test@example.com",
         "password" => "secret1234",
-        "confirm_password" => "secret1234",
+        "password_confirmation" => "secret1234",
         "alias" => "Test User"
       }
     }
@@ -14,7 +14,7 @@ defmodule SpadesWeb.API.V1.RegistrationControllerTest do
       "user" => %{
         "email" => "invalid",
         "password" => "secret1234",
-        "confirm_password" => "",
+        "password_confirmation" => "",
         "alias" => ""
       }
     }
@@ -34,7 +34,7 @@ defmodule SpadesWeb.API.V1.RegistrationControllerTest do
 
       assert json["error"]["message"] == "Couldn't create user"
       assert json["error"]["status"] == 500
-      assert json["error"]["errors"]["confirm_password"] == ["not same as password"]
+      assert json["error"]["errors"]["password_confirmation"] == ["does not match confirmation"]
       assert json["error"]["errors"]["email"] == ["has invalid format"]
     end
   end
