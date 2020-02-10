@@ -87,60 +87,60 @@ export const Login: React.FC<Props> = () => {
   }
 
   return (
-    <div className="mx-auto max-w-xs mt-20 p-8 bg-gray-100 rounded-lg shadow-lg">
+    <div className="max-w-xs p-8 mx-auto mt-20 bg-gray-100 rounded-lg shadow-lg">
       {/* <Logo src={logoImg} /> */}
-      <h1 className="font-semibold text-green-900 mb-4">Sign Up</h1>
+      <h1 className="mb-4 font-semibold text-green-900">Sign Up</h1>
       <form action="POST" onSubmit={handleSubmit}>
         <fieldset disabled={isLoading} aria-busy={isLoading}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block mb-2 text-sm font-bold text-gray-700">
               email
             </label>
             <input
               type="email"
               name="email"
               placeholder="email"
-              className="form-control block mt-2 w-full"
+              className="block w-full mt-2 form-control"
               onChange={handleInputChange}
               value={inputs.email || ""}
               ref={emailRef}
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block mb-2 text-sm font-bold text-gray-700">
               password
             </label>
             <input
               type="password"
               name="password"
               placeholder="password"
-              className="form-control block mt-2 w-full"
+              className="block w-full mt-2 form-control"
               onChange={handleInputChange}
               value={inputs.password || ""}
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block mb-2 text-sm font-bold text-gray-700">
               confirm password
             </label>
             <input
               type="password"
               name="confirm_password"
               placeholder="confirm password"
-              className="form-control block mt-2 w-full"
+              className="block w-full mt-2 form-control"
               onChange={handleInputChange}
               value={inputs.confirm_password || ""}
             />
           </div>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
+            <label className="block mb-2 text-sm font-bold text-gray-700">
               nickname
             </label>
             <input
               type="text"
               name="alias"
               placeholder="nickname"
-              className="form-control block mt-2 w-full"
+              className="block w-full mt-2 form-control"
               onChange={handleInputChange}
               value={inputs.alias || ""}
             />
@@ -154,7 +154,7 @@ export const Login: React.FC<Props> = () => {
         </fieldset>
       </form>
       {isError && (
-        <div className="alert alert-danger mt-4">
+        <div className="mt-4 alert alert-danger">
           <span className="text-xl">{errorMessage}</span>
 
           {Object.keys(validationErrors)
@@ -169,7 +169,7 @@ export const Login: React.FC<Props> = () => {
         </div>
       )}
       <Link
-        className="mt-4 block text-blue-300 hover:text-blue-500"
+        className="block mt-4 text-blue-300 hover:text-blue-500"
         to="/login"
       >
         Already have an account?
