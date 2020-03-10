@@ -3,6 +3,7 @@ defmodule Spades.GameRegistryTest do
   alias Spades.Rooms
   alias Spades.Rooms.Room
   alias SpadesGame.{GameOptions, GameUI, GameRegistry}
+
   # use ExUnit.Case
 
   setup do

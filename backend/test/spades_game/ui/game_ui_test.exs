@@ -135,6 +135,7 @@ defmodule GameUiTest do
       gameui = GameUI.bid(gameui, 12, 3)
       gameui = GameUI.bid(gameui, 10, 2)
       assert gameui.game.status == :playing
+
       ## Next, let's play some cards
 
       card_e = %Card{rank: 12, suit: :h}

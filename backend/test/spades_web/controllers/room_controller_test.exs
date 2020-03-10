@@ -10,6 +10,7 @@ defmodule SpadesWeb.RoomControllerTest do
   @update_attrs %{
     name: "some updated name"
   }
+
   # @invalid_attrs %{name: nil}
 
   def fixture(:room) do
