@@ -18,7 +18,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^2.11.0",
     "http-proxy-middleware": "^1.0.2",
-    "phoenix": "^1.4.15",
+    "phoenix": "^1.4.16",
     "prettier": "^1.19.1",
     "react": "^16.13.0",
     "react-dom": "^16.13.0",
