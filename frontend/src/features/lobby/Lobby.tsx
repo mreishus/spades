@@ -72,16 +72,14 @@ export const Lobby: React.FC = () => {
                 <span className="font-semibold">
                   free online multiplayer spades game
                 </span>
-                , inspired by the old yahoo games. It was just launched; you
-                might find it difficult to find an opponent. Invite your
-                friends!
+                , inspired by the old yahoo games.
               </p>
               <p className="mb-2">
                 If you have any suggestions or encounter any problems, please
                 email me: <AdminContact />
               </p>
               <p className="text-sm text-gray-700">
-                Last Update: 2020-01-26. Version: 0.3.3.{" "}
+                Last Update: 2020-03-16. Version: 0.3.4.{" "}
                 <a
                   href="https://github.com/mreishus/spades/blob/master/CHANGELOG.md"
                   target="_blank"
