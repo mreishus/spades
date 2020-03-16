@@ -54,8 +54,8 @@ defmodule SpadesWeb.API.V1.SessionController do
 
   @spec delete(Conn.t(), map()) :: Conn.t()
   def delete(conn, _params) do
-    {:ok, conn} = Pow.Plug.clear_authenticated_user(conn)
-
-    json(conn, %{data: %{}})
+    conn
+    |> Pow.Plug.delete()
+    |> json(%{data: %{}})
   end
 end
