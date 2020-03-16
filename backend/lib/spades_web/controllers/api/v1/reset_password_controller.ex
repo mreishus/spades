@@ -19,23 +19,21 @@ defmodule SpadesWeb.API.V1.ResetPasswordController do
   end
 
   def update(conn, %{"user" => user_params, "id" => token}) do
-    case Plug.user_from_token(conn, token) do
-      nil ->
+    case Plug.load_user_by_token(conn, token) do
+      {:error, conn} ->
         conn
         |> put_status(401)
         |> json(%{error: %{status: 401, message: "Invalid reset token"}})
 
-      user ->
-        update_user(conn, user, user_params)
+      {:ok, conn} ->
+        update_user(conn, user_params)
     end
 
     conn
     |> json(%{success: %{message: "Reset password"}})
   end
 
-  defp update_user(conn, user, user_params) do
-    conn = conn |> Plug.assign_reset_password_user(user)
-
+  defp update_user(conn, user_params) do
     case Plug.update_user_password(conn, user_params) do
       {:ok, _user, conn} ->
         conn
