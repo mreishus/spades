@@ -33,7 +33,7 @@ defmodule Spades.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.4.15"},
+      {:phoenix, "~> 1.4.16"},
       {:phoenix_pubsub, "~> 1.1"},
       {:phoenix_ecto, "~> 4.0"},
       {:ecto_sql, "~> 3.1"},
@@ -43,13 +43,13 @@ defmodule Spades.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:pow, "~> 1.0.18"},
+      {:pow, "~> 1.0.19"},
       {:swoosh, "~> 0.24"},
       {:parent, "~> 0.8.0"},
       {:accessible, "~> 0.2.1"},
       {:ex_check, ">= 0.0.0", only: :dev, runtime: false},
-      {:credo, ">= 1.3.0", only: :dev, runtime: false},
-      {:dialyxir, ">= 0.0.0", only: :dev, runtime: false},
+      {:credo, ">= 1.3.1", only: :dev, runtime: false},
+      {:dialyxir, ">= 1.0.0", only: :dev, runtime: false},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:sobelow, ">= 0.0.0", only: :dev, runtime: false}
     ]
