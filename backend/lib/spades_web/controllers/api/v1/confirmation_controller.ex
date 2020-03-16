@@ -3,11 +3,6 @@ defmodule SpadesWeb.API.V1.ConfirmationController do
 
   alias Plug.Conn
 
-  # [PowEmailConfirmation.Plug] PowEmailConfirmation.Plug.confirm_email/2 with
-  # token param as second argument has been deprecated in favor of
-  # PowEmailConfirmation.Plug.load_user_by_token/2, and
-  # PowEmailConfirmation.Plug.confirm_email/2 with map as second argument
-
   @spec show(Conn.t(), map()) :: Conn.t()
   def show(conn, %{"id" => token}) do
     case PowEmailConfirmation.Plug.load_user_by_token(conn, token) do
