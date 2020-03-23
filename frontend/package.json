@@ -20,7 +20,7 @@
     "http-proxy-middleware": "^1.0.2",
     "phoenix": "^1.4.16",
     "prettier": "^1.19.1",
-    "react": "^16.13.0",
+    "react": "^16.13.1",
     "react-dom": "^16.13.0",
     "react-icons": "^3.9.0",
     "react-modal": "^3.11.2",
