@@ -6,7 +6,7 @@ import SocketContext from "../contexts/SocketContext";
 const SocketProvider = ({
   wsUrl,
   options,
-  children
+  children,
 }: {
   wsUrl: string;
   options: object | (() => object);

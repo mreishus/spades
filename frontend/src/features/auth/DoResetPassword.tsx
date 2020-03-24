@@ -12,7 +12,7 @@ interface Props extends RouteComponentProps<TParams> {}
 
 export const DoResetPassword: React.FC<Props> = ({ match }) => {
   const {
-    params: { reset_token }
+    params: { reset_token },
   } = match;
   const [isSuccess, setIsSuccess] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -29,8 +29,8 @@ export const DoResetPassword: React.FC<Props> = ({ match }) => {
         id: reset_token,
         user: {
           password: inputs.password,
-          password_confirmation: inputs.password_confirmation
-        }
+          password_confirmation: inputs.password_confirmation,
+        },
       };
       const res = await axios.post("/be/api/v1/reset-password/update", data);
       setIsLoading(false);
@@ -74,7 +74,7 @@ export const DoResetPassword: React.FC<Props> = ({ match }) => {
           <div className="max-w-md alert alert-danger">
             Unable to reset password.
             {Object.keys(validationErrors)
-              .filter(field => field !== "password_hash")
+              .filter((field) => field !== "password_hash")
               .map((field: string) =>
                 validationErrors[field].map((message: string) => (
                   <div key={field + message}>

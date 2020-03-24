@@ -11,7 +11,7 @@ interface Props extends RouteComponentProps<TParams> {}
 export const ConfirmEmail: React.FC<Props> = ({ match }) => {
   const { authToken } = useAuth();
   const {
-    params: { confirm_token }
+    params: { confirm_token },
   } = match;
 
   // TODO: make useDataApi check for specific error messages

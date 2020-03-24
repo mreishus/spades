@@ -15,7 +15,7 @@ export const PrivateRoute: React.FC<Props & RouteProps> = ({
   return (
     <Route
       {...rest}
-      render={props =>
+      render={(props) =>
         authToken ? <Component {...props} /> : <Redirect to="/login" />
       }
     />

@@ -33,8 +33,8 @@ export const Login: React.FC<Props> = () => {
       const data = {
         user: {
           email: inputs.email,
-          password: inputs.password
-        }
+          password: inputs.password,
+        },
       };
       const res = await axios.post("/be/api/v1/session", data);
       setIsLoading(false);

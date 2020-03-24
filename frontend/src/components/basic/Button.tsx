@@ -16,7 +16,7 @@ export const Button: React.FC<Props> = ({
   className,
   isPrimary,
   isSubmit,
-  disabled
+  disabled,
 }) => {
   // bg-gray-300
   const classes = cx(

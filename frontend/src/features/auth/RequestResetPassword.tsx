@@ -30,8 +30,8 @@ export const RequestResetPassword: React.FC<Props> = () => {
       const data = {
         user: {
           email: inputs.email,
-          password: inputs.password
-        }
+          password: inputs.password,
+        },
       };
       await axios.post("/be/api/v1/reset-password", data);
       setIsLoading(false);

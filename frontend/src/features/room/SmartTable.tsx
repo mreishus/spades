@@ -15,7 +15,7 @@ const imageUrlForCard = (card: Card) => {
 };
 
 const cardFromTrick = (trick: Array<TrickCard>, seat: Seat) => {
-  const thisCardA = trick.filter(tc => tc.seat === seat);
+  const thisCardA = trick.filter((tc) => tc.seat === seat);
   if (thisCardA.length === 0) {
     return null;
   }
@@ -39,7 +39,7 @@ export const SmartTable: React.FC<Props> = ({ gameUIView }) => {
     bottomPlayer,
     topPlayer,
     rightPlayer,
-    leftPlayer
+    leftPlayer,
   } = rtcv;
 
   // Arrow indicators if it's that seat's turn

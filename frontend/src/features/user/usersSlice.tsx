@@ -9,7 +9,7 @@ interface UsersState {
 }
 
 const initialState: UsersState = {
-  usersById: {}
+  usersById: {},
 };
 
 interface SetUserPayload {
@@ -24,8 +24,8 @@ const usersSlice = createSlice({
     setUser(state, { payload }: PayloadAction<SetUserPayload>) {
       const { userId, user } = payload;
       state.usersById[userId] = user;
-    }
-  }
+    },
+  },
 });
 
 export const { setUser } = usersSlice.actions;

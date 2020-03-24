@@ -12,9 +12,9 @@ export const ChatInput: React.FC<Props> = ({ broadcast }) => {
   const { inputs, handleSubmit, handleInputChange, setInputs } = useForm(
     async () => {
       broadcast("message", { message: inputs.chat });
-      setInputs(inputs => ({
+      setInputs((inputs) => ({
         ...inputs,
-        chat: ""
+        chat: "",
       }));
     }
   );

@@ -9,14 +9,14 @@ interface Props {
 
 export const CountdownTimer: React.FC<Props> = ({
   initialSeconds,
-  className
+  className,
 }) => {
   const [seconds, setSeconds] = useState(initialSeconds);
   useEffect(() => {
     setSeconds(initialSeconds);
   }, [initialSeconds]);
   const decrementCount = useCallback(() => {
-    setSeconds(this_seconds => Math.max(0, this_seconds - 1));
+    setSeconds((this_seconds) => Math.max(0, this_seconds - 1));
   }, [setSeconds]);
   useInterval(decrementCount, 1000);
   return <div className={cx(className)}>{seconds}</div>;

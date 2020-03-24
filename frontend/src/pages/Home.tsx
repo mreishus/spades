@@ -1,14 +1,12 @@
 import React from "react";
-import {Redirect} from "react-router";
+import { Redirect } from "react-router";
 /* import Container from "../components/basic/Container"; */
 /* import Card from "../components/basic/Card"; */
 
 interface Props {}
 
 export const Home: React.FC<Props> = () => {
-  return (
-    <Redirect to="/lobby" />
-  );
+  return <Redirect to="/lobby" />;
   /* return ( */
   /*   <Container> */
   /*     <Card className="mt-20 p-4 bg-gray-100 rounded-lg shadow-lg"> */

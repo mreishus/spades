@@ -14,7 +14,7 @@ const defaultValue: AuthContextType = {
   setAuthAndRenewToken: (_x, _y) => null,
   authToken: null,
   renewToken: null,
-  logOut: () => null
+  logOut: () => null,
 };
 
 const AuthContext = createContext<AuthContextType>(defaultValue);

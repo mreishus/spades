@@ -32,7 +32,7 @@ const RoomGame: React.FC<Props> = ({ gameUIView, broadcast }) => {
     bottomUserId,
     topUserId,
     rightUserId,
-    leftUserId
+    leftUserId,
   } = rtcv;
 
   return (

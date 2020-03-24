@@ -36,7 +36,7 @@ export const AppNav: React.FC<Props> = () => {
         </div>
         <div className="sm:hidden">
           <button
-            onClick={() => setIsOpen(open => !open)}
+            onClick={() => setIsOpen((open) => !open)}
             type="button"
             className="block text-gray-500 hover:text-white focus:text-white focus:outline-none"
           >
@@ -51,7 +51,7 @@ export const AppNav: React.FC<Props> = () => {
         className={cx({
           "px-2 pt-2 pb-4 sm:flex sm:p-0": true,
           block: isOpen,
-          hidden: !isOpen
+          hidden: !isOpen,
         })}
       >
         <Link to="/lobby" className={headerLinkClass}>

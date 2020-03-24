@@ -37,8 +37,8 @@ export const Login: React.FC<Props> = () => {
           email: inputs.email,
           password: inputs.password,
           password_confirmation: inputs.password_confirmation,
-          alias: inputs.alias
-        }
+          alias: inputs.alias,
+        },
       };
       const res = await axios.post("/be/api/v1/registration", data);
       setIsLoading(false);
@@ -158,7 +158,7 @@ export const Login: React.FC<Props> = () => {
           <span className="text-xl">{errorMessage}</span>
 
           {Object.keys(validationErrors)
-            .filter(field => field !== "password_hash")
+            .filter((field) => field !== "password_hash")
             .map((field: string) =>
               validationErrors[field].map((message: string) => (
                 <div key={field + message}>

@@ -16,7 +16,7 @@ export const PlayerSeat: React.FC<Props> = ({
   broadcast,
   sittingPlayer,
   whichSeat,
-  isWinner
+  isWinner,
 }) => {
   const isLoggedIn = useIsLoggedIn();
   if (sittingPlayer == null) {

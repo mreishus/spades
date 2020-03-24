@@ -14,7 +14,7 @@ interface Props {
 const gridStyle = {
   display: "grid",
   gridTemplateColumns: "1fr 1fr 1fr",
-  gridGap: "1.5rem"
+  gridGap: "1.5rem",
 };
 
 export const RoomStaging: React.FC<Props> = ({ broadcast, gameState }) => {

@@ -4,7 +4,7 @@ import {
   GamePlayer,
   GameUIView,
   RotateTableContextType,
-  Seat
+  Seat,
 } from "elixir-backend";
 
 interface Props {
@@ -57,7 +57,7 @@ const translate = (objective_seat: Seat, perspective: Seat | null): Seat => {
 
 export const RotateTableProvider: React.FC<Props> = ({
   gameUIView,
-  children
+  children,
 }) => {
   const { my_seat, game_ui } = gameUIView;
   const { game, seats } = game_ui;
@@ -90,7 +90,7 @@ export const RotateTableProvider: React.FC<Props> = ({
     bottomUserId,
     topUserId,
     rightUserId,
-    leftUserId
+    leftUserId,
   };
 
   return (

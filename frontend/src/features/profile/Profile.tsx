@@ -13,7 +13,7 @@ export const Profile: React.FC<Props> = () => {
   const insertedDate = parseISO(user.inserted_at);
   const insertedAbsolute = format(insertedDate, "yyyy-MM-dd hh:mm bb");
   const insertedRelative = formatDistanceToNow(insertedDate, {
-    addSuffix: true
+    addSuffix: true,
   });
   return (
     <Container>

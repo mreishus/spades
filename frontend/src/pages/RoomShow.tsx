@@ -7,7 +7,7 @@ interface Props extends RouteComponentProps<TParams> {}
 
 export const RoomShow: React.FC<Props> = ({ match }) => {
   const {
-    params: { slug }
+    params: { slug },
   } = match;
   return <Room slug={slug} />;
 };

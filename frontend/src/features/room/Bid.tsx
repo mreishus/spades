@@ -22,9 +22,9 @@ export const Bid: React.FC<Props> = ({ broadcast }) => {
   return (
     <div className="bg-gray-100 rounded-lg border p-4">
       <div>How many tricks can you take?</div>
-      {chunkedBids.map(theseBids => (
+      {chunkedBids.map((theseBids) => (
         <div className="flex flex-wrap items-end justify-around  mt-2">
-          {theseBids.map(bidNum => (
+          {theseBids.map((bidNum) => (
             <button
               onClick={() =>
                 broadcast("bid", { bidNum: translateBidNum(bidNum) })

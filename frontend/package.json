@@ -44,7 +44,8 @@
     "orig_build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint src --ext .js,.jsx,.ts,.tsx",
+    "prettier": "prettier --write src"
   },
   "eslintConfig": {
     "extends": "react-app"

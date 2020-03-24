@@ -33,13 +33,13 @@ export const Table: React.FC<Props> = ({
   topPlayer,
   rightPlayer,
   bottomPlayer,
-  emphasizeBidding
+  emphasizeBidding,
 }) => {
   const gameUIView = useGameUIView();
   const winner = gameUIView != null ? gameUIView.game_ui.game.winner : null;
   const cardHeight = "h-24";
   const bidClasses = {
-    "font-semibold text-lg text-blue-800": emphasizeBidding
+    "font-semibold text-lg text-blue-800": emphasizeBidding,
   };
 
   return (

@@ -15,7 +15,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 const App: React.FC = () => {
   const [tokens, setTokens] = useState({
     authToken: null,
-    renewToken: null
+    renewToken: null,
   });
 
   const setAuthAndRenewToken = useCallback(
@@ -24,7 +24,7 @@ const App: React.FC = () => {
       localStorage.setItem("renewToken", JSON.stringify(renewTokenData));
       setTokens({
         authToken: authTokenData,
-        renewToken: renewTokenData
+        renewToken: renewTokenData,
       });
     },
     []
@@ -33,8 +33,8 @@ const App: React.FC = () => {
   const logOut = useCallback(async () => {
     const res = await axios.delete("/be/api/v1/session", {
       headers: {
-        Authorization: tokens.authToken
-      }
+        Authorization: tokens.authToken,
+      },
     });
     if (res.status !== 200) {
       console.warn("unable to log out..");
@@ -52,7 +52,7 @@ const App: React.FC = () => {
       setAuthAndRenewToken,
       authToken: tokens.authToken,
       renewToken: tokens.renewToken,
-      logOut
+      logOut,
     }),
     [logOut, setAuthAndRenewToken, tokens.authToken, tokens.renewToken]
   );
@@ -66,7 +66,7 @@ const App: React.FC = () => {
       if (at && rt) {
         setTokens({
           authToken: at,
-          renewToken: rt
+          renewToken: rt,
         });
       }
     }
@@ -74,7 +74,7 @@ const App: React.FC = () => {
 
   const socketParams = useMemo(
     () => ({
-      authToken: tokens.authToken
+      authToken: tokens.authToken,
     }),
     [tokens.authToken]
   );

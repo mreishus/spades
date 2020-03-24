@@ -6,7 +6,7 @@ const suitValues = {
   s: 400,
   h: 300,
   c: 200,
-  d: 100
+  d: 100,
 };
 
 const handSort = (a: Card, b: Card) => {
@@ -29,7 +29,7 @@ interface Props {
 const cardToString = (card: Card) => card.rank.toString() + card.suit;
 
 const minWSix = {
-  minWidth: "6rem"
+  minWidth: "6rem",
 };
 
 export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
@@ -38,7 +38,7 @@ export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
 
   return (
     <div className="flex justify-center" style={minWSix}>
-      {cards.map(card => {
+      {cards.map((card) => {
         let cardStr = cardToString(card);
 
         return (
@@ -50,7 +50,7 @@ export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
             unselectable="on"
             className={cx({
               "noselect h-32 object-cover -ml-16 z-30 hand-card-animate": true,
-              "-mt-5 mr-5 hand-card-selected": selectedCard === cardStr
+              "-mt-5 mr-5 hand-card-selected": selectedCard === cardStr,
             })}
             onClick={() => {
               if (selectedCard === cardStr) {

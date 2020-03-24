@@ -17,16 +17,16 @@ const useAuthDataApi = (
   const authOptions = useMemo(
     () => ({
       headers: {
-        Authorization: authToken
-      }
+        Authorization: authToken,
+      },
     }),
     [authToken]
   );
   const renewOptions = useMemo(
     () => ({
       headers: {
-        Authorization: renewToken
-      }
+        Authorization: renewToken,
+      },
     }),
     [renewToken]
   );
@@ -51,7 +51,7 @@ const useAuthDataApi = (
       originalRequest._retry = true;
       return axios
         .post(renewUrl, null, renewOptions)
-        .then(res => {
+        .then((res) => {
           if (res.status === 200) {
             setAuthAndRenewToken(
               res.data.data.token,
@@ -68,7 +68,7 @@ const useAuthDataApi = (
             return axios(originalRequest);
           }
         })
-        .catch(e => {
+        .catch((e) => {
           if (onError != null) {
             onError();
           }
@@ -112,7 +112,7 @@ const useAuthDataApi = (
     isError,
     doFetchUrl: setUrl,
     doFetchHash: setHash,
-    setData // Override what was fetched by the API (For example, websocket updates)
+    setData, // Override what was fetched by the API (For example, websocket updates)
   };
 };
 
