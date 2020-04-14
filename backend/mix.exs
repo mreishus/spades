@@ -45,7 +45,7 @@ defmodule Spades.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:pow, "~> 1.0.19"},
       {:swoosh, "~> 0.25.1"},
-      {:parent, "~> 0.8.0"},
+      {:parent, "~> 0.9.0"},
       {:accessible, "~> 0.2.1"},
       {:ex_check, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, ">= 1.3.1", only: :dev, runtime: false},
