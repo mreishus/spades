@@ -172,7 +172,9 @@ variety of plugins. Here, you can set up the system to use whatever email
 delivery service you would like. Check the swoosh documentation for details.
 
 Create a `./backend/config/dev.secret.exs` file. Here's what my Mailgun config
-looks like, but you'll need to change the details of this file.
+looks like, but you'll need to change the details of this file. Check the
+[Swoosh](https://github.com/swoosh/swoosh) docs for adapters and settings to
+use. You can use SMTP if you wish..
 
 ```
 use Mix.Config
