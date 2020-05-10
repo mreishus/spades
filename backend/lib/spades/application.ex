@@ -10,6 +10,8 @@ defmodule Spades.Application do
     children = [
       # MNesia for Pow - will need reworking in prod
       Pow.Store.Backend.MnesiaCache,
+      # Start the PubSub system
+      {Phoenix.PubSub, name: Spades.PubSub},
       # Start the Ecto repository
       Spades.Repo,
       # Start the endpoint when the application starts

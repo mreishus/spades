@@ -18,6 +18,7 @@ defmodule SpadesWeb.ConnCase do
   using do
     quote do
       # Import conveniences for testing with connections
+      import Plug.Conn
       use Phoenix.ConnTest
       alias SpadesWeb.Router.Helpers, as: Routes
 

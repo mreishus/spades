@@ -23,7 +23,7 @@ config :spades, SpadesWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "8fqaEQYF++61y9MByi3t+TE2+VGFuEQFfhrlBkzliKpM+1Vi5roQ3arQHNk7uRwi",
   render_errors: [view: SpadesWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Spades.PubSub, adapter: Phoenix.PubSub.PG2]
+  pubsub_server: Spades.PubSub
 
 # Configures Elixir's Logger
 config :logger, :console,
