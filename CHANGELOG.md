@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.5] - 2020-05-18
+
+### Changed
+
+- Dependency updates
+
 ## [0.3.4] - 2020-03-16
 
 ### Changed
@@ -63,8 +69,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Initial release. Rough, but playable with 4 people.
 
-[unreleased]: https://github.com/mreishus/spades/compare/v0.3.4...HEAD
-[0.3.3]: https://github.com/mreishus/spades/compare/v0.3.3...v0.3.4
+[unreleased]: https://github.com/mreishus/spades/compare/v0.3.5...HEAD
+[0.3.5]: https://github.com/mreishus/spades/compare/v0.3.4...v0.3.5
+[0.3.4]: https://github.com/mreishus/spades/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/mreishus/spades/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/mreishus/spades/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/mreishus/spades/compare/v0.3.0...v0.3.1

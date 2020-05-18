@@ -79,7 +79,7 @@ export const Lobby: React.FC = () => {
                 email me: <AdminContact />
               </p>
               <p className="text-sm text-gray-700">
-                Last Update: 2020-03-16. Version: 0.3.4.{" "}
+                Last Update: 2020-05-18. Version: 0.3.5.{" "}
                 <a
                   href="https://github.com/mreishus/spades/blob/master/CHANGELOG.md"
                   target="_blank"

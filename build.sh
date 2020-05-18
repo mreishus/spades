@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION=0.3.4 # Change in Lobby.tsx too, as well as changelog
+VERSION=0.3.5 # Change in Lobby.tsx too, as well as changelog
 
 # exit when any command fails
 set -e
