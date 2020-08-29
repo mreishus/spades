@@ -3,10 +3,10 @@ defmodule SpadesGame.GameUI do
   One level on top of Game.
   """
 
-  alias SpadesGame.{Card, Game, GameOptions, GameUI, GameUISeat}
+  alias SpadesGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User}
 
   @derive Jason.Encoder
-  defstruct [:game, :game_name, :options, :created_at, :status, :seats, :when_seats_full]
+  defstruct [:game, :game_name, :options, :created_at, :created_by, :seats]
 
   use Accessible
 
@@ -15,97 +15,100 @@ defmodule SpadesGame.GameUI do
           game_name: String.t(),
           options: GameOptions.t(),
           created_at: DateTime.t(),
-          status: :staging | :playing | :done,
+          created_by: User.t(),
           seats: %{
-            west: GameUISeat.t(),
-            north: GameUISeat.t(),
-            east: GameUISeat.t(),
-            south: GameUISeat.t()
+            player1: GameUISeat.t(),
+            player2: GameUISeat.t(),
+            player3: GameUISeat.t(),
+            player4: GameUISeat.t()
           },
-          when_seats_full: nil | DateTime.t()
         }
 
-  @spec new(String.t(), GameOptions.t()) :: GameUI.t()
-  def new(game_name, %GameOptions{} = options) do
+  @spec new(String.t(), User.t(), GameOptions.t()) :: GameUI.t()
+  def new(game_name, user, %GameOptions{} = options) do
     game = Game.new(game_name, options)
+    IO.puts("gameui new")
+    IO.inspect(game)
 
     %GameUI{
       game: game,
       game_name: game_name,
       options: options,
       created_at: DateTime.utc_now(),
-      status: :staging,
+      created_by: user,
       seats: %{
-        west: GameUISeat.new_blank(),
-        north: GameUISeat.new_blank(),
-        east: GameUISeat.new_blank(),
-        south: GameUISeat.new_blank()
+        player1: GameUISeat.new_blank(),
+        player2: GameUISeat.new_blank(),
+        player3: GameUISeat.new_blank(),
+        player4: GameUISeat.new_blank()
       }
     }
   end
 
-  @doc """
-  censor_hands/1: Return a version of GameUI with all hands hidden.
-  """
-  @spec censor_hands(GameUI.t()) :: GameUI.t()
-  def censor_hands(gameui) do
-    gameui
-    |> put_in([:game, :east, :hand], [])
-    |> put_in([:game, :north, :hand], [])
-    |> put_in([:game, :south, :hand], [])
-    |> put_in([:game, :west, :hand], [])
-  end
+  # @doc """
+  # censor_hands/1: Return a version of GameUI with all hands hidden.
+  # """
+  # @spec censor_hands(GameUI.t()) :: GameUI.t()
+  # def censor_hands(gameui) do
+  #   gameui
+  #   |> put_in([:game, :player1, :hand], [])
+  #   |> put_in([:game, :player2, :hand], [])
+  #   |> put_in([:game, :player3, :hand], [])
+  #   |> put_in([:game, :player4, :hand], [])
+  # end
 
   @doc """
-  bid/3: User bid `bid_amount` of tricks.
+  update_groups/3: A player moves a card on the table.
   """
-  @spec bid(GameUI.t(), number | :bot, number) :: GameUI.t()
-  def bid(game_ui, user_id, bid_amount) do
-    seat = user_id_to_seat(game_ui, user_id)
+  @spec update_groups(GameUI.t(), number, Groups.t()) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  def update_groups(game_ui, user_id, groups) do
+    case Game.update_groups(game_ui.game, user_id, groups) do
+      {:ok, new_game} ->
+        %{game_ui | game: new_game}
 
-    if seat == nil do
-      game_ui
-    else
-      case Game.bid(game_ui.game, seat, bid_amount) do
-        {:ok, new_game} ->
-          %{game_ui | game: new_game}
-          |> checks
-
-        {:error, _msg} ->
-          game_ui
-      end
+      {:error, _msg} ->
+        game_ui
     end
   end
 
   @doc """
-  play/3: A player puts a card on the table. (Moves from hand to trick.)
+  update_card/6: A player moves a card on the table.
   """
-  @spec play(GameUI.t(), number | :bot, Card.t()) :: GameUI.t()
-  def play(game_ui, user_id, card) do
-    seat = user_id_to_seat(game_ui, user_id)
+  @spec update_card(GameUI.t(), number, Card.t(), String.t(), number, number) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  def update_card(game_ui, user_id, card, group_id, stack_index, card_index) do
+    IO.puts("game_ui: update_card a")
+    case Game.update_card(game_ui.game, user_id, card, group_id, stack_index, card_index) do
+      {:ok, new_game} ->
+        %{game_ui | game: new_game}
 
-    if seat == nil do
-      game_ui
-    else
-      case Game.play(game_ui.game, seat, card) do
-        {:ok, new_game} ->
-          %{game_ui | game: new_game}
-          |> checks
-
-        {:error, _msg} ->
-          game_ui
-      end
+      {:error, _msg} ->
+        game_ui
     end
   end
 
   @doc """
-  user_id_to_seat/2: Which seat is this user sitting in?
-  If :bot, check if the active turn seat belongs to a bot, return that seat if so.
+  toggle_exhaust/3: A player moves a card on the table.
   """
-  @spec user_id_to_seat(GameUI.t(), number | :bot) :: nil | :west | :east | :north | :south
-  def user_id_to_seat(%GameUI{game: %Game{turn: turn}} = game_ui, :bot) do
-    if bot_turn?(game_ui), do: turn, else: nil
+  @spec toggle_exhaust(GameUI.t(), number, Group.t(), Stack.t(), Card.t()) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  def toggle_exhaust(game_ui, user_id, group, stack, card) do
+    IO.puts("game_ui: toggle_exhaust a")
+    case Game.toggle_exhaust(game_ui.game, user_id, group, stack, card) do
+      {:ok, new_game} ->
+        %{game_ui | game: new_game}
+
+      {:error, _msg} ->
+        game_ui
+    end
   end
+
+  # @doc """
+  # user_id_to_seat/2: Which seat is this user sitting in?
+  # If :bot, check if the active turn seat belongs to a bot, return that seat if so.
+  # """
+  # @spec user_id_to_seat(GameUI.t(), number | :bot) :: nil | :west | :east | :north | :south
+  # def user_id_to_seat(%GameUI{game: %Game{turn: turn}} = game_ui, :bot) do
+  #   if bot_turn?(game_ui), do: turn, else: nil
+  # end
 
   def user_id_to_seat(game_ui, user_id) do
     game_ui.seats
@@ -115,50 +118,32 @@ defmodule SpadesGame.GameUI do
   end
 
   @doc """
-  checks/1: Applies checks to GameUI and return an updated copy.
-
-  Generally, all "checks" we append to all outputs.
-  These are all derived state updates.  If something
-  needs to fire off a timer or something, it will be here.
-  It's always safe to call this function.
-  """
-  @spec checks(GameUI.t()) :: GameUI.t()
-  def checks(gameui) do
-    gameui
-    |> check_full_seats
-    |> check_status_advance
-    |> check_game
-  end
-
-  @doc """
   sit/3: User is attempting to sit in a seat.
   Let them do it if no one is in the seat, and they are not
   in any other seats.  Otherwise return the game unchanged.
   --> sit(gameui, userid, which_seat)
   """
   @spec sit(GameUI.t(), integer, String.t()) :: GameUI.t()
-  def sit(gameui, userid, "north"), do: do_sit(gameui, userid, :north)
-  def sit(gameui, userid, "south"), do: do_sit(gameui, userid, :south)
-  def sit(gameui, userid, "east"), do: do_sit(gameui, userid, :east)
-  def sit(gameui, userid, "west"), do: do_sit(gameui, userid, :west)
-  def sit(gameui, _userid, _), do: gameui |> checks
+  def sit(gameui, userid, "player1"), do: do_sit(gameui, userid, :player1)
+  def sit(gameui, userid, "player2"), do: do_sit(gameui, userid, :player2)
+  def sit(gameui, userid, "player3"), do: do_sit(gameui, userid, :player3)
+  def sit(gameui, userid, "player4"), do: do_sit(gameui, userid, :player4)
+  def sit(gameui, _userid, _), do: gameui
 
-  @spec do_sit(GameUI.t(), integer, :north | :south | :east | :west) :: GameUI.t()
+  @spec do_sit(GameUI.t(), integer, :player1 | :player2 | :player3 | :player4) :: GameUI.t()
   defp do_sit(gameui, userid, which) do
     if sit_allowed?(gameui, userid, which) do
       seat = gameui.seats[which] |> GameUISeat.sit(userid)
       seats = gameui.seats |> Map.put(which, seat)
 
       %GameUI{gameui | seats: seats}
-      |> checks
     else
       gameui
-      |> checks
     end
   end
 
   # Is this user allowed to sit in this seat?
-  @spec sit_allowed?(GameUI.t(), integer, :north | :south | :east | :west) :: boolean
+  @spec sit_allowed?(GameUI.t(), integer, :player1 | :player2 | :player3 | :player4) :: boolean
   defp sit_allowed?(gameui, userid, which) do
     !already_sitting?(gameui, userid) && seat_empty?(gameui, which)
   end
@@ -173,7 +158,7 @@ defmodule SpadesGame.GameUI do
   end
 
   # Is this seat empty?
-  @spec seat_empty?(GameUI.t(), :north | :south | :east | :west) :: boolean
+  @spec seat_empty?(GameUI.t(), :player1 | :player2 | :player3 | :player4) :: boolean
   defp seat_empty?(gameui, which), do: gameui.seats[which].sitting == nil
 
   @doc """
@@ -188,7 +173,6 @@ defmodule SpadesGame.GameUI do
           do: {k, if(v.sitting == userid, do: GameUISeat.new_blank(), else: v)}
 
     %{gameui | seats: seats}
-    |> checks
   end
 
   @doc """
@@ -224,35 +208,12 @@ defmodule SpadesGame.GameUI do
   end
 
   @doc """
-  check_status_advance/1: Move a game's status when appropriate.
-  :staging -> :playing -> :done
-  """
-  @spec check_status_advance(GameUI.t()) :: GameUI.t()
-  def check_status_advance(%GameUI{status: :staging} = gameui) do
-    if everyone_sitting?(gameui) and seat_full_countdown_finished?(gameui) do
-      %{gameui | status: :playing}
-    else
-      gameui
-    end
-  end
-
-  # This doesn't seem to work
-  def check_status_advance(%GameUI{status: :playing, game: %Game{winner: winner}} = gameui)
-      when not is_nil(winner) do
-    %{gameui | status: :done}
-  end
-
-  def check_status_advance(gameui) do
-    gameui
-  end
-
-  @doc """
   everyone_sitting?/1:
   Does each seat have a person sitting in it?
   """
   @spec everyone_sitting?(GameUI.t()) :: boolean
   def everyone_sitting?(gameui) do
-    [:north, :west, :south, :east]
+    [:player1, :player2, :player3, :player4]
     |> Enum.reduce(true, fn seat, acc ->
       acc and gameui.seats[seat].sitting != nil
     end)
@@ -267,45 +228,9 @@ defmodule SpadesGame.GameUI do
     Game.trick_full?(game_ui.game)
   end
 
-  @doc """
-  seat_full_countdown_finished?/1
-  Is the "when_seats_full" timestamp at least 10 seconds old?
-  """
-  @spec seat_full_countdown_finished?(GameUI.t()) :: boolean
-  def seat_full_countdown_finished?(%GameUI{when_seats_full: nil}) do
-    false
-  end
-
-  def seat_full_countdown_finished?(%GameUI{when_seats_full: when_seats_full}) do
-    time_elapsed = DateTime.diff(DateTime.utc_now(), when_seats_full, :millisecond)
-    # 10 seconds
-    time_elapsed >= 10 * 1000
-  end
-
-  @doc """
-  rewind_countdown_devtest/1:
-  If a "when_seats_full" timestamp is set, rewind it to be
-  10 minutes ago.  Also run check_for_trick_winner.  Used in
-  dev and testing for instant trick advance only.
-  """
-  @spec rewind_countdown_devtest(GameUI.t()) :: GameUI.t()
-  def rewind_countdown_devtest(%GameUI{when_seats_full: when_seats_full} = game_ui) do
-    if when_seats_full == nil do
-      game_ui
-      |> checks
-    else
-      ten_mins_in_seconds = 60 * 10
-      nt = DateTime.add(when_seats_full, -1 * ten_mins_in_seconds, :second)
-
-      %GameUI{game_ui | when_seats_full: nt}
-      |> checks
-    end
-  end
-
   @spec rewind_trickfull_devtest(GameUI.t()) :: GameUI.t()
   def rewind_trickfull_devtest(game_ui) do
     %GameUI{game_ui | game: Game.rewind_trickfull_devtest(game_ui.game)}
-    |> checks
   end
 
   @doc """
@@ -342,19 +267,18 @@ defmodule SpadesGame.GameUI do
       |> Enum.into(%{})
 
     %GameUI{game_ui | seats: seats}
-    |> checks
   end
 
   @doc """
   bot_turn?/1 : Is it currently a bot's turn?
   """
-  @spec bot_turn?(GameUI.t()) :: boolean
-  def bot_turn?(%GameUI{game: %Game{winner: winner}}) when winner != nil, do: false
-  def bot_turn?(%GameUI{game: %Game{turn: nil}}), do: false
+  # @spec bot_turn?(GameUI.t()) :: boolean
+  # def bot_turn?(%GameUI{game: %Game{winner: winner}}) when winner != nil, do: false
+  # def bot_turn?(%GameUI{game: %Game{turn: nil}}), do: false
 
-  def bot_turn?(%GameUI{game: %Game{turn: turn}, seats: seats}) do
-    seats
-    |> Map.get(turn)
-    |> GameUISeat.is_bot?()
-  end
+  # def bot_turn?(%GameUI{game: %Game{turn: turn}, seats: seats}) do
+  #   seats
+  #   |> Map.get(turn)
+  #   |> GameUISeat.is_bot?()
+  # end
 end

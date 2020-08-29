@@ -9,13 +9,15 @@ defmodule SpadesWeb.RoomChannel do
 
   def join("room:" <> room_slug, _payload, socket) do
     # if authorized?(payload) do
+    IO.puts("roomchannel join a")
     state = GameUIServer.state(room_slug)
 
     socket =
       socket
       |> assign(:room_slug, room_slug)
       |> assign(:game_ui, state)
-
+    IO.puts("socket")
+    IO.inspect(socket)
     # {:ok, socket}
     {:ok, client_state(socket), socket}
     # else
@@ -77,7 +79,6 @@ defmodule SpadesWeb.RoomChannel do
     card = Card.from_map(card)
     # Ignoring return value; could work on passing an error up
     GameUIServer.play(room_slug, user_id, card)
-
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)
@@ -86,18 +87,55 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
-        "invite_bots",
-        _params,
-        %{assigns: %{room_slug: room_slug, user_id: _user_id}} = socket
-      ) do
-    GameUIServer.invite_bots(room_slug)
-
+      "update_groups",
+      %{"groups" => groups},
+      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+    ) do
+    GameUIServer.update_groups(room_slug, user_id, groups)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)
 
     {:reply, {:ok, client_state(socket)}, socket}
   end
+
+  def handle_in(
+      "update_card",
+      %{
+        "card" => card,
+        "group_id" => group_id,
+        "stack_index" => stack_index,
+        "card_index" => card_index,
+        "temp" => temp,
+      },
+      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+    ) do
+    IO.inspect(card)
+    IO.puts(temp)
+    GameUIServer.update_card(room_slug, user_id, card, group_id, stack_index, card_index, temp)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "toggle_exhaust",
+    %{
+      "group" => group,
+      "stack" => stack,
+      "card" => card,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+  GameUIServer.toggle_exhaust(room_slug, user_id, group, stack, card)
+  state = GameUIServer.state(room_slug)
+  socket = socket |> assign(:game_ui, state)
+  notify(socket)
+
+  {:reply, {:ok, client_state(socket)}, socket}
+end
 
   @doc """
   notify_from_outside/1: Tell everyone in the channel to send a message
@@ -155,7 +193,8 @@ defmodule SpadesWeb.RoomChannel do
   # Here, we are using GameUIView to hide the other player's hands.
   defp client_state(socket) do
     user_id = Map.get(socket.assigns, :user_id) || 0
-
+    IO.puts("client_state")
+    IO.inspect(socket.assigns)
     if Map.has_key?(socket.assigns, :game_ui) do
       socket.assigns
       |> Map.put(

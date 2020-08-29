@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Draggable from 'react-draggable';
 import cx from "classnames";
 import { Card } from "elixir-backend";
 
@@ -34,6 +35,7 @@ const minWSix = {
 
 export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
+  const [draggedCard, setDraggedCard] = useState<string | null>(null);
   cards.sort(handSort);
 
   return (
@@ -45,12 +47,13 @@ export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
           <img
             key={cardStr}
             src={`/images/cards3/${cardStr}.png`}
-            alt=".."
+            alt={cardStr}
             draggable={false}
             unselectable="on"
             className={cx({
               "noselect h-32 object-cover -ml-16 z-30 hand-card-animate": true,
               "-mt-5 mr-5 hand-card-selected": selectedCard === cardStr,
+              "hand-card-dragged": draggedCard === cardStr,
             })}
             onClick={() => {
               if (selectedCard === cardStr) {
@@ -58,10 +61,28 @@ export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
                 // Display error message only if it's my turn(?)
                 broadcast("play", { card });
                 setSelectedCard(null);
-              } else {
+              } 
+            }}            
+            onMouseOver={() => {
+              if (!draggedCard)
                 setSelectedCard(cardStr);
-              }
+              
+              console.log(selectedCard);
+              console.log(selectedCard == cardStr);
+            }}            
+            onMouseLeave={() => {
+              setSelectedCard(null);
             }}
+            onMouseDown={() => {
+              console.log('hello');
+            }}            
+            onDrag={() => {
+              setSelectedCard(cardStr);
+              setDraggedCard(cardStr);
+            }}
+            onDragEnd={() => {
+              setDraggedCard(null);
+            }}            
           />
         );
       })}

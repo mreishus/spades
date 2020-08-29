@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import cx from "classnames";
 import useAuth from "../hooks/useAuth";
 import ProfileLink from "../features/auth/ProfileLink";
+import { faRing } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface Props {}
 
@@ -15,14 +17,14 @@ export const AppNav: React.FC<Props> = () => {
   const { authToken, logOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const headerLinkClass =
-    "mt-1 sm:mt-0 sm:ml-2 block px-2 py-1 text-white font-semibold hover:bg-indigo-800 rounded";
+    "mt-1 sm:mt-0 sm:ml-2 block px-2 py-1 text-white font-light hover:font-normal rounded no-underline";
   return (
-    <header className="bg-indigo-900 sm:flex sm:justify-between sm:items-center sm:px-4 sm:py-3">
+    <header className="bg-gray-700 sm:flex sm:justify-between sm:items-center sm:px-4" style={{height:"3vh",fontFamily:"Roboto"}}>
       <div className="flex items-center justify-between px-4 py-3 sm:p-0">
         <div>
           <Link
             to="/"
-            className="text-purple-400 font-semibold text-lg tracking-tight no-underline"
+            className="text-white font-light text-lg tracking-tight no-underline"
           >
             {/*
             <img
@@ -31,7 +33,7 @@ export const AppNav: React.FC<Props> = () => {
               alt="Logo "
             />
                 */}
-            StarSpades
+            play <FontAwesomeIcon className="text-white" icon={faRing}/> rings
           </Link>
         </div>
         <div className="sm:hidden">
@@ -54,9 +56,6 @@ export const AppNav: React.FC<Props> = () => {
           hidden: !isOpen,
         })}
       >
-        <Link to="/lobby" className={headerLinkClass}>
-          Lobby
-        </Link>
         <ProfileLink className={headerLinkClass} />
         {!authToken && (
           <>

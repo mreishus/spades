@@ -56,6 +56,7 @@ socket.connect();
 
 // Now that you are connected, you can join channels with a topic:
 let channel = socket.channel("mytopic:mysubtopic", {});
+console.log("CHANNEL",channel);
 channel
   .join()
   .receive("ok", resp => {

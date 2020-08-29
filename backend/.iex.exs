@@ -5,15 +5,14 @@ alias Spades.Users.User
 
 alias SpadesGame.{
   Card,
+  Group,
+  Groups,
   Deck,
   Game,
   GameRegistry,
   GameServer,
   GameOptions,
   GamePlayer,
-  GameAI,
-  GameAIServer,
-  GameAISupervisor,
   GameUI,
   GameUIServer,
   GameUISupervisor

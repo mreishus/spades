@@ -1,73 +1,45 @@
 defmodule SpadesGame.GameUIView do
   @moduledoc """
   One level on top of GameUI.
-  Censors hands.
   Considers which user id we're sending info to
-  and shows their hand if appropriate.
+  and shows certain things if appropriate.
   """
   alias SpadesGame.{GameUI, GameUIView, Deck}
 
   @derive Jason.Encoder
-  defstruct [:game_ui, :my_hand, :my_seat]
+  defstruct [:game_ui, :my_seat]
 
   @type t :: %GameUIView{
           game_ui: GameUI.t(),
-          my_hand: Deck.t(),
-          my_seat: nil | :east | :west | :north | :south
+          my_seat: nil | :player1 | :player2 | :player3 | :player4
         }
 
   @spec view_for(nil | GameUI.t(), integer) :: GameUIView.t()
   def view_for(nil, _user_id), do: nil
 
   def view_for(%GameUI{} = game_ui, user_id) do
-    my_hand =
-      if game_ui.status != :staging do
-        hand_for(game_ui, user_id)
-      else
-        []
-      end
-
-    my_seat = seat_for(game_ui, user_id)
+    # In the future, this could be used to limit the information that is given to each player to avoid cheating.
+    # For example, using some function game_ui: GameUI.censor(game_ui)
 
     %GameUIView{
-      game_ui: GameUI.censor_hands(game_ui),
-      my_hand: my_hand,
-      my_seat: my_seat
+      game_ui: game_ui,
+      my_seat: seat_for(game_ui, user_id)
     }
-  end
-
-  defp hand_for(%GameUI{} = game_ui, user_id) do
-    cond do
-      user_id == game_ui.seats.east.sitting ->
-        game_ui.game.east.hand
-
-      user_id == game_ui.seats.west.sitting ->
-        game_ui.game.west.hand
-
-      user_id == game_ui.seats.north.sitting ->
-        game_ui.game.north.hand
-
-      user_id == game_ui.seats.south.sitting ->
-        game_ui.game.south.hand
-
-      true ->
-        []
-    end
   end
 
   def seat_for(%GameUI{} = game_ui, user_id) do
     cond do
-      user_id == game_ui.seats.east.sitting ->
-        :east
+      user_id == game_ui.seats.player1.sitting ->
+        :player1
 
-      user_id == game_ui.seats.west.sitting ->
-        :west
+      user_id == game_ui.seats.player2.sitting ->
+        :player2
 
-      user_id == game_ui.seats.north.sitting ->
-        :north
+      user_id == game_ui.seats.player3.sitting ->
+        :player3
 
-      user_id == game_ui.seats.south.sitting ->
-        :south
+      user_id == game_ui.seats.player4.sitting ->
+        :player4
 
       true ->
         nil

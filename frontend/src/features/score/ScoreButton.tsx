@@ -27,7 +27,6 @@ export const ScoreButton: React.FC<Props> = ({ round_number }) => {
   if (gameUIView === null) {
     return null;
   }
-  const score = gameUIView.game_ui.game.score;
   return (
     <>
       <Button isPrimary onClick={() => setShowModal(true)}>
@@ -36,7 +35,6 @@ export const ScoreButton: React.FC<Props> = ({ round_number }) => {
       <ScoreModal
         isOpen={showModal}
         closeModal={() => setShowModal(false)}
-        score={score}
       />
     </>
   );

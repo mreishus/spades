@@ -17,23 +17,23 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
         <Link to={"/room/" + room.slug}>{room.name}</Link>
       </td>
       <td className={tdClass}>
-        <UserName userId={room.west} />
+        <UserName userId={room.player1} />
       </td>
       <td className={tdClass}>
-        <UserName userId={room.north} />
+        <UserName userId={room.player2} />
       </td>
       <td className={tdClass}>
-        <UserName userId={room.east} />
+        <UserName userId={room.player3} />
       </td>
       <td className={tdClass}>
-        <UserName userId={room.south} />
+        <UserName userId={room.player4} />
       </td>
     </tr>
   ));
 
   if (roomItems.length === 0) {
     return (
-      <div className="p-3 border rounded bg-gray-100 max-w-lg">
+      <div className="p-3 text-white rounded bg-gray-700 max-w-lg">
         No rooms created.
       </div>
     );
@@ -43,10 +43,7 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
       <thead>
         <tr>
           <th className={thClass}>name</th>
-          <th className={thClass}>west</th>
-          <th className={thClass}>north</th>
-          <th className={thClass}>east</th>
-          <th className={thClass}>south</th>
+          <th className={thClass}>host</th>
         </tr>
       </thead>
       <tbody>{roomItems}</tbody>

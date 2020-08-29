@@ -46,8 +46,10 @@ const useChannel = (
     (eventName: string, payload: object) => void
   >(mustJoinChannelWarning);
 
+  console.log('useChannel broadcast', broadcast);
   useEffect(() => {
     let doCleanup: () => void = () => null;
+    console.log('socket',socket);
     if (socket != null) {
       doCleanup = joinChannel(socket, channelTopic, onMessage, setBroadcast);
     }
@@ -66,6 +68,7 @@ const joinChannel = (
   >
 ) => {
   const channel = socket.channel(channelTopic, { client: "browser" });
+  console.log('joinCh',channel);
 
   channel.onMessage = (event, payload) => {
     // I don't think the chan_reply_ events are needed - always duplicates of phx_reply?

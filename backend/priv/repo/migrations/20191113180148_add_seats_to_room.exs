@@ -3,10 +3,10 @@ defmodule Spades.Repo.Migrations.AddSeatsToRoom do
 
   def change do
     alter table("rooms") do
-      add(:east, :integer, null: true)
-      add(:west, :integer, null: true)
-      add(:north, :integer, null: true)
-      add(:south, :integer, null: true)
+      add(:player1, :integer, null: true)
+      add(:player2, :integer, null: true)
+      add(:player3, :integer, null: true)
+      add(:player4, :integer, null: true)
     end
   end
 end

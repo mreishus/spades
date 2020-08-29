@@ -1,16 +1,15 @@
 declare module "elixir-backend" {
-  export type Seat = "west" | "east" | "south" | "north";
-  export type Winner = null | "north_south" | "east_west";
+  export type Seat = "player1" | "player2" | "player3" | "player4";
   export type SittingPlayer = null | number | "bot";
 
   export declare class Room {
     public id: number;
     public name: string;
     public slug: string;
-    public west: null | number;
-    public east: null | number;
-    public north: null | number;
-    public south: null | number;
+    public player1: null | number;
+    public player2: null | number;
+    public player3: null | number;
+    public player4: null | number;
   }
 
   export declare class GameUIView {
@@ -20,8 +19,44 @@ declare module "elixir-backend" {
   }
 
   export declare class Card {
+    public id: number;
     public rank: number;
     public suit: "s" | "c" | "h" | "d";
+    public src: string;
+    public rotation: number;
+    public aspectRatio: number;
+    public exhausted: boolean;
+    public tokens: Tokens;
+  }
+
+  export declare class Tokens {
+    public resource: number;
+    public progress: number;
+    public damage: number;
+    public time: number;
+    public threat: number;
+    public willpower: number;
+    public attack: number;
+    public defense: number;
+  }
+
+  export declare class Group {
+    id: string;
+    name: string;
+    type: string;
+    controller: string;
+    cards: Array<Card>;
+    updated: boolean;
+    stacks: Array<Stack>;
+  }
+
+  export declare class Groups {
+    [key:string]: Group
+  }
+
+  export declare class Stack {
+    controller: string;
+    cards: Array<Card>;
   }
 
   export declare class GameUI {
@@ -35,10 +70,10 @@ declare module "elixir-backend" {
   }
 
   export declare class GameUISeats {
-    east: GameUISeat;
-    west: GameUISeat;
-    north: GameUISeat;
-    south: GameUISeat;
+    player1: GameUISeat;
+    player2: GameUISeat;
+    player3: GameUISeat;
+    player4: GameUISeat;
   }
 
   export declare class GameUISeat {
@@ -48,49 +83,21 @@ declare module "elixir-backend" {
   }
 
   export declare class Game {
-    dealer: string; // "north"
-    east: any; // GamePlayer
     game_name: string;
-    north: any; // GamePlayer
+    first_player: string; // "player1"
+    player1: any; // GamePlayer
+    player2: any; // GamePlayer
+    player3: any; // GamePlayer
+    player4: any; // GamePlayer
     options: any;
-    south: any; // GamePlayer
-    spades_broken: boolean;
-    status: "bidding" | "playing";
-    trick: Array<TrickCard>;
-    turn: null | Seat;
-    west: any; // GamePlayer
-    when_trick_full: null | string; // timestamp
-    score: GameScore;
     round_number: number;
-    winner: Winner;
+    groups: Groups;
   }
 
   export declare class GamePlayer {
     bid: null | number;
     hand: Array<Card>;
     tricks_won: number;
-  }
-
-  export declare class GameScore {
-    north_south_rounds: Array<GameScoreRoundTeam>;
-    north_south_score: number;
-    east_west_rounds: Array<GameScoreRoundTeam>;
-    east_west_score: number;
-  }
-
-  export declare class GameScoreRoundTeam {
-    before_score: number;
-    before_bags: number;
-    bid: number;
-    won: number;
-    adj_successful_nil: number;
-    adj_failed_nil: number;
-    adj_successful_bid: number;
-    adj_failed_bid: number;
-    adj_bags: number;
-    bag_penalty: number;
-    after_score: number;
-    after_bags: number;
   }
 
   // game_ui.game.trick --> array TrickCard

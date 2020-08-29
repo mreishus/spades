@@ -19,13 +19,13 @@ export const ChatInput: React.FC<Props> = ({ broadcast }) => {
     }
   );
   return (
-    <div className="max-w-md">
+    <div className="">
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="chat"
           placeholder="your message.."
-          className="form-control w-full"
+          className="form-control w-full bg-gray-900 text-white border-0"
           onChange={handleInputChange}
           value={inputs.chat || ""}
         />
