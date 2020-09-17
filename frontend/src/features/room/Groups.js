@@ -78,7 +78,18 @@ export const Groups = ({
           stacks: newSourceStacks,
         },
       };
-      setGroups(newGroups);
+      const newGameUIView = {
+        ...gameUIView,
+        game_ui: {
+          ...gameUIView.game_ui,
+          game: {
+            ...gameUIView.game_ui.game,
+            groups: newGroups
+          }
+        }
+      }
+      setGameUIView(newGameUIView)
+      //setGroups(newGroups);
       broadcast("update_groups",{groups: newGroups});
 
       // const column = state.columns[result.source.droppableId];
