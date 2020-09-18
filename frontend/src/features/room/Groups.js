@@ -19,7 +19,7 @@ export const Groups = ({
   broadcast,
 }) => {
   const { gameUIView, setGameUIView } = useContext(GameUIViewContext);
-  const [groups, setGroups] = useState(gameUIView.game_ui.game.groups);
+  const [groups, setGroups] = useState(gameUIView.game_ui.groups);
   const [showScratch, setShowScratch] = useState(false);
   const [phase, setPhase] = useState(1);
   //const activeCard = useActiveCard();
@@ -35,8 +35,8 @@ export const Groups = ({
   }
 
   useEffect(() => {    
-     setGroups(gameUIView.game_ui.game.groups);
-  }, [gameUIView.game_ui.game.groups]);
+     setGroups(gameUIView.game_ui.groups);
+  }, [gameUIView.game_ui.groups]);
 
   const onDragEnd = (result) => {
     if (result.combine) {
@@ -82,10 +82,11 @@ export const Groups = ({
         ...gameUIView,
         game_ui: {
           ...gameUIView.game_ui,
-          game: {
-            ...gameUIView.game_ui.game,
-            groups: newGroups
-          }
+        groups: newGroups
+          // game: {
+          //   ...gameUIView.game_ui.game,
+          //   groups: newGroups
+          // }
         }
       }
       setGameUIView(newGameUIView)

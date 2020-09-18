@@ -7,7 +7,10 @@ defmodule SpadesGame.GameUIView do
   alias SpadesGame.{GameUI, GameUIView, Deck}
 
   @derive Jason.Encoder
-  defstruct [:game_ui, :my_seat]
+  defstruct [
+    :game_ui,
+    :my_seat
+  ]
 
   @type t :: %GameUIView{
           game_ui: GameUI.t(),

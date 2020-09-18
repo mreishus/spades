@@ -6,7 +6,21 @@ defmodule SpadesGame.GameUI do
   alias SpadesGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User}
 
   @derive Jason.Encoder
-  defstruct [:game, :game_name, :options, :created_at, :created_by, :seats]
+  defstruct [
+    :game,
+    :game_name,
+    :options,
+    :created_at,
+    :created_by,
+    :seats,
+    :groups,
+    :first_player,
+    :player1,
+    :player2,
+    :player3,
+    :player4,
+    :round_number
+  ]
 
   use Accessible
 
@@ -22,6 +36,13 @@ defmodule SpadesGame.GameUI do
             player3: GameUISeat.t(),
             player4: GameUISeat.t()
           },
+          groups: Map.t(),
+          first_player: 1 | 2 | 3 | 4,
+          player1: GamePlayer.t(),
+          player2: GamePlayer.t(),
+          player3: GamePlayer.t(),
+          player4: GamePlayer.t(),
+          round_number: integer,
         }
 
   @spec new(String.t(), User.t(), GameOptions.t()) :: GameUI.t()
@@ -41,7 +62,14 @@ defmodule SpadesGame.GameUI do
         player2: GameUISeat.new_blank(),
         player3: GameUISeat.new_blank(),
         player4: GameUISeat.new_blank()
-      }
+      },
+      groups: Groups.new(),
+      first_player: 1,
+      player1: nil,
+      player2: nil,
+      player3: nil,
+      player4: nil,
+      round_number: 1,
     }
   end
 
@@ -62,13 +90,9 @@ defmodule SpadesGame.GameUI do
   """
   @spec update_groups(GameUI.t(), number, Groups.t()) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
   def update_groups(game_ui, user_id, groups) do
-    case Game.update_groups(game_ui.game, user_id, groups) do
-      {:ok, new_game} ->
-        %{game_ui | game: new_game}
-
-      {:error, _msg} ->
-        game_ui
-    end
+    %{game_ui |
+      groups: groups
+    }
   end
 
   @doc """
