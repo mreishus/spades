@@ -1117,7 +1117,6 @@ defmodule SpadesUtil.NameGenerator do
       egocentric
       egomaniacal
       egotistical
-      eight
       eighth
       either
       elaborate
@@ -1389,7 +1388,6 @@ defmodule SpadesUtil.NameGenerator do
       fit
       fitted
       fitting
-      five
       fixable
       fixed
       flabby
@@ -1458,7 +1456,6 @@ defmodule SpadesUtil.NameGenerator do
       fortunate
       forward
       foul
-      four
       fourth
       foxy
       fractional
@@ -2532,10 +2529,8 @@ defmodule SpadesUtil.NameGenerator do
       nifty
       nightmarish
       nimble
-      nine
       ninth
       nippy
-      no
       noble
       nocturnal
       noiseless
@@ -3383,7 +3378,6 @@ defmodule SpadesUtil.NameGenerator do
       serious
       serrated
       serviceable
-      seven
       seventh
       several
       severe
@@ -3449,7 +3443,6 @@ defmodule SpadesUtil.NameGenerator do
       sinister
       sinuous
       sisterly
-      six
       sixth
       sizable
       sizzling
@@ -3852,7 +3845,6 @@ defmodule SpadesUtil.NameGenerator do
       temporary
       tempted
       tempting
-      ten
       tenable
       tenacious
       tender
@@ -3902,7 +3894,6 @@ defmodule SpadesUtil.NameGenerator do
       thrashed
       threatened
       threatening
-      three
       thriftless
       thrifty
       thrilled
@@ -4011,7 +4002,6 @@ defmodule SpadesUtil.NameGenerator do
       twinkly
       twisted
       twitchy
-      two
       typical
       tyrannical
       tyrannous
@@ -5795,7 +5785,6 @@ defmodule SpadesUtil.NameGenerator do
       coat
       cobbler
       cobweb
-      cock
       cockpit
       cockroach
       cocktail
@@ -6347,8 +6336,6 @@ defmodule SpadesUtil.NameGenerator do
       diarist
       diary
       dibble
-      dick
-      dickey
       dictaphone
       dictator
       diction
@@ -7402,7 +7389,6 @@ defmodule SpadesUtil.NameGenerator do
       heron
       herring
       hesitation
-      heterosexual
       hexagon
       heyday
       hiccups
@@ -7438,8 +7424,6 @@ defmodule SpadesUtil.NameGenerator do
       homicide
       homogenate
       homonym
-      homosexual
-      homosexuality
       honesty
       honey
       honeybee
@@ -8812,7 +8796,6 @@ defmodule SpadesUtil.NameGenerator do
       penguin
       penicillin
       peninsula
-      penis
       pennant
       penny
       pension
@@ -9047,7 +9030,6 @@ defmodule SpadesUtil.NameGenerator do
       pouch
       poultry
       pound
-      pounding
       poverty
       powder
       power
@@ -9745,7 +9727,6 @@ defmodule SpadesUtil.NameGenerator do
       settler
       severity
       sewer
-      sexuality
       shack
       shackle
       shade

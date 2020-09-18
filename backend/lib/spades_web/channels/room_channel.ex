@@ -3,7 +3,7 @@ defmodule SpadesWeb.RoomChannel do
   This channel will handle individual game rooms.
   """
   use SpadesWeb, :channel
-  alias SpadesGame.{Card, GameUIServer, GameUIView}
+  alias SpadesGame.{Card, GameUIServer, GameUI}
 
   require Logger
 
@@ -182,11 +182,6 @@ end
     broadcast!(socket, "ask_for_update", %{})
   end
 
-  # Add authorization logic here as required.
-  # defp authorized?(_payload) do
-  #   true
-  # end
-
   # This is what part of the state gets sent to the client.
   # It can be used to transform or hide it before they get it.
   #
@@ -194,16 +189,6 @@ end
   defp client_state(socket) do
     user_id = Map.get(socket.assigns, :user_id) || 0
     IO.puts("client_state")
-    IO.inspect(socket.assigns)
-    if Map.has_key?(socket.assigns, :game_ui) do
-      socket.assigns
-      |> Map.put(
-        :game_ui_view,
-        GameUIView.view_for(socket.assigns.game_ui, user_id)
-      )
-      |> Map.delete(:game_ui)
-    else
-      socket.assigns
-    end
+    socket.assigns
   end
 end

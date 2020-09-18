@@ -1,26 +1,26 @@
 import React, { useState, useCallback } from "react";
 import RoomGame from "./RoomGame";
-import GameUIViewContext from "../../contexts/GameUIViewContext";
+import GameUIContext from "../../contexts/GameUIContext";
 import {KeypressProvider} from '../../contexts/KeypressContext'
 import useChannel from "../../hooks/useChannel";
-import { GameUIView } from "elixir-backend";
+import { GameUI } from "elixir-backend";
 
 interface Props {
   slug: string;
 }
 
 export const Room: React.FC<Props> = ({ slug }) => {
-  const [gameUIView, setGameUIView] = useState<GameUIView | null>(null);
+  const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
     console.log("[room] Got channel message", event, payload);
     if (
       event === "phx_reply" &&
       payload.response != null &&
-      payload.response.game_ui_view != null
+      payload.response.game_ui != null
     ) {
-      const { game_ui_view } = payload.response;
+      const { game_ui } = payload.response;
       //console.log("Got new game state: ", game_ui_view);
-      setGameUIView(game_ui_view);
+      setGameUI(game_ui);
     }
   }, []);
   const broadcast = useChannel(`room:${slug}`, onChannelMessage);
@@ -33,10 +33,10 @@ export const Room: React.FC<Props> = ({ slug }) => {
       >
 
       <KeypressProvider value={[""]}>
-        {gameUIView != null && (
-          <GameUIViewContext.Provider value={{gameUIView, setGameUIView}}>
+        {gameUI != null && (
+          <GameUIContext.Provider value={{gameUI, setGameUI}}>
             <RoomGame broadcast={broadcast}/>
-         </GameUIViewContext.Provider>
+         </GameUIContext.Provider>
         )}
         </KeypressProvider>
       </div>

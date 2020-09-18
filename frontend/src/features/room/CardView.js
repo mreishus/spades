@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Component } from "react";
 import { TokensView } from './TokensView';
-import GameUIViewContext from "../../contexts/GameUIViewContext";
+import GameUIContext from "../../contexts/GameUIContext";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { playerBackSRC, encounterBackSRC } from "./Constants"
 import { getCardBackSRC } from "./CardBack"
@@ -271,7 +271,6 @@ class CardClass extends Component {
         const stackIndex = this.props.stackIndex;
         const groupID = this.props.groupID;
         const broadcast = this.props.broadcast;
-        //const gameUIView = this.props.gameUIView;
         return(
             <CardComponent
                 inputCard={inputCard}
@@ -280,7 +279,6 @@ class CardClass extends Component {
                 groupID={groupID}
                 group={this.props.group}
                 broadcast={broadcast}
-                //gameUIView={gameUIView}
             ></CardComponent>
         )
     }
@@ -296,7 +294,6 @@ const CardView = React.memo(({
     group,
   }) => {
     //if (groupID==='gSharedStaging') console.log('rendering Cardview');
-    //const gameUIView = React.useContext(GameUIViewContext);   
     console.log('rendering',group.id,stackIndex,cardIndex, "view");
 
 
@@ -309,7 +306,6 @@ const CardView = React.memo(({
             groupID={groupID}
             group={group}
             broadcast={broadcast}
-            //gameUIView={gameUIView}
         ></CardClass>
 
 

@@ -7,7 +7,7 @@ import GroupView from "./GroupView";
 import { reorderGroups } from "./Reorder";
 import { ActiveCard } from "./ActiveCard";
 import styled from "@emotion/styled";
-import GameUIViewContext from "../../contexts/GameUIViewContext";
+import GameUIContext from "../../contexts/GameUIContext";
 
 const WidthContainer = styled.div`
   padding: 2px 2px 2px 0.5vw;
@@ -18,8 +18,8 @@ const WidthContainer = styled.div`
 export const Groups = ({
   broadcast,
 }) => {
-  const { gameUIView, setGameUIView } = useContext(GameUIViewContext);
-  const [groups, setGroups] = useState(gameUIView.game_ui.groups);
+  const { gameUI, setGameUI } = useContext(GameUIContext);
+  const [groups, setGroups] = useState(gameUI.groups);
   const [showScratch, setShowScratch] = useState(false);
   const [phase, setPhase] = useState(1);
   //const activeCard = useActiveCard();
@@ -35,8 +35,8 @@ export const Groups = ({
   }
 
   useEffect(() => {    
-     setGroups(gameUIView.game_ui.groups);
-  }, [gameUIView.game_ui.groups]);
+     setGroups(gameUI.groups);
+  }, [gameUI.groups]);
 
   const onDragEnd = (result) => {
     if (result.combine) {
@@ -78,18 +78,15 @@ export const Groups = ({
           stacks: newSourceStacks,
         },
       };
-      const newGameUIView = {
-        ...gameUIView,
-        game_ui: {
-          ...gameUIView.game_ui,
+      const newGameUI = {
+        ...gameUI,
         groups: newGroups
           // game: {
           //   ...gameUIView.game_ui.game,
           //   groups: newGroups
           // }
-        }
       }
-      setGameUIView(newGameUIView)
+      setGameUI(newGameUI)
       //setGroups(newGroups);
       broadcast("update_groups",{groups: newGroups});
 
@@ -269,8 +266,8 @@ export const Groups = ({
             className="overflow-hidden" 
             style={{height: showScratch ? "12%" : "57%", opacity: 0.7}}
           >
-            {gameUIView != null && (
-              <Chat roomName={gameUIView.game_ui.game_name} />
+            {gameUI != null && (
+              <Chat roomName={gameUI.game_name} />
             )}
           </div>
           {/* Extra */}
