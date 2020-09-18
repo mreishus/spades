@@ -85,6 +85,15 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
+  update_game/3: The game is updated.
+  """
+  @spec update_game(String.t(), integer,  GameUI.t()):: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  def update_game(game_name, user_id, game) do
+    IO.puts("game_ui_server: update_game")
+    GenServer.call(via_tuple(game_name), {:update_game, user_id, game})
+  end
+
+  @doc """
   update_card/7: A player just moved a card.
   """
   @spec update_card(String.t(), integer, Card.t(), String.t(), number, number, String.t()) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
@@ -200,6 +209,14 @@ defmodule SpadesGame.GameUIServer do
     IO.puts("game_ui_server: handle_call: update_groups a")
     gameui = GameUI.update_groups(gameui, user_id, groups)
     IO.puts("game_ui_server: handle_call: update_groups b")
+    gameui
+    |> save_and_reply()
+  end
+
+  def handle_call({:update_game, user_id, game}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: update_game a")
+    gameui = game
+    IO.puts("game_ui_server: handle_call: update_game b")
     gameui
     |> save_and_reply()
   end

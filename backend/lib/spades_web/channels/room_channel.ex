@@ -100,6 +100,19 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
+    "update_game",
+    %{"game" => game},
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+  GameUIServer.update_game(room_slug, user_id, game)
+  state = GameUIServer.state(room_slug)
+  socket = socket |> assign(:game_ui, state)
+  notify(socket)
+
+  {:reply, {:ok, client_state(socket)}, socket}
+end
+
+  def handle_in(
       "update_card",
       %{
         "card" => card,

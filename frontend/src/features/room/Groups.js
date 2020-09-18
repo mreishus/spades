@@ -88,7 +88,7 @@ export const Groups = ({
       }
       setGameUI(newGameUI)
       //setGroups(newGroups);
-      broadcast("update_groups",{groups: newGroups});
+      broadcast("update_game",{game: newGameUI});
 
       // const column = state.columns[result.source.droppableId];
       // const withQuoteRemoved = [...column];
