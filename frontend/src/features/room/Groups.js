@@ -134,16 +134,31 @@ export const Groups = ({
     console.log('REGISTERED A DRAG');
     console.log(data.groups);
     //
-    setGroups(data.groups);
-    // broadcast(
-    //   "update_2_groups",
-    //   {
-    //     groupID1: source.droppableId,
-    //     groupIndex1: data.groups[source.droppableId],
-    //     groupID2: destination.droppableId,
-    //     groupIndex2: data.groups[destination.droppableId],
-    // })
-    broadcast("update_groups",{groups: data.groups});
+
+
+    const newGameUI = {
+      ...gameUI,
+      groups: data.groups
+        // game: {
+        //   ...gameUIView.game_ui.game,
+        //   groups: newGroups
+        // }
+    }
+    setGameUI(newGameUI)
+    //setGroups(newGroups);
+    broadcast("update_game",{game: newGameUI});
+
+
+    // setGroups(data.groups);
+    // // broadcast(
+    // //   "update_2_groups",
+    // //   {
+    // //     groupID1: source.droppableId,
+    // //     groupIndex1: data.groups[source.droppableId],
+    // //     groupID2: destination.droppableId,
+    // //     groupIndex2: data.groups[destination.droppableId],
+    // // })
+    // broadcast("update_groups",{groups: data.groups});
     // setState({
     //   columns: data.quoteMap,
     //   ordered: state.ordered

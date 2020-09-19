@@ -13,58 +13,43 @@ defmodule SpadesGame.Game do
 
   @derive Jason.Encoder
   defstruct [
-    :game_name,
     :groups,
     :options,
     :first_player,
-    :player1,
-    :player2,
-    :player3,
-    :player4,
     :round_number,
   ]
 
   use Accessible
 
   @type t :: %Game{
-          game_name: String.t(),
           groups: Map.t(),
           options: GameOptions.t(),
-          first_player: :player1 | :player2 | :player3 | :player4,
-          player1: GamePlayer.t(),
-          player2: GamePlayer.t(),
-          player3: GamePlayer.t(),
-          player4: GamePlayer.t(),
+          first_player: 1 | 2 | 3 | 4,
           round_number: integer,
         }
 
   @doc """
   new/1:  Create a game with default options.
   """
-  @spec new(String.t()) :: Game.t()
-  def new(game_name) do
+  @spec new() :: Game.t()
+  def new() do
     {:ok, options} = GameOptions.validate(%{})
-    new(game_name, options)
+    new(options)
   end
 
   @doc """
   new/2:  Create a game with specified options.
   """
-  @spec new(String.t(), GameOptions.t()) :: Game.t()
-  def new(game_name, %GameOptions{} = options) do
+  @spec new(GameOptions.t()) :: Game.t()
+  def new(%GameOptions{} = options) do
     [w, n, e, s] =
       get_initial_hands(options)
       |> Enum.map(fn d -> GamePlayer.new(d) end)
 
     %Game{
-      game_name: game_name,
       groups: Groups.new(),
       options: options,
-      first_player: :player1,
-      player1: nil,
-      player2: nil,
-      player3: nil,
-      player4: nil,
+      first_player: 1,
       round_number: 1,
     }
   end

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { CARDSCALE } from "./Constants";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import GameUIContext from "../../contexts/GameUIContext";
 //import cx from "classnames";
 
 const tokenURLs = {
@@ -26,6 +27,9 @@ export const Token = ({
     stackIndex,
     cardIndex,
 }) => {
+    const { gameUI, setGameUI } = useContext(GameUIContext);
+    console.log('rendering tokens on ',groupID,stackIndex)
+    console.log(gameUI.game.groups[groupID].stacks)
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
     const [amount, setAmount] = useState(card.tokens[type]);
@@ -98,7 +102,15 @@ export const Token = ({
             tokens: newTokens,
         }
         console.log("newcard",newCard);
-        broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"clickarrow"});
+
+        const newGameUI = {
+            ...gameUI
+        }
+        console.log(newGameUI.game.groups[groupID].stacks)
+        newGameUI.game.groups[groupID].stacks[stackIndex].cards[cardIndex].tokens[type] = amount+delta
+        setGameUI(newGameUI)
+        broadcast("update_game", {game: newGameUI})
+        //broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"clickarrow"});
 
 
     }
