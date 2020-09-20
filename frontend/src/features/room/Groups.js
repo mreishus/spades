@@ -19,7 +19,7 @@ export const Groups = ({
   broadcast,
 }) => {
   const { gameUI, setGameUI } = useContext(GameUIContext);
-  const [groups, setGroups] = useState(gameUI.groups);
+  const [groups, setGroups] = useState(gameUI.game.groups);
   const [showScratch, setShowScratch] = useState(false);
   const [phase, setPhase] = useState(1);
   //const activeCard = useActiveCard();
@@ -35,8 +35,8 @@ export const Groups = ({
   }
 
   useEffect(() => {    
-     setGroups(gameUI.groups);
-  }, [gameUI.groups]);
+     setGroups(gameUI.game.groups);
+  }, [gameUI.game.groups]);
 
   const onDragEnd = (result) => {
     if (result.combine) {
@@ -80,15 +80,15 @@ export const Groups = ({
       };
       const newGameUI = {
         ...gameUI,
-        groups: newGroups
-          // game: {
-          //   ...gameUIView.game_ui.game,
-          //   groups: newGroups
-          // }
-      }
+        game: {
+          ...gameUI.game,
+          groups: newGroups
+        }
+      }   
+      
       setGameUI(newGameUI)
       //setGroups(newGroups);
-      broadcast("update_game",{game: newGameUI});
+      broadcast("update_gameui",{gameui: newGameUI});
 
       // const column = state.columns[result.source.droppableId];
       // const withQuoteRemoved = [...column];
@@ -138,15 +138,15 @@ export const Groups = ({
 
     const newGameUI = {
       ...gameUI,
-      groups: data.groups
-        // game: {
-        //   ...gameUIView.game_ui.game,
-        //   groups: newGroups
-        // }
-    }
+      "game": {
+        ...gameUI.game,
+        "groups": data.groups
+      }
+    }   
+    setGroups(data.groups)
     setGameUI(newGameUI)
     //setGroups(newGroups);
-    broadcast("update_game",{game: newGameUI});
+    broadcast("update_gameui",{gameui: newGameUI});
 
 
     // setGroups(data.groups);

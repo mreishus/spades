@@ -85,12 +85,12 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  update_game/3: The game is updated.
+  update_gameui/3: The game is updated.
   """
-  @spec update_game(String.t(), integer,  GameUI.t()):: GameUI.t() #DragEvent.t()) :: GameUI.t()
-  def update_game(game_name, user_id, game) do
-    IO.puts("game_ui_server: update_game")
-    GenServer.call(via_tuple(game_name), {:update_game, user_id, game})
+  @spec update_gameui(String.t(), integer,  GameUI.t()):: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  def update_gameui(game_name, user_id, gameui) do
+    IO.puts("game_ui_server: update_gameui")
+    GenServer.call(via_tuple(game_name), {:update_gameui, user_id, gameui})
   end
 
   @doc """
@@ -161,19 +161,22 @@ defmodule SpadesGame.GameUIServer do
 
   def init({game_name, user, options = %GameOptions{}}) do
     IO.puts("game_ui_server init a")
+    IO.inspect(game_name)
     gameui =
       case :ets.lookup(:game_uis, game_name) do
         [] ->
+          IO.puts("case 1")
           gameui = GameUI.new(game_name, user, options)
           :ets.insert(:game_uis, {game_name, gameui})
           gameui
 
         [{^game_name, gameui}] ->
+          IO.puts("case 2")
           gameui
       end
 
     IO.puts("game_ui_server init b")
-    GameRegistry.add(gameui.game_name, gameui)
+    GameRegistry.add(gameui["game_name"], gameui)
     {:ok, gameui, timeout(gameui)}
   end
 
@@ -213,11 +216,10 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
-  def handle_call({:update_game, user_id, game}, _from, gameui) do
-    IO.puts("game_ui_server: handle_call: update_game a")
-    gameui = game
-    IO.puts("game_ui_server: handle_call: update_game b")
-    gameui
+  def handle_call({:update_gameui, user_id, updated_gameui}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: update_gameui a")
+    IO.puts("game_ui_server: handle_call: update_gameui b")
+    updated_gameui
     |> save_and_reply()
   end
 
@@ -271,13 +273,13 @@ defmodule SpadesGame.GameUIServer do
 
     IO.puts("game_ui_server: save_and_reply a")
     #IO.inspect(new_gameui)
-    GameRegistry.update(new_gameui.game_name, new_gameui)
+    GameRegistry.update(new_gameui["game_name"], new_gameui)
 
     IO.puts("game_ui_server: save_and_reply b")
     # end)
 
     spawn_link(fn ->
-      :ets.insert(:game_uis, {new_gameui.game_name, new_gameui})
+      :ets.insert(:game_uis, {new_gameui["game_name"], new_gameui})
     end)
 
     IO.puts("game_ui_server: save_and_reply c")
@@ -304,7 +306,7 @@ defmodule SpadesGame.GameUIServer do
       |> Enum.each(fn _ ->
         Process.sleep(delay_ms)
         state = GenServer.call(pid, :state)
-        SpadesWeb.RoomChannel.notify_from_outside(state.game_name)
+        SpadesWeb.RoomChannel.notify_from_outside(state["game_name"])
       end)
     end)
   end
@@ -325,9 +327,9 @@ defmodule SpadesGame.GameUIServer do
 
   def terminate({:shutdown, :timeout}, state) do
     IO.inspect("gameuiserv shutdown")
-    Logger.info("Terminate (Timeout) running for #{state.game_name}")
-    :ets.delete(:game_uis, state.game_name)
-    GameRegistry.remove(state.game_name)
+    Logger.info("Terminate (Timeout) running for #{state["game_name"]}")
+    :ets.delete(:game_uis, state["game_name"])
+    GameRegistry.remove(state["game_name"])
     :ok
   end
 
@@ -335,8 +337,8 @@ defmodule SpadesGame.GameUIServer do
   def terminate(_reason, state) do
     IO.puts("terminating because")
     IO.inspect(_reason)
-    Logger.info("Terminate (Non Timeout) running for #{state.game_name}")
-    GameRegistry.remove(state.game_name)
+    Logger.info("Terminate (Non Timeout) running for #{state["game_name"]}")
+    GameRegistry.remove(state["game_name"])
     :ok
   end
 end

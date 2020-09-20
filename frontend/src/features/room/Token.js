@@ -109,7 +109,7 @@ export const Token = ({
         console.log(newGameUI.game.groups[groupID].stacks)
         newGameUI.game.groups[groupID].stacks[stackIndex].cards[cardIndex].tokens[type] = amount+delta
         setGameUI(newGameUI)
-        broadcast("update_game", {game: newGameUI})
+        //broadcast("update_gameui", {gameui: newGameUI})
         //broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"clickarrow"});
 
 

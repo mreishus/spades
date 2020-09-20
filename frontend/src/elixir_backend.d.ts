@@ -69,14 +69,10 @@ declare module "elixir-backend" {
     seats: GameUISeats;
     status: "staging" | "playing" | "done";
     when_seats_full: null | string; // timestamp
-
-    first_player: 1 | 2 | 3 | 4;
     player1: any; // GamePlayer
     player2: any; // GamePlayer
     player3: any; // GamePlayer
     player4: any; // GamePlayer
-    round_number: number;
-    groups: Groups;
   }
 
   export declare class GameUISeats {
@@ -93,12 +89,7 @@ declare module "elixir-backend" {
   }
 
   export declare class Game {
-    game_name: string;
-    first_player: string; // "player1"
-    player1: any; // GamePlayer
-    player2: any; // GamePlayer
-    player3: any; // GamePlayer
-    player4: any; // GamePlayer
+    first_player: 1 | 2 | 3 | 4; // "player1"
     options: any;
     round_number: number;
     groups: Groups;

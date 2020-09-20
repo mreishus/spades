@@ -20,7 +20,7 @@ defmodule SpadesGame.GameUIView do
   @spec view_for(nil | GameUI.t(), integer) :: GameUIView.t()
   def view_for(nil, _user_id), do: nil
 
-  def view_for(%GameUI{} = game_ui, user_id) do
+  def view_for(%{} = game_ui, user_id) do
     # In the future, this could be used to limit the information that is given to each player to avoid cheating.
     # For example, using some function game_ui: GameUI.censor(game_ui)
 
@@ -30,7 +30,7 @@ defmodule SpadesGame.GameUIView do
     }
   end
 
-  def seat_for(%GameUI{} = game_ui, user_id) do
+  def seat_for(%{} = game_ui, user_id) do
     cond do
       user_id == game_ui.seats.player1.sitting ->
         :player1

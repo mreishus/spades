@@ -213,8 +213,6 @@ const CardComponent = React.memo(({
             onMouseOver={event => handleMouseOver(event)}
             onMouseLeave={event => handleMouseLeave(event)}
         >
-            {/* <div>{cardIndex}</div> */}
-            <div className='text-white'>{zIndex}</div>
             
             <TokensView card={inputCard} isHighlighted={isActive || isClicked} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></TokensView>
         </div>
@@ -241,9 +239,6 @@ const CardComponent = React.memo(({
 </div>
     )
 })
-  
-
-
 
 class CardClass extends Component {
 

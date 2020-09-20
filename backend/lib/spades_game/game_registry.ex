@@ -12,7 +12,7 @@ defmodule SpadesGame.GameRegistry do
   Register a GameUI.  We will create a Room in the database
   so it can be found in the lobby.
   """
-  def add(game_name, %GameUI{} = gameui) do
+  def add(game_name, %{}= gameui) do
     remove(game_name)
 
     gameui
@@ -25,7 +25,7 @@ defmodule SpadesGame.GameRegistry do
   Update information about a GameUI.  We will update the Room
   row in the database so it can found in the lobby.
   """
-  def update(game_name, %GameUI{} = gameui) do
+  def update(game_name, %{} = gameui) do
     room = Rooms.get_room_by_name(game_name)
 
     case room do
@@ -49,14 +49,17 @@ defmodule SpadesGame.GameRegistry do
 
   # Convert a GameUI{} into a %{} that is suitable for
   # inserting or updating a Room.
-  defp to_room_param(%GameUI{} = gameui) do
+  defp to_room_param(%{} = gameui) do
     # created_at: DateTime.t()
+    IO.puts("to_room_param")
+    IO.inspect(gameui["game_name"])
+    IO.inspect(Map.keys(gameui))
     %{
-      name: gameui.game_name,
-      player1: gameui.seats.player1.sitting,
-      player2: gameui.seats.player2.sitting,
-      player3: gameui.seats.player3.sitting,
-      player4: gameui.seats.player4.sitting
+      name: gameui["game_name"],
+      player1: gameui["seats"]["player1"]["sitting"],
+      player2: gameui["seats"]["player2"]["sitting"],
+      player3: gameui["seats"]["player3"]["sitting"],
+      player4: gameui["seats"]["player4"]["sitting"]
     }
   end
 
