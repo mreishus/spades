@@ -27,9 +27,9 @@ export const Token = ({
     stackIndex,
     cardIndex,
 }) => {
-    const { gameUI, setGameUI } = useContext(GameUIContext);
+    const { _, setGameUI } = useContext(GameUIContext);
     console.log('rendering tokens on ',groupID,stackIndex)
-    console.log(gameUI.game.groups[groupID].stacks)
+    //console.log(gameUI.game.groups[groupID].stacks)
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
     const [amount, setAmount] = useState(card.tokens[type]);
@@ -103,14 +103,14 @@ export const Token = ({
         }
         console.log("newcard",newCard);
 
-        const newGameUI = {
+/*         const newGameU  I = {
             ...gameUI
         }
         console.log(newGameUI.game.groups[groupID].stacks)
         newGameUI.game.groups[groupID].stacks[stackIndex].cards[cardIndex].tokens[type] = amount+delta
-        setGameUI(newGameUI)
+        setGameUI(newGameUI) */
         //broadcast("update_gameui", {gameui: newGameUI})
-        //broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"clickarrow"});
+        broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
 
 
     }

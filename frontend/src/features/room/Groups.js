@@ -86,8 +86,8 @@ export const Groups = ({
         }
       }   
       
-      setGameUI(newGameUI)
-      //setGroups(newGroups);
+      setGroups(newGroups);
+      setGameUI(newGameUI);
       broadcast("update_gameui",{gameui: newGameUI});
 
       // const column = state.columns[result.source.droppableId];

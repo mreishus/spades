@@ -18,6 +18,7 @@ const Header = styled.div`
 `;
 
 export default class GroupView extends Component {
+  
 
   shouldComponentUpdate = (nextProps, nextState) => {
         // if (nextProps.group.id == "gSharedStaging") {
