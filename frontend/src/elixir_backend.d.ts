@@ -92,7 +92,7 @@ declare module "elixir-backend" {
     first_player: 1 | 2 | 3 | 4; // "player1"
     options: any;
     round_number: number;
-    groups: Groups;
+    cards: CardDict;
   }
 
   export declare class GamePlayer {

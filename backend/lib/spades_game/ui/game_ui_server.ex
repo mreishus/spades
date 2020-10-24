@@ -224,6 +224,7 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:update_card, user_id, card, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_card a")
+
     IO.inspect(gameui["game"]["groups"][group_id]["stacks"][stack_index]["cards"][card_index])
     put_in(gameui["game"]["groups"][group_id]["stacks"][stack_index]["cards"][card_index],card)
     IO.puts("game_ui_server: handle_call: update_card b")
