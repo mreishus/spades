@@ -224,12 +224,28 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:update_card, user_id, card, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_card a")
-
-    IO.inspect(gameui["game"]["groups"][group_id]["stacks"][stack_index]["cards"][card_index])
-    put_in(gameui["game"]["groups"][group_id]["stacks"][stack_index]["cards"][card_index],card)
-    IO.puts("game_ui_server: handle_call: update_card b")
+    IO.inspect("old stacks")
+    old_stacks = gameui["game"]["groups"][group_id]["stacks"]
+    IO.inspect("old stack")
+    old_stack = Enum.at(old_stacks, stack_index)
+    IO.inspect("old cards")
+    old_cards = old_stack["cards"]
+    IO.inspect(old_cards)
+    IO.inspect("old card")
+    old_card = Enum.at(old_cards, card_index)
+    IO.inspect(old_card)
+    IO.inspect("new cards")
+    IO.inspect(card_index)
+    new_cards = List.replace_at(old_cards,card_index,card)
+    IO.inspect("new stack")
+    new_stack = put_in(old_stack["cards"],new_cards)
+    IO.inspect("new stacks")
+    new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
+    IO.inspect("put_in")
+    put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
     |> save_and_reply()
   end
+
 
   def handle_call({:toggle_exhaust, user_id, group, stack, card}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: toggle_exhaust a")

@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import { CARDSCALE } from "./Constants";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import GameUIContext from "../../contexts/GameUIContext";
 //import cx from "classnames";
 
 const tokenURLs = {
@@ -27,7 +26,6 @@ export const Token = ({
     stackIndex,
     cardIndex,
 }) => {
-    const { _, setGameUI } = useContext(GameUIContext);
     console.log('rendering tokens on ',groupID,stackIndex)
     //console.log(gameUI.game.groups[groupID].stacks)
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
