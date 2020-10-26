@@ -15,6 +15,8 @@ const tokenURLs = {
     "time":      "https://raw.githubusercontent.com/seastan/Lord-of-the-Rings/master/o8g/Sets/Markers%20and%20Tokens/Markers/31627422-f546-4a69-86df-ca0a028f3138.png",
 }
 
+var delayBroadcast;
+
 export const Token = ({
     type,
     card,
@@ -31,6 +33,7 @@ export const Token = ({
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
     const [amount, setAmount] = useState(card.tokens[type]);
+
     // useEffect(() => {
 
     //     const onKeyDown = ({key}) => {
@@ -108,7 +111,11 @@ export const Token = ({
         newGameUI.game.groups[groupID].stacks[stackIndex].cards[cardIndex].tokens[type] = amount+delta
         setGameUI(newGameUI) */
         //broadcast("update_gameui", {gameui: newGameUI})
-        broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
+        if (delayBroadcast) clearTimeout(delayBroadcast);
+        delayBroadcast = setTimeout(function() {
+            broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
+        }, 500);
+        
 
 
     }

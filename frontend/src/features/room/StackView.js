@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import styled from "@emotion/styled";
 import CardView from "./CardView"
 import { CARDSCALE } from "./Constants"
@@ -36,6 +36,64 @@ function getStyle(provided, style) {
 // Need to be super sure we are not relying on PureComponent here for
 // things we should be doing in the selector as we do not know if consumers
 // will be using PureComponent
+
+export default class StackView extends Component {
+  
+
+  shouldComponentUpdate = (nextProps, nextState) => {
+      if (this.props.isDragging || this.props.isGroupedOver) return true;
+
+      if (JSON.stringify(nextProps.stack)===JSON.stringify(this.props.stack)) {
+        return false;
+      } else {
+        return true;
+      }
+  };
+
+  render() {
+    var handSpacing = 100*0.8*0.8*0.8/(this.props.group.stacks.length);
+    if (handSpacing > CARDSCALE) handSpacing = CARDSCALE;
+    const stackWidth = this.props.group.type == "hand" ? handSpacing : CARDSCALE/0.75 + CARDSCALE/3*(this.props.stack.cards.length-1);
+
+    return (
+      <Container
+        isDragging={this.props.isDragging}
+        isGroupedOver={this.props.isGroupedOver}
+        isClone={this.props.isClone}
+        stackWidth={stackWidth}
+        ref={this.props.provided.innerRef}
+        {...this.props.provided.draggableProps}
+        {...this.props.provided.dragHandleProps}
+        style={getStyle(this.props.provided, this.props.style)}
+        data-is-dragging={this.props.isDragging}
+        data-testid={this.props.stack.id}
+        data-index={this.props.index}
+      >
+      {this.props.stack.cards.map((card, cardIndex) => {
+          return(
+
+            <CardView
+              broadcast={this.props.broadcast} 
+              groupID={this.props.group.id} 
+              group={this.props.group}
+              stackIndex={this.props.stackIndex}
+              cardIndex={cardIndex}
+              inputCard={card} 
+              key={card.id} 
+            >
+            </CardView>
+          )
+      })}
+      </Container>
+
+    );
+  }
+}
+
+
+
+/* 
+
 function StackView(props) {
   const {
     broadcast,
@@ -95,6 +153,6 @@ function StackView(props) {
 
 
   );
-}
+} */
 
-export default StackView;
+//export default StackView;
