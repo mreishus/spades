@@ -30,7 +30,7 @@
     "react-scroll-to-bottom": "^2.0.0",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
-    "typescript": "3.9.7"
+    "typescript": "4.1.2"
   },
   "scripts": {
     "start-elixir": "REACT_APP_WS_URL=ws://172.22.2.174:4000/socket npm-run-all -p start:css start:js",
