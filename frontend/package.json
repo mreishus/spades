@@ -19,7 +19,7 @@
     "date-fns": "^2.14.0",
     "http-proxy-middleware": "^1.0.4",
     "phoenix": "^1.5.4",
-    "prettier": "^2.0.5",
+    "prettier": "^2.2.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-icons": "^3.10.0",
