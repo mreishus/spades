@@ -39,16 +39,15 @@ function getStyle(provided, style) {
 
 export default class StackView extends Component {
   
-
-  shouldComponentUpdate = (nextProps, nextState) => {
-      if (this.props.isDragging || this.props.isGroupedOver) return true;
-
-      if (JSON.stringify(nextProps.stack)===JSON.stringify(this.props.stack)) {
-        return false;
-      } else {
-        return true;
-      }
-  };
+  // This optimization doesn't work because when you hover over a card somewhere earlier in the group, this card also needs to update
+  // shouldComponentUpdate = (nextProps, nextState) => {
+  //     if (this.props.isDragging || this.props.isGroupedOver) return true;
+  //     if (JSON.stringify(nextProps.stack)===JSON.stringify(this.props.stack)) {
+  //       return false;
+  //     } else {
+  //       return true;
+  //     }
+  // };
 
   render() {
     var handSpacing = 100*0.8*0.8*0.8/(this.props.group.stacks.length);
