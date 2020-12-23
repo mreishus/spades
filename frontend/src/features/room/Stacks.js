@@ -62,10 +62,6 @@ const Container = styled.div`
 const InnerQuoteList = React.memo(function InnerQuoteList(props) {
   const pile = (props.group.type=="deck" || props.group.type=="discard")
 
-  function handleMenuClick() {
-      console.log('menu clicked');
-  }
-
   // Truncate stacked piles
   var stacks;
   if (pile && props.isDraggingOver && !props.isDraggingFrom) stacks = [];

@@ -94,6 +94,15 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
+  move_stack/6: A player just moved a card.
+  """
+  @spec move_stack(String.t(), integer, String.t(), number, String.t(), number) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  def move_stack(game_name, user_id, start_group_id, start_stack_index, end_group_id, end_stack_index) do
+    IO.puts("game_ui_server: move_stack")
+    GenServer.call(via_tuple(game_name), {:move_stack, user_id, start_group_id, start_stack_index, end_group_id, end_stack_index})
+  end
+
+  @doc """
   update_card/6: A player just moved a card.
   """
   @spec update_card(String.t(), integer, Card.t(), String.t(), number, number) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
@@ -217,10 +226,30 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:update_gameui, user_id, updated_gameui}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_gameui a")
-    IO.puts("game_ui_server: handle_call: update_gameui b")
     updated_gameui
     |> save_and_reply()
   end
+
+  def handle_call({:move_stack, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: update_gameui a")
+    old_orig_group = gameui["game"]["groups"][orig_group_id]
+    old_orig_stacks = old_orig_group["stacks"]
+    stack = Enum.at(old_orig_stacks,orig_stack_index)
+    new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
+    new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
+
+
+    old_dest_group = gameui["game"]["groups"][dest_group_id]
+    old_dest_stacks = old_dest_group["stacks"]
+    new_dest_stacks = List.insert_at(old_dest_stacks,dest_stack_index,stack)
+    new_dest_group = put_in(old_dest_group["stacks"],new_dest_stacks)
+
+
+    gameui_orig_removed = put_in(gameui["game"]["groups"][orig_group_id],new_orig_group)
+    put_in(gameui_orig_removed["game"]["groups"][dest_group_id],new_dest_group)
+    |> save_and_reply()
+  end
+
 
   def handle_call({:update_card, user_id, card, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_card a")

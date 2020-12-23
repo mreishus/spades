@@ -116,9 +116,7 @@ function StackView(props) {
   console.log('rendering',group.id,stackIndex);
   //console.log(stackIndex);
   //console.log(stack.cards);
-  function handleMenuClick() {
-    console.log('menu clicked');
-}
+
   return (
 
     <Container

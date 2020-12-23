@@ -132,7 +132,10 @@ export const Groups = ({
     //   }
     // }
     console.log('REGISTERED A DRAG');
-    console.log(data.groups);
+    console.log(source.droppableId);
+    console.log(source.index);
+    console.log(destination.droppableId);
+    console.log(destination.index);
     //
 
 
@@ -146,7 +149,13 @@ export const Groups = ({
     setGroups(data.groups)
     setGameUI(newGameUI)
     //setGroups(newGroups);
-    broadcast("update_gameui",{gameui: newGameUI});
+    broadcast("move_stack",{
+      orig_group_id: source.droppableId, 
+      orig_stack_index: source.index, 
+      dest_group_id: destination.droppableId, 
+      dest_stack_index: destination.index
+    });
+    //broadcast("update_gameui",{gameui: newGameUI});
 
 
     // setGroups(data.groups);

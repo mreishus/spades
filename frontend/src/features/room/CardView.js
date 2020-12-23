@@ -115,7 +115,7 @@ const CardComponent = React.memo(({
     // useEffect(() => {    
     //   if (inputCard) setCard(inputCard);
     // }, [inputCard]);
-    console.log('rendering',group.id,stackIndex,cardIndex, "comp");
+    //console.log('rendering',group.id,stackIndex,cardIndex, "comp");
 
     const handleMouseOver = (event) => {
         if (!isActive) {
@@ -132,11 +132,9 @@ const CardComponent = React.memo(({
     }
 
     const onClick = (event) => {
-        //console.log(gameUIView);
-        if (isClicked) setIsClicked(false);
-        else setIsClicked(true);
-        broadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
-        
+        //if (isClicked) setIsClicked(false);
+        //else setIsClicked(true);
+        //broadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
         return;
     }
 
@@ -171,72 +169,70 @@ const CardComponent = React.memo(({
     //console.log(card.id);
     //console.log('in');
     //console.log(group);
-    function handleMenuClick() {
-        console.log('menu clicked');
+    function handleMenuClick(e, data) {
+        console.log(data);
     }
     if (!inputCard) return <div></div>;
     return (
+        <div>
+            <ContextMenuTrigger id={inputCard.id}> 
+            <div 
+                key={inputCard.id}
+                style={{
+                    position: "absolute",
+                    background: group.type === "deck" ? `url(${getCardBackSRC(inputCard)}) no-repeat` : `url(${inputCard.src}) no-repeat`,
+                    backgroundSize: "contain",
+                    height: `${CARDSCALE/0.72}vw`,
+                    width: `${CARDSCALE}vw`,
+                    left: `${CARDSCALE/3*cardIndex}vw`,
+                    borderWidth: '2px',
+                    borderRadius: '6px',
+                    borderColor: isActive || isClicked ? 'yellow' : 'transparent',
+                    //transform: `rotate(${angles}deg)`,
+                    transform: `rotate(${inputCard.rotation}deg)`,
+                    zIndex: zIndex,
+                    cursor: "default",
+                    WebkitTransitionDuration: "0.1s",
+                    MozTransitionDuration: "0.1s",
+                    OTransitionDuration: "0.1s",
+                    transitionDuration: "0.1s",
+                    WebkitTransitionProperty: "-webkit-transform",
+                    MozTransitionProperty: "-moz-transform",
+                    OTransitionProperty: "-o-transform",
+                    transitionProperty: "transform",
+                    // WebkitBoxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
+                    // MozBoxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
+                    // boxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
+                }}
+                onClick={handleClick}
+                onDoubleClick={handleDoubleClick}
+                onMouseOver={event => handleMouseOver(event)}
+                onMouseLeave={event => handleMouseLeave(event)}
+            >
+                
+                <TokensView card={inputCard} isHighlighted={isActive || isClicked} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></TokensView>
+            </div>
+            </ContextMenuTrigger>
 
-                        <div>
-        <ContextMenuTrigger id={inputCard.id}> 
-
-        <div 
-            key={inputCard.id}
-            style={{
-                position: "absolute",
-                background: group.type === "deck" ? `url(${getCardBackSRC(inputCard)}) no-repeat` : `url(${inputCard.src}) no-repeat`,
-                backgroundSize: "contain",
-                height: `${CARDSCALE/0.72}vw`,
-                width: `${CARDSCALE}vw`,
-                left: `${CARDSCALE/3*cardIndex}vw`,
-                borderWidth: '2px',
-                borderRadius: '6px',
-                borderColor: isActive || isClicked ? 'yellow' : 'transparent',
-                //transform: `rotate(${angles}deg)`,
-                transform: `rotate(${inputCard.rotation}deg)`,
-                zIndex: zIndex,
-                cursor: "default",
-                WebkitTransitionDuration: "0.1s",
-                MozTransitionDuration: "0.1s",
-                OTransitionDuration: "0.1s",
-                transitionDuration: "0.1s",
-                WebkitTransitionProperty: "-webkit-transform",
-                MozTransitionProperty: "-moz-transform",
-                OTransitionProperty: "-o-transform",
-                transitionProperty: "transform",
-                // WebkitBoxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
-                // MozBoxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
-                // boxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
-            }}
-            onClick={handleClick}
-            onDoubleClick={handleDoubleClick}
-            onMouseOver={event => handleMouseOver(event)}
-            onMouseLeave={event => handleMouseLeave(event)}
-        >
-            
-            <TokensView card={inputCard} isHighlighted={isActive || isClicked} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></TokensView>
+            <ContextMenu id={inputCard.id} style={{zIndex:1e6}}>
+            {/* {stack.cards.map((card, cardIndex) => ( */}
+                <hr></hr>
+                {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{ option: 'detach', groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex }}>Detach</MenuItem>:null}
+                <MenuItem onClick={handleMenuClick} data={{ item: 'item 2' }}>Menu Item 2</MenuItem>
+                <SubMenu title='A SubMenu'>
+                    <MenuItem onClick={handleMenuClick} data={{ item: 'subitem 1' }}>SubItem 1</MenuItem>
+                    <SubMenu title='Another SubMenu'>
+                        <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 1' }}>SubSubItem 1</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 2' }}>SubSubItem 2</MenuItem>
+                    </SubMenu>
+                    <SubMenu title='Yet Another SubMenu'>
+                        <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 3' }}>SubSubItem 3</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 4' }}>SubSubItem 4</MenuItem>
+                    </SubMenu>
+                    <MenuItem onClick={handleMenuClick} data={{ item: 'subitem 2' }}>SubItem 2</MenuItem>
+                </SubMenu>
+            </ContextMenu>
         </div>
-        </ContextMenuTrigger>
-
-<ContextMenu id={inputCard.id} style={{zIndex:1e6}}>
-{/* {stack.cards.map((card, cardIndex) => ( */}
-    <hr></hr>
-    {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{ item: 'item 1' }}>Detach</MenuItem>:null}
-    <MenuItem onClick={handleMenuClick} data={{ item: 'item 2' }}>Menu Item 2</MenuItem>
-    <SubMenu title='A SubMenu'>
-        <MenuItem onClick={handleMenuClick} data={{ item: 'subitem 1' }}>SubItem 1</MenuItem>
-        <SubMenu title='Another SubMenu'>
-            <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 1' }}>SubSubItem 1</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 2' }}>SubSubItem 2</MenuItem>
-        </SubMenu>
-        <SubMenu title='Yet Another SubMenu'>
-            <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 3' }}>SubSubItem 3</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 4' }}>SubSubItem 4</MenuItem>
-        </SubMenu>
-        <MenuItem onClick={handleMenuClick} data={{ item: 'subitem 2' }}>SubItem 2</MenuItem>
-    </SubMenu>
-</ContextMenu>
-</div>
     )
 })
 
