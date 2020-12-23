@@ -170,7 +170,7 @@ const CardComponent = React.memo(({
     //console.log('in');
     //console.log(group);
     function handleMenuClick(e, data) {
-        console.log(data);
+        if (data.action === "detach") broadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
     }
     if (!inputCard) return <div></div>;
     return (
@@ -217,7 +217,7 @@ const CardComponent = React.memo(({
             <ContextMenu id={inputCard.id} style={{zIndex:1e6}}>
             {/* {stack.cards.map((card, cardIndex) => ( */}
                 <hr></hr>
-                {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{ option: 'detach', groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex }}>Detach</MenuItem>:null}
+                {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{ action: 'detach', groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex }}>Detach</MenuItem>:null}
                 <MenuItem onClick={handleMenuClick} data={{ item: 'item 2' }}>Menu Item 2</MenuItem>
                 <SubMenu title='A SubMenu'>
                     <MenuItem onClick={handleMenuClick} data={{ item: 'subitem 1' }}>SubItem 1</MenuItem>

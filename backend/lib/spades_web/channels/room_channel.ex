@@ -150,6 +150,23 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
+      "detach",
+      %{
+        "group_id" => group_id,
+        "stack_index" => stack_index,
+        "card_index" => card_index,
+      },
+      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+    ) do
+    GameUIServer.detach(room_slug, user_id, group_id, stack_index, card_index)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
     "toggle_exhaust",
     %{
       "group" => group,

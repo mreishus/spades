@@ -6,7 +6,7 @@ defmodule SpadesGame.GameUIServer do
   @timeout :timer.minutes(60)
 
   require Logger
-  alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry, Groups, User}
+  alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack}
   alias SpadesGame.{Game}
 
   @doc """
@@ -78,7 +78,7 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   update_groups/3: A player just moved a card.
   """
-  @spec update_groups(String.t(), integer,  Groups.t()):: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  @spec update_groups(String.t(), integer,  Groups.t()):: GameUI.t()
   def update_groups(game_name, user_id, groups) do
     IO.puts("game_ui_server: update_groups")
     GenServer.call(via_tuple(game_name), {:update_groups, user_id, groups})
@@ -87,34 +87,43 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   update_gameui/3: The game is updated.
   """
-  @spec update_gameui(String.t(), integer,  GameUI.t()):: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  @spec update_gameui(String.t(), integer,  GameUI.t()):: GameUI.t()
   def update_gameui(game_name, user_id, gameui) do
     IO.puts("game_ui_server: update_gameui")
     GenServer.call(via_tuple(game_name), {:update_gameui, user_id, gameui})
   end
 
   @doc """
-  move_stack/6: A player just moved a card.
+  move_stack/6: A player just moved a stack.
   """
-  @spec move_stack(String.t(), integer, String.t(), number, String.t(), number) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  @spec move_stack(String.t(), integer, String.t(), number, String.t(), number) :: GameUI.t()
   def move_stack(game_name, user_id, start_group_id, start_stack_index, end_group_id, end_stack_index) do
     IO.puts("game_ui_server: move_stack")
     GenServer.call(via_tuple(game_name), {:move_stack, user_id, start_group_id, start_stack_index, end_group_id, end_stack_index})
   end
 
   @doc """
-  update_card/6: A player just moved a card.
+  update_card/6: A player just updated a card.
   """
-  @spec update_card(String.t(), integer, Card.t(), String.t(), number, number) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  @spec update_card(String.t(), integer, Card.t(), String.t(), number, number) :: GameUI.t()
   def update_card(game_name, user_id, card, group_id, stack_index, card_index) do
     IO.puts("game_ui_server: update_card")
     GenServer.call(via_tuple(game_name), {:update_card, user_id, card, group_id, stack_index, card_index})
   end
 
   @doc """
+  detach/5: A player just detached a card.
+  """
+  @spec detach(String.t(), integer, String.t(), number, number) :: GameUI.t()
+  def detach(game_name, user_id, group_id, stack_index, card_index) do
+    IO.puts("game_ui_server: detach")
+    GenServer.call(via_tuple(game_name), {:detach, user_id, group_id, stack_index, card_index})
+  end
+
+  @doc """
   toggle_exhaust/5: A player just exhausted/unexhausted a card.
   """
-  @spec toggle_exhaust(String.t(), integer, Group.t(), Stack.t(), Card.t()) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
+  @spec toggle_exhaust(String.t(), integer, Group.t(), Stack.t(), Card.t()) :: GameUI.t()
   def toggle_exhaust(game_name, user_id, group, stack, card) do
     IO.puts("game_ui_server: toggle_exhaust")
     GenServer.call(via_tuple(game_name), {:toggle_exhaust, user_id, group, stack, card})
@@ -275,6 +284,32 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
+  def handle_call({:detach, user_id, group_id, stack_index, card_index}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: detach a")
+    IO.inspect("old stacks")
+    old_stacks = gameui["game"]["groups"][group_id]["stacks"]
+    IO.inspect("old stack")
+    old_stack = Enum.at(old_stacks, stack_index)
+    IO.inspect("old cards")
+    old_cards = old_stack["cards"]
+    IO.inspect(old_cards)
+    IO.inspect("old card")
+    old_card = Enum.at(old_cards, card_index)
+    IO.inspect(old_card)
+    IO.inspect("new cards")
+    IO.inspect(card_index)
+    # Delete old card
+    new_cards = List.delete_at(old_cards,card_index)
+    IO.inspect("new stack")
+    new_stack = put_in(old_stack["cards"],new_cards)
+    IO.inspect("new stacks")
+    new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
+    # Insert new card
+    new_stacks = List.insert_at(new_stacks,stack_index+1,Stack.stack_from_card(old_card))
+    # Put stacks into gameui
+    put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
+    |> save_and_reply()
+  end
 
   def handle_call({:toggle_exhaust, user_id, group, stack, card}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: toggle_exhaust a")
