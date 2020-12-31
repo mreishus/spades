@@ -114,7 +114,7 @@ export const Token = ({
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
             broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
-        }, 5000);
+        }, 500);
         
 
 

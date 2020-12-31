@@ -132,9 +132,7 @@ const CardComponent = React.memo(({
     }
 
     const onClick = (event) => {
-        //if (isClicked) setIsClicked(false);
-        //else setIsClicked(true);
-        //broadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
+        console.log(inputCard);
         return;
     }
 
@@ -158,7 +156,7 @@ const CardComponent = React.memo(({
         //console.log(groups[group.id].stacks[stackIndex]);
         //groups[group.id].stacks[stackIndex].cards[cardIndex] = card;
         broadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
-        forceUpdate();
+        //forceUpdate();
     }
 
     const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onClick, onDoubleClick);

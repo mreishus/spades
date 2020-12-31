@@ -144,19 +144,13 @@ defmodule SpadesGame.GameUI do
   # @spec seat_empty?(GameUI.t(), :player1 | :player2 | :player3 | :player4) :: boolean
   # defp seat_empty?(gameui, which), do: gameui.seats[which].sitting == nil
 
-  # @doc """
-  # leave/2: Userid just left the table.  If they were seated, mark
-  # their seat as vacant.
-  # """
-  # @spec leave(GameUI.t(), integer) :: GameUI.t()
-  # def leave(gameui, userid) do
-  #   seats =
-  #     for {k, v} <- gameui.seats,
-  #         into: %{},
-  #         do: {k, if(v.sitting == userid, do: GameUISeat.new_blank(), else: v)}
-
-  #   %{gameui | seats: seats}
-  # end
+  @doc """
+  leave/2: Userid just left the table.  For now, we do nothing.
+  """
+  @spec leave(GameUI.t(), integer) :: GameUI.t()
+  def leave(gameui, userid) do
+    gameui
+  end
 
   # @doc """
   # check_full_seats/1
