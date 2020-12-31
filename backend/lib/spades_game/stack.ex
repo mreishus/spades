@@ -22,6 +22,10 @@ defmodule SpadesGame.Stack do
     %{"id"=> Ecto.UUID.generate, "cards"=> [Card.new_test2()]}
   end
 
+  def new_testq() do
+    %{"id"=> Ecto.UUID.generate, "cards"=> [Card.new_testq()]}
+  end
+
   @spec stack_from_card(Card.t()) :: Map.t()
   def stack_from_card(card) do
     %{"id"=> Ecto.UUID.generate, "cards"=> [card]}

@@ -52,7 +52,7 @@ export default class StackView extends Component {
   render() {
     var handSpacing = 100*0.8*0.8*0.8/(this.props.group.stacks.length);
     if (handSpacing > CARDSCALE) handSpacing = CARDSCALE;
-    const stackWidth = this.props.group.type == "hand" ? handSpacing : CARDSCALE/0.75 + CARDSCALE/3*(this.props.stack.cards.length-1);
+    const stackWidth = this.props.group.type == "hand" ? handSpacing : CARDSCALE/0.72 + CARDSCALE/3*(this.props.stack.cards.length-1);
 
     return (
       <Container

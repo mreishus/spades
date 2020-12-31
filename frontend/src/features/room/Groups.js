@@ -302,12 +302,12 @@ export const Groups = ({
             }}
           >        
             <div style={{height: "33.3%"}}>
-              <GroupView group={groups['gSharedExtra1']} showTitle="false"></GroupView>
+              <GroupView group={groups['gSharedExtra1']} broadcast={broadcast} showTitle="false"></GroupView>
             </div>
             <div style={{height: "33.3%"}}>
-              <GroupView group={groups['gSharedExtra2']} showTitle="false"></GroupView></div>
+              <GroupView group={groups['gSharedExtra2']} broadcast={broadcast} showTitle="false"></GroupView></div>
             <div style={{height: "33.4%"}}>
-              <GroupView group={groups['gSharedExtra3']} showTitle="false"></GroupView></div>
+              <GroupView group={groups['gSharedExtra3']} broadcast={broadcast} showTitle="false"></GroupView></div>
           </div>
           <div className="text-center" onClick={() => toggleScratch()} style={{height: "3%"}}>
             <FontAwesomeIcon className="text-white" icon={showScratch ? faChevronDown : faChevronUp}/>

@@ -240,47 +240,53 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:move_stack, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index}, _from, gameui) do
-    IO.puts("game_ui_server: handle_call: update_gameui a")
+    IO.puts("game_ui_server: handle_call: move_stack a")
     old_orig_group = gameui["game"]["groups"][orig_group_id]
     old_orig_stacks = old_orig_group["stacks"]
     stack = Enum.at(old_orig_stacks,orig_stack_index)
-    new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
-    new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
+    if stack do
+      new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
+      new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
 
+      old_dest_group = gameui["game"]["groups"][dest_group_id]
+      old_dest_stacks = old_dest_group["stacks"]
+      new_dest_stacks = List.insert_at(old_dest_stacks,dest_stack_index,stack)
+      new_dest_group = put_in(old_dest_group["stacks"],new_dest_stacks)
 
-    old_dest_group = gameui["game"]["groups"][dest_group_id]
-    old_dest_stacks = old_dest_group["stacks"]
-    new_dest_stacks = List.insert_at(old_dest_stacks,dest_stack_index,stack)
-    new_dest_group = put_in(old_dest_group["stacks"],new_dest_stacks)
-
-
-    gameui_orig_removed = put_in(gameui["game"]["groups"][orig_group_id],new_orig_group)
-    put_in(gameui_orig_removed["game"]["groups"][dest_group_id],new_dest_group)
-    |> save_and_reply()
+      gameui_orig_removed = put_in(gameui["game"]["groups"][orig_group_id],new_orig_group)
+      put_in(gameui_orig_removed["game"]["groups"][dest_group_id],new_dest_group)
+      |> save_and_reply()
+    else
+      gameui
+      |> save_and_reply()
+    end
   end
 
 
-  def handle_call({:update_card, user_id, card, group_id, stack_index, card_index}, _from, gameui) do
+  def handle_call({:update_card, user_id, new_card, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_card a")
     IO.inspect("old stacks")
     old_stacks = gameui["game"]["groups"][group_id]["stacks"]
     IO.inspect("old stack")
-    old_stack = Enum.at(old_stacks, stack_index)
-    IO.inspect("old cards")
-    old_cards = old_stack["cards"]
-    IO.inspect(old_cards)
-    IO.inspect("old card")
-    old_card = Enum.at(old_cards, card_index)
-    IO.inspect(old_card)
-    IO.inspect("new cards")
-    IO.inspect(card_index)
-    new_cards = List.replace_at(old_cards,card_index,card)
-    IO.inspect("new stack")
-    new_stack = put_in(old_stack["cards"],new_cards)
-    IO.inspect("new stacks")
-    new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
-    IO.inspect("put_in")
-    put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
+    if old_stack = Enum.at(old_stacks, stack_index) do
+      IO.inspect("old cards")
+      old_cards = old_stack["cards"]
+      IO.inspect(old_cards)
+      IO.inspect("old card")
+      if old_card = Enum.at(old_cards, card_index) do
+        IO.inspect(old_card)
+        IO.inspect("new cards")
+        IO.inspect(card_index)
+        new_cards = List.replace_at(old_cards,card_index,new_card)
+        IO.inspect("new stack")
+        new_stack = put_in(old_stack["cards"],new_cards)
+        IO.inspect("new stacks")
+        new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
+        IO.inspect("put_in")
+        put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
+      end
+    end
+    gameui
     |> save_and_reply()
   end
 
@@ -289,25 +295,29 @@ defmodule SpadesGame.GameUIServer do
     IO.inspect("old stacks")
     old_stacks = gameui["game"]["groups"][group_id]["stacks"]
     IO.inspect("old stack")
-    old_stack = Enum.at(old_stacks, stack_index)
-    IO.inspect("old cards")
-    old_cards = old_stack["cards"]
-    IO.inspect(old_cards)
-    IO.inspect("old card")
-    old_card = Enum.at(old_cards, card_index)
-    IO.inspect(old_card)
-    IO.inspect("new cards")
-    IO.inspect(card_index)
-    # Delete old card
-    new_cards = List.delete_at(old_cards,card_index)
-    IO.inspect("new stack")
-    new_stack = put_in(old_stack["cards"],new_cards)
-    IO.inspect("new stacks")
-    new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
-    # Insert new card
-    new_stacks = List.insert_at(new_stacks,stack_index+1,Stack.stack_from_card(old_card))
-    # Put stacks into gameui
-    put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
+    if old_stack = Enum.at(old_stacks, stack_index) do
+      IO.inspect("old cards")
+      old_cards = old_stack["cards"]
+      IO.inspect(old_cards)
+      IO.inspect("old card")
+      if old_card = Enum.at(old_cards, card_index) do
+        IO.inspect(old_card)
+        IO.inspect("new cards")
+        IO.inspect(card_index)
+        # Delete old card
+        new_cards = List.delete_at(old_cards,card_index)
+        IO.inspect("new stack")
+        new_stack = put_in(old_stack["cards"],new_cards)
+        IO.inspect("new stacks")
+        new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
+        # Insert new card
+        new_stacks = List.insert_at(new_stacks,stack_index+1,Stack.stack_from_card(old_card))
+        # Put stacks into gameui
+        put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
+        |> save_and_reply()
+      end
+    end
+    gameui
     |> save_and_reply()
   end
 
