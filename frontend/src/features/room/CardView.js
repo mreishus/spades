@@ -238,6 +238,7 @@ const CardComponent = React.memo(({
 class CardClass extends Component {
 
     shouldComponentUpdate = (nextProps, nextState) => {
+        return true; // XYZ
         if ( 
             (JSON.stringify(nextProps.inputCard)!==JSON.stringify(this.props.inputCard)) ||
             (nextProps.groupID!==this.props.groupID) ||
