@@ -284,10 +284,15 @@ defmodule SpadesGame.GameUIServer do
         new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
         IO.inspect("put_in")
         put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
+        |> save_and_reply()
+      else
+        gameui
+        |> save_and_reply()
       end
+    else
+      gameui
+      |> save_and_reply()
     end
-    gameui
-    |> save_and_reply()
   end
 
   def handle_call({:detach, user_id, group_id, stack_index, card_index}, _from, gameui) do
@@ -315,10 +320,14 @@ defmodule SpadesGame.GameUIServer do
         # Put stacks into gameui
         put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
         |> save_and_reply()
+      else
+        gameui
+        |> save_and_reply()
       end
+    else
+      gameui
+      |> save_and_reply()
     end
-    gameui
-    |> save_and_reply()
   end
 
   def handle_call({:toggle_exhaust, user_id, group, stack, card}, _from, gameui) do
