@@ -156,7 +156,7 @@ const CardComponent = React.memo(({
         //console.log(groups[group.id].stacks[stackIndex]);
         //groups[group.id].stacks[stackIndex].cards[cardIndex] = card;
         broadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
-        //forceUpdate();
+        forceUpdate();
     }
 
     const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onClick, onDoubleClick);
@@ -238,7 +238,7 @@ const CardComponent = React.memo(({
 class CardClass extends Component {
 
     shouldComponentUpdate = (nextProps, nextState) => {
-        return true; // XYZ
+        
         if ( 
             (JSON.stringify(nextProps.inputCard)!==JSON.stringify(this.props.inputCard)) ||
             (nextProps.groupID!==this.props.groupID) ||

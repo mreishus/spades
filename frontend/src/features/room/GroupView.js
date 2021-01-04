@@ -21,24 +21,23 @@ export default class GroupView extends Component {
   
 
   shouldComponentUpdate = (nextProps, nextState) => {
-    return true; // XYZ
         // if (nextProps.group.id == "gSharedStaging") {
         //   console.log("prev",JSON.stringify(this.props.group.stacks[0].cards[0].exhausted),JSON.stringify(this.props.group.stacks[1].cards[0].exhausted))
         //   console.log("next",JSON.stringify(nextProps.group.stacks[0].cards[0].exhausted),JSON.stringify(nextProps.group.stacks[1].cards[0].exhausted))
         // }
               //if (nextProps.group.updated === false) {
-    if (JSON.stringify(nextProps.group)===JSON.stringify(this.props.group)) {
+      if (JSON.stringify(nextProps.group)===JSON.stringify(this.props.group)) {
 
-      return false;
+        return false;
 //      } else if {
 
-    } else {
-      // console.log('this.props.group');
-      // console.log(this.props.group);
-      // console.log('nextProps.group');
-      // console.log(nextProps.group);
-      return true;
-    }
+      } else {
+        // console.log('this.props.group');
+        // console.log(this.props.group);
+        // console.log('nextProps.group');
+        // console.log(nextProps.group);
+        return true;
+      }
   };
 
   render() {
