@@ -245,17 +245,20 @@ defmodule SpadesGame.GameUIServer do
     old_orig_stacks = old_orig_group["stacks"]
     stack = Enum.at(old_orig_stacks,orig_stack_index)
     if stack do
-      new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
-      new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
+        new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
+        new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
+        old_dest_group =  if orig_group_id == dest_group_id do
+                            new_orig_group
+                          else
+                            gameui["game"]["groups"][dest_group_id]
+                          end
+        old_dest_stacks = old_dest_group["stacks"]
+        new_dest_stacks = List.insert_at(old_dest_stacks,dest_stack_index,stack)
+        new_dest_group = put_in(old_dest_group["stacks"],new_dest_stacks)
 
-      old_dest_group = gameui["game"]["groups"][dest_group_id]
-      old_dest_stacks = old_dest_group["stacks"]
-      new_dest_stacks = List.insert_at(old_dest_stacks,dest_stack_index,stack)
-      new_dest_group = put_in(old_dest_group["stacks"],new_dest_stacks)
-
-      gameui_orig_removed = put_in(gameui["game"]["groups"][orig_group_id],new_orig_group)
-      put_in(gameui_orig_removed["game"]["groups"][dest_group_id],new_dest_group)
-      |> save_and_reply()
+        gameui_orig_removed = put_in(gameui["game"]["groups"][orig_group_id],new_orig_group)
+        put_in(gameui_orig_removed["game"]["groups"][dest_group_id],new_dest_group)
+        |> save_and_reply()
     else
       gameui
       |> save_and_reply()
