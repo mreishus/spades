@@ -2,6 +2,7 @@ import React, { useState, useCallback } from "react";
 import RoomGame from "./RoomGame";
 import GameUIContext from "../../contexts/GameUIContext";
 import {KeypressProvider} from '../../contexts/KeypressContext'
+import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
 import useChannel from "../../hooks/useChannel";
 import { GameUI } from "elixir-backend";
 
@@ -35,7 +36,9 @@ export const Room: React.FC<Props> = ({ slug }) => {
       <KeypressProvider value={[""]}>
         {gameUI != null && (
           <GameUIContext.Provider value={{gameUI, setGameUI}}>
-            <RoomGame broadcast={broadcast}/>
+            <ActiveCardProvider value={null}>
+              <RoomGame broadcast={broadcast}/>
+            </ActiveCardProvider>
          </GameUIContext.Provider>
         )}
         </KeypressProvider>

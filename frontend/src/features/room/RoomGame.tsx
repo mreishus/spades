@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import { Groups } from "./Groups";
-import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
+import { useActiveCard } from "../../contexts/ActiveCardContext";
 import {useSetKeypress} from "../../contexts/KeypressContext";
 
 interface Props {
@@ -12,34 +12,25 @@ const RoomGame: React.FC<Props> = ({ broadcast }) => {
   //const gameUIView = React.useContext(GameUIViewContext);
   //if (gameUIView) broadcast("update_groups",{groups: gameUIView.game_ui.game.groups});
   const setKeypress = useSetKeypress();
+  const activeCard = useActiveCard();
+  console.log("RoomGame activeCard",activeCard);
 
-  useEffect(() => {
-
-    const onKeyDown = (event: any) => {
+  const onKeyDown = (event: any) => {
       console.log(event.key);
       setKeypress([event.key]);
-    }
-
-    const onKeyUp = (event: any) => {
+      console.log(activeCard);
+  }
+  const onKeyUp = (event: any) => {
       console.log(event.key);
       setKeypress([""]);
-    }
+  }
+  document.addEventListener('keydown', onKeyDown);
+  document.addEventListener('keyup', onKeyUp);
 
-    document.addEventListener('keydown', onKeyDown);
-    document.addEventListener('keyup', onKeyUp);
-
-    return () => {
-        document.removeEventListener('keydown', onKeyDown);
-        document.removeEventListener('keyup', onKeyUp);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
   return (
-    <ActiveCardProvider value={null}>
       <Groups 
         broadcast={broadcast}
       />
-    </ActiveCardProvider>
     
   )
 }   

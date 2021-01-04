@@ -121,6 +121,7 @@ const CardComponent = React.memo(({
         if (!isActive) {
             setIsActive(true);
             setActiveCard(inputCard);
+            console.log('CardView activeCard',inputCard)
         }
     }
 
