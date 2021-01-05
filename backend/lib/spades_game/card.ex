@@ -7,11 +7,6 @@ defmodule SpadesGame.Card do
   alias SpadesGame.{Card,Tokens}
 
   @type t :: Map.t()
-  @type suit :: :h | :d | :c | :s
-  @type rank :: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14
-
-  def suits(), do: [:h, :d, :c, :s]
-  def ranks(), do: Enum.to_list(2..14)
 
   @spec new_test1() :: Map.t()
   def new_test1() do
@@ -20,8 +15,6 @@ defmodule SpadesGame.Card do
       "width"=> 1,
       "height"=> 1.39,
       "exhausted"=> false,
-      "rank"=> 9,
-      "suit"=> :h,
       "src"=> "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Shadow-and-Flame/Elrond.jpg",
       "srcBack"=> "",
       "deckType"=> "Player",
@@ -35,8 +28,6 @@ defmodule SpadesGame.Card do
       "width"=> 1,
       "height"=> 1.39,
       "exhausted"=> false,
-      "rank"=> 9,
-      "suit"=> :h,
       "src"=> "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Shadow-and-Flame/Vilya.jpg",
       "srcBack"=> "",
       "deckType"=> "Player",
@@ -50,8 +41,6 @@ defmodule SpadesGame.Card do
       "width"=> 1,
       "height"=> 1.39,
       "exhausted"=> false,
-      "rank"=> 9,
-      "suit"=> :h,
       "src"=> "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Shadow-and-Flame/Miruvor.jpg",
       "srcBack"=> "",
       "deckType"=> "Player",
@@ -65,8 +54,6 @@ defmodule SpadesGame.Card do
       "width"=> 1.39,
       "height"=> 1,
       "exhausted"=> false,
-      "rank"=> 9,
-      "suit"=> :h,
       "src"=> "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/Flies-and-Spiders-1A.jpg",
       "srcBack"=> "https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Core-Set/Flies-and-Spiders-1B.jpg",
       "deckType"=> "Quest",
@@ -74,18 +61,4 @@ defmodule SpadesGame.Card do
     }
   end
 
-  @spec from_map(%{}) :: Map.t()
-  def from_map(%{"rank" => rank, "suit" => "c"}),
-    do: %{"rank"=> rank, "suit"=> :c}
-
-  def from_map(%{"rank" => rank, "suit" => "s"}),
-    do: %{"rank"=> rank, "suit"=> :s}
-
-  def from_map(%{"rank" => rank, "suit" => "d"}),
-    do: %{"rank"=> rank, "suit"=> :d}
-
-  def from_map(%{"rank" => rank, "suit" => "h"}),
-    do: %{"rank"=> rank, "suit"=> :h}
-
-  def from_map(m), do: m
 end

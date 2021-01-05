@@ -11,14 +11,6 @@ const suitValues = {
 };
 
 const handSort = (a: Card, b: Card) => {
-  const aVal = suitValues[a.suit] + a.rank;
-  const bVal = suitValues[b.suit] + b.rank;
-  if (aVal < bVal) {
-    return -1;
-  }
-  if (aVal > bVal) {
-    return 1;
-  }
   return 0;
 };
 
@@ -27,7 +19,7 @@ interface Props {
   broadcast: (eventName: string, payload: object) => void;
 }
 
-const cardToString = (card: Card) => card.rank.toString() + card.suit;
+const cardToString = "";
 
 const minWSix = {
   minWidth: "6rem",
