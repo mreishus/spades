@@ -5,6 +5,7 @@ alias Spades.Users.User
 
 alias SpadesGame.{
   Card,
+  CardFace,
   Group,
   Groups,
   Deck,
