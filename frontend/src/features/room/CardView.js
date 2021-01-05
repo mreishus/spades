@@ -181,8 +181,7 @@ const CardComponent = React.memo(({
                 key={inputCard.id}
                 style={{
                     position: "absolute",
-                    background: `url(${currentFace.src}) no-repeat`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
-                    backgroundSize: "contain",
+                    background: `url(${currentFace.src}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
