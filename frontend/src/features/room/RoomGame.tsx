@@ -102,11 +102,8 @@ const RoomGame: React.FC<Props> = ({ broadcast }) => {
               
               var newCard = activeCard.card;
               var newTokens = newCard.tokens;
-              //console.log('delayed list',newList);
-              //console.log('delayed card',newCard);
-              //console.log('delayed tokens',newTokens);
-              console.log('Looping over',newList);
               newList.forEach( k => {
+                // Check for token updates
                 if (keyTokenMap[k] != undefined) {
                   const tokenType = keyTokenMap[k][0];
                   const tokenIncrement = keyTokenMap[k][1];
@@ -115,12 +112,16 @@ const RoomGame: React.FC<Props> = ({ broadcast }) => {
                     [tokenType]: newTokens[tokenType]+tokenIncrement,
                   }
                 }
-                console.log(newTokens);
+                // Flip card
+                if (k === "f") {
+                  if (newCard.currentSide === "A") {
+                    newCard = {...newCard, currentSide: "B"}
+                  } else {
+                    newCard = {...newCard, currentSide: "A"}
+                  }
+                }
               });
-              newCard = {
-              ...newCard,
-                tokens: newTokens,
-              }
+              newCard = {...newCard, tokens: newTokens}
               setActiveCard({card: newCard, groupID: activeCard.groupID, stackIndex: activeCard.stackIndex, cardIndex: activeCard.cardIndex});
               broadcast("update_card", {card: newCard, group_id: activeCard.groupID, stack_index: activeCard.stackIndex, card_index: activeCard.cardIndex});
               setKeyDownList([]);
