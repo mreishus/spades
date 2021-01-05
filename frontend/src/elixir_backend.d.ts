@@ -22,8 +22,6 @@ declare module "elixir-backend" {
 
   export declare class Card {
     public id: number;
-    public rank: number;
-    public suit: "s" | "c" | "h" | "d";
     public src: string;
     public rotation: number;
     public aspectRatio: number;
