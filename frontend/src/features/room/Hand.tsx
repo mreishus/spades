@@ -33,7 +33,7 @@ export const Hand: React.FC<Props> = ({ cards, broadcast }) => {
   return (
     <div className="flex justify-center" style={minWSix}>
       {cards.map((card) => {
-        let cardStr = cardToString(card);
+        let cardStr = cardToString;
 
         return (
           <img

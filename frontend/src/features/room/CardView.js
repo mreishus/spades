@@ -172,6 +172,7 @@ const CardComponent = React.memo(({
         if (data.action === "detach") broadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
     }
     if (!inputCard) return <div></div>;
+    const currentFace = inputCard.sides[inputCard.currentSide];
     return (
         <div>
             <ContextMenuTrigger id={inputCard.id}> 
@@ -180,12 +181,12 @@ const CardComponent = React.memo(({
                 key={inputCard.id}
                 style={{
                     position: "absolute",
-                    background: group.type === "deck" ? `url(${getCardBackSRC(inputCard)}) no-repeat` : `url(${inputCard.src}) no-repeat`,
+                    background: `url(${currentFace.src}) no-repeat`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
                     backgroundSize: "contain",
-                    height: `${CARDSCALE*inputCard.height}vw`,
-                    width: `${CARDSCALE*inputCard.width}vw`,
-                    left: `${0.2 + (1.39-inputCard.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
-                    top: `${0.2 + (1.39-inputCard.height)*CARDSCALE/2}vw`,
+                    height: `${CARDSCALE*currentFace.height}vw`,
+                    width: `${CARDSCALE*currentFace.width}vw`,
+                    left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
+                    top: `${0.2 + (1.39-currentFace.height)*CARDSCALE/2}vw`,
                     borderWidth: '1px',
                     borderRadius: '6px',
                     borderColor: isActive || isClicked ? 'yellow' : 'transparent',
