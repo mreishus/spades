@@ -14,7 +14,7 @@ defmodule SpadesGame.Card do
       "rotation"=> 0,
       "exhausted"=> false,
       "deckType"=> "Player",
-      "tokens"=> Tokens.new(),
+      "tokens"=> Tokens.test(),
       "currentSide"=> "A",
       "sides"=> %{
         "A"=>CardFace.test1(),
@@ -28,7 +28,7 @@ defmodule SpadesGame.Card do
       "rotation"=> 0,
       "exhausted"=> false,
       "deckType"=> "Player",
-      "tokens"=>Tokens.new(),
+      "tokens"=>Tokens.test(),
       "currentSide"=> "A",
       "sides"=> %{
         "A"=>CardFace.test2(),
@@ -42,7 +42,7 @@ defmodule SpadesGame.Card do
       "rotation"=> 90,
       "exhausted"=> false,
       "deckType"=> "Player",
-      "tokens"=>Tokens.new(),
+      "tokens"=>Tokens.test(),
       "currentSide"=> "A",
       "sides"=> %{
         "A"=>CardFace.test3(),
@@ -56,7 +56,7 @@ defmodule SpadesGame.Card do
       "rotation"=> 0,
       "exhausted"=> false,
       "deckType"=> "Quest",
-      "tokens"=>Tokens.new(),
+      "tokens"=>Tokens.test(),
       "currentSide"=> "A",
       "sides"=> %{
         "A"=>CardFace.test_quest_A(),

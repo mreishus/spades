@@ -6,7 +6,7 @@ defmodule SpadesGame.GameUIServer do
   @timeout :timer.minutes(60)
 
   require Logger
-  alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack}
+  alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack, Tokens}
   alias SpadesGame.{Game}
 
   @doc """
@@ -16,7 +16,6 @@ defmodule SpadesGame.GameUIServer do
   def start_link(game_name, user, %GameOptions{} = options) do
     IO.puts("gameuiserver: start_link a")
     a=GenServer.start_link(__MODULE__, {game_name, user, options}, name: via_tuple(game_name))
-    IO.inspect(a)
     IO.puts("gameuiserver: start_link b")
   end
 
@@ -42,12 +41,7 @@ defmodule SpadesGame.GameUIServer do
   @spec state(String.t()) :: GameUI.t() | nil
   def state(game_name) do
     IO.puts("getting state a")
-    IO.inspect(game_name)
-    IO.puts("getting state b")
-    IO.inspect(gameui_pid(game_name))
-    IO.puts("getting state c")
     IO.inspect(GenServer.call(via_tuple(game_name), :state))
-    IO.puts("getting state d")
     case gameui_pid(game_name) do
       nil -> nil
       _ -> GenServer.call(via_tuple(game_name), :state)
@@ -178,7 +172,6 @@ defmodule SpadesGame.GameUIServer do
 
   def init({game_name, user, options = %GameOptions{}}) do
     IO.puts("game_ui_server init a")
-    IO.inspect(game_name)
     gameui =
       case :ets.lookup(:game_uis, game_name) do
         [] ->
@@ -254,10 +247,21 @@ defmodule SpadesGame.GameUIServer do
                           end
         old_dest_stacks = old_dest_group["stacks"]
         new_dest_stacks = if old_dest_group["type"] == "deck" do
-                            stack_list_to_insert = Enum.map(stack["cards"], fn card -> Stack.stack_from_card(card) end)
-                            new_dest_stacks = List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
+                            stack_list_to_insert = Enum.map(stack["cards"], fn card ->
+                              card_B = Map.put(card, "currentSide", "B")
+                              card_no_tokens = Map.put(card_B, "tokens", Tokens.new())
+                              Stack.stack_from_card(card_no_tokens)
+                            end)
+                            List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
                           else
-                            new_dest_stacks = List.insert_at(old_dest_stacks,dest_stack_index,stack)
+                            if old_orig_group["type"] == "deck" and old_dest_group["type"] != "deck" do
+                              card = Enum.at(stack["cards"],0)
+                              card_flipped = Map.put(card,"currentSide","A")
+                              stack_flipped = Map.put(stack,"cards",[card_flipped])
+                              List.insert_at(old_dest_stacks,dest_stack_index,stack_flipped)
+                            else
+                              List.insert_at(old_dest_stacks,dest_stack_index,stack)
+                            end
                           end
         new_dest_group = put_in(old_dest_group["stacks"],new_dest_stacks)
         gameui_orig_removed = put_in(gameui["game"]["groups"][orig_group_id],new_orig_group)
@@ -272,24 +276,13 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:update_card, user_id, new_card, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_card a")
-    IO.inspect("old stacks")
     old_stacks = gameui["game"]["groups"][group_id]["stacks"]
-    IO.inspect("old stack")
     if old_stack = Enum.at(old_stacks, stack_index) do
-      IO.inspect("old cards")
       old_cards = old_stack["cards"]
-      IO.inspect(old_cards)
-      IO.inspect("old card")
       if old_card = Enum.at(old_cards, card_index) do
-        IO.inspect(old_card)
-        IO.inspect("new cards")
-        IO.inspect(card_index)
         new_cards = List.replace_at(old_cards,card_index,new_card)
-        IO.inspect("new stack")
         new_stack = put_in(old_stack["cards"],new_cards)
-        IO.inspect("new stacks")
         new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
-        IO.inspect("put_in")
         put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
         |> save_and_reply()
       else
@@ -304,23 +297,13 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:detach, user_id, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: detach a")
-    IO.inspect("old stacks")
     old_stacks = gameui["game"]["groups"][group_id]["stacks"]
-    IO.inspect("old stack")
     if old_stack = Enum.at(old_stacks, stack_index) do
-      IO.inspect("old cards")
       old_cards = old_stack["cards"]
-      IO.inspect(old_cards)
-      IO.inspect("old card")
       if old_card = Enum.at(old_cards, card_index) do
-        IO.inspect(old_card)
-        IO.inspect("new cards")
-        IO.inspect(card_index)
         # Delete old card
         new_cards = List.delete_at(old_cards,card_index)
-        IO.inspect("new stack")
         new_stack = put_in(old_stack["cards"],new_cards)
-        IO.inspect("new stacks")
         new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
         # Insert new card
         new_stacks = List.insert_at(new_stacks,stack_index+1,Stack.stack_from_card(old_card))
@@ -389,7 +372,6 @@ defmodule SpadesGame.GameUIServer do
     end)
 
     IO.puts("game_ui_server: save_and_reply c")
-    IO.inspect(new_gameui)
     {:reply, new_gameui, new_gameui, timeout(new_gameui)}
   end
 
