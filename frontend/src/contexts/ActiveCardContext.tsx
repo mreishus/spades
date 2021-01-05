@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
-import { Card } from "elixir-backend";
 
 
-const ActiveCardContext = React.createContext<Card | null>(null)
+
+const ActiveCardContext = React.createContext<any | null>(null)
 const SetActiveCardContext = React.createContext<any | null>(null)
 
 
 function ActiveCardProvider({children} : any) {
-  const [activeCard, setActiveCard] = useState<Card | null>(null);
+  const [activeCard, setActiveCard] = useState<any | null>(null);
   return (
     <ActiveCardContext.Provider value={activeCard}>
       <SetActiveCardContext.Provider value={setActiveCard}>

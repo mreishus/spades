@@ -31,6 +31,13 @@ declare module "elixir-backend" {
     public tokens: Tokens;
   }
 
+  export declare class CardAndLoc {
+    card: Card;
+    groupID: String;
+    stackIndex: number;
+    cardIndex: number;
+  }
+
   export declare class Tokens {
     public resource: number;
     public progress: number;

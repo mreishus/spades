@@ -120,7 +120,7 @@ const CardComponent = React.memo(({
     const handleMouseOver = (event) => {
         if (!isActive) {
             setIsActive(true);
-            setActiveCard(inputCard);
+            setActiveCard({card: inputCard, groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex});
             console.log('CardView activeCard',inputCard)
         }
     }
@@ -176,6 +176,7 @@ const CardComponent = React.memo(({
         <div>
             <ContextMenuTrigger id={inputCard.id}> 
             <div 
+                className={isActive ? 'isActive' : ''}
                 key={inputCard.id}
                 style={{
                     position: "absolute",
