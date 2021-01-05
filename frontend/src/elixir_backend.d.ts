@@ -20,13 +20,21 @@ declare module "elixir-backend" {
 
   }
 
+  // One side of a card
+  export declare class CardFace {
+    public src;
+    public width: number;
+    public height: number;
+  }
+
   export declare class Card {
     public id: number;
-    public src: string;
     public rotation: number;
-    public aspectRatio: number;
     public exhausted: boolean;
     public tokens: Tokens;
+
+    public CurrentSide: string;
+    public Sides: { [id: string] : CardFace; };
   }
 
   export declare class CardAndLoc {
