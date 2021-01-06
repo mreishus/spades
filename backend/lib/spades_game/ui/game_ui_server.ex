@@ -106,7 +106,7 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  increment_token/6: A player just incremented a token.
+  increment_token/7: A player just incremented a token.
   """
   @spec increment_token(String.t(), integer, String.t(), number, number, String.t(), number) :: GameUI.t()
   def increment_token(game_name, user_id, group_id, stack_index, card_index, token_type, increment) do
@@ -284,71 +284,33 @@ defmodule SpadesGame.GameUIServer do
 
 
   def handle_call({:update_card, user_id, new_card, group_id, stack_index, card_index}, _from, gameui) do
-    IO.puts("game_ui_server: handle_call: update_card a")
-    old_stacks = gameui["game"]["groups"][group_id]["stacks"]
-    if old_stack = Enum.at(old_stacks, stack_index) do
-      old_cards = old_stack["cards"]
-      if old_card = Enum.at(old_cards, card_index) do
-        new_cards = List.replace_at(old_cards,card_index,new_card)
-        new_stack = put_in(old_stack["cards"],new_cards)
-        new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
-        put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
-        |> save_and_reply()
-      else
-        gameui
-        |> save_and_reply()
-      end
-    else
-      gameui
-      |> save_and_reply()
-    end
+    GameUI.update_card(gameui, group_id, stack_index, card_index, new_card)
+    |> save_and_reply()
   end
 
   def handle_call({:increment_token, user_id, group_id, stack_index, card_index, token_type, increment}, _from, gameui) do
-    IO.puts("game_ui_server: handle_call: increment_token a")
-    old_stacks = gameui["game"]["groups"][group_id]["stacks"]
-    if old_stack = Enum.at(old_stacks, stack_index) do
-      old_cards = old_stack["cards"]
-      if old_card = Enum.at(old_cards, card_index) do
-        new_card = put_in(old_card["tokens"][token_type],old_card["tokens"][token_type]+increment)
-        new_cards = List.replace_at(old_cards,card_index,new_card)
-        new_stack = put_in(old_stack["cards"],new_cards)
-        new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
-        put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
-        |> save_and_reply()
-      else
-        gameui
-        |> save_and_reply()
-      end
-    else
-      gameui
-      |> save_and_reply()
-    end
+    old_token = GameUI.get_token(gameui, group_id, stack_index, card_index, token_type)
+    GameUI.update_token(gameui, group_id, stack_index, card_index, token_type, old_token+increment)
+    |> save_and_reply()
   end
 
   def handle_call({:detach, user_id, group_id, stack_index, card_index}, _from, gameui) do
-    IO.puts("game_ui_server: handle_call: detach a")
-    old_stacks = gameui["game"]["groups"][group_id]["stacks"]
-    if old_stack = Enum.at(old_stacks, stack_index) do
-      old_cards = old_stack["cards"]
-      if old_card = Enum.at(old_cards, card_index) do
-        # Delete old card
-        new_cards = List.delete_at(old_cards,card_index)
-        new_stack = put_in(old_stack["cards"],new_cards)
-        new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
-        # Insert new card
-        new_stacks = List.insert_at(new_stacks,stack_index+1,Stack.stack_from_card(old_card))
-        # Put stacks into gameui
-        put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
-        |> save_and_reply()
-      else
-        gameui
-        |> save_and_reply()
-      end
-    else
-      gameui
-      |> save_and_reply()
-    end
+    old_stacks = GameUI.get_stacks(gameui, group_id)
+    old_stack = GameUI.get_stack(gameui, group_id, stack_index)
+    old_cards = GameUI.get_cards(gameui, group_id, stack_index)
+    old_card = GameUI.get_card(gameui, group_id, stack_index, card_index)
+
+    # Delete old card
+    new_cards = List.delete_at(old_cards,card_index)
+    new_stack = put_in(old_stack["cards"],new_cards)
+    new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
+
+    # Insert new card
+    new_stacks = List.insert_at(new_stacks,stack_index+1,Stack.stack_from_card(old_card))
+
+    # Put stacks into gameui
+    GameUI.update_stacks(gameui, group_id, new_stacks)
+    |> save_and_reply()
   end
 
   def handle_call({:toggle_exhaust, user_id, group, stack, card}, _from, gameui) do

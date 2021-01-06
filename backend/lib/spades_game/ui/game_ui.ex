@@ -32,6 +32,72 @@ defmodule SpadesGame.GameUI do
     }
   end
 
+  def get_stacks(gameui,group_id) do
+    gameui["game"]["groups"][group_id]["stacks"]
+  end
+
+  def get_stack(gameui, group_id, stack_index) do
+    stacks = get_stacks(gameui, group_id)
+    Enum.at(stacks, stack_index)
+  end
+
+  def get_cards(gameui, group_id, stack_index) do
+    get_stack(gameui, group_id, stack_index)["cards"]
+  end
+
+  def get_card(gameui, group_id, stack_index, card_index) do
+    cards = get_cards(gameui, group_id, stack_index)
+    Enum.at(cards, card_index)
+  end
+
+  def get_tokens(gameui, group_id, stack_index, card_index) do
+    get_card(gameui, group_id, stack_index, card_index)["tokens"]
+  end
+
+  def get_token(gameui, group_id, stack_index, card_index, token_type) do
+    get_tokens(gameui, group_id, stack_index, card_index)[token_type]
+  end
+
+  def update_stacks(gameui, group_id, new_stacks) do
+    put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
+  end
+
+  def update_stack(gameui, group_id, stack_index, new_stack) do
+    old_stacks = get_stacks(gameui, group_id)
+    new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
+    update_stacks(gameui, group_id, new_stacks)
+  end
+
+  def update_cards(gameui, group_id, stack_index, new_cards) do
+    old_stack = get_stack(gameui, group_id, stack_index)
+    new_stack = put_in(old_stack["cards"],new_cards)
+    update_stack(gameui, group_id, stack_index, new_stack)
+  end
+
+  def update_card(gameui, group_id, stack_index, card_index, new_card) do
+    old_cards = get_cards(gameui, group_id, stack_index)
+    new_cards = List.replace_at(old_cards,card_index,new_card)
+    update_cards(gameui, group_id, stack_index, new_cards)
+  end
+
+  def update_tokens(gameui, group_id, stack_index, card_index, new_tokens) do
+    old_card = get_card(gameui, group_id, stack_index, card_index)
+    new_card = put_in(old_card["tokens"],new_tokens)
+    update_card(gameui, group_id, stack_index, card_index, new_card)
+  end
+
+  def update_token(gameui, group_id, stack_index, card_index, token_type, new_value) do
+    IO.puts("a")
+    old_tokens = get_tokens(gameui, group_id, stack_index, card_index)
+    IO.puts("b")
+    IO.inspect(old_tokens)
+    new_tokens = put_in(old_tokens[token_type],new_value)
+    IO.puts("c")
+    IO.inspect(new_tokens)
+    update_tokens(gameui, group_id, stack_index, card_index, new_tokens)
+  end
+
+
   # # @doc """
   # # censor_hands/1: Return a version of GameUI with all hands hidden.
   # # """
@@ -63,7 +129,7 @@ defmodule SpadesGame.GameUI do
 
   # @doc """
   # sit/3: User is attempting to sit in a seat.
-  # Let them do it if no one is in the seat, and they are not
+  # Let them do it if vno one is in the seat, and they are not
   # in any other seats.  Otherwise return the game unchanged.
   # --> sit(gameui, userid, which_seat)
   # """
