@@ -150,6 +150,25 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
+      "increment_token",
+      %{
+        "group_id" => group_id,
+        "stack_index" => stack_index,
+        "card_index" => card_index,
+        "token_type" => token_type,
+        "increment" => increment,
+      },
+      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+    ) do
+    GameUIServer.increment_token(room_slug, user_id, group_id, stack_index, card_index, token_type, increment)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
       "detach",
       %{
         "group_id" => group_id,

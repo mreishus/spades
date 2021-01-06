@@ -635,7 +635,6 @@ defmodule SpadesUtil.NameGenerator do
       consecutive
       consensual
       consenting
-      conservative
       considerable
       considerate
       consistent
@@ -2197,7 +2196,6 @@ defmodule SpadesUtil.NameGenerator do
       level
       liable
       libelous
-      liberal
       licensed
       life
       lifeless
@@ -3999,7 +3997,6 @@ defmodule SpadesUtil.NameGenerator do
       ubiquitous
       ugly
       ultimate
-      ultraconservative
       ultrasensitive
       ultrasonic
       ultraviolet
@@ -5592,8 +5589,6 @@ defmodule SpadesUtil.NameGenerator do
       channel
       chaos
       chap
-      chapel
-      chaplain
       chapter
       character
       characteristic
@@ -5609,7 +5604,6 @@ defmodule SpadesUtil.NameGenerator do
       charter
       chasm
       chassis
-      chastity
       chasuble
       chateau
       chatter
@@ -5910,7 +5904,6 @@ defmodule SpadesUtil.NameGenerator do
       conformation
       confusion
       conga
-      congo
       congregation
       congress
       congressman
@@ -5924,7 +5917,6 @@ defmodule SpadesUtil.NameGenerator do
       consent
       consequence
       conservation
-      conservative
       consideration
       consignment
       consist
@@ -6244,7 +6236,6 @@ defmodule SpadesUtil.NameGenerator do
       delivery
       demand
       democracy
-      democrat
       demon
       demur
       denim
@@ -8305,7 +8296,6 @@ defmodule SpadesUtil.NameGenerator do
       monitor
       monitoring
       monk
-      monkey
       monocle
       monopoly
       monotheism
@@ -9373,7 +9363,6 @@ defmodule SpadesUtil.NameGenerator do
       representative
       reprocessing
       republic
-      republican
       reputation
       request
       requirement

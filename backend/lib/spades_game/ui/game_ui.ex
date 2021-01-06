@@ -44,45 +44,6 @@ defmodule SpadesGame.GameUI do
   # #   |> put_in([:game, :player4, :hand], [])
   # # end
 
-  # @doc """
-  # update_groups/3: A player moves a card on the table.
-  # """
-  # @spec update_groups(GameUI.t(), number, Groups.t()) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
-  # def update_groups(game_ui, user_id, groups) do
-  #   %{game_ui |
-  #     groups: groups
-  #   }
-  # end
-
-  # @doc """
-  # update_card/6: A player moves a card on the table.
-  # """
-  # @spec update_card(GameUI.t(), number, Card.t(), String.t(), number, number) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
-  # def update_card(game_ui, user_id, card, group_id, stack_index, card_index) do
-  #   IO.puts("game_ui: update_card a")
-  #   case Game.update_card(game_ui.game, user_id, card, group_id, stack_index, card_index) do
-  #     {:ok, new_game} ->
-  #       %{game_ui | game: new_game}
-
-  #     {:error, _msg} ->
-  #       game_ui
-  #   end
-  # end
-
-  # @doc """
-  # toggle_exhaust/3: A player moves a card on the table.
-  # """
-  # @spec toggle_exhaust(GameUI.t(), number, Group.t(), Stack.t(), Card.t()) :: GameUI.t() #DragEvent.t()) :: GameUI.t()
-  # def toggle_exhaust(game_ui, user_id, group, stack, card) do
-  #   IO.puts("game_ui: toggle_exhaust a")
-  #   case Game.toggle_exhaust(game_ui.game, user_id, group, stack, card) do
-  #     {:ok, new_game} ->
-  #       %{game_ui | game: new_game}
-
-  #     {:error, _msg} ->
-  #       game_ui
-  #   end
-  # end
 
   # # @doc """
   # # user_id_to_seat/2: Which seat is this user sitting in?
