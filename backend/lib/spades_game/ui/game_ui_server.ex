@@ -243,16 +243,16 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:move_stack, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: move_stack a")
-    old_orig_group = gameui["game"]["groups"][orig_group_id]
-    old_orig_stacks = old_orig_group["stacks"]
-    stack = Enum.at(old_orig_stacks,orig_stack_index)
+    old_orig_group = GameUI.get_group(gameui, orig_group_id)
+    old_orig_stacks = GameUI.get_stacks(gameui, orig_group_id)
+    stack = GameUI.get_stack(gameui, orig_group_id, orig_stack_index)
     if stack do
         new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
         new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
         old_dest_group =  if orig_group_id == dest_group_id do
                             new_orig_group
                           else
-                            gameui["game"]["groups"][dest_group_id]
+                            GameUI.get_group(gameui,dest_group_id)
                           end
         old_dest_stacks = old_dest_group["stacks"]
         new_dest_stacks = if old_dest_group["type"] == "deck" do
@@ -272,9 +272,9 @@ defmodule SpadesGame.GameUIServer do
                               List.insert_at(old_dest_stacks,dest_stack_index,stack)
                             end
                           end
-        new_dest_group = put_in(old_dest_group["stacks"],new_dest_stacks)
-        gameui_orig_removed = put_in(gameui["game"]["groups"][orig_group_id],new_orig_group)
-        put_in(gameui_orig_removed["game"]["groups"][dest_group_id],new_dest_group)
+        new_dest_group = put_in(old_dest_group["stacks"], new_dest_stacks)
+        gameui_orig_removed = GameUI.update_group(gameui, orig_group_id, new_orig_group)
+        GameUI.update_group(gameui_orig_removed,dest_group_id,new_dest_group)
         |> save_and_reply()
     else
       gameui

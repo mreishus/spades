@@ -32,8 +32,12 @@ defmodule SpadesGame.GameUI do
     }
   end
 
+  def get_group(gameui,group_id) do
+    gameui["game"]["groups"][group_id]
+  end
+
   def get_stacks(gameui,group_id) do
-    gameui["game"]["groups"][group_id]["stacks"]
+    get_group(gameui,group_id)["stacks"]
   end
 
   def get_stack(gameui, group_id, stack_index) do
@@ -58,19 +62,25 @@ defmodule SpadesGame.GameUI do
     get_tokens(gameui, group_id, stack_index, card_index)[token_type]
   end
 
+  def update_group(gameui, group_id, new_group) do
+    put_in(gameui["game"]["groups"][group_id], new_group)
+  end
+
   def update_stacks(gameui, group_id, new_stacks) do
-    put_in(gameui["game"]["groups"][group_id]["stacks"],new_stacks)
+    old_group = get_group(gameui,group_id)
+    new_group = put_in(old_group["stacks"], new_stacks)
+    update_group(gameui, group_id, new_group)
   end
 
   def update_stack(gameui, group_id, stack_index, new_stack) do
     old_stacks = get_stacks(gameui, group_id)
-    new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
+    new_stacks = List.replace_at(old_stacks, stack_index, new_stack)
     update_stacks(gameui, group_id, new_stacks)
   end
 
   def update_cards(gameui, group_id, stack_index, new_cards) do
     old_stack = get_stack(gameui, group_id, stack_index)
-    new_stack = put_in(old_stack["cards"],new_cards)
+    new_stack = put_in(old_stack["cards"], new_cards)
     update_stack(gameui, group_id, stack_index, new_stack)
   end
 
@@ -87,13 +97,8 @@ defmodule SpadesGame.GameUI do
   end
 
   def update_token(gameui, group_id, stack_index, card_index, token_type, new_value) do
-    IO.puts("a")
     old_tokens = get_tokens(gameui, group_id, stack_index, card_index)
-    IO.puts("b")
-    IO.inspect(old_tokens)
     new_tokens = put_in(old_tokens[token_type],new_value)
-    IO.puts("c")
-    IO.inspect(new_tokens)
     update_tokens(gameui, group_id, stack_index, card_index, new_tokens)
   end
 
