@@ -93,71 +93,64 @@ const RoomGame: React.FC<Props> = ({ broadcast }) => {
   useEffect(() => {
     const onKeyDown = (event: any) => {
       const k = event.key;
-      setKeypress([event.key]);
-      if (activeCardAndLoc != null) {
-          //var newList = keyDownList.concat(event.key);
-          //setKeyDownList(newList);
-          //if (delayBroadcast) clearTimeout(delayBroadcast);
-          //delayBroadcast = setTimeout(function() {
-              
-              var newCard = activeCardAndLoc.card;
-              var newTokens = newCard.tokens;
-            //  newList.forEach( k => {
-                // Check for token updates
-                if (keyTokenMap[k] != undefined) {
-                  const tokenType = keyTokenMap[k][0];
-                  const increment = keyTokenMap[k][1];
-                  newTokens = {
-                    ...newTokens,
-                    [tokenType]: newTokens[tokenType]+increment,
-                  }
-                  newCard = {...newCard, tokens: newTokens}
-                  broadcast("increment_token",{group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: increment})
-                }
-                // Set tokens to 0
-                if (k === "0") {
-                  newTokens = {
-                    ...newTokens,
-                    "resource": 0,
-                    "progress": 0,
-                    "damage": 0,
-                    "time": 0,
-                    "threat": 0,
-                    "willpower": 0,
-                    "attack": 0,
-                    "defense": 0,
-                  }
-                  newCard = {...newCard, tokens: newTokens}
-                  broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-                }
-                // Flip card
-                if (k === "f") {
-                  if (newCard.currentSide === "A") {
-                    newCard = {...newCard, currentSide: "B"}
-                  } else {
-                    newCard = {...newCard, currentSide: "A"}
-                  }
-                  broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-                }
-                // Exhaust card
-                if (k === "a") {
-                  if (newCard.exhausted) {
-                    newCard = {...newCard, exhausted: false, rotation: 0}
-                  } else {
-                    newCard = {...newCard, exhausted: true, rotation: 90}
-                  }
-                  broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-                }
-              }
-              //);
-              //newCard = {...newCard, tokens: newTokens}
-              // If activeCard has not changed ,refresh activeCard to new value
-              if (activeCardAndLoc) setActiveCardAndLoc({card: newCard, groupID: activeCardAndLoc.groupID, stackIndex: activeCardAndLoc.stackIndex, cardIndex: activeCardAndLoc.cardIndex});
-              //
-              //setKeyDownList([]);
-          //}, 300);
-        //}
-      //}
+      // Keep track of last pressed key
+      setKeypress([k]);
+      // If a card is active, perform hotkey command
+      if (activeCardAndLoc != null) {   
+        var newCard = activeCardAndLoc.card;
+        var newTokens = newCard.tokens;
+        var cardChanged = false;
+        // Increment token 
+        if (keyTokenMap[k] != undefined) {
+          const tokenType = keyTokenMap[k][0];
+          const increment = keyTokenMap[k][1];
+          newTokens = {
+            ...newTokens,
+            [tokenType]: newTokens[tokenType]+increment,
+          }
+          newCard = {...newCard, tokens: newTokens}
+          cardChanged = true;
+          broadcast("increment_token",{group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: increment})
+        }
+        // Set tokens to 0
+        else if (k === "0") {
+          newTokens = {
+            ...newTokens,
+            "resource": 0,
+            "progress": 0,
+            "damage": 0,
+            "time": 0,
+            "threat": 0,
+            "willpower": 0,
+            "attack": 0,
+            "defense": 0,
+          }
+          newCard = {...newCard, tokens: newTokens}
+          cardChanged = true;
+          broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+        }
+        // Flip card
+        else if (k === "f") {
+          if (newCard.currentSide === "A") {
+            newCard = {...newCard, currentSide: "B"}
+          } else {
+            newCard = {...newCard, currentSide: "A"}
+          }
+          cardChanged = true;
+          broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+        }
+        // Exhaust card
+        else if (k === "a") {
+          if (newCard.exhausted) {
+            newCard = {...newCard, exhausted: false, rotation: 0}
+          } else {
+            newCard = {...newCard, exhausted: true, rotation: 90}
+          }
+          cardChanged = true;
+          broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+        }
+        if (cardChanged) setActiveCardAndLoc({card: newCard, groupID: activeCardAndLoc.groupID, stackIndex: activeCardAndLoc.stackIndex, cardIndex: activeCardAndLoc.cardIndex});
+      }
     }
 
     const onKeyUp = (event: any) => {
