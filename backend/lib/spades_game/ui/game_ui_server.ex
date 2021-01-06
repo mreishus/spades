@@ -115,6 +115,15 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
+  deal_shadow/4: A player just incremented a token.
+  """
+  @spec deal_shadow(String.t(), integer, String.t(), number) :: GameUI.t()
+  def deal_shadow(game_name, user_id, group_id, stack_index) do
+    IO.puts("game_ui_server: deal_shadow")
+    GenServer.call(via_tuple(game_name), {:deal_shadow, user_id, group_id, stack_index})
+  end
+
+  @doc """
   detach/5: A player just detached a card.
   """
   @spec detach(String.t(), integer, String.t(), number, number) :: GameUI.t()
@@ -242,46 +251,9 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:move_stack, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index}, _from, gameui) do
-    IO.puts("game_ui_server: handle_call: move_stack a")
-    old_orig_group = GameUI.get_group(gameui, orig_group_id)
-    old_orig_stacks = GameUI.get_stacks(gameui, orig_group_id)
-    stack = GameUI.get_stack(gameui, orig_group_id, orig_stack_index)
-    if stack do
-        new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
-        new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
-        old_dest_group =  if orig_group_id == dest_group_id do
-                            new_orig_group
-                          else
-                            GameUI.get_group(gameui,dest_group_id)
-                          end
-        old_dest_stacks = old_dest_group["stacks"]
-        new_dest_stacks = if old_dest_group["type"] == "deck" do
-                            stack_list_to_insert = Enum.map(stack["cards"], fn card ->
-                              card_B = Map.put(card, "currentSide", "B")
-                              card_no_tokens = Map.put(card_B, "tokens", Tokens.new())
-                              Stack.stack_from_card(card_no_tokens)
-                            end)
-                            List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
-                          else
-                            if old_orig_group["type"] == "deck" and old_dest_group["type"] != "deck" do
-                              card = Enum.at(stack["cards"],0)
-                              card_flipped = Map.put(card,"currentSide","A")
-                              stack_flipped = Map.put(stack,"cards",[card_flipped])
-                              List.insert_at(old_dest_stacks,dest_stack_index,stack_flipped)
-                            else
-                              List.insert_at(old_dest_stacks,dest_stack_index,stack)
-                            end
-                          end
-        new_dest_group = put_in(old_dest_group["stacks"], new_dest_stacks)
-        gameui_orig_removed = GameUI.update_group(gameui, orig_group_id, new_orig_group)
-        GameUI.update_group(gameui_orig_removed,dest_group_id,new_dest_group)
-        |> save_and_reply()
-    else
-      gameui
-      |> save_and_reply()
-    end
+    GameUI.move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index)
+    |> save_and_reply()
   end
-
 
   def handle_call({:update_card, user_id, new_card, group_id, stack_index, card_index}, _from, gameui) do
     GameUI.update_card(gameui, group_id, stack_index, card_index, new_card)
@@ -291,6 +263,12 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:increment_token, user_id, group_id, stack_index, card_index, token_type, increment}, _from, gameui) do
     old_token = GameUI.get_token(gameui, group_id, stack_index, card_index, token_type)
     GameUI.update_token(gameui, group_id, stack_index, card_index, token_type, old_token+increment)
+    |> save_and_reply()
+  end
+
+  def handle_call({:deal_shadow, user_id, group_id, stack_index}, _from, gameui) do
+    cards_size = Enum.count(GameUI.get_cards(gameui, group_id, stack_index))
+    GameUI.move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size)
     |> save_and_reply()
   end
 

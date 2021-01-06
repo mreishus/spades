@@ -149,6 +149,10 @@ const RoomGame: React.FC<Props> = ({ broadcast }) => {
           cardChanged = true;
           broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
         }
+        // Deal shadow card
+        else if (k === "s") {
+          broadcast("deal_shadow", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
+        }
         if (cardChanged) setActiveCardAndLoc({card: newCard, groupID: activeCardAndLoc.groupID, stackIndex: activeCardAndLoc.stackIndex, cardIndex: activeCardAndLoc.cardIndex});
       }
     }

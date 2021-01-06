@@ -42,7 +42,7 @@ defmodule SpadesGame.GameUI do
 
   def get_stack(gameui, group_id, stack_index) do
     stacks = get_stacks(gameui, group_id)
-    Enum.at(stacks, stack_index)
+    if stacks do Enum.at(stacks, stack_index) else nil end
   end
 
   def get_cards(gameui, group_id, stack_index) do
@@ -51,7 +51,7 @@ defmodule SpadesGame.GameUI do
 
   def get_card(gameui, group_id, stack_index, card_index) do
     cards = get_cards(gameui, group_id, stack_index)
-    Enum.at(cards, card_index)
+    if cards do Enum.at(cards, card_index) else nil end
   end
 
   def get_tokens(gameui, group_id, stack_index, card_index) do
@@ -100,6 +100,86 @@ defmodule SpadesGame.GameUI do
     old_tokens = get_tokens(gameui, group_id, stack_index, card_index)
     new_tokens = put_in(old_tokens[token_type],new_value)
     update_tokens(gameui, group_id, stack_index, card_index, new_tokens)
+  end
+
+  def move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index) do
+    old_orig_group = get_group(gameui, orig_group_id)
+    old_orig_stacks = get_stacks(gameui, orig_group_id)
+    stack = get_stack(gameui, orig_group_id, orig_stack_index)
+    if stack do
+        new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
+        new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
+        old_dest_group =  if orig_group_id == dest_group_id do
+                            new_orig_group
+                          else
+                            get_group(gameui,dest_group_id)
+                          end
+        old_dest_stacks = old_dest_group["stacks"]
+        new_dest_stacks = if old_dest_group["type"] == "deck" do
+                            stack_list_to_insert = Enum.map(stack["cards"], fn card ->
+                              card_B = Map.put(card, "currentSide", "B")
+                              card_no_tokens = Map.put(card_B, "tokens", Tokens.new())
+                              Stack.stack_from_card(card_no_tokens)
+                            end)
+                            List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
+                          else
+                            if old_orig_group["type"] == "deck" and old_dest_group["type"] != "deck" do
+                              card = Enum.at(stack["cards"],0)
+                              card_flipped = Map.put(card,"currentSide","A")
+                              stack_flipped = Map.put(stack,"cards",[card_flipped])
+                              List.insert_at(old_dest_stacks,dest_stack_index,stack_flipped)
+                            else
+                              List.insert_at(old_dest_stacks,dest_stack_index,stack)
+                            end
+                          end
+        new_dest_group = put_in(old_dest_group["stacks"], new_dest_stacks)
+        gameui_orig_removed = update_group(gameui, orig_group_id, new_orig_group)
+        update_group(gameui_orig_removed,dest_group_id,new_dest_group)
+      else
+        gameui
+      end
+  end
+
+  def move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index) do
+    if orig_group_id == dest_group_id and orig_stack_index == dest_stack_index and orig_card_index == dest_card_index do
+      gameui
+    else
+      # Get old position info
+      old_orig_stacks = get_stacks(gameui, orig_group_id)
+      old_orig_stack = get_stack(gameui, orig_group_id, orig_stack_index)
+      old_orig_cards = get_cards(gameui, orig_group_id, orig_stack_index)
+      moving_card = get_card(gameui, orig_group_id, orig_stack_index, orig_card_index)
+      IO.inspect(moving_card)
+      if !moving_card do
+        gameui
+      else
+        # Delete card from old position
+        new_orig_cards = List.delete_at(old_orig_cards, orig_card_index)
+        new_orig_stack = put_in(old_orig_stack["cards"],new_orig_cards)
+        new_orig_stacks = if Enum.count(new_orig_cards) == 0 do
+          List.delete_at(old_orig_stacks, orig_stack_index)
+        else
+          List.replace_at(old_orig_stacks, orig_stack_index, new_orig_stack)
+        end
+        intermediate_gameui = update_stacks(gameui, orig_group_id, new_orig_stacks)
+
+        # Add card to new position
+        old_dest_cards = get_cards(intermediate_gameui, dest_group_id, dest_stack_index)
+        new_dest_cards = List.insert_at(old_dest_cards, dest_card_index, moving_card)
+        update_cards(intermediate_gameui, dest_group_id, dest_stack_index, new_dest_cards)
+      end
+    end
+  end
+
+  def flip_card(gameui, group_id, stack_index, card_index) do
+    old_card = get_card(gameui, group_id, stack_index, card_index)
+    current_side = old_card["currentSide"]
+    new_card = if current_side == "A" do
+      put_in(old_card["currentSide"],"B")
+    else
+      put_in(old_card["currentSide"],"A")
+    end
+    update_card(gameui, group_id, stack_index, card_index, new_card)
   end
 
 
