@@ -40,8 +40,8 @@ defmodule SpadesGame.GameUIServer do
   """
   @spec state(String.t()) :: GameUI.t() | nil
   def state(game_name) do
-    IO.puts("getting state a")
-    IO.inspect(GenServer.call(via_tuple(game_name), :state))
+    IO.puts("game_ui_server state")
+    # IO.inspect(GenServer.call(via_tuple(game_name), :state))
     case gameui_pid(game_name) do
       nil -> nil
       _ -> GenServer.call(via_tuple(game_name), :state)
@@ -130,6 +130,24 @@ defmodule SpadesGame.GameUIServer do
   def detach(game_name, user_id, group_id, stack_index, card_index) do
     IO.puts("game_ui_server: detach")
     GenServer.call(via_tuple(game_name), {:detach, user_id, group_id, stack_index, card_index})
+  end
+
+  @doc """
+  move_card/9: A player just moved a card.
+  """
+  @spec move_card(String.t(), integer, String.t(), number, number, String.t(), number, number, boolean) :: GameUI.t()
+  def move_card(game_name, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack) do
+    IO.puts("game_ui_server: move_card")
+    GenServer.call(via_tuple(game_name), {:move_card, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack})
+  end
+
+  @doc """
+  shuffle/5: Shuffle a group.
+  """
+  @spec shuffle_group(String.t(), integer, String.t()) :: GameUI.t()
+  def shuffle_group(game_name, user_id, group_id) do
+    IO.puts("game_ui_server: shuffle_group")
+    GenServer.call(via_tuple(game_name), {:shuffle_group, user_id, group_id})
   end
 
   @doc """
@@ -268,9 +286,31 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:deal_shadow, user_id, group_id, stack_index}, _from, gameui) do
     cards_size = Enum.count(GameUI.get_cards(gameui, group_id, stack_index))
-    GameUI.move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size)
+    gameui = GameUI.move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false)
+    shadow_card = GameUI.get_card(gameui, group_id, stack_index, cards_size)
+    IO.puts("shadow_card")
+    #IO.inspect(shadow_card)
+    rotated_shadow_card = put_in(shadow_card["rotation"], -30)
+    GameUI.update_card(gameui, group_id, stack_index, cards_size, rotated_shadow_card)
     |> save_and_reply()
   end
+
+  def handle_call({:shuffle_group, user_id, group_id}, _from, gameui) do
+    GameUI.shuffle_group(gameui, group_id)
+    |> save_and_reply()
+  end
+
+  def handle_call({:move_card, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack}, _from, gameui) do
+    # Check if dest_stack_index is negative, meaning counting from the bottom
+    IO.puts("game_ui_server move_card")
+    IO.inspect(dest_stack_index)
+    dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stacks(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
+    IO.inspect(dest_stack_index)
+    GameUI.move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack)
+    |> save_and_reply()
+  end
+
+
 
   def handle_call({:detach, user_id, group_id, stack_index, card_index}, _from, gameui) do
     old_stacks = GameUI.get_stacks(gameui, group_id)
@@ -374,18 +414,18 @@ defmodule SpadesGame.GameUIServer do
   # Given the current state of the game, what should the
   # GenServer timeout be? (Games with winners expire quickly)
   defp timeout(_state) do
-    IO.inspect("timeout set")
+    IO.puts("timeout set")
     @timeout
   end
 
   # When timing out, the order is handle_info(:timeout, _) -> terminate({:shutdown, :timeout}, _)
   def handle_info(:timeout, state) do
-    IO.inspect("gameuiserv handle_info")
+    IO.puts("gameuiserv handle_info")
     {:stop, {:shutdown, :timeout}, state}
   end
 
   def terminate({:shutdown, :timeout}, state) do
-    IO.inspect("gameuiserv shutdown")
+    IO.puts("gameuiserv shutdown")
     Logger.info("Terminate (Timeout) running for #{state["game_name"]}")
     :ets.delete(:game_uis, state["game_name"])
     GameRegistry.remove(state["game_name"])

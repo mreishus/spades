@@ -52,8 +52,8 @@ defmodule SpadesGame.GameRegistry do
   defp to_room_param(%{} = gameui) do
     # created_at: DateTime.t()
     IO.puts("to_room_param")
-    IO.inspect(gameui["game_name"])
-    IO.inspect(Map.keys(gameui))
+    # IO.inspect(gameui["game_name"])
+    # IO.inspect(Map.keys(gameui))
     %{
       name: gameui["game_name"],
       player1: gameui["seats"]["player1"]["sitting"],

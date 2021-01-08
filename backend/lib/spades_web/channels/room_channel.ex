@@ -140,7 +140,6 @@ defmodule SpadesWeb.RoomChannel do
       },
       %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
     ) do
-    IO.inspect(card)
     GameUIServer.update_card(room_slug, user_id, card, group_id, stack_index, card_index)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
@@ -194,6 +193,43 @@ defmodule SpadesWeb.RoomChannel do
       %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
     ) do
     GameUIServer.detach(room_slug, user_id, group_id, stack_index, card_index)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+
+  def handle_in(
+    "move_card",
+    %{
+      "orig_group_id"    => orig_group_id,
+      "orig_stack_index" => orig_stack_index,
+      "orig_card_index"  => orig_card_index,
+      "dest_group_id"    => dest_group_id,
+      "dest_stack_index" => dest_stack_index,
+      "dest_card_index"  => dest_card_index,
+      "create_new_stack" => create_new_stack
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    IO.puts("room_channel move_card")
+    GameUIServer.move_card(room_slug, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "shuffle_group",
+    %{
+      "group_id" => group_id
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.shuffle_group(room_slug, user_id, group_id)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)

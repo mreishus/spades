@@ -165,11 +165,19 @@ const CardComponent = React.memo(({
 
     const menuID = inputCard.id+'-menu';
     const zIndex = 1e5-cardIndex;
-    //console.log(card.id);
-    //console.log('in');
-    //console.log(group);
+
     function handleMenuClick(e, data) {
         if (data.action === "detach") broadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
+        else if (data.action === "move_card") {
+            if (data.position === "t") {
+                broadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+            } else if (data.position === "b") {
+                broadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: -1, dest_card_index: 0, create_new_stack: true})
+            } else if (data.position === "s") {
+                broadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                broadcast("shuffle_group", {group_id: data.destGroupID})
+            }
+        }
     }
     if (!inputCard) return <div></div>;
     const currentFace = inputCard.sides[inputCard.currentSide];
@@ -218,24 +226,25 @@ const CardComponent = React.memo(({
             <ContextMenu id={inputCard.id} style={{zIndex:1e6}}>
             {/* {stack.cards.map((card, cardIndex) => ( */}
                 <hr></hr>
-                {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{ action: 'detach', groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex }}>Detach</MenuItem>:null}
-                <MenuItem onClick={handleMenuClick} data={{ item: 'item 2' }}>Menu Item 2</MenuItem>
-                <SubMenu title='A SubMenu'>
-                    <MenuItem onClick={handleMenuClick} data={{ item: 'subitem 1' }}>SubItem 1</MenuItem>
-                    <SubMenu title='Another SubMenu'>
-                        <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 1' }}>SubSubItem 1</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 2' }}>SubSubItem 2</MenuItem>
+                {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
+                <SubMenu title='Move to'>
+                    <SubMenu title='Encounter Deck'>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gSharedEncounterDeck", position: "t"}}>Top</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gSharedEncounterDeck", position: "b"}}>Bottom</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gSharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
-                    <SubMenu title='Yet Another SubMenu'>
-                        <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 3' }}>SubSubItem 3</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{ item: 'subsubitem 4' }}>SubSubItem 4</MenuItem>
+                    <SubMenu title="Owner's Deck">
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gPlayer"+inputCard.owner+"Deck", position: "t"}}>Top</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gPlayer"+inputCard.owner+"Deck", position: "b"}}>Bottom</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gPlayer"+inputCard.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
-                    <MenuItem onClick={handleMenuClick} data={{ item: 'subitem 2' }}>SubItem 2</MenuItem>
+                    <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex, destGroupID: "gSharedVictory", position: "t" }}>Victory Display</MenuItem>
                 </SubMenu>
             </ContextMenu>
         </div>
     )
 })
+
 
 class CardClass extends Component {
 

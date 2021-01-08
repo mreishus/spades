@@ -3,15 +3,15 @@ defmodule SpadesGame.GameUI do
   One level on top of Game.
   """
 
-  alias SpadesGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User}
+  alias SpadesGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens}
 
   @type t :: Map.t()
 
   @spec new(String.t(), User.t(), GameOptions.t()) :: GameUI.t()
   def new(game_name, user, %GameOptions{} = options) do
     game = Game.new(options)
-    IO.puts("gameui new")
-    IO.inspect(game)
+    IO.puts("game_ui new")
+    #IO.inspect(game)
 
     %{
       "game"=> game,
@@ -140,7 +140,9 @@ defmodule SpadesGame.GameUI do
       end
   end
 
-  def move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index) do
+  def move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack \\ true) do
+    IO.puts("game_ui move_card")
+    IO.inspect(create_new_stack)
     if orig_group_id == dest_group_id and orig_stack_index == dest_stack_index and orig_card_index == dest_card_index do
       gameui
     else
@@ -149,7 +151,7 @@ defmodule SpadesGame.GameUI do
       old_orig_stack = get_stack(gameui, orig_group_id, orig_stack_index)
       old_orig_cards = get_cards(gameui, orig_group_id, orig_stack_index)
       moving_card = get_card(gameui, orig_group_id, orig_stack_index, orig_card_index)
-      IO.inspect(moving_card)
+      #IO.inspect(moving_card)
       if !moving_card do
         gameui
       else
@@ -164,9 +166,19 @@ defmodule SpadesGame.GameUI do
         intermediate_gameui = update_stacks(gameui, orig_group_id, new_orig_stacks)
 
         # Add card to new position
-        old_dest_cards = get_cards(intermediate_gameui, dest_group_id, dest_stack_index)
-        new_dest_cards = List.insert_at(old_dest_cards, dest_card_index, moving_card)
-        update_cards(intermediate_gameui, dest_group_id, dest_stack_index, new_dest_cards)
+        if create_new_stack do
+          old_dest_stacks = get_stacks(intermediate_gameui, dest_group_id)
+          IO.puts("inserting at")
+          IO.inspect(dest_stack_index)
+          new_dest_stacks = List.insert_at(old_dest_stacks, dest_stack_index, Stack.stack_from_card(moving_card))
+          IO.inspect(dest_group_id)
+          IO.inspect(new_dest_stacks)
+          update_stacks(intermediate_gameui, dest_group_id, new_dest_stacks)
+        else # Add to existing stack
+          old_dest_cards = get_cards(intermediate_gameui, dest_group_id, dest_stack_index)
+          new_dest_cards = List.insert_at(old_dest_cards, dest_card_index, moving_card)
+          update_cards(intermediate_gameui, dest_group_id, dest_stack_index, new_dest_cards)
+        end
       end
     end
   end
@@ -180,6 +192,11 @@ defmodule SpadesGame.GameUI do
       put_in(old_card["currentSide"],"A")
     end
     update_card(gameui, group_id, stack_index, card_index, new_card)
+  end
+
+  def shuffle_group(gameui, group_id) do
+    shuffled_stacks = get_stacks(gameui, group_id) |> Enum.shuffle
+    update_stacks(gameui, group_id, shuffled_stacks)
   end
 
 

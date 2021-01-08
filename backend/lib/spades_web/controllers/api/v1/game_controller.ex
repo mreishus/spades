@@ -9,22 +9,22 @@ defmodule SpadesWeb.API.V1.GameController do
   alias SpadesGame.{GameOptions, GameUISupervisor}
 
   def create(conn, _params) do
-    IO.puts("gamecontroller conn")
-    IO.inspect(conn)
-    IO.inspect(_params)
+    IO.puts("game_controller create")
+    # IO.inspect(conn)
+    # IO.inspect(_params)
     game_name = NameGenerator.generate()
-    IO.puts("gamecontroller create b")
+    # IO.puts("gamecontroller create b")
     user = Pow.Plug.current_user(conn)
-    IO.puts("gamecontroller create c")
-    IO.inspect(user)
+    # IO.puts("gamecontroller create c")
+    # IO.inspect(user)
     options = %GameOptions{}
-    IO.puts("gamecontroller create d")
+    # IO.puts("gamecontroller create d")
     #IO.puts(game_name)
     GameUISupervisor.start_game(game_name, user, options)
-    IO.puts("gamecontroller create e")
+    # IO.puts("gamecontroller create e")
     room = Rooms.get_room_by_name(game_name)
-    IO.puts("ROOM")
-    IO.inspect(room)
+    # IO.puts("ROOM")
+    # IO.inspect(room)
     # with {:ok, _pid} <- GameUISupervisor.start_game(game_name, options),
     #      %Room{} = room <- Rooms.get_room_by_name(game_name) do
     if room do

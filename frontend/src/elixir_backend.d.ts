@@ -32,6 +32,8 @@ declare module "elixir-backend" {
     public rotation: number;
     public exhausted: boolean;
     public tokens: Tokens;
+    public owner: number;
+    public controller: number;
 
     public CurrentSide: string;
     public Sides: { [id: string] : CardFace; };

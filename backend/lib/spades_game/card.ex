@@ -16,6 +16,8 @@ defmodule SpadesGame.Card do
       "deckType"=> "Player",
       "tokens"=> Tokens.test(),
       "currentSide"=> "A",
+      "owner"=> 1,
+      "controller"=> 1,
       "sides"=> %{
         "A"=>CardFace.test1(),
         "B"=>CardFace.player_back(),
@@ -30,6 +32,8 @@ defmodule SpadesGame.Card do
       "deckType"=> "Player",
       "tokens"=>Tokens.test(),
       "currentSide"=> "A",
+      "owner"=> 1,
+      "controller"=> 1,
       "sides"=> %{
         "A"=>CardFace.test2(),
         "B"=>CardFace.player_back(),
@@ -44,6 +48,8 @@ defmodule SpadesGame.Card do
       "deckType"=> "Player",
       "tokens"=>Tokens.test(),
       "currentSide"=> "A",
+      "owner"=> 1,
+      "controller"=> 1,
       "sides"=> %{
         "A"=>CardFace.test3(),
         "B"=>CardFace.player_back(),
@@ -58,6 +64,8 @@ defmodule SpadesGame.Card do
       "deckType"=> "Quest",
       "tokens"=>Tokens.test(),
       "currentSide"=> "A",
+      "owner"=> 0,
+      "controller"=> 0,
       "sides"=> %{
         "A"=>CardFace.test_quest_A(),
         "B"=>CardFace.test_quest_B(),
