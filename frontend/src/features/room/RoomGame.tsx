@@ -27,7 +27,7 @@ const keyTokenMap: { [id: string] : Array<string | number>; } = {
 }
 
 interface Props {
-  broadcast: (eventName: string, payload: object) => void;
+  gameBroadcast: (eventName: string, payload: object) => void;
   chatBroadcast: (eventName: string, payload: object) => void;
   messages: Array<ChatMessage>;
 }
@@ -54,17 +54,17 @@ interface Props {
 //   render() {
 //     return(
 //         <Groups 
-//           broadcast={this.props.broadcast}
+//           gameBroadcast={this.props.gameBroadcast}
 //         />
 //     )
 //   }
 
 // 
 
-const RoomGame: React.FC<Props> = ({ broadcast, chatBroadcast, messages }) => {
+const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) => {
   console.log('rendering roomgame');
   //const gameUIView = React.useContext(GameUIViewContext);
-  //if (gameUIView) broadcast("update_groups",{groups: gameUIView.game_ui.game.groups});
+  //if (gameUIView) gameBroadcast("update_groups",{groups: gameUIView.game_ui.game.groups});
 
 /*   const setKeypress = useSetKeypress();
   const activeCard = useActiveCard();
@@ -113,7 +113,7 @@ const RoomGame: React.FC<Props> = ({ broadcast, chatBroadcast, messages }) => {
           }
           newCard = {...newCard, tokens: newTokens}
           cardChanged = true;
-          broadcast("increment_token",{group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: increment})
+          gameBroadcast("increment_token",{group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: increment})
         }
         // Set tokens to 0
         else if (k === "0") {
@@ -130,7 +130,7 @@ const RoomGame: React.FC<Props> = ({ broadcast, chatBroadcast, messages }) => {
           }
           newCard = {...newCard, tokens: newTokens}
           cardChanged = true;
-          broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+          gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
         }
         // Flip card
         else if (k === "f") {
@@ -140,7 +140,7 @@ const RoomGame: React.FC<Props> = ({ broadcast, chatBroadcast, messages }) => {
             newCard = {...newCard, currentSide: "A"}
           }
           cardChanged = true;
-          broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+          gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
         }
         // Exhaust card
         else if (k === "a") {
@@ -150,11 +150,11 @@ const RoomGame: React.FC<Props> = ({ broadcast, chatBroadcast, messages }) => {
             newCard = {...newCard, exhausted: true, rotation: 90}
           }
           cardChanged = true;
-          broadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+          gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
         }
         // Deal shadow card
         else if (k === "s") {
-          broadcast("deal_shadow", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
+          gameBroadcast("deal_shadow", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
           chatBroadcast("game_update", {message: "dealt a shadow card to "+activeCardAndLoc.card.sides["A"].src});
         }
         if (cardChanged) setActiveCardAndLoc({card: newCard, groupID: activeCardAndLoc.groupID, stackIndex: activeCardAndLoc.stackIndex, cardIndex: activeCardAndLoc.cardIndex});
@@ -178,7 +178,7 @@ const RoomGame: React.FC<Props> = ({ broadcast, chatBroadcast, messages }) => {
 
   return (
       <Groups 
-        broadcast={broadcast}
+        gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         messages={messages}
       />

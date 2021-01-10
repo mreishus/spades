@@ -35,7 +35,7 @@ export const Room: React.FC<Props> = ({ slug }) => {
       setMessages(payload.response.messages);
     }
   }, []);
-  const broadcast = useChannel(`room:${slug}`, onChannelMessage);
+  const gameBroadcast = useChannel(`room:${slug}`, onChannelMessage);
   const chatBroadcast = useChannel(`chat:${slug}`, onChatMessage);
   //if (gameUIView) broadcast("update_groups",gameUIView.game_ui.game.groups);
   console.log('rendering room');
@@ -49,7 +49,7 @@ export const Room: React.FC<Props> = ({ slug }) => {
         {gameUI != null && (
           <GameUIContext.Provider value={{gameUI, setGameUI}}>
             <ActiveCardProvider value={null}>
-              <RoomGame broadcast={broadcast} chatBroadcast={chatBroadcast} messages={messages}/>
+              <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} messages={messages}/>
             </ActiveCardProvider>
          </GameUIContext.Provider>
         )}

@@ -6,27 +6,27 @@ import {useKeypress} from "../../contexts/KeypressContext";
 const InnerTokensView = React.memo(({ 
     card,
     showButtons,
-    broadcast,
+    gameBroadcast,
     groupID,
     stackIndex,
     cardIndex,
  }) => (
     <div>
-        <Token type="resource" card={card} left={"10%"} top={"0%"} showButtons={showButtons} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
-        <Token type="progress" card={card} left={"10%"} top={"25%"} showButtons={showButtons} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
-        <Token type="damage" card={card} left={"10%"} top={"50%"} showButtons={showButtons} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
-        <Token type="time" card={card} left={"10%"} top={"75%"} showButtons={showButtons} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
-        <Token type="threat" card={card} left={"55%"} top={"0%"} showButtons={showButtons} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
-        <Token type="willpower" card={card} left={"55%"} top={"25%"} showButtons={showButtons} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
-        <Token type="attack" card={card} left={"55%"} top={"50%"} showButtons={showButtons} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
-        <Token type="defense" card={card} left={"55%"} top={"75%"} showButtons={showButtons} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
+        <Token type="resource" card={card} left={"10%"} top={"0%"} showButtons={showButtons} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
+        <Token type="progress" card={card} left={"10%"} top={"25%"} showButtons={showButtons} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
+        <Token type="damage" card={card} left={"10%"} top={"50%"} showButtons={showButtons} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
+        <Token type="time" card={card} left={"10%"} top={"75%"} showButtons={showButtons} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
+        <Token type="threat" card={card} left={"55%"} top={"0%"} showButtons={showButtons} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
+        <Token type="willpower" card={card} left={"55%"} top={"25%"} showButtons={showButtons} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
+        <Token type="attack" card={card} left={"55%"} top={"50%"} showButtons={showButtons} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
+        <Token type="defense" card={card} left={"55%"} top={"75%"} showButtons={showButtons} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
     </div>
 ));
   
 export const TokensView = ({
     card,
     isHighlighted,
-    broadcast,
+    gameBroadcast,
     groupID,
     stackIndex,
     cardIndex,
@@ -37,7 +37,7 @@ export const TokensView = ({
         <InnerTokensView 
             card={card}
             showButtons={showButtons}
-            broadcast={broadcast}
+            gameBroadcast={gameBroadcast}
             groupID={groupID}
             stackIndex={stackIndex}
             cardIndex={cardIndex}

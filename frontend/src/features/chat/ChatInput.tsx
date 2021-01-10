@@ -5,13 +5,13 @@ import React from "react";
 import useForm from "../../hooks/useForm";
 
 interface Props {
-  broadcast: (eventName: string, payload: object) => void;
+  chatBroadcast: (eventName: string, payload: object) => void;
 }
 
-export const ChatInput: React.FC<Props> = ({ broadcast }) => {
+export const ChatInput: React.FC<Props> = ({ chatBroadcast }) => {
   const { inputs, handleSubmit, handleInputChange, setInputs } = useForm(
     async () => {
-      broadcast("message", { message: inputs.chat });
+      chatBroadcast("message", { message: inputs.chat });
       setInputs((inputs) => ({
         ...inputs,
         chat: "",

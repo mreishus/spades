@@ -8,6 +8,7 @@ import { reorderGroups } from "./Reorder";
 import { ActiveCard } from "./ActiveCard";
 import styled from "@emotion/styled";
 import GameUIContext from "../../contexts/GameUIContext";
+import { GROUPSINFO } from "./Constants"
 
 const WidthContainer = styled.div`
   padding: 2px 2px 2px 0.5vw;
@@ -16,7 +17,7 @@ const WidthContainer = styled.div`
 `;
 
 export const Groups = ({
-  broadcast,
+  gameBroadcast,
   chatBroadcast,
   messages
 }) => {
@@ -41,14 +42,16 @@ export const Groups = ({
   }, [gameUI.game.groups]);
 
   const onDragEnd = (result) => {
-    if (result.combine) {
-      const source = result.source;
-      const destination = result.combine;
+    const source = result.source;
+    const sourceStacks = groups[source.droppableId].stacks;
+    const sourceStack = sourceStacks[source.index];    
+    const topOfSourceStack = sourceStack.cards[0];
+    const topCardNameSource = topOfSourceStack["sides"][topOfSourceStack["currentSide"]].name;
 
-      console.log(result);
-      const sourceStacks = groups[source.droppableId].stacks;
+    if (result.combine) {
+      const destination = result.combine;
       const destStacks = groups[destination.droppableId].stacks;
-      const sourceStack = sourceStacks[source.index];
+
       for(var i in destStacks) {
         if(destStacks[i].id == destination.draggableId){
           destination.index = i;
@@ -57,6 +60,8 @@ export const Groups = ({
       }
       if (!destination.index) return;
       var destStack = destStacks[destination.index];
+      const topOfDestStack = destStack.cards[0];
+      const topCardNameDest = topOfDestStack["sides"][topOfDestStack["currentSide"]].name;
       // remove from original
       const newDestStackCards = destStack.cards.concat(sourceStack.cards);
       const newDestStack = {
@@ -90,7 +95,9 @@ export const Groups = ({
       
       setGroups(newGroups);
       setGameUI(newGameUI);
-      broadcast("update_gameui",{gameui: newGameUI});
+      gameBroadcast("update_gameui",{gameui: newGameUI});    
+      chatBroadcast("game_update",{message: "attached "+topCardNameSource+" from "+GROUPSINFO[source.droppableId].name+" to "+topCardNameDest+" in "+GROUPSINFO[destination.droppableId].name+"."})
+ 
 
       // const column = state.columns[result.source.droppableId];
       // const withQuoteRemoved = [...column];
@@ -107,7 +114,6 @@ export const Groups = ({
     if (!result.destination) {
       return;
     }
-    const source = result.source;
     const destination = result.destination;
 
     // did not move anywhere - can bail early
@@ -124,23 +130,6 @@ export const Groups = ({
       destination
     });
 
-    // const keys = Object.keys(data.groups);
-    // for (const key of keys) {
-    //   //data.groups[key].updated = false;
-    //   if (key === source.droppableId || key === destination.droppableId) {
-    //     data.groups[key]["updated"] = true;
-    //   } else {
-    //     data.groups[key]["updated"] = false;
-    //   }
-    // }
-    console.log('REGISTERED A DRAG');
-    console.log(source.droppableId);
-    console.log(source.index);
-    console.log(destination.droppableId);
-    console.log(destination.index);
-    //
-
-
     const newGameUI = {
       ...gameUI,
       "game": {
@@ -151,17 +140,19 @@ export const Groups = ({
     setGroups(data.groups)
     setGameUI(newGameUI)
     //setGroups(newGroups);
-    broadcast("move_stack",{
+    gameBroadcast("move_stack",{
       orig_group_id: source.droppableId, 
       orig_stack_index: source.index, 
       dest_group_id: destination.droppableId, 
       dest_stack_index: destination.index
     });
-    //broadcast("update_gameui",{gameui: newGameUI});
+
+    if (source.droppableId != destination.droppableId) chatBroadcast("game_update",{message: "moved "+topCardNameSource+" from "+GROUPSINFO[source.droppableId].name+" to "+GROUPSINFO[destination.droppableId].name+"."})
+    //gameBroadcast("update_gameui",{gameui: newGameUI});
 
 
     // setGroups(data.groups);
-    // // broadcast(
+    // // gameBroadcast(
     // //   "update_2_groups",
     // //   {
     // //     groupID1: source.droppableId,
@@ -169,7 +160,7 @@ export const Groups = ({
     // //     groupID2: destination.droppableId,
     // //     groupIndex2: data.groups[destination.droppableId],
     // // })
-    // broadcast("update_groups",{groups: data.groups});
+    // gameBroadcast("update_groups",{groups: data.groups});
     // setState({
     //   columns: data.quoteMap,
     //   ordered: state.ordered
@@ -224,44 +215,44 @@ export const Groups = ({
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "75%"}}>                
-                <GroupView group={groups['gSharedStaging']} key={'gSharedStaging'} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gSharedStaging']} key={'gSharedStaging'} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gSharedActive']} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gSharedActive']} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "15%"}}>
-                <GroupView group={groups['gSharedMainQuest']} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gSharedMainQuest']} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
               
             </div> 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "100%"}}>
-                <GroupView group={groups['gPlayer1Engaged']} key={'gPlayer1Engaged'} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Engaged']} key={'gPlayer1Engaged'} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
             </div>
               
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "100%"}}>
-                <GroupView group={groups['gPlayer1Play1']} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Play1']} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
             </div>
             <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "90%"}}>
-                <GroupView group={groups['gPlayer1Play2']} showTitle="false" broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Play2']} showTitle="false" gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Event']} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Event']} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
             </div>
             <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
               <WidthContainer style={{width: "80%"}}>
-                <GroupView group={groups['gPlayer1Hand']} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Hand']} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Deck']} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Deck']} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Discard']} broadcast={broadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Discard']} gameBroadcast={gameBroadcast}></GroupView>
               </WidthContainer>
             </div>
           </div>
@@ -304,12 +295,12 @@ export const Groups = ({
             }}
           >        
             <div style={{height: "33.3%"}}>
-              <GroupView group={groups['gSharedExtra1']} broadcast={broadcast} showTitle="false"></GroupView>
+              <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} showTitle="false"></GroupView>
             </div>
             <div style={{height: "33.3%"}}>
-              <GroupView group={groups['gSharedExtra2']} broadcast={broadcast} showTitle="false"></GroupView></div>
+              <GroupView group={groups['gSharedExtra2']} gameBroadcast={gameBroadcast} showTitle="false"></GroupView></div>
             <div style={{height: "33.4%"}}>
-              <GroupView group={groups['gSharedExtra3']} broadcast={broadcast} showTitle="false"></GroupView></div>
+              <GroupView group={groups['gSharedExtra3']} gameBroadcast={gameBroadcast} showTitle="false"></GroupView></div>
           </div>
           <div className="text-center" onClick={() => toggleScratch()} style={{height: "3%"}}>
             <FontAwesomeIcon className="text-white" icon={showScratch ? faChevronDown : faChevronUp}/>
@@ -358,7 +349,7 @@ export default Groups;
 
 // export const Groups = ({
 //   gameUIView,
-//   broadcast,
+//   gameBroadcast,
 // }) => {
 
 //   const [groups, setGroups] = useState(gameUIView.game_ui.game.groups);
@@ -421,7 +412,7 @@ export default Groups;
 //   //     }
 //   //   }
 //   //   setGroups(newGroups);
-//   //   broadcast("update_groups",{groups: newGroups});
+//   //   gameBroadcast("update_groups",{groups: newGroups});
 //   // };
 
 //   const onDragEnd = (result) => {
@@ -483,7 +474,7 @@ export default Groups;
 
 //     <WidthContainer>
 //       <Group
-//         broadcast={broadcast}
+//         gameBroadcast={gameBroadcast}
 //         group={groups['gSharedQuestDeck']}
 //         key={'gSharedQuestDeck'}
 //         title={groups['gSharedQuestDeck'].id}
@@ -492,7 +483,7 @@ export default Groups;
 //         setActiveCard={setActiveCard}
 //       />
 //       <Group
-//         broadcast={broadcast}
+//         gameBroadcast={gameBroadcast}
 //         group={groups['gSharedEncounterDeck']}
 //         key={'gSharedEncounterDeck'}
 //         title={groups['gSharedEncounterDeck'].id}
@@ -501,7 +492,7 @@ export default Groups;
 //         setActiveCard={setActiveCard}
 //       />      
 //       <Group
-//         broadcast={broadcast}
+//         gameBroadcast={gameBroadcast}
 //         group={groups['gPlayer1Deck']}
 //         key={'gPlayer1Deck'}
 //         title={groups['gPlayer1Deck'].id}
@@ -510,7 +501,7 @@ export default Groups;
 //         setActiveCard={setActiveCard}
 //       />  
 //       <Group
-//         broadcast={broadcast}
+//         gameBroadcast={gameBroadcast}
 //         group={groups['gPlayer2Deck']}
 //         key={'gPlayer2Deck'}
 //         title={groups['gPlayer2Deck'].id}
@@ -519,7 +510,7 @@ export default Groups;
 //         setActiveCard={setActiveCard}
 //       />  
 //       <Group
-//         broadcast={broadcast}
+//         gameBroadcast={gameBroadcast}
 //         group={groups['gPlayer3Deck']}
 //         key={'gPlayer3Deck'}
 //         title={groups['gPlayer3Deck'].id}

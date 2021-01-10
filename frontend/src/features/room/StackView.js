@@ -72,7 +72,7 @@ export default class StackView extends Component {
           return(
 
             <CardView
-              broadcast={this.props.broadcast} 
+              gameBroadcast={this.props.gameBroadcast} 
               groupID={this.props.group.id} 
               group={this.props.group}
               stackIndex={this.props.stackIndex}
@@ -95,7 +95,7 @@ export default class StackView extends Component {
 
 function StackView(props) {
   const {
-    broadcast,
+    gameBroadcast,
     group,
     stackIndex,
     stack,
@@ -135,7 +135,7 @@ function StackView(props) {
           return(
     
             <CardView
-              broadcast={broadcast} 
+              gameBroadcast={gameBroadcast} 
               groupID={group.id} 
               group={group}
               stackIndex={stackIndex}

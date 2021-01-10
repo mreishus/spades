@@ -12,17 +12,6 @@ interface Props {
 
 export const Chat: React.FC<Props> = ({ chatBroadcast, messages }) => {
   const isLoggedIn = useIsLoggedIn();
-  // const [messages, setMessages] = useState<Array<ChatMessage>>([]);
-  // const onChannelMessage = useCallback((event, payload) => {
-  //   if (
-  //     event === "phx_reply" &&
-  //     payload.response != null &&
-  //     payload.response.messages != null
-  //   ) {
-  //     setMessages(payload.response.messages);
-  //   }
-  // }, []);
-  //const broadcast = useChannel(`chat:${roomName}`, onChannelMessage);
 
   return (
 
@@ -31,17 +20,9 @@ export const Chat: React.FC<Props> = ({ chatBroadcast, messages }) => {
         <ChatMessages messages={messages}/>
       </div>
       <div className="text-center" >
-        {isLoggedIn && <ChatInput broadcast={chatBroadcast} />}
+        {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} />}
       </div>
     </div>
-
-
-    // <div className="flex flex-1 flex-col h-full w-full">
-    //   <div className="flex flex-grow flex-col mb-2 max-h-full">
-    //     <ChatMessages messages={messages} className="flex" />
-    //   </div>
-    //   {isLoggedIn && <ChatInput broadcast={broadcast} />}
-    // </div>
   );
 };
 export default Chat;

@@ -77,7 +77,7 @@ const InnerQuoteList = React.memo(function InnerQuoteList(props) {
         >
           {(dragProvided, dragSnapshot) => (
             <StackView
-              broadcast={props.broadcast}
+              gameBroadcast={props.gameBroadcast}
               group={props.group}
               stackIndex={stackIndex}
               stack={stack}
@@ -93,7 +93,7 @@ const InnerQuoteList = React.memo(function InnerQuoteList(props) {
 });
 
 function InnerList(props) {
-  const { isDraggingOver, isDraggingFrom, broadcast, group, stacks, dropProvided } = props;
+  const { isDraggingOver, isDraggingFrom, gameBroadcast, group, stacks, dropProvided } = props;
 
   return (
     <Container>
@@ -102,7 +102,7 @@ function InnerList(props) {
         <InnerQuoteList 
           isDraggingOver={isDraggingOver}
           isDraggingFrom={isDraggingFrom}
-          broadcast={broadcast} 
+          gameBroadcast={gameBroadcast} 
           group={group} 
           stacks={stacks}
         />
@@ -114,7 +114,7 @@ function InnerList(props) {
 
 export default function Stacks(props) {
   const {
-    broadcast,
+    gameBroadcast,
     group,
     isDropDisabled,
     isCombineEnabled,
@@ -139,7 +139,7 @@ export default function Stacks(props) {
             <InnerList
                 isDraggingOver={dropSnapshot.isDraggingOver}
                 isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
-                broadcast={broadcast}
+                gameBroadcast={gameBroadcast}
                 group={group}
                 stacks={group.stacks}
                 dropProvided={dropProvided}

@@ -92,7 +92,7 @@ const CardComponent = React.memo(({
     stackIndex,
     groupID,
     group,
-    broadcast,
+    gameBroadcast,
 }) => {
     //const [card, setCard] = useState(inputCard);
 
@@ -156,7 +156,7 @@ const CardComponent = React.memo(({
         //console.log(stackIndex);
         //console.log(groups[group.id].stacks[stackIndex]);
         //groups[group.id].stacks[stackIndex].cards[cardIndex] = card;
-        broadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
+        gameBroadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
         forceUpdate();
     }
 
@@ -167,15 +167,15 @@ const CardComponent = React.memo(({
     const zIndex = 1e5-cardIndex;
 
     function handleMenuClick(e, data) {
-        if (data.action === "detach") broadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
+        if (data.action === "detach") gameBroadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
         else if (data.action === "move_card") {
             if (data.position === "t") {
-                broadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
             } else if (data.position === "b") {
-                broadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: -1, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: -1, dest_card_index: 0, create_new_stack: true})
             } else if (data.position === "s") {
-                broadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
-                broadcast("shuffle_group", {group_id: data.destGroupID})
+                gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("shuffle_group", {group_id: data.destGroupID})
             }
         }
     }
@@ -219,7 +219,7 @@ const CardComponent = React.memo(({
                 onMouseLeave={event => handleMouseLeave(event)}
             >
                 
-                <TokensView card={inputCard} isHighlighted={isActive || isClicked} broadcast={broadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></TokensView>
+                <TokensView card={inputCard} isHighlighted={isActive || isClicked} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></TokensView>
             </div>
             </ContextMenuTrigger>
 
@@ -272,7 +272,7 @@ class CardClass extends Component {
         const cardIndex = this.props.cardIndex;
         const stackIndex = this.props.stackIndex;
         const groupID = this.props.groupID;
-        const broadcast = this.props.broadcast;
+        const gameBroadcast = this.props.gameBroadcast;
         return(
             <CardComponent
                 inputCard={inputCard}
@@ -280,7 +280,7 @@ class CardClass extends Component {
                 stackIndex={stackIndex}
                 groupID={groupID}
                 group={this.props.group}
-                broadcast={broadcast}
+                gameBroadcast={gameBroadcast}
             ></CardComponent>
         )
     }
@@ -292,7 +292,7 @@ const CardView = React.memo(({
     cardIndex,
     stackIndex,
     groupID,
-    broadcast,
+    gameBroadcast,
     group,
   }) => {
     //if (groupID==='gSharedStaging') console.log('rendering Cardview');
@@ -307,7 +307,7 @@ const CardView = React.memo(({
             stackIndex={stackIndex}
             groupID={groupID}
             group={group}
-            broadcast={broadcast}
+            gameBroadcast={gameBroadcast}
         ></CardClass>
 
 

@@ -23,7 +23,7 @@ export const Token = ({
     left,
     top,
     showButtons,
-    broadcast,
+    gameBroadcast,
     groupID,
     stackIndex,
     cardIndex,
@@ -33,58 +33,6 @@ export const Token = ({
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
     const [amount, setAmount] = useState(card.tokens[type]);
-
-    // useEffect(() => {
-
-    //     const onKeyDown = ({key}) => {
-    //         console.log(key);
-    //         if (key === "t" && !adjustVisible && isHighlighted) {
-    //             setAdjustVisible(true);
-    //         }
-    //     }
-
-    //     const onKeyUp = ({key}) => {
-    //         if (key === "t") {
-    //             setAdjustVisible(false);
-    //         }
-    //     }
-
-    //     document.addEventListener('keydown', onKeyDown);
-    //     document.addEventListener('keyup', onKeyUp);
-
-    //     return () => {
-    //         document.removeEventListener('keydown', onKeyDown);
-    //         document.removeEventListener('keyup', onKeyUp);
-    //     }
-    // // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [isHighlighted]);
-
-    // if (type==="resource") console.log('rendering resource',amount,card.tokens[type]);
-    // console.log("visible",inputAdjustVisible,adjustVisible);
-
-
-
-
-
-    //if (card.tokens[type] !== amount) setAmount(card.tokens[type]);
-
-
-
-
-    // if (inputAdjustVisible && !adjustVisible) setAdjustVisible(true);
-    // if (!inputAdjustVisible && adjustVisible) {
-    //     const newTokens = {
-    //         ...card.tokens,
-    //         [type]: amount,
-    //     }
-    //     const newCard = {
-    //         ...card,
-    //         tokens: newTokens,
-    //     }
-    //     console.log("newcard",newCard);
-    //     broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"clickarrow"});
-    //     setAdjustVisible(false);
-    // }
 
     useEffect(() => {    
         if (card.tokens[type] !== amount) setAmount(card.tokens[type]);
@@ -110,10 +58,10 @@ export const Token = ({
         console.log(newGameUI.game.groups[groupID].stacks)
         newGameUI.game.groups[groupID].stacks[stackIndex].cards[cardIndex].tokens[type] = amount+delta
         setGameUI(newGameUI) */
-        //broadcast("update_gameui", {gameui: newGameUI})
+        //gameBroadcast("update_gameui", {gameui: newGameUI})
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
-            broadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
+            gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
         }, 500);
         
 

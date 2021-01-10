@@ -22,7 +22,8 @@ declare module "elixir-backend" {
 
   // One side of a card
   export declare class CardFace {
-    public src;
+    public name: string;
+    public src: sring;
     public width: number;
     public height: number;
   }
