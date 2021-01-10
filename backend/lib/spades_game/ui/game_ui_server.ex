@@ -289,9 +289,12 @@ defmodule SpadesGame.GameUIServer do
     gameui = GameUI.move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false)
     shadow_card = GameUI.get_card(gameui, group_id, stack_index, cards_size)
     IO.puts("shadow_card")
-    #IO.inspect(shadow_card)
-    rotated_shadow_card = put_in(shadow_card["rotation"], -30)
-    GameUI.update_card(gameui, group_id, stack_index, cards_size, rotated_shadow_card)
+    if shadow_card do
+      rotated_shadow_card = put_in(shadow_card["rotation"], -30)
+      GameUI.update_card(gameui, group_id, stack_index, cards_size, rotated_shadow_card)
+    else
+      gameui
+    end
     |> save_and_reply()
   end
 

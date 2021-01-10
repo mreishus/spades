@@ -4,7 +4,7 @@ import GameUIContext from "../../contexts/GameUIContext";
 import {KeypressProvider} from '../../contexts/KeypressContext'
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
 import useChannel from "../../hooks/useChannel";
-import { GameUI } from "elixir-backend";
+import { GameUI, ChatMessage } from "elixir-backend";
 
 interface Props {
   slug: string;
@@ -24,7 +24,19 @@ export const Room: React.FC<Props> = ({ slug }) => {
       setGameUI(game_ui);
     }
   }, []);
+  
+  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
+  const onChatMessage = useCallback((event, payload) => {
+    if (
+      event === "phx_reply" &&
+      payload.response != null &&
+      payload.response.messages != null
+    ) {
+      setMessages(payload.response.messages);
+    }
+  }, []);
   const broadcast = useChannel(`room:${slug}`, onChannelMessage);
+  const chatBroadcast = useChannel(`chat:${slug}`, onChatMessage);
   //if (gameUIView) broadcast("update_groups",gameUIView.game_ui.game.groups);
   console.log('rendering room');
   return (
@@ -37,7 +49,7 @@ export const Room: React.FC<Props> = ({ slug }) => {
         {gameUI != null && (
           <GameUIContext.Provider value={{gameUI, setGameUI}}>
             <ActiveCardProvider value={null}>
-              <RoomGame broadcast={broadcast}/>
+              <RoomGame broadcast={broadcast} chatBroadcast={chatBroadcast} messages={messages}/>
             </ActiveCardProvider>
          </GameUIContext.Provider>
         )}

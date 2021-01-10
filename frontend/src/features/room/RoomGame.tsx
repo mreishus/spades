@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import { Groups } from "./Groups";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import {useSetKeypress} from "../../contexts/KeypressContext";
+import { ChatMessage } from "elixir-backend";
 
 var delayBroadcast: number;
 
@@ -27,6 +28,8 @@ const keyTokenMap: { [id: string] : Array<string | number>; } = {
 
 interface Props {
   broadcast: (eventName: string, payload: object) => void;
+  chatBroadcast: (eventName: string, payload: object) => void;
+  messages: Array<ChatMessage>;
 }
 
 
@@ -58,7 +61,7 @@ interface Props {
 
 // 
 
-const RoomGame: React.FC<Props> = ({ broadcast }) => {
+const RoomGame: React.FC<Props> = ({ broadcast, chatBroadcast, messages }) => {
   console.log('rendering roomgame');
   //const gameUIView = React.useContext(GameUIViewContext);
   //if (gameUIView) broadcast("update_groups",{groups: gameUIView.game_ui.game.groups});
@@ -152,6 +155,7 @@ const RoomGame: React.FC<Props> = ({ broadcast }) => {
         // Deal shadow card
         else if (k === "s") {
           broadcast("deal_shadow", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
+          chatBroadcast("game_update", {message: "dealt a shadow card to "+activeCardAndLoc.card.sides["A"].src});
         }
         if (cardChanged) setActiveCardAndLoc({card: newCard, groupID: activeCardAndLoc.groupID, stackIndex: activeCardAndLoc.stackIndex, cardIndex: activeCardAndLoc.cardIndex});
       }
@@ -175,6 +179,8 @@ const RoomGame: React.FC<Props> = ({ broadcast }) => {
   return (
       <Groups 
         broadcast={broadcast}
+        chatBroadcast={chatBroadcast}
+        messages={messages}
       />
     
   )

@@ -6,6 +6,7 @@ import Button from "../../components/basic/Button";
 import Container from "../../components/basic/Container";
 import AdminContact from "../../components/AdminContact";
 import Chat from "../chat/Chat";
+import { ChatMessage } from "elixir-backend";
 
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
@@ -29,6 +30,19 @@ export const Lobby: React.FC = () => {
     },
     [setData]
   );
+
+  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
+  const onChatMessage = useCallback((event, payload) => {
+    if (
+      event === "phx_reply" &&
+      payload.response != null &&
+      payload.response.messages != null
+    ) {
+      setMessages(payload.response.messages);
+    }
+  }, []);
+  const chatBroadcast = useChannel(`chat:Lobby`, onChatMessage);
+
 
   useChannel("lobby:lobby", onChannelMessage);
   const rooms = data != null && data.data != null ? data.data : [];
@@ -85,7 +99,7 @@ export const Lobby: React.FC = () => {
         </div>
         <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">
           <div className="flex items-end h-full">
-            <Chat roomName="lobby" />
+            <Chat chatBroadcast={chatBroadcast} messages={messages} />
           </div>
         </div>
       </div>

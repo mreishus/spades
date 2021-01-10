@@ -157,5 +157,6 @@ declare module "elixir-backend" {
     public sent_by: number | null;
     public when: string; // Actually a timestamp
     public shortcode: string;
+    public game_update: boolean;
   }
 }

@@ -23,8 +23,11 @@ export const UserName: React.FC<Props> = ({ userId }) => {
   );
 
   if (userId === null) {
+    return <span>anonymous</span>;
+  } 
+  if (userId < 0) {
     return null;
-  }
+  } 
   if (user != null) {
     return <span>{user.alias}</span>;
   }

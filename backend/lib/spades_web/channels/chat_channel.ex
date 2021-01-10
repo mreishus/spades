@@ -25,13 +25,27 @@ defmodule SpadesWeb.ChatChannel do
       ) do
     message = ChatMessage.new(message_text, user_id)
 
-    # Disallow anonymous message submission
-    messages =
-      if user_id != nil do
-        ChatServer.add_message(room_slug, message)
-      else
-        ChatServer.messages(room_slug)
-      end
+    messages = ChatServer.add_message(room_slug, message)
+
+    socket =
+      socket
+      |> assign(:messages, messages)
+
+    notify(socket)
+    # use noreply - Notify will send them a reply
+    {:noreply, socket}
+  end
+
+  # New chat message typed from user
+  def handle_in(
+      "game_update",
+      %{"message" => message_text},
+      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+    ) do
+
+    message = ChatMessage.new(message_text, user_id, 1)
+
+    messages = ChatServer.add_message(room_slug, message)
 
     socket =
       socket

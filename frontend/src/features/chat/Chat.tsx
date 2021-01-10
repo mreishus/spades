@@ -6,22 +6,23 @@ import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { ChatMessage } from "elixir-backend";
 
 interface Props {
-  roomName: string;
+  chatBroadcast: (eventName: string, payload: object) => void;
+  messages: Array<ChatMessage>;
 }
 
-export const Chat: React.FC<Props> = ({ roomName }) => {
+export const Chat: React.FC<Props> = ({ chatBroadcast, messages }) => {
   const isLoggedIn = useIsLoggedIn();
-  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
-  const onChannelMessage = useCallback((event, payload) => {
-    if (
-      event === "phx_reply" &&
-      payload.response != null &&
-      payload.response.messages != null
-    ) {
-      setMessages(payload.response.messages);
-    }
-  }, []);
-  const broadcast = useChannel(`chat:${roomName}`, onChannelMessage);
+  // const [messages, setMessages] = useState<Array<ChatMessage>>([]);
+  // const onChannelMessage = useCallback((event, payload) => {
+  //   if (
+  //     event === "phx_reply" &&
+  //     payload.response != null &&
+  //     payload.response.messages != null
+  //   ) {
+  //     setMessages(payload.response.messages);
+  //   }
+  // }, []);
+  //const broadcast = useChannel(`chat:${roomName}`, onChannelMessage);
 
   return (
 
@@ -30,7 +31,7 @@ export const Chat: React.FC<Props> = ({ roomName }) => {
         <ChatMessages messages={messages}/>
       </div>
       <div className="text-center" >
-        {isLoggedIn && <ChatInput broadcast={broadcast} />}
+        {isLoggedIn && <ChatInput broadcast={chatBroadcast} />}
       </div>
     </div>
 
