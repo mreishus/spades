@@ -30,7 +30,7 @@ const DropZone = styled.div`
   width: 100%;
   height: 100%;
   min-height: 100%;
-  padding: 0 0 0 0.75vw;
+  padding: 0 0 0 0;
 `;
 
 /* stylelint-disable block-no-empty */
@@ -80,7 +80,7 @@ function DropZoneContainer(props) {
     <Container>
       <CardBack group={group} isDraggingOver={isDraggingOver} isDraggingFrom={isDraggingFrom}></CardBack>
       <DropZone ref={dropProvided.innerRef} group={group}>
-        <StacksList 
+        <StacksList
           isDraggingOver={isDraggingOver}
           isDraggingFrom={isDraggingFrom}
           gameBroadcast={gameBroadcast} 

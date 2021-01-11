@@ -157,7 +157,11 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
           cardChanged = true;
           const newCardName = newCard["sides"][newCard["currentSide"]].name;
           gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-          chatBroadcast("game_update", {message: "flipped "+cardName+" to "+newCardName+"."});
+          if (cardName==="Player Card" || cardName==="Encounter Card") {
+            chatBroadcast("game_update", {message: "flipped "+newCardName+" faceup."});
+          } else {
+            chatBroadcast("game_update", {message: "flipped "+cardName+" over."});
+          }
         }
         // Exhaust card
         else if (k === "a") {
