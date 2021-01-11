@@ -24,6 +24,7 @@ export const Token = ({
     top,
     showButtons,
     gameBroadcast,
+    chatBroadcast,
     groupID,
     stackIndex,
     cardIndex,
@@ -50,18 +51,28 @@ export const Token = ({
             ...card,
             tokens: newTokens,
         }
-        console.log("newcard",newCard);
 
-/*         const newGameU  I = {
-            ...gameUI
-        }
-        console.log(newGameUI.game.groups[groupID].stacks)
-        newGameUI.game.groups[groupID].stacks[stackIndex].cards[cardIndex].tokens[type] = amount+delta
-        setGameUI(newGameUI) */
-        //gameBroadcast("update_gameui", {gameui: newGameUI})
+        // Get card name
+        const cardName = newCard["sides"][newCard["currentSide"]].name;
+        // Determine total number of tokens added or removed since last broadcast
+        const totalDelta = newCard.tokens[type]-card.tokens[type];
+        // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
             gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
+            if (delta > 0) {
+                if (delta === 1) {
+                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" token to "+cardName+"."});
+                } else {
+                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" tokens to "+cardName+"."});
+                }
+            } else {
+                if (delta === -1) {
+                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+type+" token from "+cardName+"."});
+                } else {
+                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+type+" tokens from "+cardName+"."});
+                }                
+            }
         }, 500);
         
 

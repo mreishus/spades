@@ -3,7 +3,6 @@ import styled from "@emotion/styled";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import StackView from "./StackView";
 import CardBack from "./CardBack"
-import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 
 export const getBackgroundColor = (isDraggingOver, isDraggingFrom) => {
   if (isDraggingOver) {
@@ -34,32 +33,13 @@ const DropZone = styled.div`
   padding: 0 0 0 0.75vw;
 `;
 
-const MenuContainer = styled.div`
-    background: red;
-    cursor: default;
-`;
-
-// const CardBack = styled.div`
-//   /* stop the list collapsing when empty */
-//   display: ${props => (props.type=="deck" || props.type=="discard") ? "" : "none"};
-//   width: ${CARDSCALE}vw;
-//   height: ${CARDSCALE/0.72}vw;
-//   border-width: 0px;
-//   border-color: black;
-//   position: absolute;
-//   margin: 0 0 0 0.75vw;
-//   background: ${props => ((props.type=="deck" || props.type=="discard") && (props.group.stacks.length>1 || (props.group.stacks.length===1 && props.isDraggingOver && !props.isDraggingFrom))) ? 
-//                               (props.type=="deck" ? `url(${playerBackURL})`: `url(${props.group.stacks[0].cards[0].src})`) : ""}; 
-//   background-size: contain;
-// `;
-
 /* stylelint-disable block-no-empty */
 const Container = styled.div`
   height: 100%;
 `;
 /* stylelint-enable */
 
-const InnerQuoteList = React.memo(function InnerQuoteList(props) {
+const StacksList = React.memo(function StacksList(props) {
   const pile = (props.group.type=="deck" || props.group.type=="discard")
 
   // Truncate stacked piles
@@ -78,6 +58,7 @@ const InnerQuoteList = React.memo(function InnerQuoteList(props) {
           {(dragProvided, dragSnapshot) => (
             <StackView
               gameBroadcast={props.gameBroadcast}
+              chatBroadcast={props.chatBroadcast}
               group={props.group}
               stackIndex={stackIndex}
               stack={stack}
@@ -92,17 +73,18 @@ const InnerQuoteList = React.memo(function InnerQuoteList(props) {
   ));
 });
 
-function InnerList(props) {
-  const { isDraggingOver, isDraggingFrom, gameBroadcast, group, stacks, dropProvided } = props;
+function DropZoneContainer(props) {
+  const { isDraggingOver, isDraggingFrom, gameBroadcast, chatBroadcast, group, stacks, dropProvided } = props;
 
   return (
     <Container>
       <CardBack group={group} isDraggingOver={isDraggingOver} isDraggingFrom={isDraggingFrom}></CardBack>
       <DropZone ref={dropProvided.innerRef} group={group}>
-        <InnerQuoteList 
+        <StacksList 
           isDraggingOver={isDraggingOver}
           isDraggingFrom={isDraggingFrom}
           gameBroadcast={gameBroadcast} 
+          chatBroadcast={chatBroadcast} 
           group={group} 
           stacks={stacks}
         />
@@ -115,6 +97,7 @@ function InnerList(props) {
 export default function Stacks(props) {
   const {
     gameBroadcast,
+    chatBroadcast,
     group,
     isDropDisabled,
     isCombineEnabled,
@@ -136,10 +119,11 @@ export default function Stacks(props) {
           {...dropProvided.droppableProps}
           type={group.type}
         >
-            <InnerList
+            <DropZoneContainer
                 isDraggingOver={dropSnapshot.isDraggingOver}
                 isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
                 gameBroadcast={gameBroadcast}
+                chatBroadcast={chatBroadcast}
                 group={group}
                 stacks={group.stacks}
                 dropProvided={dropProvided}

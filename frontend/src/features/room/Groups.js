@@ -146,8 +146,9 @@ export const Groups = ({
       dest_group_id: destination.droppableId, 
       dest_stack_index: destination.index
     });
-
-    if (source.droppableId != destination.droppableId) chatBroadcast("game_update",{message: "moved "+topCardNameSource+" from "+GROUPSINFO[source.droppableId].name+" to "+GROUPSINFO[destination.droppableId].name+"."})
+    const sourceGroupTitle = GROUPSINFO[source.droppableId].name;
+    const destGroupTitle = GROUPSINFO[destination.droppableId].name
+    if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+topCardNameSource+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
     //gameBroadcast("update_gameui",{gameui: newGameUI});
 
 
@@ -166,8 +167,6 @@ export const Groups = ({
     //   ordered: state.ordered
     // });
   };
-
-
 
   return (
     <DragDropContext
@@ -215,44 +214,44 @@ export const Groups = ({
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "75%"}}>                
-                <GroupView group={groups['gSharedStaging']} key={'gSharedStaging'} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gSharedStaging']} key={'gSharedStaging'} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gSharedActive']} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gSharedActive']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "15%"}}>
-                <GroupView group={groups['gSharedMainQuest']} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gSharedMainQuest']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
               
             </div> 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "100%"}}>
-                <GroupView group={groups['gPlayer1Engaged']} key={'gPlayer1Engaged'} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Engaged']} key={'gPlayer1Engaged'} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
             </div>
               
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "100%"}}>
-                <GroupView group={groups['gPlayer1Play1']} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Play1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
             </div>
             <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "90%"}}>
-                <GroupView group={groups['gPlayer1Play2']} showTitle="false" gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Play2']} showTitle="false" gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Event']} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Event']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
             </div>
             <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
               <WidthContainer style={{width: "80%"}}>
-                <GroupView group={groups['gPlayer1Hand']} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Hand']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Deck']} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Deck']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Discard']} gameBroadcast={gameBroadcast}></GroupView>
+                <GroupView group={groups['gPlayer1Discard']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
               </WidthContainer>
             </div>
           </div>
@@ -295,12 +294,12 @@ export const Groups = ({
             }}
           >        
             <div style={{height: "33.3%"}}>
-              <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} showTitle="false"></GroupView>
+              <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView>
             </div>
             <div style={{height: "33.3%"}}>
-              <GroupView group={groups['gSharedExtra2']} gameBroadcast={gameBroadcast} showTitle="false"></GroupView></div>
+              <GroupView group={groups['gSharedExtra2']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView></div>
             <div style={{height: "33.4%"}}>
-              <GroupView group={groups['gSharedExtra3']} gameBroadcast={gameBroadcast} showTitle="false"></GroupView></div>
+              <GroupView group={groups['gSharedExtra3']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView></div>
           </div>
           <div className="text-center" onClick={() => toggleScratch()} style={{height: "3%"}}>
             <FontAwesomeIcon className="text-white" icon={showScratch ? faChevronDown : faChevronUp}/>
@@ -474,7 +473,7 @@ export default Groups;
 
 //     <WidthContainer>
 //       <Group
-//         gameBroadcast={gameBroadcast}
+//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
 //         group={groups['gSharedQuestDeck']}
 //         key={'gSharedQuestDeck'}
 //         title={groups['gSharedQuestDeck'].id}
@@ -483,7 +482,7 @@ export default Groups;
 //         setActiveCard={setActiveCard}
 //       />
 //       <Group
-//         gameBroadcast={gameBroadcast}
+//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
 //         group={groups['gSharedEncounterDeck']}
 //         key={'gSharedEncounterDeck'}
 //         title={groups['gSharedEncounterDeck'].id}
@@ -492,7 +491,7 @@ export default Groups;
 //         setActiveCard={setActiveCard}
 //       />      
 //       <Group
-//         gameBroadcast={gameBroadcast}
+//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
 //         group={groups['gPlayer1Deck']}
 //         key={'gPlayer1Deck'}
 //         title={groups['gPlayer1Deck'].id}
@@ -501,7 +500,7 @@ export default Groups;
 //         setActiveCard={setActiveCard}
 //       />  
 //       <Group
-//         gameBroadcast={gameBroadcast}
+//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
 //         group={groups['gPlayer2Deck']}
 //         key={'gPlayer2Deck'}
 //         title={groups['gPlayer2Deck'].id}
@@ -510,7 +509,7 @@ export default Groups;
 //         setActiveCard={setActiveCard}
 //       />  
 //       <Group
-//         gameBroadcast={gameBroadcast}
+//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
 //         group={groups['gPlayer3Deck']}
 //         key={'gPlayer3Deck'}
 //         title={groups['gPlayer3Deck'].id}

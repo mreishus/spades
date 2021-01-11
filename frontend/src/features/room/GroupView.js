@@ -41,7 +41,6 @@ export default class GroupView extends Component {
   };
 
   render() {
-    const gameBroadcast = this.props.gameBroadcast;
     const group = this.props.group;
     console.log('rendering',group.id);
     return (
@@ -52,7 +51,8 @@ export default class GroupView extends Component {
           <Title>{group.name}</Title>
         </Header>
         <Stacks
-          gameBroadcast={gameBroadcast}
+          gameBroadcast={this.props.gameBroadcast}
+          chatBroadcast={this.props.chatBroadcast}
           group={group}
           internalScroll={this.props.isScrollable}
           isCombineEnabled={group.type === "play"}

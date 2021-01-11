@@ -93,6 +93,7 @@ const CardComponent = React.memo(({
     groupID,
     group,
     gameBroadcast,
+    chatBroadcast,
 }) => {
     //const [card, setCard] = useState(inputCard);
 
@@ -106,6 +107,7 @@ const CardComponent = React.memo(({
     const setActiveCard = useSetActiveCard();
     const [isActive, setIsActive] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
+    const cardName = inputCard["sides"][inputCard["currentSide"]].name
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
 
@@ -143,9 +145,11 @@ const CardComponent = React.memo(({
         if (!inputCard.exhausted) {
             inputCard.exhausted = true;
             inputCard.rotation = 90;
+            chatBroadcast("game_update", {message: "exhausted "+cardName+"."});
         } else {
             inputCard.exhausted = false;
             inputCard.rotation = 0;
+            chatBroadcast("game_update", {message: "readied "+cardName+"."});
         }
         //setCard({...card});
         //const newGroup = group;
@@ -179,6 +183,7 @@ const CardComponent = React.memo(({
             }
         }
     }
+    
     if (!inputCard) return <div></div>;
     const currentFace = inputCard.sides[inputCard.currentSide];
     return (
@@ -219,7 +224,15 @@ const CardComponent = React.memo(({
                 onMouseLeave={event => handleMouseLeave(event)}
             >
                 
-                <TokensView card={inputCard} isHighlighted={isActive || isClicked} gameBroadcast={gameBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></TokensView>
+                <TokensView 
+                    card={inputCard} 
+                    isHighlighted={isActive || isClicked} 
+                    gameBroadcast={gameBroadcast} 
+                    chatBroadcast={chatBroadcast} 
+                    groupID={groupID} 
+                    stackIndex={stackIndex} 
+                    cardIndex={cardIndex}
+                ></TokensView>
             </div>
             </ContextMenuTrigger>
 
@@ -266,21 +279,15 @@ class CardClass extends Component {
     };
   
     render() {
-        //if (this.props.groupID==='gSharedStaging') console.log('rendering Cardclass');
-        //if (this.props.groupID==='gSharedStaging') console.log(this.props.inputCard);
-        const inputCard = this.props.inputCard;
-        const cardIndex = this.props.cardIndex;
-        const stackIndex = this.props.stackIndex;
-        const groupID = this.props.groupID;
-        const gameBroadcast = this.props.gameBroadcast;
         return(
             <CardComponent
-                inputCard={inputCard}
-                cardIndex={cardIndex}
-                stackIndex={stackIndex}
-                groupID={groupID}
+                inputCard={this.props.inputCard}
+                cardIndex={this.props.cardIndex}
+                stackIndex={this.props.stackIndex}
+                groupID={this.props.groupID}
                 group={this.props.group}
-                gameBroadcast={gameBroadcast}
+                gameBroadcast={this.props.gameBroadcast}
+                chatBroadcast={this.props.chatBroadcast}
             ></CardComponent>
         )
     }
@@ -293,6 +300,7 @@ const CardView = React.memo(({
     stackIndex,
     groupID,
     gameBroadcast,
+    chatBroadcast,
     group,
   }) => {
     //if (groupID==='gSharedStaging') console.log('rendering Cardview');
@@ -308,6 +316,7 @@ const CardView = React.memo(({
             groupID={groupID}
             group={group}
             gameBroadcast={gameBroadcast}
+            chatBroadcast={chatBroadcast}
         ></CardClass>
 
 

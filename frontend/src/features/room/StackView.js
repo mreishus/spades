@@ -53,7 +53,6 @@ export default class StackView extends Component {
     var handSpacing = 100*0.8*0.8*0.8/(this.props.group.stacks.length);
     if (handSpacing > CARDSCALE) handSpacing = CARDSCALE;
     const stackWidth = this.props.group.type == "hand" ? handSpacing : CARDSCALE/0.72 + CARDSCALE/3*(this.props.stack.cards.length-1);
-
     return (
       <Container
         isDragging={this.props.isDragging}
@@ -73,6 +72,7 @@ export default class StackView extends Component {
 
             <CardView
               gameBroadcast={this.props.gameBroadcast} 
+              chatBroadcast={this.props.chatBroadcast} 
               groupID={this.props.group.id} 
               group={this.props.group}
               stackIndex={this.props.stackIndex}
