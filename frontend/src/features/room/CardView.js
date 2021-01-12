@@ -7,6 +7,7 @@ import { getCardBackSRC } from "./CardBack"
 import { CARDSCALE } from "./Constants"
 import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
+import { GROUPSINFO } from "./Constants"
 
 //import cx from "classnames";
 
@@ -107,7 +108,10 @@ const CardComponent = React.memo(({
     const setActiveCard = useSetActiveCard();
     const [isActive, setIsActive] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
-    const cardName = inputCard["sides"][inputCard["currentSide"]].name
+    const currentSide = inputCard["sides"][inputCard["currentSide"]];
+    const cardName = currentSide.name;
+    const cardID = inputCard.id;
+    const cardNameID = cardName+' ('+cardID.substr(cardID.length - 4)+')';
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
 
@@ -123,7 +127,6 @@ const CardComponent = React.memo(({
         if (!isActive) {
             setIsActive(true);
             setActiveCard({card: inputCard, groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex});
-            console.log('CardView activeCard',inputCard)
         }
     }
 
@@ -151,15 +154,6 @@ const CardComponent = React.memo(({
             inputCard.rotation = 0;
             chatBroadcast("game_update", {message: "readied "+cardName+"."});
         }
-        //setCard({...card});
-        //const newGroup = group;
-        //group.stacks[stackIndex].cards[cardIndex] = card;
-        //setGroup({...group});
-        //console.log(gameUIView.game_ui.game.groups);
-        //console.log(group.id);
-        //console.log(stackIndex);
-        //console.log(groups[group.id].stacks[stackIndex]);
-        //groups[group.id].stacks[stackIndex].cards[cardIndex] = card;
         gameBroadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
         forceUpdate();
     }
@@ -171,15 +165,24 @@ const CardComponent = React.memo(({
     const zIndex = 1e5-cardIndex;
 
     function handleMenuClick(e, data) {
-        if (data.action === "detach") gameBroadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
+        if (data.action === "detach") {
+            gameBroadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
+            chatBroadcast("game_update",{message: "detached "+cardNameID+"."})
+        }
         else if (data.action === "move_card") {
+            const sourceGroupTitle = GROUPSINFO[groupID].name;
+            const destGroupTitle = GROUPSINFO[data.destGroupID].name;
             if (data.position === "t") {
                 gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                chatBroadcast("game_update",{message: "moved "+cardNameID+" from "+sourceGroupTitle+" to top of "+destGroupTitle+"."})
             } else if (data.position === "b") {
                 gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: -1, dest_card_index: 0, create_new_stack: true})
+                chatBroadcast("game_update",{message: "moved "+cardNameID+" from "+sourceGroupTitle+" to bottom of "+destGroupTitle+"."})
             } else if (data.position === "s") {
                 gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                chatBroadcast("game_update",{message: "moved "+cardNameID+" from "+sourceGroupTitle+" to top of "+destGroupTitle+"."})
                 gameBroadcast("shuffle_group", {group_id: data.destGroupID})
+                chatBroadcast("game_update",{message: "shuffled "+cardNameID+" from "+sourceGroupTitle+" into "+destGroupTitle+"."})
             }
         }
     }

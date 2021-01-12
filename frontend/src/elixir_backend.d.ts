@@ -29,7 +29,7 @@ declare module "elixir-backend" {
   }
 
   export declare class Card {
-    public id: number;
+    public id: string;
     public rotation: number;
     public exhausted: boolean;
     public tokens: Tokens;

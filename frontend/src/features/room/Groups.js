@@ -147,7 +147,7 @@ export const Groups = ({
       dest_stack_index: destination.index
     });
     const sourceGroupTitle = GROUPSINFO[source.droppableId].name;
-    const destGroupTitle = GROUPSINFO[destination.droppableId].name
+    const destGroupTitle = GROUPSINFO[destination.droppableId].name;
     if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+topCardNameSource+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
     //gameBroadcast("update_gameui",{gameui: newGameUI});
 
