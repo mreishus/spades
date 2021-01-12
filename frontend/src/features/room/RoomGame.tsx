@@ -87,7 +87,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   document.addEventListener('keydown', onKeyDown);
   document.addEventListener('keyup', onKeyUp);
  */
-
+  const [typing, setTyping] = useState<Boolean>(false);
   const setKeypress = useSetKeypress();
   const activeCardAndLoc = useActiveCard();
   const setActiveCardAndLoc = useSetActiveCard();
@@ -95,10 +95,13 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
 
   useEffect(() => {
     const onKeyDown = (event: any) => {
+      if (typing) return;
       const k = event.key;
       // Keep track of last pressed key
       setKeypress([k]);
-      // If a card is active, perform hotkey command
+      // General hotkeys
+
+      // Card specific hotkeys
       if (activeCardAndLoc != null) {   
         var newCard = activeCardAndLoc.card;
         var newTokens = newCard.tokens;
@@ -204,6 +207,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         messages={messages}
+        setTyping={setTyping}
       />
     
   )

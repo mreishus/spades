@@ -8,9 +8,10 @@ import { ChatMessage } from "elixir-backend";
 interface Props {
   chatBroadcast: (eventName: string, payload: object) => void;
   messages: Array<ChatMessage>;
+  setTyping: React.Dispatch<React.SetStateAction<Boolean>>
 }
 
-export const Chat: React.FC<Props> = ({ chatBroadcast, messages }) => {
+export const Chat: React.FC<Props> = ({ chatBroadcast, messages, setTyping }) => {
   const isLoggedIn = useIsLoggedIn();
 
   return (
@@ -20,7 +21,7 @@ export const Chat: React.FC<Props> = ({ chatBroadcast, messages }) => {
         <ChatMessages messages={messages}/>
       </div>
       <div className="text-center" >
-        {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} />}
+        {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping} />}
       </div>
     </div>
   );

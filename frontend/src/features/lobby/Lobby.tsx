@@ -17,6 +17,7 @@ interface Props {}
 export const Lobby: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
   const [showModal, setShowModal] = useState(false);
+  const [typing, setTyping] = useState<Boolean>(false);
   const { isLoading, isError, data, setData } = useDataApi<any>(
     "/be/api/rooms",
     null
@@ -99,7 +100,7 @@ export const Lobby: React.FC = () => {
         </div>
         <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">
           <div className="flex items-end h-full">
-            <Chat chatBroadcast={chatBroadcast} messages={messages} />
+            <Chat chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping} />
           </div>
         </div>
       </div>

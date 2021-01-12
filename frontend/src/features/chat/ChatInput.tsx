@@ -6,9 +6,10 @@ import useForm from "../../hooks/useForm";
 
 interface Props {
   chatBroadcast: (eventName: string, payload: object) => void;
+  setTyping: React.Dispatch<React.SetStateAction<Boolean>>
 }
 
-export const ChatInput: React.FC<Props> = ({ chatBroadcast }) => {
+export const ChatInput: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
   const { inputs, handleSubmit, handleInputChange, setInputs } = useForm(
     async () => {
       chatBroadcast("message", { message: inputs.chat });
@@ -26,6 +27,8 @@ export const ChatInput: React.FC<Props> = ({ chatBroadcast }) => {
           name="chat"
           placeholder="your message.."
           className="form-control w-full bg-gray-900 text-white border-0"
+          onFocus={event => setTyping(true)}
+          onBlur={event => setTyping(false)}
           onChange={handleInputChange}
           value={inputs.chat || ""}
         />

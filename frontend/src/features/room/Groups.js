@@ -19,7 +19,8 @@ const WidthContainer = styled.div`
 export const Groups = ({
   gameBroadcast,
   chatBroadcast,
-  messages
+  messages,
+  setTyping
 }) => {
   const { gameUI, setGameUI } = useContext(GameUIContext);
   const [groups, setGroups] = useState(gameUI.game.groups);
@@ -283,7 +284,7 @@ export const Groups = ({
             style={{height: showScratch ? "12%" : "57%", opacity: 0.7}}
           >
             {gameUI != null && (
-              <Chat roomName={gameUI.game_name} chatBroadcast={chatBroadcast} messages={messages}/>
+              <Chat roomName={gameUI.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
             )}
           </div>
           {/* Extra */}
