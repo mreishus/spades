@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom";
 import { Groups } from "./Groups";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
-import {useSetKeypress} from "../../contexts/KeypressContext";
+import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import { ChatMessage } from "elixir-backend";
 
 var delayBroadcast: number;
@@ -88,6 +88,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   document.addEventListener('keyup', onKeyUp);
  */
   const [typing, setTyping] = useState<Boolean>(false);
+  const keypress = useKeypress();
   const setKeypress = useSetKeypress();
   const activeCardAndLoc = useActiveCard();
   const setActiveCardAndLoc = useSetActiveCard();
@@ -97,9 +98,15 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
     const onKeyDown = (event: any) => {
       if (typing) return;
       const k = event.key;
+      console.log(k);
       // Keep track of last pressed key
-      setKeypress([k]);
+      setKeypress([...keypress, k]);
       // General hotkeys
+      if (k === "Tab") {
+        gameBroadcast("reveal_card",{})
+      } else if (k === "Space") {
+        gameBroadcast("draw_card",{})
+      }
 
       // Card specific hotkeys
       if (activeCardAndLoc != null) {   
@@ -182,6 +189,12 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         else if (k === "s") {
           gameBroadcast("deal_shadow", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
           chatBroadcast("game_update", {message: "dealt a shadow card to "+cardName+"."});
+        }        
+        // Send to appropriate discard pile
+        else if (k === "x") {
+          console.log('1');
+          chatBroadcast("game_update", {message: "discarded "+cardName+" to ."});
+          gameBroadcast("discard_card", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
         }
         if (cardChanged) setActiveCardAndLoc({card: newCard, groupID: activeCardAndLoc.groupID, stackIndex: activeCardAndLoc.stackIndex, cardIndex: activeCardAndLoc.cardIndex});
       }
