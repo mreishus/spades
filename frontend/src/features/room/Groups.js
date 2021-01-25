@@ -11,7 +11,10 @@ import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
 import Button from "../../components/basic/Button";
 import axios from 'axios'; 
-const Tabletop = require('tabletop');
+const cardDB = require('../../../../cardDB/playringsCardDB.json');
+
+//const Tabletop = require('tabletop');
+
 
 
 var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/11fW57D2_3gwOFWomWoEEozKOwKsGpYokwmIF_LIy_tY/edit?usp=sharing'
@@ -76,7 +79,7 @@ export const Groups = ({
             console.log(card['$'].qty);
             console.log(card._);
             const id = card._;
-            const cardRow = getRowFromCardDB(id);
+            const cardRow = cardDB[id];
             console.log(cardRow);
           })
         })
@@ -85,21 +88,21 @@ export const Groups = ({
     reader.readAsText(event.target.files[0])
   }
   
-  const getRowFromCardDB = (id) => {
-    for (var i = 0; i<cardDB.length; i++) {
-      if (cardDB[i].ID === id) return cardDB[i];
-    }
-    return null;
-  }
+  // const getRowFromCardDB = (id) => {
+  //   for (var i = 0; i<cardDB.length; i++) {
+  //     if (cardDB[i].ID === id) return cardDB[i];
+  //   }
+  //   return null;
+  // }
 
-  useEffect(() => {
-    Tabletop.init( { key: publicSpreadsheetUrl, callback: showInfo, simpleSheet: false } )
-  }, []);
+  // useEffect(() => {
+  //   Tabletop.init( { key: publicSpreadsheetUrl, callback: showInfo, simpleSheet: false } )
+  // }, []);
  
-  const showInfo = (data, tabletop) => {
-    setCardDB(data);
-    console.log(data);
-  }
+  // const showInfo = (data, tabletop) => {
+  //   setCardDB(data);
+  //   console.log(data);
+  // }
 
   const onDragEnd = (result) => {
     const source = result.source;
