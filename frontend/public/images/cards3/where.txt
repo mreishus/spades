@@ -1,3 +1,0 @@
-public domain cards from https://commons.wikimedia.org/wiki/File:English_pattern_playing_cards_deck.svg
-
-Modified by me to make the reds darker.  Photoshop, -20 lightness +5 saturation on red color only.

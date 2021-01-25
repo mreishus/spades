@@ -10,14 +10,7 @@ import styled from "@emotion/styled";
 import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
 import Button from "../../components/basic/Button";
-import axios from 'axios'; 
 const cardDB = require('../../cardDB/playringsCardDB.json');
-
-//const Tabletop = require('tabletop');
-
-
-
-var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/11fW57D2_3gwOFWomWoEEozKOwKsGpYokwmIF_LIy_tY/edit?usp=sharing'
 
 const WidthContainer = styled.div`
   padding: 2px 2px 2px 0.5vw;
@@ -89,21 +82,6 @@ export const Groups = ({
     reader.readAsText(event.target.files[0])
   }
   
-  // const getRowFromCardDB = (id) => {
-  //   for (var i = 0; i<cardDB.length; i++) {
-  //     if (cardDB[i].ID === id) return cardDB[i];
-  //   }
-  //   return null;
-  // }
-
-  // useEffect(() => {
-  //   Tabletop.init( { key: publicSpreadsheetUrl, callback: showInfo, simpleSheet: false } )
-  // }, []);
- 
-  // const showInfo = (data, tabletop) => {
-  //   setCardDB(data);
-  //   console.log(data);
-  // }
 
   const onDragEnd = (result) => {
     const source = result.source;
