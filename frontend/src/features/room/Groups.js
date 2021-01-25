@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,6 +9,12 @@ import { ActiveCard } from "./ActiveCard";
 import styled from "@emotion/styled";
 import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
+import Button from "../../components/basic/Button";
+import axios from 'axios'; 
+const Tabletop = require('tabletop');
+
+
+var publicSpreadsheetUrl = 'https://docs.google.com/spreadsheets/d/11fW57D2_3gwOFWomWoEEozKOwKsGpYokwmIF_LIy_tY/edit?usp=sharing'
 
 const WidthContainer = styled.div`
   padding: 2px 2px 2px 0.5vw;
@@ -25,22 +31,75 @@ export const Groups = ({
   const { gameUI, setGameUI } = useContext(GameUIContext);
   const [groups, setGroups] = useState(gameUI.game.groups);
   const [showScratch, setShowScratch] = useState(false);
+  const [cardDB, setCardDB] = useState(null);
   const [phase, setPhase] = useState(1);
+  //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
+  const inputFile = useRef(null) 
+
   console.log('Rendering groups');
   
-  function toggleScratch() {
+  const toggleScratch = () => {
     if (showScratch) setShowScratch(false);
     else setShowScratch(true);
   }
 
-  function changePhase(num) {
+  const changePhase = (num) => {
     if (num!==phase) setPhase(num);
   }
 
   useEffect(() => {    
      setGroups(gameUI.game.groups);
   }, [gameUI.game.groups]);
+
+  function loadDeckFile() {
+    inputFile.current.click();
+  }
+  const loadDeck = async(event) => {
+    event.preventDefault();
+    const reader = new FileReader();
+    reader.onload = async (event) => { 
+      const xmltext = (event.target.result)
+      //console.log(xmltext)
+      var parseString = require('xml2js').parseString;
+      parseString(xmltext, function (err, deckJSON) {
+        console.dir(deckJSON);
+        console.log(deckJSON.deck.section);
+        const sections = deckJSON.deck.section;
+        sections.forEach(section => {
+          const sectionName = section['$'].name;
+          console.log(sectionName);
+          const cards = section.card;
+          if (!cards) return;
+          cards.forEach(card => {
+            console.log(card['$'].id);
+            console.log(card['$'].qty);
+            console.log(card._);
+            const id = card._;
+            const cardRow = getRowFromCardDB(id);
+            console.log(cardRow);
+          })
+        })
+      })
+    }
+    reader.readAsText(event.target.files[0])
+  }
+  
+  const getRowFromCardDB = (id) => {
+    for (var i = 0; i<cardDB.length; i++) {
+      if (cardDB[i].ID === id) return cardDB[i];
+    }
+    return null;
+  }
+
+  useEffect(() => {
+    Tabletop.init( { key: publicSpreadsheetUrl, callback: showInfo, simpleSheet: false } )
+  }, []);
+ 
+  const showInfo = (data, tabletop) => {
+    setCardDB(data);
+    console.log(data);
+  }
 
   const onDragEnd = (result) => {
     const source = result.source;
@@ -258,6 +317,10 @@ export const Groups = ({
           </div>
           <div className="bg-gray-300" style={{height: "3%"}}>
             Social links
+            <Button isPrimary onClick={loadDeckFile}>
+              Load Deck
+            </Button>
+            <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
           </div>
           <div className="bg-gray-200" style={{height: "3%"}}>
             <select name="num_players" id="num_players">

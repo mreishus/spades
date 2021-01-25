@@ -23,6 +23,7 @@
     "@types/styled-components": "^5.1.0",
     "@types/uuid": "^8.0.0",
     "@types/webpack-env": "^1.15.1",
+    "@types/xml2js": "^0.4.8",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "date-fns": "^2.12.0",
@@ -34,6 +35,7 @@
     "prettier": "^2.0.4",
     "react": "^16.13.1",
     "react-beautiful-dnd": "^13.0.0",
+    "react-contextmenu": "^2.14.0",
     "react-dnd": "^10.0.2",
     "react-dnd-html5-backend": "^10.0.2",
     "react-dom": "^16.13.1",
@@ -48,7 +50,10 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.1.0",
-    "typescript": "3.8.3"
+    "tabletop": "^1.6.3",
+    "typeface-roboto": "^1.1.13",
+    "typescript": "3.8.3",
+    "xml2js": "^0.4.23"
   },
   "scripts": {
     "start-elixir": "REACT_APP_WS_URL=ws://172.22.2.174:4000/socket npm-run-all -p start:css start:js",
