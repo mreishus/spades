@@ -11,7 +11,7 @@ import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
 import Button from "../../components/basic/Button";
 import axios from 'axios'; 
-const cardDB = require('../../../../cardDB/playringsCardDB.json');
+const cardDB = require('../../cardDB/playringsCardDB.json');
 
 //const Tabletop = require('tabletop');
 
@@ -34,7 +34,7 @@ export const Groups = ({
   const { gameUI, setGameUI } = useContext(GameUIContext);
   const [groups, setGroups] = useState(gameUI.game.groups);
   const [showScratch, setShowScratch] = useState(false);
-  const [cardDB, setCardDB] = useState(null);
+  //const [cardDB, setCardDB] = useState(null);
   const [phase, setPhase] = useState(1);
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
@@ -59,6 +59,7 @@ export const Groups = ({
     inputFile.current.click();
   }
   const loadDeck = async(event) => {
+    console.log(cardDB);
     event.preventDefault();
     const reader = new FileReader();
     reader.onload = async (event) => { 
@@ -78,9 +79,9 @@ export const Groups = ({
             console.log(card['$'].id);
             console.log(card['$'].qty);
             console.log(card._);
-            const id = card._;
+            const id = card['$'].id;
             const cardRow = cardDB[id];
-            console.log(cardRow);
+            console.log('thiscard', cardRow);
           })
         })
       })
