@@ -3,8 +3,9 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { CARDSCALE, playerBackSRC, encounterBackSRC} from "./Constants"
+import { getCurrentFaceSRC } from "./CardView";
 
-export function getCardFace(card) {
+export function getCurrentFace(card) {
     return card["sides"][card["currentSide"]];
 }
 
@@ -42,30 +43,34 @@ function CardBack(props) {
     isDraggingFrom
   } = props;
 
-  var cardFace;
+  var currentSideSRC;
+  var currentFace;
   if (group.type=="deck" && group.stacks.length>0 && isDraggingOver && !isDraggingFrom) {
-      cardFace = getCardFace(group.stacks[0].cards[0])
+    currentSideSRC = getCurrentFaceSRC(group.stacks[0].cards[0])
+    currentFace = getCurrentFace(group.stacks[0].cards[0])
   } else if (group.type=="deck" && group.stacks.length>1 && isDraggingFrom) {
-     cardFace = getCardFace(group.stacks[1].cards[0])
+    currentSideSRC = getCurrentFaceSRC(group.stacks[1].cards[0])
+    currentFace = getCurrentFace(group.stacks[0].cards[0])
   } else if (group.type=="discard" && group.stacks.length>0 && isDraggingOver && !isDraggingFrom) {
-      cardFace = getCardFace(group.stacks[0].cards[0])
+    currentSideSRC = getCurrentFaceSRC(group.stacks[0].cards[0])
+    currentFace = getCurrentFace(group.stacks[0].cards[0])
   } else if (group.type=="discard" && group.stacks.length>1 && isDraggingFrom) {
-     cardFace = getCardFace(group.stacks[1].cards[0])
+    currentSideSRC = getCurrentFaceSRC(group.stacks[1].cards[0])
+    currentFace = getCurrentFace(group.stacks[0].cards[0])
   }
-  if (cardFace) {
-    console.log("SHOWING "+cardFace.name);
+  if (currentFace) {
     return (
         <div 
             style={{
-                background:`url(${cardFace.src}) no-repeat scroll 0% 0% / contain`,
+                background:`url(${currentSideSRC}) no-repeat scroll 0% 0% / contain`,
                 borderWidth: '1px',
                 borderRadius: '6px',
                 borderColor: 'transparent',
                 position:"relative",
-                width:`${CARDSCALE*cardFace.width}vw`,
-                height:`${CARDSCALE*cardFace.height}vw`,
-                left:`${0.2 + (1.39-cardFace.width)*CARDSCALE/2}vw`,
-                top:`${0.2 + (1.39-cardFace.height)*CARDSCALE/2}vw`,
+                width:`${CARDSCALE*currentFace.width}vw`,
+                height:`${CARDSCALE*currentFace.height}vw`,
+                left:`${0.2 + (1.39-currentFace.width)*CARDSCALE/2}vw`,
+                top:`${0.2 + (1.39-currentFace.height)*CARDSCALE/2}vw`,
             }}
         >
         </div>)
