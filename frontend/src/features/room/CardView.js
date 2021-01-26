@@ -3,15 +3,31 @@ import { TokensView } from './TokensView';
 import GameUIContext from "../../contexts/GameUIContext";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { playerBackSRC, encounterBackSRC } from "./Constants"
-import { getCardBackSRC } from "./CardBack"
+import { getCardFaceSRC } from "./CardBack"
 import { CARDSCALE } from "./Constants"
 import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { GROUPSINFO } from "./Constants"
 
-//import cx from "classnames";
-
-
+export const currentSideCardSRC = (card) => {
+    const currentSide = card["currentSide"]
+    if (currentSide == "A") {
+        console.log(process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg')
+        return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
+    } else { // Side B logic
+        if (card["cardbackoverride"] == "player") {
+            return process.env.PUBLIC_URL + '/images/cards/player.jpg';
+        } else if (card["cardbackoverride"] == "encounter") {
+            return process.env.PUBLIC_URL + '/images/cards/encounter.jpg';
+        } else if (card["sides"]["B"]["name"]) {
+            return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.B.jpg';
+        } else if (card["sides"]["B"]["encounterset"]) {
+            return process.env.PUBLIC_URL + '/images/cards/encounter.jpg';
+        } else {
+            return process.env.PUBLIC_URL + '/images/cards/player.jpg';
+        }
+    }
+}
 
 
 // PREVENT DOUBLECLICK REGISTERING 2 CLICK EVENTS
@@ -197,7 +213,7 @@ const CardComponent = React.memo(({
                 key={inputCard.id}
                 style={{
                     position: "absolute",
-                    background: `url(${currentFace.src}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
+                    background: `url(${currentSideCardSRC(inputCard)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,

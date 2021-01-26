@@ -199,6 +199,33 @@ defmodule SpadesGame.GameUI do
     update_stacks(gameui, group_id, shuffled_stacks)
   end
 
+  def load_card(gameui, card_row, group_id, quantity) do
+    #IO.puts("game_ui load_card a")
+    #IO.inspect(card_row)
+    stacks_to_add = for _ <- 1..quantity, do: Stack.stack_from_cardrow(card_row)
+    old_stacks = get_stacks(gameui, group_id)
+    new_stacks = old_stacks ++ stacks_to_add
+    update_stacks(gameui, group_id, new_stacks)
+  end
+
+  def load_cards(gameui, load_list) do
+    IO.puts("before_load")
+    IO.inspect(gameui["game"]["groups"])
+    gameui = Enum.reduce load_list, gameui, fn r, acc ->
+      load_card(acc, r["cardRow"], r["groupID"], r["quantity"])
+    end
+
+    # Enum.each(load_list,
+    #   fn(r) ->
+    #     #IO.puts("game_ui load_cards r")
+    #     #IO.inspect(r)
+    #     gameui = load_card(gameui, r["cardRow"], r["groupID"], r["quantity"])
+    #   end
+    # )
+    IO.puts("after_load")
+    IO.inspect(gameui["game"]["groups"])
+    gameui
+  end
 
   # # @doc """
   # # censor_hands/1: Return a version of GameUI with all hands hidden.

@@ -20,6 +20,8 @@ defmodule SpadesGame.Groups do
       "gSharedEncounterDeck2"=>    Group.new("gSharedEncounterDeck2","Encounter 2","deck","cShared"),
       "gSharedEncounterDiscard2"=> Group.new("gSharedEncounterDiscard2","Enc Discard 2","discard","cShared"),
       "gSharedOther"=>             Group.new("gSharedOther","Other","hand","cShared"),
+      "gSharedOther2"=>            Group.new("gSharedOther2","Other 2","hand","cShared"),
+      "gSharedSetAside"=>          Group.new("gSharedSetAside","Set Aside","hand","cShared"),
       "gSharedVictory"=>           Group.new("gSharedVictory","Victory Display","hand","cShared"),
       "gSharedStaging"=>           Group.new_staging("gSharedStaging","Staging Area","play","cShared"),
       "gSharedActive"=>            Group.new("gSharedActive","Active Location","play","cShared"),

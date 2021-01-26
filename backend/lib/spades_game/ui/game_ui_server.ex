@@ -88,6 +88,16 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
+  load_cards/3: Cards are loaded.
+  """
+  @spec load_cards(String.t(), integer,  List.t()):: GameUI.t()
+  def load_cards(game_name, user_id, load_list) do
+    IO.puts("game_ui_server: load_cards")
+    IO.inspect(load_list)
+    GenServer.call(via_tuple(game_name), {:load_cards, user_id, load_list})
+  end
+
+  @doc """
   move_stack/6: A player just moved a stack.
   """
   @spec move_stack(String.t(), integer, String.t(), number, String.t(), number) :: GameUI.t()
@@ -265,6 +275,12 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:update_gameui, user_id, updated_gameui}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_gameui a")
     updated_gameui
+    |> save_and_reply()
+  end
+
+  def handle_call({:load_cards, user_id, load_list}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: load_list a")
+    GameUI.load_cards(gameui, load_list)
     |> save_and_reply()
   end
 

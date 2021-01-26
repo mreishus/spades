@@ -18,6 +18,53 @@ const WidthContainer = styled.div`
   height: 100%;
 `;
 
+const sectionToGroupID = (section, PlayerN) => {
+  switch(section) {
+    case 'Hero':
+      return 'g'+PlayerN+'Play1';
+      break;
+    case 'Ally':
+      return 'g'+PlayerN+'Deck';
+      break;
+    case 'Attachment':
+      return 'g'+PlayerN+'Deck';
+      break;
+    case 'Event':
+      return 'g'+PlayerN+'Deck';
+      break;
+    case 'Side Quest':
+      return 'g'+PlayerN+'Deck';
+      break;
+    case 'Sideboard':
+      return 'g'+PlayerN+'Sideboard';
+      break;
+    case 'Quest':
+      return 'gSharedQuestDeck';
+      break;
+    case 'Encounter':
+      return 'gSharedEncounterDeck';
+      break;
+    case 'Special':
+      return 'gSharedOther';
+      break;
+    case 'Second Special':
+      return 'gSharedOther2';
+      break;
+    case 'Setup':
+      return 'gSharedSetAside';
+      break;
+    case 'Staging Setup':
+      return 'gSharedStaging';
+      break;
+    case 'Active Setup':
+      return 'gSharedActive';
+      break;
+    case 'Second Quest Deck':
+      return 'gSharedQuestDeck2';
+      break;
+  }
+}
+
 export const Groups = ({
   gameBroadcast,
   chatBroadcast,
@@ -63,23 +110,28 @@ export const Groups = ({
         console.dir(deckJSON);
         console.log(deckJSON.deck.section);
         const sections = deckJSON.deck.section;
+        var loadList = [];
         sections.forEach(section => {
           const sectionName = section['$'].name;
           console.log(sectionName);
           const cards = section.card;
           if (!cards) return;
           cards.forEach(card => {
-            console.log(card['$'].id);
-            console.log(card['$'].qty);
-            console.log(card._);
-            const id = card['$'].id;
-            const cardRow = cardDB[id];
-            console.log('thiscard', cardRow);
+            const cardid = card['$'].id;
+            const quantity = parseInt(card['$'].qty);
+            const cardRow = cardDB[cardid];
+            if (cardRow) {
+              loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToGroupID(sectionName,'Player1')})
+            }
+              //console.log('thiscard', cardRow);
           })
         })
+        console.log(loadList);
+        gameBroadcast("load_cards",{load_list: loadList});
+        chatBroadcast("game_update",{message: "loaded a deck."});
       })
     }
-    reader.readAsText(event.target.files[0])
+    reader.readAsText(event.target.files[0]);
   }
   
 

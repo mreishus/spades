@@ -11,6 +11,8 @@ export const GROUPSINFO = {
     "gSharedEncounterDeck2": {name: "Secondary Encounter Deck"},
     "gSharedEncounterDiscard2": {name: "Secondary Encounter Discard Pile"},
     "gSharedOther": {name: "Other"},
+    "gSharedOther2": {name: "Other 2"},
+    "gSharedSetAside": {name: "Set Aside"},
     "gSharedVictory": {name: "Victory Display"},
     "gSharedStaging": {name: "Staging Area"},
     "gSharedActive": {name: "Active Location"},
