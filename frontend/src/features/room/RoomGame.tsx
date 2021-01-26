@@ -101,7 +101,8 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
       const k = event.key;
       console.log(k);
       // Keep track of last pressed key
-      setKeypress([...keypress, k]);
+      setKeypress([k]);
+      console.log(keypress);
       // General hotkeys
       if (k === "Tab") {
         gameBroadcast("reveal_card",{})
@@ -118,7 +119,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         // Increment token 
         if (keyTokenMap[k] != undefined) {
           const tokenType = keyTokenMap[k][0];
-          const delta = keyTokenMap[k][1];
+          const delta = (keypress.includes('Shift')) ? -keyTokenMap[k][1] : keyTokenMap[k][1];
           newTokens = {
             ...newTokens,
             [tokenType]: newTokens[tokenType]+delta,
