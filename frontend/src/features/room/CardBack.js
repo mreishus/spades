@@ -3,11 +3,9 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { CARDSCALE, playerBackSRC, encounterBackSRC} from "./Constants"
-import { getCurrentFaceSRC } from "./CardView";
+import { getCurrentFace, getCurrentFaceSRC } from "./CardView";
 
-export function getCurrentFace(card) {
-    return card["sides"][card["currentSide"]];
-}
+
 
 // const Container = styled.div`
 //     height: ${props => (CARDSCALE * props.cardFace.height)}vw,

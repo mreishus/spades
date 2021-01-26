@@ -42,7 +42,7 @@ export const Token = ({
         }
 
         // Get card name
-        const cardName = newCard["sides"][newCard["currentSide"]].name;
+        const cardName = newCard["sides"][newCard["currentSide"]].printname;
         // Determine total number of tokens added or removed since last broadcast
         const totalDelta = newCard.tokens[type]-card.tokens[type];
         // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.

@@ -4,6 +4,7 @@ import { Groups } from "./Groups";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import { ChatMessage } from "elixir-backend";
+import { getDisplayName } from "./CardView"
 
 var delayBroadcast: number;
 
@@ -113,7 +114,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         var newCard = activeCardAndLoc.card;
         var newTokens = newCard.tokens;
         var cardChanged = false;
-        const cardName = newCard["sides"][newCard["currentSide"]].name;
+        const displayName = getDisplayName(newCard);
         // Increment token 
         if (keyTokenMap[k] != undefined) {
           const tokenType = keyTokenMap[k][0];
@@ -127,15 +128,15 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
           gameBroadcast("increment_token",{group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: delta})
           if (delta > 0) {
             if (delta === 1) {
-                chatBroadcast("game_update",{message: "added "+delta+" "+tokenType+" token to "+cardName+"."});
+                chatBroadcast("game_update",{message: "added "+delta+" "+tokenType+" token to "+displayName+"."});
             } else {
-                chatBroadcast("game_update",{message: "added "+delta+" "+tokenType+" tokens to "+cardName+"."});
+                chatBroadcast("game_update",{message: "added "+delta+" "+tokenType+" tokens to "+displayName+"."});
             }
           } else {
             if (delta === -1) {
-                chatBroadcast("game_update",{message: "removed "+(-delta)+" "+tokenType+" token from "+cardName+"."});
+                chatBroadcast("game_update",{message: "removed "+(-delta)+" "+tokenType+" token from "+displayName+"."});
             } else {
-                chatBroadcast("game_update",{message: "removed "+(-delta)+" "+tokenType+" tokens from "+cardName+"."});
+                chatBroadcast("game_update",{message: "removed "+(-delta)+" "+tokenType+" tokens from "+displayName+"."});
             }                
           }
         }
@@ -155,7 +156,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
           newCard = {...newCard, tokens: newTokens}
           cardChanged = true;
           gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-          chatBroadcast("game_update", {message: "cleared all tokens from "+cardName+"."});
+          chatBroadcast("game_update", {message: "cleared all tokens from "+displayName+"."});
         }
         // Flip card
         else if (k === "f") {
@@ -165,22 +166,22 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
             newCard = {...newCard, currentSide: "A"}
           }
           cardChanged = true;
-          const newCardName = newCard["sides"][newCard["currentSide"]].name;
+          const newCardName = newCard["sides"][newCard["currentSide"]].printname;
           gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-          if (cardName==="Player Card" || cardName==="Encounter Card") {
-            chatBroadcast("game_update", {message: "flipped "+newCardName+" faceup."});
+          if (displayName==="player card" || displayName==="encounter card") {
+            chatBroadcast("game_update", {message: "flipped "+getDisplayName(newCard)+" faceup."});
           } else {
-            chatBroadcast("game_update", {message: "flipped "+cardName+" over."});
+            chatBroadcast("game_update", {message: "flipped "+displayName+" over."});
           }
         }
         // Exhaust card
         else if (k === "a") {
           if (newCard.exhausted) {
             newCard = {...newCard, exhausted: false, rotation: 0}
-            chatBroadcast("game_update", {message: "readied "+cardName+"."});
+            chatBroadcast("game_update", {message: "readied "+displayName+"."});
           } else {
             newCard = {...newCard, exhausted: true, rotation: 90}
-            chatBroadcast("game_update", {message: "exhausted "+cardName+"."});
+            chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
           }
           cardChanged = true;
           gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
@@ -188,12 +189,12 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         // Deal shadow card
         else if (k === "s") {
           gameBroadcast("deal_shadow", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
-          chatBroadcast("game_update", {message: "dealt a shadow card to "+cardName+"."});
+          chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
         }        
         // Send to appropriate discard pile
         else if (k === "x") {
           console.log('1');
-          chatBroadcast("game_update", {message: "discarded "+cardName+" to ."});
+          chatBroadcast("game_update", {message: "discarded "+displayName+" to ."});
           gameBroadcast("discard_card", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
         }
         if (cardChanged) setActiveCardAndLoc({card: newCard, groupID: activeCardAndLoc.groupID, stackIndex: activeCardAndLoc.stackIndex, cardIndex: activeCardAndLoc.cardIndex});

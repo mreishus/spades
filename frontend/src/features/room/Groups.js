@@ -10,6 +10,7 @@ import styled from "@emotion/styled";
 import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
 import Button from "../../components/basic/Button";
+import { getDisplayName } from "./CardView"
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
 const WidthContainer = styled.div`
@@ -140,7 +141,7 @@ export const Groups = ({
     const sourceStacks = groups[source.droppableId].stacks;
     const sourceStack = sourceStacks[source.index];    
     const topOfSourceStack = sourceStack.cards[0];
-    const topCardNameSource = topOfSourceStack["sides"][topOfSourceStack["currentSide"]].name;
+    const topCardNameSource = topOfSourceStack["sides"][topOfSourceStack["currentSide"]].printname;
 
     if (result.combine) {
       const destination = result.combine;
@@ -155,7 +156,7 @@ export const Groups = ({
       if (!destination.index) return;
       var destStack = destStacks[destination.index];
       const topOfDestStack = destStack.cards[0];
-      const topCardNameDest = topOfDestStack["sides"][topOfDestStack["currentSide"]].name;
+      const topCardNameDest = topOfDestStack["sides"][topOfDestStack["currentSide"]].printname;
       // remove from original
       const newDestStackCards = destStack.cards.concat(sourceStack.cards);
       const newDestStack = {
@@ -190,7 +191,7 @@ export const Groups = ({
       setGroups(newGroups);
       setGameUI(newGameUI);
       gameBroadcast("update_gameui",{gameui: newGameUI});    
-      chatBroadcast("game_update",{message: "attached "+topCardNameSource+" from "+GROUPSINFO[source.droppableId].name+" to "+topCardNameDest+" in "+GROUPSINFO[destination.droppableId].name+"."})
+      chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfSourceStack)+" from "+GROUPSINFO[source.droppableId].name+" to "+getDisplayName(topOfDestStack)+" in "+GROUPSINFO[destination.droppableId].name+"."})
  
 
       // const column = state.columns[result.source.droppableId];
@@ -242,7 +243,7 @@ export const Groups = ({
     });
     const sourceGroupTitle = GROUPSINFO[source.droppableId].name;
     const destGroupTitle = GROUPSINFO[destination.droppableId].name;
-    if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+topCardNameSource+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
+    if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfSourceStack)+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
     //gameBroadcast("update_gameui",{gameui: newGameUI});
 
 

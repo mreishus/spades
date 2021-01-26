@@ -9,22 +9,52 @@ import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { GROUPSINFO } from "./Constants"
 
+
+
+export const getCurrentFace = (card) => {
+    return card["sides"][card["currentSide"]];
+}
+
+export const getDisplayName = (card) => {
+    const currentSide = card["currentSide"];
+    const currentFace = getCurrentFace(card);
+    if (currentSide == "A") {
+        const printName = currentFace["printname"];
+        const id = card["id"];
+        const id4digit = id.substr(id.length - 4);
+        return printName+' ('+id4digit+')';
+    } else { // Side B logic
+        const sideBName = card["sides"]["B"]["name"];
+        if (sideBName == "player") {
+            return 'player card';
+        } else if (sideBName == "encounter") {
+            return 'encounter card';
+        } else if (sideBName) {
+            const printName = currentFace["printname"];
+            const id = card["id"];
+            const id4digit = id.substr(id.length - 4);
+            return printName+' ('+id4digit+')';
+        } else {
+            return 'undefined';
+        }
+    }
+}
+
 export const getCurrentFaceSRC = (card) => {
     if (!card) return "";
     const currentSide = card["currentSide"];
     if (currentSide == "A") {
         return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
     } else { // Side B logic
-        if (card["cardbackoverride"] == "player") {
-            return process.env.PUBLIC_URL + '/images/cardbackss/player.jpg';
-        } else if (card["cardbackoverride"] == "encounter") {
-            return process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg';
-        } else if (card["sides"]["B"]["name"]) {
-            return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.B.jpg';
-        } else if (card["sides"]["B"]["encounterset"]) {
-            return process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg';
-        } else {
+        const sideBName = card["sides"]["B"]["name"];
+        if (sideBName == "player") {
             return process.env.PUBLIC_URL + '/images/cardbacks/player.jpg';
+        } else if (sideBName == "encounter") {
+            return process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg';
+        } else if (sideBName) {
+            return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.B.jpg';
+        } else {
+            return '';
         }
     }
 }
@@ -124,10 +154,7 @@ const CardComponent = React.memo(({
     const setActiveCard = useSetActiveCard();
     const [isActive, setIsActive] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
-    const currentSide = inputCard["sides"][inputCard["currentSide"]];
-    const cardName = currentSide.name;
-    const cardID = inputCard.id;
-    const cardNameID = cardName+' ('+cardID.substr(cardID.length - 4)+')';
+    const displayName = getDisplayName(inputCard);
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
 
@@ -164,11 +191,11 @@ const CardComponent = React.memo(({
         if (!inputCard.exhausted) {
             inputCard.exhausted = true;
             inputCard.rotation = 90;
-            chatBroadcast("game_update", {message: "exhausted "+cardName+"."});
+            chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
         } else {
             inputCard.exhausted = false;
             inputCard.rotation = 0;
-            chatBroadcast("game_update", {message: "readied "+cardName+"."});
+            chatBroadcast("game_update", {message: "readied "+displayName+"."});
         }
         gameBroadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
         forceUpdate();
@@ -183,22 +210,22 @@ const CardComponent = React.memo(({
     function handleMenuClick(e, data) {
         if (data.action === "detach") {
             gameBroadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
-            chatBroadcast("game_update",{message: "detached "+cardNameID+"."})
+            chatBroadcast("game_update",{message: "detached "+displayName+"."})
         }
         else if (data.action === "move_card") {
             const sourceGroupTitle = GROUPSINFO[groupID].name;
             const destGroupTitle = GROUPSINFO[data.destGroupID].name;
             if (data.position === "t") {
                 gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
-                chatBroadcast("game_update",{message: "moved "+cardNameID+" from "+sourceGroupTitle+" to top of "+destGroupTitle+"."})
+                chatBroadcast("game_update",{message: "moved "+displayName+" from "+sourceGroupTitle+" to top of "+destGroupTitle+"."})
             } else if (data.position === "b") {
                 gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: -1, dest_card_index: 0, create_new_stack: true})
-                chatBroadcast("game_update",{message: "moved "+cardNameID+" from "+sourceGroupTitle+" to bottom of "+destGroupTitle+"."})
+                chatBroadcast("game_update",{message: "moved "+displayName+" from "+sourceGroupTitle+" to bottom of "+destGroupTitle+"."})
             } else if (data.position === "s") {
                 gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
-                chatBroadcast("game_update",{message: "moved "+cardNameID+" from "+sourceGroupTitle+" to top of "+destGroupTitle+"."})
+                chatBroadcast("game_update",{message: "moved "+displayName+" from "+sourceGroupTitle+" to top of "+destGroupTitle+"."})
                 gameBroadcast("shuffle_group", {group_id: data.destGroupID})
-                chatBroadcast("game_update",{message: "shuffled "+cardNameID+" from "+sourceGroupTitle+" into "+destGroupTitle+"."})
+                chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+sourceGroupTitle+" into "+destGroupTitle+"."})
             }
         }
     }
@@ -266,9 +293,9 @@ const CardComponent = React.memo(({
                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gSharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
                     <SubMenu title="Owner's Deck">
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gPlayer"+inputCard.owner+"Deck", position: "t"}}>Top</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gPlayer"+inputCard.owner+"Deck", position: "b"}}>Bottom</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gPlayer"+inputCard.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+inputCard.owner+"Deck", position: "t"}}>Top</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+inputCard.owner+"Deck", position: "b"}}>Bottom</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+inputCard.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
                     <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex, destGroupID: "gSharedVictory", position: "t" }}>Victory Display</MenuItem>
                 </SubMenu>
