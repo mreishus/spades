@@ -166,10 +166,10 @@ const CardComponent = React.memo(({
     // }, [inputCard]);
     //console.log('rendering',group.id,stackIndex,cardIndex, "comp");
 
-    const handleMouseOver = (event) => {
+    const handleMouseOver = (event, mousePosition) => {
         if (!isActive) {
             setIsActive(true);
-            setActiveCard({card: inputCard, groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex});
+            setActiveCard({card: inputCard, groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex, mousePosition: mousePosition});
         }
     }
 
@@ -235,6 +235,7 @@ const CardComponent = React.memo(({
     return (
         <div>
             <ContextMenuTrigger id={inputCard.id}> 
+
             <div 
                 className={isActive ? 'isActive' : ''}
                 key={inputCard.id}
@@ -266,9 +267,26 @@ const CardComponent = React.memo(({
                 }}
                 onClick={handleClick}
                 onDoubleClick={handleDoubleClick}
-                onMouseOver={event => handleMouseOver(event)}
-                onMouseLeave={event => handleMouseLeave(event)}
             >
+                <div style={{
+                    position: 'absolute',
+                    width: '100%',
+                    height: '50%',
+                    zIndex: zIndex+1,
+                }}
+                    onMouseOver={event => handleMouseOver(event,'top')}
+                    onMouseLeave={event => handleMouseLeave(event,'top')}
+                ></div>
+                <div style={{
+                    position: 'absolute',
+                    top: '50%',
+                    width: '100%',
+                    height: '50%',
+                    zIndex: zIndex+1,
+                }}
+                    onMouseOver={event => handleMouseOver(event,'bottom')}
+                    onMouseLeave={event => handleMouseLeave(event,'bottom')}
+                ></div>
                 
                 <TokensView 
                     card={inputCard} 

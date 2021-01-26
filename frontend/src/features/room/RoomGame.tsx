@@ -119,7 +119,8 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         // Increment token 
         if (keyTokenMap[k] != undefined) {
           const tokenType = keyTokenMap[k][0];
-          const delta = (keypress.includes('Shift')) ? -keyTokenMap[k][1] : keyTokenMap[k][1];
+          const mousePosition = activeCardAndLoc.mousePosition;
+          const delta = (mousePosition === "top") ? keyTokenMap[k][1] : -keyTokenMap[k][1];
           newTokens = {
             ...newTokens,
             [tokenType]: newTokens[tokenType]+delta,
@@ -198,7 +199,15 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
           chatBroadcast("game_update", {message: "discarded "+displayName+" to ."});
           gameBroadcast("discard_card", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
         }
-        if (cardChanged) setActiveCardAndLoc({card: newCard, groupID: activeCardAndLoc.groupID, stackIndex: activeCardAndLoc.stackIndex, cardIndex: activeCardAndLoc.cardIndex});
+        if (cardChanged) {
+          setActiveCardAndLoc({
+            card: newCard, 
+            groupID: activeCardAndLoc.groupID, 
+            stackIndex: activeCardAndLoc.stackIndex, 
+            cardIndex: activeCardAndLoc.cardIndex, 
+            mousePosition: activeCardAndLoc.mousePosition
+          });
+        }
       }
     }
 
