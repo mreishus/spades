@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Chat from "../chat/Chat";
 import GroupView from "./GroupView";
 import { reorderGroups } from "./Reorder";
-import { ActiveCard } from "./ActiveCard";
+import { GiantCard } from "./GiantCard";
 import styled from "@emotion/styled";
 import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
@@ -373,7 +373,7 @@ export const Groups = ({
         <div className="flex flex-col w-full h-full">
           {/* Hovercard */}
           <div style={{height: "45%"}}>
-            <ActiveCard></ActiveCard>
+            <GiantCard></GiantCard>
           </div>
           {/* Chat */}
           <div 

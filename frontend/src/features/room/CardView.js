@@ -9,10 +9,10 @@ import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { GROUPSINFO } from "./Constants"
 
-export const currentSideCardSRC = (card) => {
-    const currentSide = card["currentSide"]
+export const currentSideSRC = (card) => {
+    if (!card) return "";
+    const currentSide = card["currentSide"];
     if (currentSide == "A") {
-        console.log(process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg')
         return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
     } else { // Side B logic
         if (card["cardbackoverride"] == "player") {
@@ -213,7 +213,7 @@ const CardComponent = React.memo(({
                 key={inputCard.id}
                 style={{
                     position: "absolute",
-                    background: `url(${currentSideCardSRC(inputCard)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
+                    background: `url(${currentSideSRC(inputCard)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
