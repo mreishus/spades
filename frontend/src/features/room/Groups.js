@@ -23,46 +23,65 @@ const sectionToGroupID = (section, PlayerN) => {
   switch(section) {
     case 'Hero':
       return 'g'+PlayerN+'Play1';
-      break;
     case 'Ally':
       return 'g'+PlayerN+'Deck';
-      break;
     case 'Attachment':
       return 'g'+PlayerN+'Deck';
-      break;
     case 'Event':
       return 'g'+PlayerN+'Deck';
-      break;
     case 'Side Quest':
       return 'g'+PlayerN+'Deck';
-      break;
     case 'Sideboard':
       return 'g'+PlayerN+'Sideboard';
-      break;
     case 'Quest':
       return 'gSharedQuestDeck';
-      break;
     case 'Encounter':
       return 'gSharedEncounterDeck';
-      break;
     case 'Special':
-      return 'gSharedOther';
-      break;
+      return 'gSharedEncounterDeck2';
     case 'Second Special':
-      return 'gSharedOther2';
-      break;
+      return 'gSharedEncounterDeck3';
     case 'Setup':
       return 'gSharedSetAside';
-      break;
     case 'Staging Setup':
       return 'gSharedStaging';
-      break;
     case 'Active Setup':
       return 'gSharedActive';
-      break;
     case 'Second Quest Deck':
       return 'gSharedQuestDeck2';
-      break;
+  }
+}
+
+const sectionToDiscardGroupID = (section, PlayerN) => {
+  switch(section) {
+    case 'Hero':
+      return 'g'+PlayerN+'Discard';
+    case 'Ally':
+      return 'g'+PlayerN+'Discard';
+    case 'Attachment':
+      return 'g'+PlayerN+'Discard';
+    case 'Event':
+      return 'g'+PlayerN+'Discard';
+    case 'Side Quest':
+      return 'g'+PlayerN+'Discard';
+    case 'Sideboard':
+      return 'g'+PlayerN+'Discard';
+    case 'Quest':
+      return 'gSharedQuestDiscard';
+    case 'Encounter':
+      return 'gSharedEncounterDiscard';
+    case 'Special':
+      return 'gSharedEncounterDiscard2';
+    case 'Second Special':
+      return 'gSharedEncounterDiscard3';
+    case 'Setup':
+      return 'gSharedEncounterDiscard';
+    case 'Staging Setup':
+      return 'gSharedEncounterDiscard';
+    case 'Active Setup':
+      return 'gSharedEncounterDiscard';
+    case 'Second Quest Deck':
+      return 'gSharedQuestDiscard2';
   }
 }
 
@@ -125,7 +144,8 @@ export const Groups = ({
           cards.forEach(card => {
             const cardid = card['$'].id;
             const quantity = parseInt(card['$'].qty);
-            const cardRow = cardDB[cardid];
+            var cardRow = cardDB[cardid];
+            cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,'Player1');
             if (cardRow) {
               loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToGroupID(sectionName,'Player1')})
             }

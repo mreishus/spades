@@ -78,17 +78,7 @@ export const handleKeyDown = (
     }
     // Set tokens to 0
     else if (k === "0") {
-        newTokens = {
-        ...newTokens,
-        "resource": 0,
-        "progress": 0,
-        "damage": 0,
-        "time": 0,
-        "threat": 0,
-        "willpower": 0,
-        "attack": 0,
-        "defense": 0,
-        }
+        for (var tokenType in newTokens) if (newTokens.hasOwnProperty(tokenType)) newTokens = {...newTokens, [tokenType]: 0};
         newCard = {...newCard, tokens: newTokens}
         cardChanged = true;
         gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
