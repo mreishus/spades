@@ -11,7 +11,7 @@ const InnerTokensView = React.memo(({
     stackIndex,
     cardIndex,
  }) => (
-    <div style={{width:'100%',height:'100%',backgroundColor:'blue'}}>
+    <div style={{width:'100%',height:'100%'}}>
         <Token type="resource"  card={card} left={"10%"} top={"0%"}  showButtons={showButtons} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
         <Token type="progress"  card={card} left={"10%"} top={"25%"} showButtons={showButtons} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>
         <Token type="damage"    card={card} left={"10%"} top={"50%"} showButtons={showButtons} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} groupID={groupID} stackIndex={stackIndex} cardIndex={cardIndex}></Token>

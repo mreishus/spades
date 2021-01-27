@@ -53,9 +53,11 @@ export const handleKeyDown = (
         } else {
             delta = 0;
         }
+        const newVal = newTokens[tokenType]+delta;
+        if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
         newTokens = {
             ...newTokens,
-            [tokenType]: newTokens[tokenType]+delta,
+            [tokenType]: newVal,
         }
         newCard = {...newCard, tokens: newTokens}
         cardChanged = true;
