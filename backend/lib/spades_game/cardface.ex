@@ -10,6 +10,8 @@ defmodule SpadesGame.CardFace do
 
   @spec cardface_from_cardrowside(Map.t()) :: Map.t()
   def cardface_from_cardrowside(card_row_side) do
+    IO.puts("cardface")
+    IO.inspect(card_row_side)
     type = card_row_side["type"]
     width = if(type=="Quest" || type=="Side Quest", do: 1.39, else: 1.0)
     height = if(type=="Quest" || type=="Side Quest", do: 1.0, else: 1.39)

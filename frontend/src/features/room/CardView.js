@@ -301,7 +301,6 @@ const CardComponent = React.memo(({
                     groupID={groupID} 
                     stackIndex={stackIndex} 
                     cardIndex={cardIndex}
-                    zIndex={zIndex}
                 ></TokensView>
                 
             </div>

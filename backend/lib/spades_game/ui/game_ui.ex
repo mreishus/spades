@@ -214,8 +214,8 @@ defmodule SpadesGame.GameUI do
   end
 
   def load_cards(gameui, load_list) do
-    IO.puts("before_load")
-    IO.inspect(gameui["game"]["groups"])
+    # IO.puts("before_load")
+    # IO.inspect(gameui["game"]["groups"])
     gameui = Enum.reduce load_list, gameui, fn r, acc ->
       load_card(acc, r["cardRow"], r["groupID"], r["quantity"])
     end
@@ -230,6 +230,8 @@ defmodule SpadesGame.GameUI do
       gameui
     end
 
+    # IO.puts("after_load")
+    # IO.inspect(gameui["game"]["groups"])
     gameui
   end
 
