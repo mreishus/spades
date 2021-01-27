@@ -11,7 +11,7 @@ defmodule SpadesGame.Groups do
   @spec new() :: Map.t()
   def new() do
     %{
-      "gSharedQuestDeck"=>         Group.new_quest("gSharedQuestDeck","Quest","deck","cShared"),
+      "gSharedQuestDeck"=>         Group.new("gSharedQuestDeck","Quest","deck","cShared"),
       "gSharedQuestDiscard"=>      Group.new("gSharedQuestDiscard","Quest Discard","discard","cShared"),
       "gSharedEncounterDeck"=>     Group.new("gSharedEncounterDeck","Encounter","deck","cShared"),
       "gSharedEncounterDiscard"=>  Group.new("gSharedEncounterDiscard","Enc Discard","discard","cShared"),
@@ -23,9 +23,9 @@ defmodule SpadesGame.Groups do
       "gSharedOther2"=>            Group.new("gSharedOther2","Other 2","hand","cShared"),
       "gSharedSetAside"=>          Group.new("gSharedSetAside","Set Aside","hand","cShared"),
       "gSharedVictory"=>           Group.new("gSharedVictory","Victory Display","hand","cShared"),
-      "gSharedStaging"=>           Group.new_staging("gSharedStaging","Staging Area","play","cShared"),
+      "gSharedStaging"=>           Group.new("gSharedStaging","Staging Area","play","cShared"),
       "gSharedActive"=>            Group.new("gSharedActive","Active Location","play","cShared"),
-      "gSharedMainQuest"=>         Group.new_quest("gSharedMainQuest","Main Quest","play","cShared"),
+      "gSharedMainQuest"=>         Group.new("gSharedMainQuest","Main Quest","play","cShared"),
       "gSharedExtra1"=>            Group.new("gSharedExtra1","Extra1","play","cShared"),
       "gSharedExtra2"=>            Group.new("gSharedExtra2","Extra2","play","cShared"),
       "gSharedExtra3"=>            Group.new("gSharedExtra3","Extra3","play","cShared"),
