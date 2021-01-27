@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from "react";
 import ReactDOM from "react-dom";
-import { Groups } from "./Groups";
+import { Table } from "./Table";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import { ChatMessage } from "elixir-backend";
@@ -106,7 +106,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
 
 
   return (
-      <Groups 
+      <Table 
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         messages={messages}

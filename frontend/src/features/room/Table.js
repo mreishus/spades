@@ -85,7 +85,7 @@ const sectionToDiscardGroupID = (section, PlayerN) => {
   }
 }
 
-export const Groups = ({
+export const Table = ({
   gameBroadcast,
   chatBroadcast,
   messages,
