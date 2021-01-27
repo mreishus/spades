@@ -96,7 +96,12 @@ export const Groups = ({
      setGroups(gameUI.game.groups);
   }, [gameUI.game.groups]);
 
-  function loadDeckFile() {
+  const resetGame = () => {
+    gameBroadcast("reset_game",{});
+    chatBroadcast("game_update",{message: "reset the game."});
+  }
+  
+  const loadDeckFile = () => {
     inputFile.current.click();
   }
   const loadDeck = async(event) => {
@@ -354,6 +359,9 @@ export const Groups = ({
             Social links
             <Button isPrimary onClick={loadDeckFile}>
               Load Deck
+            </Button>
+            <Button isPrimary onClick={resetGame}>
+              Reset Game
             </Button>
             <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
           </div>

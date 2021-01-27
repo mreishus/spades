@@ -45,7 +45,14 @@ export const handleKeyDown = (
     if (keyTokenMap[k] != undefined) {
         const tokenType = keyTokenMap[k][0];
         const mousePosition = activeCardAndLoc.mousePosition;
-        const delta = (mousePosition === "top") ? keyTokenMap[k][1] : -keyTokenMap[k][1];
+        var delta;
+        if (mousePosition === "top") {
+            delta = keyTokenMap[k][1];
+        } else if (mousePosition === "bottom") { 
+            delta = -keyTokenMap[k][1];
+        } else {
+            delta = 0;
+        }
         newTokens = {
             ...newTokens,
             [tokenType]: newTokens[tokenType]+delta,

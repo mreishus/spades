@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef, Component } from "react";
 import { TokensView } from './TokensView';
 import GameUIContext from "../../contexts/GameUIContext";
-import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { playerBackSRC, encounterBackSRC } from "./Constants"
 import { getCardFaceSRC } from "./CardBack"
-import { CARDSCALE } from "./Constants"
+import { CARDSCALE, GROUPSINFO } from "./Constants"
 import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
-import { GROUPSINFO } from "./Constants"
+import { CardMouseRegion } from "./CardMouseRegion"
+import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 
 
 
@@ -148,13 +148,17 @@ const CardComponent = React.memo(({
     // occasionally have cards refuse to rerender ater calling a broadcast. For some reason
     // the shouldComponentUpdate aleady sees the next state and thinks its the same as the
     // current one, so it doesn't update.
+    console.log('rendering ',groupID,stackIndex,cardIndex)
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
-
     const setActiveCard = useSetActiveCard();
+
     const [isActive, setIsActive] = useState(false);
+    const [mousePosition, setMousePosition] = useState('none');
     const [isClicked, setIsClicked] = useState(false);
     const displayName = getDisplayName(inputCard);
+    console.log('mousePosition ',mousePosition)
+    console.log('activeCard pos ',)
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
 
@@ -166,25 +170,20 @@ const CardComponent = React.memo(({
     // }, [inputCard]);
     //console.log('rendering',group.id,stackIndex,cardIndex, "comp");
 
-    const handleMouseOver = (event, mousePosition) => {
-        if (!isActive) {
-            setIsActive(true);
-            setActiveCard({card: inputCard, groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex, mousePosition: mousePosition});
-        }
-    }
-
-    const handleMouseLeave = (event) => {
-        if (isActive) {
-            setIsActive(false);
-            setActiveCard(null);
-        }
-    }
 
     const onClick = (event) => {
         console.log(inputCard);
         return;
     }
 
+    const handleMouseOver = (event) => {
+        setIsActive(true);
+    }
+
+    const handleMouseLeave = (event) => {
+        setIsActive(false);
+        setActiveCard(null);
+    }
 
     const onDoubleClick = (event) => {
         //forceUpdate();
@@ -267,36 +266,44 @@ const CardComponent = React.memo(({
                 }}
                 onClick={handleClick}
                 onDoubleClick={handleDoubleClick}
+                onMouseOver={event => handleMouseOver(event)}
+                onMouseLeave={event => handleMouseLeave(event)}
             >
-                <div style={{
-                    position: 'absolute',
-                    width: '100%',
-                    height: '50%',
-                    zIndex: zIndex+1,
-                }}
-                    onMouseOver={event => handleMouseOver(event,'top')}
-                    onMouseLeave={event => handleMouseLeave(event,'top')}
-                ></div>
-                <div style={{
-                    position: 'absolute',
-                    top: '50%',
-                    width: '100%',
-                    height: '50%',
-                    zIndex: zIndex+1,
-                }}
-                    onMouseOver={event => handleMouseOver(event,'bottom')}
-                    onMouseLeave={event => handleMouseLeave(event,'bottom')}
-                ></div>
+                {/* <div style={{position:'absolute',width:"50%",height:"100%",backgroundColor:"green"}}></div>
+                <div style={{position:'absolute',width:"100%",height:"50%",backgroundColor:"red"}}></div>
+                <div style={{position:'absolute',left:"50%",width:"50%",height:"100%",backgroundColor:"blue"}}></div> */}
+
+                <CardMouseRegion 
+                    position={"top"}
+                    top={"0%"}
+                    card={inputCard}
+                    groupID={groupID}
+                    stackIndex={stackIndex}
+                    cardIndex={cardIndex}
+                    setMousePosition={setMousePosition}
+                ></CardMouseRegion>
                 
+                <CardMouseRegion 
+                    position={"bottom"}
+                    top={"50%"}
+                    card={inputCard}
+                    groupID={groupID}
+                    stackIndex={stackIndex}
+                    cardIndex={cardIndex}
+                    setMousePosition={setMousePosition}
+                ></CardMouseRegion>
+
                 <TokensView 
                     card={inputCard} 
-                    isHighlighted={isActive || isClicked} 
+                    isActive={isActive} 
                     gameBroadcast={gameBroadcast} 
                     chatBroadcast={chatBroadcast} 
                     groupID={groupID} 
                     stackIndex={stackIndex} 
                     cardIndex={cardIndex}
+                    zIndex={zIndex}
                 ></TokensView>
+                
             </div>
             </ContextMenuTrigger>
 

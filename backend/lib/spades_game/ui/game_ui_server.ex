@@ -6,8 +6,7 @@ defmodule SpadesGame.GameUIServer do
   @timeout :timer.minutes(60)
 
   require Logger
-  alias SpadesGame.{Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack, Tokens}
-  alias SpadesGame.{Game}
+  alias SpadesGame.{Game, Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack, Tokens}
 
   @doc """
   start_link/3: Generates a new game server under a provided name.
@@ -95,6 +94,14 @@ defmodule SpadesGame.GameUIServer do
     IO.puts("game_ui_server: load_cards")
     IO.inspect(load_list)
     GenServer.call(via_tuple(game_name), {:load_cards, user_id, load_list})
+  end
+
+  @doc """
+  reset_game/2: Cards are loaded.
+  """
+  @spec reset_game(String.t(), integer):: GameUI.t()
+  def reset_game(game_name, user_id) do
+    GenServer.call(via_tuple(game_name), {:reset_game, user_id})
   end
 
   @doc """
@@ -281,6 +288,13 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:load_cards, user_id, load_list}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: load_list a")
     GameUI.load_cards(gameui, load_list)
+    |> save_and_reply()
+  end
+
+  def handle_call({:reset_game, user_id}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: load_list a")
+    new_game = Game.new(gameui["options"])
+    put_in(gameui["game"], new_game)
     |> save_and_reply()
   end
 

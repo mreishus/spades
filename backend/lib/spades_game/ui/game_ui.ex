@@ -97,6 +97,11 @@ defmodule SpadesGame.GameUI do
   end
 
   def update_token(gameui, group_id, stack_index, card_index, token_type, new_value) do
+    new_value = if new_value < 0 && Enum.member?(["resource", "progress", "damage", "time"], token_type) do
+      0
+    else
+      new_value
+    end
     old_tokens = get_tokens(gameui, group_id, stack_index, card_index)
     new_tokens = put_in(old_tokens[token_type],new_value)
     update_tokens(gameui, group_id, stack_index, card_index, new_tokens)
@@ -215,15 +220,16 @@ defmodule SpadesGame.GameUI do
       load_card(acc, r["cardRow"], r["groupID"], r["quantity"])
     end
 
-    # Enum.each(load_list,
-    #   fn(r) ->
-    #     #IO.puts("game_ui load_cards r")
-    #     #IO.inspect(r)
-    #     gameui = load_card(gameui, r["cardRow"], r["groupID"], r["quantity"])
-    #   end
-    # )
-    IO.puts("after_load")
-    IO.inspect(gameui["game"]["groups"])
+    # Check if we should load the first quest card
+    IO.puts("checking quest")
+    IO.inspect(Enum.count(get_stacks(gameui,"gSharedQuestDeck")))
+    IO.inspect(Enum.count(get_stacks(gameui,"gSharedMainQuest")))
+    gameui = if Enum.count(get_stacks(gameui,"gSharedQuestDeck"))>0 && Enum.count(get_stacks(gameui,"gSharedMainQuest"))==0 do
+      move_stack(gameui, "gSharedQuestDeck", 0, "gSharedMainQuest", 0)
+    else
+      gameui
+    end
+
     gameui
   end
 

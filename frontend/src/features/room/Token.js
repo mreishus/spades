@@ -123,6 +123,7 @@ export const Token = ({
                     backgroundColor: "black",
                     opacity: buttonLeftVisible ? "65%" : "0%",
                     display: showButtons ? "block" : "none",
+                    //zIndex: zIndex + 200,
                 }}
                 onMouseOver={() => setButtonLeftVisible(true)}
                 onMouseLeave={() => setButtonLeftVisible(false)}
@@ -149,6 +150,7 @@ export const Token = ({
                     backgroundColor: "black",
                     opacity: buttonRightVisible ? "65%" : "0%",
                     display: showButtons ? "block" : "none",
+                    //zIndex: zIndex + 200,
                 }}
                 onMouseOver={() => setButtonRightVisible(true)}
                 onMouseLeave={() => setButtonRightVisible(false)}
