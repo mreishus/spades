@@ -47,8 +47,9 @@ export const handleKeyDown = (
     const groupID = activeCardAndLoc.groupID;
     const stackIndex = activeCardAndLoc.stackIndex;
     const cardIndex = activeCardAndLoc.cardIndex;
+    const groupType = gameUI["game"]["groups"][groupID]["type"];
     // Increment token 
-    if (keyTokenMap[k] != undefined) {
+    if (keyTokenMap[k] != undefined && groupType == "play") {
         const tokenType = keyTokenMap[k][0];
         const mousePosition = activeCardAndLoc.mousePosition;
         var delta;
@@ -76,7 +77,7 @@ export const handleKeyDown = (
         }
     }
     // Set tokens to 0
-    else if (k === "0") {
+    else if (k === "0" && groupType == "play") {
         for (var tokenType in newTokens) if (newTokens.hasOwnProperty(tokenType)) newTokens = {...newTokens, [tokenType]: 0};
         newCard = {...newCard, tokens: newTokens}
         cardChanged = true;
@@ -99,7 +100,7 @@ export const handleKeyDown = (
         }
     }
     // Exhaust card
-    else if (k === "a") {
+    else if (k === "a" && groupType == "play") {
         if (newCard.exhausted) {
         newCard = {...newCard, exhausted: false, rotation: 0}
         chatBroadcast("game_update", {message: "readied "+displayName+"."});
@@ -111,7 +112,7 @@ export const handleKeyDown = (
         gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
     }
     // Deal shadow card
-    else if (k === "s") {
+    else if (k === "s" && groupType == "play") {
         gameBroadcast("deal_shadow", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
         chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
     }        

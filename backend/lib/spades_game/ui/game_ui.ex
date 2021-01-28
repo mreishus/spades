@@ -110,6 +110,8 @@ defmodule SpadesGame.GameUI do
   # Modify the card based on where it's coming from and where it's going
   def card_move_change(card, orig_group, dest_group) do
     card = if dest_group["type"] != "play" do Map.put(card, "tokens", Tokens.new()) else card end
+    card = if dest_group["type"] != "play" do Map.put(card, "exhausted", false) else card end
+    card = if dest_group["type"] != "play" do Map.put(card, "rotation", 0) else card end
     card = if dest_group["type"] == "deck" do Map.put(card, "currentSide", "B") else card end
     card = if orig_group["type"] == "deck" and dest_group["type"] != "deck" do Map.put(card, "currentSide", "A") else card end
     card

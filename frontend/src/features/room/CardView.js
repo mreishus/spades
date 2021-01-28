@@ -187,6 +187,7 @@ const CardComponent = React.memo(({
 
     const onDoubleClick = (event) => {
         //forceUpdate();
+        if (group["type"] != "play") return;
         if (!inputCard.exhausted) {
             inputCard.exhausted = true;
             inputCard.rotation = 90;
