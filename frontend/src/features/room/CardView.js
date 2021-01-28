@@ -40,6 +40,14 @@ export const getDisplayName = (card) => {
     }
 }
 
+export const getFlippedCard = (card) => {
+    return (card["currentSide"] === "A") ? {...card, ["currentSide"]: "B"} : {...card, ["currentSide"]: "A"};
+}
+
+export const getDisplayNameFlipped = (card) => {
+    return getDisplayName(getFlippedCard(card));
+}
+
 export const getCurrentFaceSRC = (card) => {
     if (!card) return "";
     const currentSide = card["currentSide"];

@@ -336,9 +336,6 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:move_card, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack}, _from, gameui) do
     # Check if dest_stack_index is negative, meaning counting from the bottom
     IO.puts("game_ui_server move_card")
-    IO.inspect(dest_stack_index)
-    dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stacks(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
-    IO.inspect(dest_stack_index)
     GameUI.move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack)
     |> save_and_reply()
   end

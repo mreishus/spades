@@ -76,13 +76,12 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   const setKeypress = useSetKeypress();
   const activeCardAndLoc = useActiveCard();
   const setActiveCardAndLoc = useSetActiveCard();
-  const [keyDownList, setKeyDownList] = useState<Array<string>>([]);
 
   useEffect(() => {
     const onKeyDown = (event: any) => {
       handleKeyDown(
-        gameUI,
         event, 
+        gameUI,
         typing, 
         keypress, 
         setKeypress,
@@ -105,7 +104,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         document.removeEventListener('keyup', onKeyUp);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeCardAndLoc, keyDownList]);
+  }, [gameUI, typing, keypress, activeCardAndLoc]);
 
 
   return (

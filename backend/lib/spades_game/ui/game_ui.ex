@@ -36,6 +36,15 @@ defmodule SpadesGame.GameUI do
     gameui["game"]["groups"][group_id]
   end
 
+  def get_group_type(gameui,group_id) do
+    group = gameui["game"]["groups"][group_id]
+    if group do
+      group["type"]
+    else
+      nil
+    end
+  end
+
   def get_stacks(gameui,group_id) do
     get_group(gameui,group_id)["stacks"]
   end
@@ -108,17 +117,21 @@ defmodule SpadesGame.GameUI do
   end
 
   # Modify the card based on where it's coming from and where it's going
-  def card_group_change(card, orig_group, dest_group) do
-    card = if dest_group["type"] != "play" do Map.put(card, "tokens", Tokens.new()) else card end
-    card = if dest_group["type"] != "play" do Map.put(card, "exhausted", false) else card end
-    card = if dest_group["type"] != "play" do Map.put(card, "rotation", 0) else card end
-    card = if dest_group["type"] == "deck" do Map.put(card, "currentSide", "B") else card end
-    card = if orig_group["type"] == "deck" and dest_group["type"] != "deck" do Map.put(card, "currentSide", "A") else card end
+  def card_group_change(gameui, card, orig_group_id, dest_group_id) do
+    orig_group_type = get_group_type(gameui, orig_group_id)
+    dest_group_type = get_group_type(gameui, dest_group_id)
+    card = if dest_group_type != "play" do Map.put(card, "tokens", Tokens.new()) else card end
+    card = if dest_group_type != "play" do Map.put(card, "exhausted", false) else card end
+    card = if dest_group_type != "play" do Map.put(card, "rotation", 0) else card end
+    card = if dest_group_type == "deck" do Map.put(card, "currentSide", "B") else card end
+    card = if orig_group_type == "deck" and dest_group_type != "deck" do Map.put(card, "currentSide", "A") else card end
     card
   end
 
 
   def move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index) do
+    # Check if dest_stack_index is negative, indicating a move to the end of a group, and adjust index accordingly
+    dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stacks(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
     old_orig_group = get_group(gameui, orig_group_id)
     old_orig_stacks = get_stacks(gameui, orig_group_id)
     old_stack = get_stack(gameui, orig_group_id, orig_stack_index)
@@ -133,7 +146,7 @@ defmodule SpadesGame.GameUI do
           end
         old_dest_stacks = old_dest_group["stacks"]
         old_cards = old_stack["cards"]
-        new_cards = Enum.map(old_cards, fn card -> card_group_change(card, old_orig_group, old_dest_group) end)
+        new_cards = Enum.map(old_cards, fn card -> card_group_change(gameui, card, orig_group_id, dest_group_id) end)
         new_dest_stacks =
           # If stack leaving play, separate the stack
           if old_dest_group["type"] != "play" do
@@ -156,6 +169,8 @@ defmodule SpadesGame.GameUI do
   def move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack \\ true) do
     IO.puts("game_ui move_card")
     IO.inspect(create_new_stack)
+    # Check if dest_stack_index is negative, indicating a move to the end of a group, and adjust index accordingly
+    dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stacks(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
     if orig_group_id == dest_group_id and orig_stack_index == dest_stack_index and orig_card_index == dest_card_index do
       gameui
     else
@@ -164,7 +179,7 @@ defmodule SpadesGame.GameUI do
       old_orig_stack = get_stack(gameui, orig_group_id, orig_stack_index)
       old_orig_cards = get_cards(gameui, orig_group_id, orig_stack_index)
       moving_card = get_card(gameui, orig_group_id, orig_stack_index, orig_card_index)
-      moving_card = card_group_change(moving_card, gameui["game"]["groups"][orig_group_id], gameui["game"]["groups"][dest_group_id])
+      moving_card = card_group_change(gameui, moving_card, orig_group_id, dest_group_id)
       #IO.inspect(moving_card)
       if !moving_card do
         gameui
@@ -216,7 +231,12 @@ defmodule SpadesGame.GameUI do
   def load_card(gameui, card_row, group_id, quantity) do
     #IO.puts("game_ui load_card a")
     #IO.inspect(card_row)
-    stacks_to_add = for _ <- 1..quantity, do: Stack.stack_from_cardrow(card_row)
+
+    stacks_to_add = for _ <- 1..quantity do
+      card = Card.card_from_cardrow(card_row)
+      card = card_group_change(gameui, card, group_id, group_id)
+      Stack.stack_from_card(card)
+    end
     old_stacks = get_stacks(gameui, group_id)
     new_stacks = old_stacks ++ stacks_to_add
     update_stacks(gameui, group_id, new_stacks)
