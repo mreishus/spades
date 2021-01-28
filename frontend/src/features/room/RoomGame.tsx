@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useContext, useEffect} from "react";
 import ReactDOM from "react-dom";
 import { Table } from "./Table";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
+import GameUIContext from "../../contexts/GameUIContext";
 import { ChatMessage } from "elixir-backend";
 import { handleKeyDown } from "./HandleKeyDown";
 
@@ -69,6 +70,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   document.addEventListener('keydown', onKeyDown);
   document.addEventListener('keyup', onKeyUp);
  */
+  const { gameUI, setGameUI } = useContext(GameUIContext);
   const [typing, setTyping] = useState<Boolean>(false);
   const keypress = useKeypress();
   const setKeypress = useSetKeypress();
@@ -79,6 +81,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   useEffect(() => {
     const onKeyDown = (event: any) => {
       handleKeyDown(
+        gameUI,
         event, 
         typing, 
         keypress, 

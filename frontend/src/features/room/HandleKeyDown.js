@@ -13,6 +13,7 @@ const keyTokenMap = {
 }
 
 export const handleKeyDown = (
+    gameUI,
     event, 
     typing, 
     keypress,
@@ -22,6 +23,8 @@ export const handleKeyDown = (
     gameBroadcast, 
     chatBroadcast
 ) => {
+
+
     if (typing) return;
     const k = event.key;
     console.log(k);
@@ -41,24 +44,20 @@ export const handleKeyDown = (
     var newTokens = newCard.tokens;
     var cardChanged = false;
     const displayName = getDisplayName(newCard);
+    const groupID = activeCardAndLoc.groupID;
+    const stackIndex = activeCardAndLoc.stackIndex;
+    const cardIndex = activeCardAndLoc.cardIndex;
     // Increment token 
     if (keyTokenMap[k] != undefined) {
         const tokenType = keyTokenMap[k][0];
         const mousePosition = activeCardAndLoc.mousePosition;
         var delta;
-        if (mousePosition === "top") {
-            delta = keyTokenMap[k][1];
-        } else if (mousePosition === "bottom") { 
-            delta = -keyTokenMap[k][1];
-        } else {
-            delta = 0;
-        }
+        if (mousePosition === "top") delta = keyTokenMap[k][1];
+        else if (mousePosition === "bottom") delta = -keyTokenMap[k][1];
+        else delta = 0;
         const newVal = newTokens[tokenType]+delta;
         if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
-        newTokens = {
-            ...newTokens,
-            [tokenType]: newVal,
-        }
+        newTokens = {...newTokens, [tokenType]: newVal}
         newCard = {...newCard, tokens: newTokens}
         cardChanged = true;
         gameBroadcast("increment_token",{group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: delta})
@@ -87,9 +86,9 @@ export const handleKeyDown = (
     // Flip card
     else if (k === "f") {
         if (newCard.currentSide === "A") {
-        newCard = {...newCard, currentSide: "B"}
+            newCard = {...newCard, currentSide: "B"}
         } else {
-        newCard = {...newCard, currentSide: "A"}
+            newCard = {...newCard, currentSide: "A"}
         }
         cardChanged = true;
         gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
@@ -118,17 +117,39 @@ export const handleKeyDown = (
     }        
     // Send to appropriate discard pile
     else if (k === "x") {
-        console.log('1');
-        chatBroadcast("game_update", {message: "discarded "+displayName+" to ."});
-        gameBroadcast("discard_card", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
+        console.log(cardIndex)
+        if (cardIndex == 0) {
+            const cards = gameUI["game"]["groups"][groupID]["stacks"][stackIndex]["cards"];
+            console.log(cards)
+            for (var i=0; i<cards.length; i++) {
+                const cardi = cards[i]
+                chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+cardi["discardgroupid"]+"."});
+            }
+            gameBroadcast("discard_stack",{
+                group_id: groupID, 
+                stack_index: stackIndex
+            });
+        } else {
+            const discardGroupID = newCard["discardgroupid"]
+            chatBroadcast("game_update", {message: "discarded "+displayName+" to "+discardGroupID+"."});
+            gameBroadcast("move_card", {
+                orig_group_id: groupID, 
+                orig_stack_index: stackIndex, 
+                orig_card_index: cardIndex, 
+                dest_group_id: discardGroupID, 
+                dest_stack_index: 0, 
+                dest_card_index: 0, 
+                create_new_stack: true
+            })
+        }
     }
     if (cardChanged) {
         setActiveCardAndLoc({
-        card: newCard, 
-        groupID: activeCardAndLoc.groupID, 
-        stackIndex: activeCardAndLoc.stackIndex, 
-        cardIndex: activeCardAndLoc.cardIndex, 
-        mousePosition: activeCardAndLoc.mousePosition
+            card: newCard, 
+            groupID: activeCardAndLoc.groupID, 
+            stackIndex: activeCardAndLoc.stackIndex, 
+            cardIndex: activeCardAndLoc.cardIndex, 
+            mousePosition: activeCardAndLoc.mousePosition
         });
     }
     }

@@ -35,7 +35,7 @@ export const getDisplayName = (card) => {
             const id4digit = id.substr(id.length - 4);
             return printName+' ('+id4digit+')';
         } else {
-            return 'undefined';
+            return 'undefinedCard';
         }
     }
 }

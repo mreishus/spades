@@ -24,6 +24,7 @@ defmodule SpadesGame.Card do
       "cardnumber" => card_row["cardnumber"],
       "cardquantity" => card_row["cardquantity"],
       "cardsetid" => card_row["cardsetid"],
+      "discardgroupid" => card_row["discardgroupid"],
 
       "sides"=> %{
         "A"=>CardFace.cardface_from_cardrowside(card_row["sideA"]),

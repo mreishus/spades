@@ -19,7 +19,7 @@ const WidthContainer = styled.div`
   height: 100%;
 `;
 
-const sectionToGroupID = (section, PlayerN) => {
+export const sectionToGroupID = (section, PlayerN) => {
   switch(section) {
     case 'Hero':
       return 'g'+PlayerN+'Play1';
@@ -50,9 +50,10 @@ const sectionToGroupID = (section, PlayerN) => {
     case 'Second Quest Deck':
       return 'gSharedQuestDeck2';
   }
+  return 'gSharedOther';
 }
 
-const sectionToDiscardGroupID = (section, PlayerN) => {
+export const sectionToDiscardGroupID = (section, PlayerN) => {
   switch(section) {
     case 'Hero':
       return 'g'+PlayerN+'Discard';
@@ -83,6 +84,7 @@ const sectionToDiscardGroupID = (section, PlayerN) => {
     case 'Second Quest Deck':
       return 'gSharedQuestDiscard2';
   }
+  return 'gSharedOther';
 }
 
 export const Table = ({
@@ -146,6 +148,7 @@ export const Table = ({
             const quantity = parseInt(card['$'].qty);
             var cardRow = cardDB[cardid];
             cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,'Player1');
+            console.log(cardRow);
             if (cardRow) {
               loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToGroupID(sectionName,'Player1')})
             }
@@ -439,7 +442,7 @@ export const Table = ({
   );
 }
 
-export default Groups;
+export default Table;
 
 
 
@@ -447,212 +450,3 @@ export default Groups;
 
 
 
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import ReactDOM from "react-dom";
-// import { generateQuoteMap } from "./data";
-// import styled from "@emotion/styled";
-// import GroupView from "./Group";
-// import Reorder, { reorderGroups } from "./Reorder";
-// import { DragDropContext } from "react-beautiful-dnd";
-
-// const data = {
-//   small: generateQuoteMap(10),
-//   medium: generateQuoteMap(100),
-//   large: generateQuoteMap(250)
-// };
-
-// const WidthContainer = styled.div`
-//   min-height: 100vh;
-//   /* like display:flex but will allow bleeding over the window width */
-//   min-width: 100vw;
-//   /* display: inline-flex; */
-// `;
-
-// export const Groups = ({
-//   gameUIView,
-//   gameBroadcast,
-// }) => {
-
-//   const [groups, setGroups] = useState(gameUIView.game_ui.game.groups);
-//   const [showScratch, setShowScratch] = useState(false);
-//   const [phase, setPhase] = useState(1);
-//   const [activeCard, setActiveCard] = useState(null);
-
-//   function toggleScratch() {
-//     if (showScratch) setShowScratch(false);
-//     else setShowScratch(true);
-//   }
-
-//   function changePhase(num) {
-//     if (num!=phase) setPhase(num);
-//   }
-
-//   useEffect(() => {    
-//     setGroups(gameUIView.game_ui.game.groups);
-//   }, [gameUIView.game_ui.game.groups]);
-
-//   const [state,setState] = useState({
-//     columns: data.large,
-//     ordered: Object.keys(data.medium)
-//   });
-
-//   // const onDragEnd = (result) => {
-//   //   console.log(result);
-//   //   if (!result.destination) return;
-//   //   const { source, destination } = result;
-//   //   var newGroups = {};
-//   //   if (source.droppableId !== destination.droppableId) {
-//   //     const sourceGroupView = groups[source.droppableId];
-//   //     const destGroupView = groups[destination.droppableId];
-//   //     const sourceStacks = [...sourceGroup.stacks];
-//   //     const destStacks = [...destGroup.stacks];
-//   //     const [removed] = sourceStacks.splice(source.index, 1);
-//   //     destStacks.splice(destination.index, 0, removed);
-//   //     newGroups = {
-//   //       ...groups,
-//   //       [source.droppableId]: {
-//   //         ...sourceGroup,
-//   //         stacks: sourceStacks
-//   //       },
-//   //       [destination.droppableId]: {
-//   //         ...destGroup,
-//   //         stacks: destStacks
-//   //       }
-//   //     }
-//   //   } else {
-//   //     const group = groups[source.droppableId];
-//   //     const copiedStacks = [...group.stacks];
-//   //     const [removed] = copiedStacks.splice(source.index, 1);
-//   //     copiedStacks.splice(destination.index, 0, removed);
-//   //     newGroups = {
-//   //       ...groups,
-//   //       [source.droppableId]: {
-//   //         ...group,
-//   //         stacks: copiedStacks
-//   //       }
-//   //     }
-//   //   }
-//   //   setGroups(newGroups);
-//   //   gameBroadcast("update_groups",{groups: newGroups});
-//   // };
-
-//   const onDragEnd = (result) => {
-//     if (result.combine) {
-//       return;
-//       const column = state.columns[result.source.droppableId];
-//       const withQuoteRemoved = [...column];
-//       withQuoteRemoved.splice(result.source.index, 1);
-//       const columns = {
-//         ...state.columns,
-//         [result.source.droppableId]: withQuoteRemoved
-//       };
-//       setState({ columns, ordered: state.ordered });
-//       return;
-//     }
-
-//     // dropped nowhere
-//     if (!result.destination) {
-//       return;
-//     }
-//     console.log(result);
-//     const source = result.source;
-//     const destination = result.destination;
-
-//     // did not move anywhere - can bail early
-//     if (
-//       source.droppableId === destination.droppableId &&
-//       source.index === destination.index
-//     ) {
-//       return;
-//     }
-
-//     console.log('here');
-//     const data = reorderGroups({
-//       groups: groups,
-//       source,
-//       destination
-//     });
-
-//     setGroups(data.groups);
-//     // setState({
-//     //   columns: data.quoteMap,
-//     //   ordered: state.ordered
-//     // });
-//   };
-
-//   const columns = state.columns;
-//   const ordered = state.ordered;
-//   console.log('ordered');
-//   console.log(ordered);
-//   // const {
-//   //   containerHeight,
-//   //   useClone,
-//   //   isCombineEnabled,
-//   //   withScrollableColumns
-//   // } = props;
-
-//   const board = (
-
-//     <WidthContainer>
-//       <Group
-//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
-//         group={groups['gSharedQuestDeck']}
-//         key={'gSharedQuestDeck'}
-//         title={groups['gSharedQuestDeck'].id}
-//         isCombineEnabled={true}
-//         activeCard={activeCard}
-//         setActiveCard={setActiveCard}
-//       />
-//       <Group
-//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
-//         group={groups['gSharedEncounterDeck']}
-//         key={'gSharedEncounterDeck'}
-//         title={groups['gSharedEncounterDeck'].id}
-//         isCombineEnabled={true}
-//         activeCard={activeCard}
-//         setActiveCard={setActiveCard}
-//       />      
-//       <Group
-//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
-//         group={groups['gPlayer1Deck']}
-//         key={'gPlayer1Deck'}
-//         title={groups['gPlayer1Deck'].id}
-//         isCombineEnabled={true}
-//         activeCard={activeCard}
-//         setActiveCard={setActiveCard}
-//       />  
-//       <Group
-//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
-//         group={groups['gPlayer2Deck']}
-//         key={'gPlayer2Deck'}
-//         title={groups['gPlayer2Deck'].id}
-//         isCombineEnabled={true}
-//         activeCard={activeCard}
-//         setActiveCard={setActiveCard}
-//       />  
-//       <Group
-//         gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
-//         group={groups['gPlayer3Deck']}
-//         key={'gPlayer3Deck'}
-//         title={groups['gPlayer3Deck'].id}
-//         isCombineEnabled={true}
-//         activeCard={activeCard}
-//         setActiveCard={setActiveCard}
-//       />
-      
-//     </WidthContainer>
-//   );
-
-//   return (
-//     <React.Fragment>
-//       <DragDropContext onDragEnd={onDragEnd}>
-//         {board}
-//       </DragDropContext>
-//     </React.Fragment>
-//   );
-// }

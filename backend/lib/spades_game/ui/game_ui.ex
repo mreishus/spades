@@ -107,36 +107,42 @@ defmodule SpadesGame.GameUI do
     update_tokens(gameui, group_id, stack_index, card_index, new_tokens)
   end
 
+  # Modify the card based on where it's coming from and where it's going
+  def card_move_change(card, orig_group, dest_group) do
+    card = if dest_group["type"] != "play" do Map.put(card, "tokens", Tokens.new()) else card end
+    card = if dest_group["type"] == "deck" do Map.put(card, "currentSide", "B") else card end
+    card = if orig_group["type"] == "deck" and dest_group["type"] != "deck" do Map.put(card, "currentSide", "A") else card end
+    card
+  end
+
+
   def move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index) do
     old_orig_group = get_group(gameui, orig_group_id)
     old_orig_stacks = get_stacks(gameui, orig_group_id)
-    stack = get_stack(gameui, orig_group_id, orig_stack_index)
-    if stack do
+    old_stack = get_stack(gameui, orig_group_id, orig_stack_index)
+    if old_stack do
         new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
         new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
-        old_dest_group =  if orig_group_id == dest_group_id do
-                            new_orig_group
-                          else
-                            get_group(gameui,dest_group_id)
-                          end
+        old_dest_group =
+          if orig_group_id == dest_group_id do
+            new_orig_group
+          else
+            get_group(gameui,dest_group_id)
+          end
         old_dest_stacks = old_dest_group["stacks"]
-        new_dest_stacks = if old_dest_group["type"] == "deck" do
-                            stack_list_to_insert = Enum.map(stack["cards"], fn card ->
-                              card_B = Map.put(card, "currentSide", "B")
-                              card_no_tokens = Map.put(card_B, "tokens", Tokens.new())
-                              Stack.stack_from_card(card_no_tokens)
-                            end)
-                            List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
-                          else
-                            if old_orig_group["type"] == "deck" and old_dest_group["type"] != "deck" do
-                              card = Enum.at(stack["cards"],0)
-                              card_flipped = Map.put(card,"currentSide","A")
-                              stack_flipped = Map.put(stack,"cards",[card_flipped])
-                              List.insert_at(old_dest_stacks,dest_stack_index,stack_flipped)
-                            else
-                              List.insert_at(old_dest_stacks,dest_stack_index,stack)
-                            end
-                          end
+        old_cards = old_stack["cards"]
+        new_cards = Enum.map(old_cards, fn card -> card_move_change(card, old_orig_group, old_dest_group) end)
+        new_dest_stacks =
+          # If stack leaving play, separate the stack
+          if old_dest_group["type"] != "play" do
+            stack_list_to_insert = Enum.map(new_cards, fn card -> Stack.stack_from_card(card) end)
+            # Insert list of stacks into original destination stacks
+            List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
+          # Stack is either entering play or staying in play. Keep it in one piece
+          else
+            new_stack = put_in(old_stack["cards"],new_cards)
+            List.insert_at(old_dest_stacks,dest_stack_index,new_stack)
+          end
         new_dest_group = put_in(old_dest_group["stacks"], new_dest_stacks)
         gameui_orig_removed = update_group(gameui, orig_group_id, new_orig_group)
         update_group(gameui_orig_removed,dest_group_id,new_dest_group)
