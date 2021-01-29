@@ -177,10 +177,10 @@ const CardComponent = React.memo(({
     //console.log('rendering',group.id,stackIndex,cardIndex, "comp");
 
 
-    const onClick = (event) => {
-        console.log(inputCard);
-        return;
-    }
+    // const onClick = (event) => {
+    //     console.log(inputCard);
+    //     return;
+    // }
 
     const handleMouseOver = (event) => {
         setIsActive(true);
@@ -270,7 +270,7 @@ const CardComponent = React.memo(({
                     // MozBoxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
                     // boxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
                 }}
-                onClick={handleClick}
+                //onClick={handleClick}
                 //onDoubleClick={handleDoubleClick}
                 onMouseOver={event => handleMouseOver(event)}
                 onMouseLeave={event => handleMouseLeave(event)}
