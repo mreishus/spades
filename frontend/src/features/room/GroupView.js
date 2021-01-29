@@ -2,6 +2,10 @@ import React, { Component } from "react";
 import styled from "@emotion/styled";
 import Stacks from "./Stacks";
 import Title from "./Title";
+import { GROUPSINFO } from "./Constants";
+import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 
 const Container = styled.div`
   padding: 1px 1px 1px 1px;
@@ -17,8 +21,70 @@ const Header = styled.div`
   height: 13%;
 `;
 
+
+const GroupComponent = React.memo(({
+  group,
+  gameBroadcast,
+  chatBroadcast,
+  showTitle,
+}) => {
+
+  const handleMenuClick = (e, data) => {
+    if (data.action === "shuffle_group") {
+      gameBroadcast("shuffle_group", {group_id: group.id})
+      chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+"."})
+    } else if (data.action === "move_stacks") {
+      if (data.position === "t") {
+        gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
+        chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to top of "+GROUPSINFO[data.destGroupID].name+"."})
+      } else if (data.position === "b") {
+        gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
+        chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to bottom of "+GROUPSINFO[data.destGroupID].name+"."})
+      } else if (data.position === "s") {
+        gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
+        chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[data.destGroupID].name+"."})
+      }
+    }
+  }
+
+  return(
+    <Container>
+
+      <ContextMenuTrigger id={group.id} holdToDisplay={0}>
+        <Header>
+          <Title>{group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+        </Header>
+      </ContextMenuTrigger> 
+
+      <ContextMenu id={group.id} style={{zIndex:1e6}}>
+      {/* {stack.cards.map((card, cardIndex) => ( */}
+          <hr></hr>
+          <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
+          <SubMenu title='Move to'>
+              <SubMenu title='Encounter Deck'>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "t"}}>Top</MenuItem>
+              </SubMenu>
+              <SubMenu title='Deck'>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "t"}}>Top</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "b"}}>Bottom</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "s"}}>Shuffle in</MenuItem>
+              </SubMenu>
+          </SubMenu>
+      </ContextMenu>
+
+      <Stacks
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+        group={group}
+        isCombineEnabled={group.type === "play"}
+      />
+    </Container>
+  )
+
+
+})
+
 export default class GroupView extends Component {
-  
 
   shouldComponentUpdate = (nextProps, nextState) => {
         // if (nextProps.group.id == "gSharedStaging") {
@@ -40,24 +106,22 @@ export default class GroupView extends Component {
       }
   };
 
+
+
   render() {
     const group = this.props.group;
     console.log('rendering',group.id);
     return (
       // <Draggable draggableId={title} index={index}>
       //   {(provided, snapshot) => (ref={provided.innerRef} {...provided.draggableProps}>
-      <Container>
-        <Header>
-          <Title>{group.name}</Title>
-        </Header>
-        <Stacks
-          gameBroadcast={this.props.gameBroadcast}
-          chatBroadcast={this.props.chatBroadcast}
-          group={group}
-          internalScroll={this.props.isScrollable}
-          isCombineEnabled={group.type === "play"}
-        />
-      </Container>
+
+      <GroupComponent
+        group={this.props.group}
+        gameBroadcast={this.props.gameBroadcast}
+        chatBroadcast={this.props.chatBroadcast}
+        showTitle={this.props.showTitle}
+      ></GroupComponent>
+
       //   )}
       // </Draggable>
     );

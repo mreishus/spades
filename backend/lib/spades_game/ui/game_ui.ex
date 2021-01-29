@@ -167,7 +167,7 @@ defmodule SpadesGame.GameUI do
 
   def move_stacks(gameui, orig_group_id, dest_group_id, position) do
     orig_stacks = get_stacks(gameui, orig_group_id)
-    gameui = update_stacks(gameui, orig_group_id, [])
+    # gameui = update_stacks(gameui, orig_group_id, [])
     # Moving stacks to the top or the bottom of the new group?
     dest_stack_index = if position == "b" do -1 else 0 end
     # Move stacks 1 at a time

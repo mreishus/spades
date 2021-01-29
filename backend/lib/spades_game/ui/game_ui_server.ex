@@ -117,8 +117,8 @@ defmodule SpadesGame.GameUIServer do
   move_stack/6: Move all stacks from one group to another group, where position = t (top), b (bottom), s (shuffle in) to new group.
   """
   @spec move_stacks(String.t(), integer, String.t(), String.t(), String.t()) :: GameUI.t()
-  def move_stack(game_name, user_id, orig_group_id, dest_group_id, position) do
-    IO.puts("game_ui_server: move_stack")
+  def move_stacks(game_name, user_id, orig_group_id, dest_group_id, position) do
+    IO.puts("game_ui_server: move_stacks")
     GenServer.call(via_tuple(game_name), {:move_stacks, user_id, orig_group_id, dest_group_id, position})
   end
 

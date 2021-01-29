@@ -165,6 +165,7 @@ defmodule SpadesWeb.RoomChannel do
     },
     %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
   ) do
+    IO.puts("roomchannel move_stacks a")
     GameUIServer.move_stacks(room_slug, user_id, orig_group_id, dest_group_id, position)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
