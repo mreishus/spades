@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef, Component } from "react";
 import { TokensView } from './TokensView';
-import GameUIContext from "../../contexts/GameUIContext";
 import { playerBackSRC, encounterBackSRC } from "./Constants"
 import { getCardFaceSRC } from "./CardBack"
 import { CARDSCALE, GROUPSINFO } from "./Constants"
@@ -163,7 +162,6 @@ const CardComponent = React.memo(({
 
     const [isActive, setIsActive] = useState(false);
     const [mousePosition, setMousePosition] = useState('none');
-    const [isClicked, setIsClicked] = useState(false);
     const displayName = getDisplayName(inputCard);
     console.log('mousePosition ',mousePosition)
     console.log('activeCard pos ',)
@@ -193,21 +191,21 @@ const CardComponent = React.memo(({
         setActiveCard(null);
     }
 
-    const onDoubleClick = (event) => {
-        //forceUpdate();
-        if (group["type"] != "play") return;
-        if (!inputCard.exhausted) {
-            inputCard.exhausted = true;
-            inputCard.rotation = 90;
-            chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
-        } else {
-            inputCard.exhausted = false;
-            inputCard.rotation = 0;
-            chatBroadcast("game_update", {message: "readied "+displayName+"."});
-        }
-        gameBroadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
-        forceUpdate();
-    }
+    // const onDoubleClick = (event) => {
+    //     //forceUpdate();
+    //     if (group["type"] != "play") return;
+    //     if (!inputCard.exhausted) {
+    //         inputCard.exhausted = true;
+    //         inputCard.rotation = 90;
+    //         chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+    //     } else {
+    //         inputCard.exhausted = false;
+    //         inputCard.rotation = 0;
+    //         chatBroadcast("game_update", {message: "readied "+displayName+"."});
+    //     }
+    //     gameBroadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
+    //     forceUpdate();
+    // }
 
     const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onClick, onDoubleClick);
 
@@ -256,7 +254,7 @@ const CardComponent = React.memo(({
                     top: `${0.2 + (1.39-currentFace.height)*CARDSCALE/2}vw`,
                     borderWidth: '1px',
                     borderRadius: '6px',
-                    borderColor: isActive || isClicked ? 'yellow' : 'transparent',
+                    borderColor: isActive ? 'yellow' : 'transparent',
                     //transform: `rotate(${angles}deg)`,
                     transform: `rotate(${inputCard.rotation}deg)`,
                     zIndex: zIndex,
@@ -274,7 +272,7 @@ const CardComponent = React.memo(({
                     // boxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
                 }}
                 onClick={handleClick}
-                onDoubleClick={handleDoubleClick}
+                //onDoubleClick={handleDoubleClick}
                 onMouseOver={event => handleMouseOver(event)}
                 onMouseLeave={event => handleMouseLeave(event)}
             >
