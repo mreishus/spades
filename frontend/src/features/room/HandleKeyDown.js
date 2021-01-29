@@ -31,7 +31,7 @@ export const handleKeyDown = (
     setKeypress([k]);
     console.log(keypress);
     // General hotkeys
-    if (k === "e") {
+    if (k === "e" || k === "E") {
         // Check remaining cards in encounter deck
         const gSharedEncounterDeck = gameUI["game"]["groups"]["gSharedEncounterDeck"];
         const stacks = gSharedEncounterDeck["stacks"];
@@ -55,12 +55,16 @@ export const handleKeyDown = (
         // Reveal card
         const topStack = stacks[0];
         const topCard = topStack["cards"][0];
-        chatBroadcast("game_update",{message: "revealed "+getDisplayNameFlipped(topCard)+"."});
+        // Was shift held down? (Deal card facedown)
+        const shiftHeld = keypress[0] === "Shift";
+        const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
+        chatBroadcast("game_update",{message: message});
         gameBroadcast("move_stack",{
             orig_group_id: "gSharedEncounterDeck", 
             orig_stack_index: 0, 
             dest_group_id: "gSharedStaging", 
             dest_stack_index: -1,
+            preserve_state: shiftHeld,
         });
     } else if (k === "d") {
         // Check remaining cards in deck
@@ -82,6 +86,7 @@ export const handleKeyDown = (
             orig_stack_index: 0, 
             dest_group_id: "gPlayer1Hand", 
             dest_stack_index: -1,
+            preserve_state: false,
         });
     }
 

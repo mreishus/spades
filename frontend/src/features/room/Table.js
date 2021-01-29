@@ -267,7 +267,8 @@ export const Table = ({
       orig_group_id: source.droppableId, 
       orig_stack_index: source.index, 
       dest_group_id: destination.droppableId, 
-      dest_stack_index: destination.index
+      dest_stack_index: destination.index,
+      preserve_state: false,
     });
     const sourceGroupTitle = GROUPSINFO[source.droppableId].name;
     const destGroupTitle = GROUPSINFO[destination.droppableId].name;
