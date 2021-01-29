@@ -128,7 +128,6 @@ defmodule SpadesGame.GameUI do
     card
   end
 
-
   def move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index) do
     # Check if dest_stack_index is negative, indicating a move to the end of a group, and adjust index accordingly
     dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stacks(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
@@ -164,6 +163,19 @@ defmodule SpadesGame.GameUI do
       else
         gameui
       end
+  end
+
+  def move_stacks(gameui, orig_group_id, dest_group_id, position) do
+    orig_stacks = get_stacks(gameui, orig_group_id)
+    gameui = update_stacks(gameui, orig_group_id, [])
+    # Moving stacks to the top or the bottom of the new group?
+    dest_stack_index = if position == "b" do -1 else 0 end
+    # Move stacks 1 at a time
+    gameui = Enum.reduce orig_stacks, gameui, fn s, acc ->
+      move_stack(acc, orig_group_id, 0, dest_group_id, dest_stack_index)
+    end
+    # Do we shuffle it in?
+    if position == "s" do shuffle_group(gameui, dest_group_id) else gameui end
   end
 
   def move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack \\ true) do

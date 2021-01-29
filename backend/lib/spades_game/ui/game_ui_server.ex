@@ -108,9 +108,18 @@ defmodule SpadesGame.GameUIServer do
   move_stack/6: A player just moved a stack.
   """
   @spec move_stack(String.t(), integer, String.t(), number, String.t(), number) :: GameUI.t()
-  def move_stack(game_name, user_id, start_group_id, start_stack_index, end_group_id, end_stack_index) do
+  def move_stack(game_name, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index) do
     IO.puts("game_ui_server: move_stack")
-    GenServer.call(via_tuple(game_name), {:move_stack, user_id, start_group_id, start_stack_index, end_group_id, end_stack_index})
+    GenServer.call(via_tuple(game_name), {:move_stack, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index})
+  end
+
+  @doc """
+  move_stack/6: Move all stacks from one group to another group, where position = t (top), b (bottom), s (shuffle in) to new group.
+  """
+  @spec move_stacks(String.t(), integer, String.t(), String.t(), String.t()) :: GameUI.t()
+  def move_stack(game_name, user_id, orig_group_id, dest_group_id, position) do
+    IO.puts("game_ui_server: move_stack")
+    GenServer.call(via_tuple(game_name), {:move_stacks, user_id, orig_group_id, dest_group_id, position})
   end
 
   @doc """
@@ -300,6 +309,11 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:move_stack, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index}, _from, gameui) do
     GameUI.move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index)
+    |> save_and_reply()
+  end
+
+  def handle_call({:move_stacks, user_id, orig_group_id, dest_group_id, position}, _from, gameui) do
+    GameUI.move_stacks(gameui, orig_group_id, dest_group_id, position)
     |> save_and_reply()
   end
 

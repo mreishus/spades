@@ -1,4 +1,5 @@
 import { getDisplayName, getDisplayNameFlipped } from "./CardView";
+import { GROUPSINFO } from "./Constants";
 
 // const keyTokenMap: { [id: string] : Array<string | number>; } = {
 const keyTokenMap = {
@@ -32,15 +33,27 @@ export const handleKeyDown = (
     // General hotkeys
     if (k === "e") {
         // Check remaining cards in encounter deck
-
+        const gSharedEncounterDeck = gameUI["game"]["groups"]["gSharedEncounterDeck"];
+        const stacks = gSharedEncounterDeck["stacks"];
+        const cardsLeft = stacks.length;
         // If no cards, check phase of game
-
-            // If quest phase, shuffle encounte deck
-
-            // If not quest phase, give error message and break
-
+        if (cardsLeft === 0) {
+            // If quest phase, shuffle encounter discard pile into deck
+            if (gameUI["game"]["phase"] === "quest") {
+                gameBroadcast("move_stacks",{
+                    orig_group_id: "gSharedEncounterDeck",
+                    dest_group_id: "gSharedStaging", 
+                    position: "s",
+                });
+                chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["gSharedEncounterDiscard"].name+" into "+GROUPSINFO["gSharedEncounterDeck"].name+"."});
+            } else {
+                // If not quest phase, give error message and break
+                chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty and it's not the quest phase."});
+                return;
+            }
+        }
         // Reveal card
-        const topStack = gameUI["game"]["groups"]["gSharedEncounterDeck"]["stacks"][0];
+        const topStack = ["stacks"][0];
         const topCard = topStack["cards"][0];
         chatBroadcast("game_update",{message: "revealed "+getDisplayNameFlipped(topCard)+"."});
         gameBroadcast("move_stack",{

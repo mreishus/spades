@@ -108,6 +108,8 @@ declare module "elixir-backend" {
     first_player: 1 | 2 | 3 | 4; // "player1"
     options: any;
     round_number: number;
+    phase: String;
+    phase_part: String;
     groups: Groups;
   }
 

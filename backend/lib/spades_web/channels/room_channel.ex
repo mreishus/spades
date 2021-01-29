@@ -157,6 +157,23 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
+    "move_stacks",
+    %{
+      "orig_group_id" => orig_group_id,
+      "dest_group_id" => dest_group_id,
+      "position" => position,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.move_stacks(room_slug, user_id, orig_group_id, dest_group_id, position)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
       "update_card",
       %{
         "card" => card,

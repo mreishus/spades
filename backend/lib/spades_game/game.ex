@@ -23,10 +23,12 @@ defmodule SpadesGame.Game do
   @spec new(GameOptions.t()) :: Game.t()
   def new(%GameOptions{} = options) do
     %{
-      "groups"=> Groups.new(),
-      "options"=> options,
-      "first_player"=> 1,
-      "round_number"=> 1,
+      "groups" => Groups.new(),
+      "options" => options,
+      "first_player" => 1,
+      "round_number" => 1,
+      "phase" => "roundstart",
+      "phasepart" => "beginning",
     }
   end
 
