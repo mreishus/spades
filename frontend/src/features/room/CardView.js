@@ -206,8 +206,7 @@ const CardComponent = React.memo(({
     //     gameBroadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
     //     forceUpdate();
     // }
-
-    const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onClick, onDoubleClick);
+    // const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onClick, onDoubleClick);
 
 
     const menuID = inputCard.id+'-menu';
