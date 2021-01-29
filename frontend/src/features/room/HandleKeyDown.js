@@ -35,9 +35,9 @@ export const handleKeyDown = (
         // Check remaining cards in encounter deck
         const gSharedEncounterDeck = gameUI["game"]["groups"]["gSharedEncounterDeck"];
         const stacks = gSharedEncounterDeck["stacks"];
-        const cardsLeft = stacks.length;
+        const stacksLeft = stacks.length;
         // If no cards, check phase of game
-        if (cardsLeft === 0) {
+        if (stacksLeft === 0) {
             // If quest phase, shuffle encounter discard pile into deck
             if (gameUI["game"]["phase"] === "quest") {
                 gameBroadcast("move_stacks",{
@@ -53,7 +53,7 @@ export const handleKeyDown = (
             }
         }
         // Reveal card
-        const topStack = ["stacks"][0];
+        const topStack = stacks[0];
         const topCard = topStack["cards"][0];
         chatBroadcast("game_update",{message: "revealed "+getDisplayNameFlipped(topCard)+"."});
         gameBroadcast("move_stack",{
@@ -62,8 +62,27 @@ export const handleKeyDown = (
             dest_group_id: "gSharedStaging", 
             dest_stack_index: -1,
         });
-    } else if (k === "Space") {
-        gameBroadcast("draw_card",{})
+    } else if (k === "d") {
+        // Check remaining cards in deck
+        const gPlayer1Deck = gameUI["game"]["groups"]["gPlayer1Deck"];
+        const stacks = gPlayer1Deck["stacks"];
+        const stacksLeft = stacks.length;
+        // If no cards, give error message and break
+        if (stacksLeft === 0) {
+            chatBroadcast("game_update",{message: " tried to draw a card, but their deck is empty."});
+            return;
+        }
+        // Draw card
+        const topStack = stacks[0];
+        console.log('topStack',topStack)
+        const topCard = topStack["cards"][0];
+        chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+"."});
+        gameBroadcast("move_stack",{
+            orig_group_id: "gPlayer1Deck", 
+            orig_stack_index: 0, 
+            dest_group_id: "gPlayer1Hand", 
+            dest_stack_index: -1,
+        });
     }
 
     // Card specific hotkeys
