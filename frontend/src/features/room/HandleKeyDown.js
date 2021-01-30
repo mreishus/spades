@@ -176,15 +176,21 @@ export const handleKeyDown = (
                 console.log(cards)
                 for (var i=0; i<cards.length; i++) {
                     const cardi = cards[i]
-                    chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+cardi["discardgroupid"]+"."});
+                    const discardGroupID = cardi["discardgroupid"];
+                    chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+GROUPSINFO[discardGroupID].name+"."});
+                    gameBroadcast("move_card",{
+                        orig_group_id: groupID, 
+                        orig_stack_index: stackIndex, 
+                        orig_card_index: cardIndex, 
+                        dest_group_id: discardGroupID,
+                        dest_stack_index: 0,
+                        dest_card_index: 0, 
+                        create_new_stack: true
+                    });
                 }
-                gameBroadcast("discard_stack",{
-                    group_id: groupID, 
-                    stack_index: stackIndex
-                });
             } else {
                 const discardGroupID = newCard["discardgroupid"]
-                chatBroadcast("game_update", {message: "discarded "+displayName+" to "+discardGroupID+"."});
+                chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupID].name+"."});
                 gameBroadcast("move_card", {
                     orig_group_id: groupID, 
                     orig_stack_index: stackIndex, 

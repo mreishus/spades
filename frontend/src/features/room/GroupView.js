@@ -21,12 +21,13 @@ const Header = styled.div`
   height: 13%;
 `;
 
-
 const GroupComponent = React.memo(({
   group,
   gameBroadcast,
   chatBroadcast,
   showTitle,
+  setBrowseGroupID,
+  setBrowseGroupIndices,
 }) => {
 
   const handleMenuClick = (e, data) => {
@@ -44,12 +45,14 @@ const GroupComponent = React.memo(({
         gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
         chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[data.destGroupID].name+"."})
       }
+    } else if (data.action === "look_at") {
+      setBrowseGroupID(group.id);
+      setBrowseGroupIndices(data.indices);
     }
   }
-
+  const numStacks = group["stacks"].length;
   return(
     <Container>
-
       <ContextMenuTrigger id={group.id} holdToDisplay={0}>
         <Header>
           <Title>{group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
@@ -60,6 +63,15 @@ const GroupComponent = React.memo(({
       {/* {stack.cards.map((card, cardIndex) => ( */}
           <hr></hr>
           <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
+          <SubMenu title='Look at'>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(numStacks).keys()]}}>All</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(5).keys()]}}>Top 5</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(10).keys()]}}>Top 10</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(15).keys()]}}>Top 15</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(20).keys()]}}>Top 20</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(25).keys()]}}>Top 25</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [numStacks-1]}}>Bottom 1</MenuItem>
+          </SubMenu>
           <SubMenu title='Move all to'>
               <SubMenu title='My Deck'>
                   <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "t"}}>Top </MenuItem>
@@ -122,20 +134,27 @@ export default class GroupView extends Component {
 
   render() {
     const group = this.props.group;
-    console.log('rendering',group.id);
-    return (
-      // <Draggable draggableId={title} index={index}>
-      //   {(provided, snapshot) => (ref={provided.innerRef} {...provided.draggableProps}>
+    if (group) {
+      console.log('rendering',group.id);
+      return (
+        // <Draggable draggableId={title} index={index}>
+        //   {(provided, snapshot) => (ref={provided.innerRef} {...provided.draggableProps}>
 
-      <GroupComponent
-        group={this.props.group}
-        gameBroadcast={this.props.gameBroadcast}
-        chatBroadcast={this.props.chatBroadcast}
-        showTitle={this.props.showTitle}
-      ></GroupComponent>
+        <GroupComponent
+          group={this.props.group}
+          gameBroadcast={this.props.gameBroadcast}
+          chatBroadcast={this.props.chatBroadcast}
+          showTitle={this.props.showTitle}
+          setBrowseGroupID={this.props.setBrowseGroupID}
+          setBrowseGroupIndices={this.props.setBrowseGroupIndices}
+        ></GroupComponent>
 
-      //   )}
-      // </Draggable>
-    );
+        //   )}
+        // </Draggable>
+      );
+
+    } else {
+      return (<div></div>)
+    }
   }
 }

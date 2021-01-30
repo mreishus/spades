@@ -239,7 +239,7 @@ const CardComponent = React.memo(({
     const currentFace = inputCard.sides[inputCard.currentSide];
     return (
         <div>
-            <ContextMenuTrigger id={inputCard.id}> 
+            <ContextMenuTrigger id={inputCard.id} holdToDisplay={500}> 
 
             <div 
                 className={isActive ? 'isActive' : ''}

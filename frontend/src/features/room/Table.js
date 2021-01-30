@@ -4,6 +4,7 @@ import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Chat from "../chat/Chat";
 import GroupView from "./GroupView";
+import BrowseGroup from "./BrowseGroup";
 import { reorderGroups } from "./Reorder";
 import { GiantCard } from "./GiantCard";
 import styled from "@emotion/styled";
@@ -11,6 +12,7 @@ import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
 import Button from "../../components/basic/Button";
 import { getDisplayName } from "./CardView"
+import ReactModal from "react-modal";
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
 const WidthContainer = styled.div`
@@ -96,6 +98,11 @@ export const Table = ({
   const { gameUI, setGameUI } = useContext(GameUIContext);
   const [groups, setGroups] = useState(gameUI.game.groups);
   const [showScratch, setShowScratch] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  // Show/hide group that allows you to browse certain cards in a group
+  const [browseGroupID, setBrowseGroupID] = useState("");
+  // Indices of stacks in group being browsed
+  const [browseGroupIndices, setBrowseGroupIndices] = useState(false);
   //const [cardDB, setCardDB] = useState(null);
   const [phase, setPhase] = useState(1);
   //const [selectedFile, setSelectedFile] = useState(null);
@@ -338,44 +345,96 @@ export const Table = ({
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "75%"}}>                
-                <GroupView group={groups['gSharedStaging']} key={'gSharedStaging'} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gSharedStaging']}
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gSharedActive']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gSharedActive']} 
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+              ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "15%"}}>
-                <GroupView group={groups['gSharedMainQuest']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gSharedMainQuest']} 
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
               </WidthContainer>
               
             </div> 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "100%"}}>
-                <GroupView group={groups['gPlayer1Engaged']} key={'gPlayer1Engaged'} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gPlayer1Engaged']}
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
               </WidthContainer>
             </div>
               
-            <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
+            <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%", display: browseGroupID? "none": "block"}}>
               <WidthContainer style={{width: "100%"}}>
-                <GroupView group={groups['gPlayer1Play1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gPlayer1Play1']} 
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
+              </WidthContainer>
+            </div>
+            <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%", display: browseGroupID? "block": "none"}}>
+              <WidthContainer style={{width: "100%"}}>
+                <BrowseGroup 
+                  group={groups[browseGroupID]}
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
+                ></BrowseGroup>
               </WidthContainer>
             </div>
             <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <WidthContainer style={{width: "90%"}}>
-                <GroupView group={groups['gPlayer1Play2']} showTitle="false" gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gPlayer1Play2']} 
+                  showTitle="false" 
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Event']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gPlayer1Event']} 
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
               </WidthContainer>
             </div>
             <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
               <WidthContainer style={{width: "80%"}}>
-                <GroupView group={groups['gPlayer1Hand']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gPlayer1Hand']} 
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Deck']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gPlayer1Deck']} 
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%"}}>
-                <GroupView group={groups['gPlayer1Discard']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}></GroupView>
+                <GroupView 
+                  group={groups['gPlayer1Discard']} 
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                ></GroupView>
               </WidthContainer>
             </div>
           </div>
@@ -386,6 +445,9 @@ export const Table = ({
             </Button>
             <Button isPrimary onClick={resetGame}>
               Reset Game
+            </Button>
+            <Button isPrimary onClick={() => {browseGroupID? setBrowseGroupID("") : setBrowseGroupID("gSharedEncounterDeck")}}>
+              Browse Group
             </Button>
             <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
           </div>
@@ -425,12 +487,29 @@ export const Table = ({
             }}
           >        
             <div style={{height: "33.3%"}}>
-              <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView>
+              <GroupView 
+                group={groups['gSharedExtra1']} 
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast} 
+                showTitle="false"
+              ></GroupView>
             </div>
             <div style={{height: "33.3%"}}>
-              <GroupView group={groups['gSharedExtra2']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView></div>
+              <GroupView 
+                group={groups['gSharedExtra2']} 
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast} 
+                showTitle="false"
+              ></GroupView>
+            </div>
             <div style={{height: "33.4%"}}>
-              <GroupView group={groups['gSharedExtra3']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView></div>
+              <GroupView 
+                group={groups['gSharedExtra3']} 
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast} 
+                showTitle="false"
+              ></GroupView>
+            </div>
           </div>
           <div className="text-center" onClick={() => toggleScratch()} style={{height: "3%"}}>
             <FontAwesomeIcon className="text-white" icon={showScratch ? faChevronDown : faChevronUp}/>
@@ -438,6 +517,35 @@ export const Table = ({
         </div>
       </div>
     </div>
+    {/* <Draggable>
+    <ReactModal
+      closeTimeoutMS={200}
+      isOpen={showModal}
+      onRequestClose={() => setShowModal(false)}
+      contentLabel="Create New Game"
+      overlayClassName="fixed inset-0 bg-black-0 z-50"
+      className="insert-auto overflow-auto p-5 bg-gray-700 border rounded-lg outline-none"
+      style={{  content : {
+        height: "20%",
+        width: "60%",
+        marginTop:"20%",
+        zindex:1e9,
+      }}}
+    >
+      <div style={{height: "25vh",zIndex:1e7}}>
+      <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView>
+      </div>
+    </ReactModal>
+    </Draggable> */}
+
+    {/* <Draggable>
+      <div style={{height:"200px",width:"800px",top:"0px",left:"0px",position:"relative",backgroundColor:"red",zIndex:1e7}}>
+        <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView>
+      </div>
+    </Draggable> */}
+
+
+
     </DragDropContext>
 
   );
