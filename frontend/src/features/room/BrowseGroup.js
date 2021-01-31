@@ -21,11 +21,13 @@ const Header = styled.div`
   height: 13%;
 `;
 
+
 const GroupComponent = React.memo(({
   group,
   gameBroadcast,
   chatBroadcast,
   showTitle,
+  browseGroupIndices,
   setBrowseGroupID,
   setBrowseGroupIndices,
 }) => {
@@ -50,59 +52,42 @@ const GroupComponent = React.memo(({
       setBrowseGroupIndices(data.indices);
     }
   }
-  const numStacks = group["stacks"].length;
+  const stacks = group["stacks"];
+  const browseGroupIndices2 = [1,2,3];
+  const selectedStacks = stacks.filter((x,i) => browseGroupIndices2.includes(i));
+  for (var i=0; i<selectedStacks.length; i++) {
+    const stack = selectedStacks[i];
+    const cards = stack["cards"]
+    const card = cards[0];
+    const faceupCard = {...card, currentSide: "A"};
+    cards[0] = faceupCard;
+    const faceupStack = {...stack, cards: cards};
+    selectedStacks[i] = faceupStack;
+  }
+  const faceupGroup = {
+      ...group, 
+      type: "hand",
+      stacks: selectedStacks, 
+    } 
   return(
     <Container>
-      <ContextMenuTrigger id={group.id} holdToDisplay={0}>
-        <Header>
-          <Title>{group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
-        </Header>
-      </ContextMenuTrigger> 
+      <Header>
+        <Title>Browsing: {group.name}</Title>
+      </Header>
 
-      <ContextMenu id={group.id} style={{zIndex:1e6}}>
-      {/* {stack.cards.map((card, cardIndex) => ( */}
-          <hr></hr>
-          <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
-          {(group.type === "deck" || group.type === "discard") ?
-          (<SubMenu title='Look at'>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(numStacks).keys()]}}>All</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(5).keys()]}}>Top 5</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(10).keys()]}}>Top 10</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(15).keys()]}}>Top 15</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(20).keys()]}}>Top 20</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(25).keys()]}}>Top 25</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [numStacks-1]}}>Bottom 1</MenuItem>
-          </SubMenu>) : null}
-          <SubMenu title='Move all to'>
-              <SubMenu title='My Deck'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "s"}}>Shuffle in </MenuItem>
-              </SubMenu>
-              <SubMenu title='Encounter Deck'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "s"}}>Shuffle in </MenuItem>
-              </SubMenu>
-              <SubMenu title='Encounter Deck 2 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "s"}}>Shuffle in </MenuItem>
-              </SubMenu>
-              <SubMenu title='Encounter Deck 3 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "t"}}>Top</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "b"}}>Bottom</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "s"}}>Shuffle in</MenuItem>
-              </SubMenu>
-          </SubMenu>
-      </ContextMenu>
-
+    <div style={{height:"100%"}}>
+      <div style={{width:"75%", height:"100%", float:"left"}}>
       <Stacks
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
-        group={group}
-        isCombineEnabled={group.type === "play"}
+        group={faceupGroup}
+        isCombineEnabled={false}
       />
+      </div>
+      <div style={{width:"25%", height:"80%", backgroundColor:"red", float:"left"}}>
+
+      </div>
+    </div>
     </Container>
   )
 
