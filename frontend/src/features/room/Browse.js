@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Dropdown from 'react-dropdown';
 import { GroupView } from "./GroupView";
+import { handleBrowseTopN } from "./HandleBrowseTopN";
 
 const Container = styled.div`
   padding: 1px 1px 1px 1px;
@@ -41,11 +42,8 @@ const BrowseComponent = React.memo(({
 }) => {
   const [selectedCardType, setSelectedCardType] = useState('All');
   const [selectedCardName, setSelectedCardName] = useState('');
-  const [optionValue, setOptionValue] = useState("All");
   //const [faceupStackIDs, setFaceupStackIDs] = useState([]);
   const stacks = group["stacks"];
-  const numStacks = stacks.length;
-  const groupName = GROUPSINFO[group.id].name;
 
   //var faceupStackIDs = [];
   //browseGroupTopN.forEach(i => {if (stacks[i]) faceupStackIDs.push(stacks[i].id)});
@@ -57,29 +55,38 @@ const BrowseComponent = React.memo(({
   }
 
   const handleSelectClick = (event) => {
-    var topN = event.target.value;
-    var peekStackIndices = [];
-    var peekCardIndices = [];
+    const topNstr = event.target.value;
+    handleBrowseTopN(
+      topNstr, 
+      group,
+      "Player1",
+      gameBroadcast, 
+      chatBroadcast,
+      setBrowseGroupID,
+      setBrowseGroupTopN
+    )
+    // var peekStackIndices = [];
+    // var peekCardIndices = [];
     
-    if (topN === "All") {
-      topN = numStacks;
-      peekStackIndices = [...Array(topN).keys()];
-      peekCardIndices = new Array(topN).fill(0);
-      chatBroadcast("game_update",{message: "looks at "+groupName+"."})
-    } else if (topN === "None") {
-      topN = numStacks; 
-      peekStackIndices = [];
-      peekCardIndices = [];
-      chatBroadcast("game_update",{message: "stopped looking at "+groupName+"."})
-    } else {
-      topN = parseInt(topN);
-      peekStackIndices = [...Array(topN).keys()];
-      peekCardIndices = new Array(topN).fill(0);
-      chatBroadcast("game_update",{message: "looks at top "+topN+" of "+groupName+"."})
-    }
-    setBrowseGroupID(group.id);
-    setBrowseGroupTopN(topN);
-    gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: 'Player1', reset_peek: true})
+    // if (topN === "All") {
+    //   topN = numStacks;
+    //   peekStackIndices = [...Array(topN).keys()];
+    //   peekCardIndices = new Array(topN).fill(0);
+    //   chatBroadcast("game_update",{message: "looks at "+groupName+"."})
+    // } else if (topN === "None") {
+    //   topN = numStacks; 
+    //   peekStackIndices = [];
+    //   peekCardIndices = [];
+    //   chatBroadcast("game_update",{message: "stopped looking at "+groupName+"."})
+    // } else {
+    //   topN = parseInt(topN);
+    //   peekStackIndices = [...Array(topN).keys()];
+    //   peekCardIndices = new Array(topN).fill(0);
+    //   chatBroadcast("game_update",{message: "looks at top "+topN+" of "+groupName+"."})
+    // }
+    // setBrowseGroupID(group.id);
+    // setBrowseGroupTopN(topN);
+    // gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: 'Player1', reset_peek: true})
   }
 
   const handleInputTyping = (event) => {
@@ -118,9 +125,19 @@ const BrowseComponent = React.memo(({
   console.log('browseGroupTopN',browseGroupTopN)
   var filteredStackIndices = browseGroupTopN>=0 ? [...Array(browseGroupTopN).keys()] : [...Array(7).keys()]; 
   // Filter by selected card type
-  //if (selectedCardType != "All") filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType));
+  if (selectedCardType != "All") 
+    filteredStackIndices = filteredStackIndices.filter((s,i) => (
+      stacks[s] && 
+      stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType &&
+      stacks[s]["cards"][0]["peeking"]["Player1"]
+    ));
   // Filter by card name
-  //if (selectedCardName != "")    filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["printname"].toLowerCase().includes(selectedCardName.toLowerCase())));
+  if (selectedCardName != "")
+    filteredStackIndices = filteredStackIndices.filter((s,i) => (
+      stacks[s] && 
+      stacks[s]["cards"][0]["sides"]["A"]["printname"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
+      stacks[s]["cards"][0]["peeking"]["Player1"]
+    ));
 
   // Flip cards faceup
   // for (var i=0; i<stacks.length; i++) {
@@ -183,16 +200,16 @@ const BrowseComponent = React.memo(({
       </ContextMenu> */}
 
     {/* <div style={{height:"100%", width:"100%"}}> */}
-      {/* <div style={{width:"75%", height:"100%", float:"left"}}> */}
-      <Stacks
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-        group={fannedGroup}
-        isCombineEnabled={false}
-        selectedStackIndices={filteredStackIndices}
-      />
-      {/* </div> */}
-      <div style={{width:"25%", height:"80%", backgroundColor:"red", float:"left"}}>
+      <div style={{width:"75%", height:"100%", float:"left"}}>
+        <Stacks
+          gameBroadcast={gameBroadcast}
+          chatBroadcast={chatBroadcast}
+          group={fannedGroup}
+          isCombineEnabled={false}
+          selectedStackIndices={filteredStackIndices}
+        />
+      </div>
+      <div style={{width:"25%", height:"80%", float:"left"}}>
 
         <table style={{width:"100%"}}>
           <body>
@@ -207,29 +224,29 @@ const BrowseComponent = React.memo(({
                 </select>
               </td>
               <td>
-                <input type="text" id="name" name="name" className="mb-2" placeholder="Card name..." onChange={handleInputTyping}></input>
+                <input type="text" id="name" name="name" className="ml-5" placeholder="Card name..." onChange={handleInputTyping}></input>
               </td>
             </tr>
             <tr onChange={handleOptionClick}>
-              <td><label><input type="radio" value="All" name="cardtype" defaultChecked/> All</label></td>
-              <td><label><input type="radio" value="Ally" name="cardtype"/> Ally</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="All" defaultChecked/> All</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="Ally"/> Ally</label></td>
             </tr>
             <tr onChange={handleOptionClick}>
-              <td><label><input type="radio" value="Enemy" name="cardtype" /> Enemy</label></td>
-              <td><label><input type="radio" value="Attachment" name="cardtype" /> Attachment</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="Enemy" /> Enemy</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="Attachment" /> Attachment</label></td>
             </tr>
             <tr onChange={handleOptionClick}>
-              <td><label><input type="radio" value="Location" name="cardtype" /> Location</label></td>
-              <td><label><input type="radio" value="Event" name="cardtype" /> Event</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="Location" /> Location</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="Event" /> Event</label></td>
             </tr>
             <tr onChange={handleOptionClick}>
-              <td><label><input type="radio" value="Location" name="cardtype" /> Treachery</label></td>
-              <td><label><input type="radio" value="Side Quest" name="cardtype" /> Side Quest</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="Location" /> Treachery</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="Side Quest" /> Side Quest</label></td>
             </tr>
           </body>
         </table> 
+      </div>
       {/* </div> */}
-    </div>
     </Container>
   )
 
@@ -290,14 +307,14 @@ export default class BrowseContainer extends Component {
     if (this.props.group) {
       return (
         <WidthContainer style={{width: this.props.width}}>
-          <GroupView
+          <BrowseComponent
             group={this.props.group} 
             gameBroadcast={this.props.gameBroadcast} 
             chatBroadcast={this.props.chatBroadcast}
             browseGroupTopN={this.props.browseGroupTopN}
             setBrowseGroupID={this.props.setBrowseGroupID}
             setBrowseGroupTopN={this.props.setBrowseGroupTopN}
-          ></GroupView>
+          ></BrowseComponent>
         </WidthContainer>
       )
     } else {

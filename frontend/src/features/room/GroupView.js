@@ -6,6 +6,7 @@ import { GROUPSINFO } from "./Constants";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
+import { handleBrowseTopN } from "./HandleBrowseTopN";
 
 const Container = styled.div`
   padding: 1px 1px 1px 1px;
@@ -52,12 +53,16 @@ const GroupComponent = React.memo(({
         chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[data.destGroupID].name+"."})
       }
     } else if (data.action === "look_at") {
-      setBrowseGroupID(group.id);
-      setBrowseGroupTopN(data.topN);
-      const peekStackIndices = [...Array(data.topN).keys()];
-      const peekCardIndices = new Array(data.topN).fill(0);
-      gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: 'Player1', reset_peek: true})
-  
+      const topNstr = data.topN;
+      handleBrowseTopN(
+        topNstr, 
+        group,
+        "Player1",
+        gameBroadcast, 
+        chatBroadcast,
+        setBrowseGroupID,
+        setBrowseGroupTopN
+      ) 
     }
   }
   const numStacks = group["stacks"].length;
@@ -73,12 +78,12 @@ const GroupComponent = React.memo(({
       {/* {stack.cards.map((card, cardIndex) => ( */}
           <hr></hr>
           <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
-          <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Browse</MenuItem>
-          {(group.type === "deck" || group.type === "discard") ?
+          <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: "None"}}>Browse</MenuItem>
+          {(1 || group.type === "deck" || group.type === "discard") ?
           (<div>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Look at all</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: 5}}>Look at top 5</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: 10}}>Look at top 10</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: "All"}}>Look at all</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: "5"}}>Look at top 5</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: "10"}}>Look at top 10</MenuItem>
           </div>) : null}
           <SubMenu title='Move all to'>
               <SubMenu title='My Deck'>
@@ -168,22 +173,30 @@ export class GroupView extends Component {
 
 export class GroupContainer extends Component {
   render() {
-    const beingBrowsed = this.props.browseGroupID === this.props.group.id || this.props.group.id === "gPlayer1Hand";
-    return (
-      <WidthContainer 
-        style={{
-          width: this.props.width, 
-          visibility: beingBrowsed ? "hidden" : "visible"}}>
-        <div style={{width:"100%", height:"100%", display: beingBrowsed ? "none" : "block"}}>
-          <GroupView 
-            group={this.props.group} 
-            gameBroadcast={this.props.gameBroadcast} 
-            chatBroadcast={this.props.chatBroadcast}
-            setBrowseGroupID={this.props.setBrowseGroupID}
-            setBrowseGroupTopN={this.props.setBrowseGroupTopN}
-          ></GroupView>
-        </div>
-      </WidthContainer>
-    )
+    if (this.props.group) {
+      const beingBrowsed = this.props.browseGroupID === this.props.group.id;
+      return (
+        <WidthContainer 
+          style={{
+            width: this.props.width, 
+            visibility: beingBrowsed ? "hidden" : "visible"
+          }}>
+          {beingBrowsed? <div></div> :
+            <div style={{width:"100%", height:"100%"}}>
+              <GroupView 
+                group={this.props.group} 
+                gameBroadcast={this.props.gameBroadcast} 
+                chatBroadcast={this.props.chatBroadcast}
+                setBrowseGroupID={this.props.setBrowseGroupID}
+                setBrowseGroupTopN={this.props.setBrowseGroupTopN}
+              ></GroupView>
+            </div>
+          }
+
+        </WidthContainer>
+      )
+    } else {
+      return (<div></div>)
+    }
   }
 }
