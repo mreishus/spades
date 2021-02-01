@@ -47,9 +47,10 @@ const StacksList = React.memo(function StacksList(props) {
   if (pile && props.isDraggingOver && !props.isDraggingFrom) stacks = [];
   else if (pile && props.stacks.length>1) stacks = [props.stacks[0]]
   else stacks = props.stacks;
-
+  console.log('rendering stacks for ',props.group.id);
+  console.log(props.selectedStackIndices);
   return stacks?.map((stack, stackIndex) => (
-
+      (props.selectedStackIndices.includes(stackIndex)) ? (
         <Draggable 
           key={stack.id} 
           draggableId={stack.id} 
@@ -66,15 +67,17 @@ const StacksList = React.memo(function StacksList(props) {
               isDragging={dragSnapshot.isDragging}
               isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
               provided={dragProvided}
+              numStacks={props.selectedStackIndices.length}
             />
           )}
         </Draggable>
+      ) : null 
 
   ));
 });
 
 function DropZoneContainer(props) {
-  const { isDraggingOver, isDraggingFrom, gameBroadcast, chatBroadcast, group, stacks, dropProvided } = props;
+  const { isDraggingOver, isDraggingFrom, gameBroadcast, chatBroadcast, group, stacks, dropProvided, selectedStackIndices } = props;
 
   return (
     <Container>
@@ -87,6 +90,7 @@ function DropZoneContainer(props) {
           chatBroadcast={chatBroadcast} 
           group={group} 
           stacks={stacks}
+          selectedStackIndices={selectedStackIndices}
         />
         {dropProvided.placeholder}
       </DropZone>
@@ -101,7 +105,10 @@ export default function Stacks(props) {
     group,
     isDropDisabled,
     isCombineEnabled,
+    selectedStackIndices,
   } = props;
+  console.log('rendering stacks for ',group.id);
+  console.log(props.selectedStackIndices);
 
   return (
     <Droppable
@@ -127,6 +134,7 @@ export default function Stacks(props) {
                 group={group}
                 stacks={group.stacks}
                 dropProvided={dropProvided}
+                selectedStackIndices={selectedStackIndices}
             />
         </Wrapper>
       )}

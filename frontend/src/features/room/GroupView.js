@@ -48,6 +48,8 @@ const GroupComponent = React.memo(({
     } else if (data.action === "look_at") {
       setBrowseGroupID(group.id);
       setBrowseGroupIndices(data.indices);
+    } else if (data.action === "browse") {
+      setBrowseGroupID(group.id);
     }
   }
   const numStacks = group["stacks"].length;
@@ -63,6 +65,7 @@ const GroupComponent = React.memo(({
       {/* {stack.cards.map((card, cardIndex) => ( */}
           <hr></hr>
           <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
+          <MenuItem onClick={handleMenuClick} data={{action: 'browse'}}>Browse</MenuItem>
           {(group.type === "deck" || group.type === "discard") ?
           (<SubMenu title='Look at'>
             <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(numStacks).keys()]}}>All</MenuItem>
@@ -102,6 +105,7 @@ const GroupComponent = React.memo(({
         chatBroadcast={chatBroadcast}
         group={group}
         isCombineEnabled={group.type === "play"}
+        selectedStackIndices={[...Array(numStacks).keys()]}
       />
     </Container>
   )

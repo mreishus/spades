@@ -10,13 +10,19 @@ defmodule SpadesGame.Card do
 
   @spec card_from_cardrow(Map.t()) :: Map.t()
   def card_from_cardrow(card_row) do
-    %{"id"=> Ecto.UUID.generate,
-      "rotation"=> 0,
-      "exhausted"=> false,
-      "tokens"=>Tokens.new(),
-      "currentSide"=> "A",
-      "owner"=> "Player1",
-      "controller"=> "Player1",
+    %{"id" => Ecto.UUID.generate,
+      "rotation" => 0,
+      "exhausted" => false,
+      "tokens" =>Tokens.new(),
+      "currentSide" => "A",
+      "owner" => "Player1",
+      "controller" => "Player1",
+      "peeking" => %{
+        "Player1" => false,
+        "Player2" => false,
+        "Player3" => false,
+        "Player4" => false
+      }
 
       "cardbackoverride" => card_row["cardbackoverride"],
       "cardencounterset" => card_row["cardencounterset"],

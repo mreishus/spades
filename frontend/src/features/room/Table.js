@@ -344,35 +344,49 @@ export const Table = ({
           <div className=""  style={{height: "94%"}}>
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <WidthContainer style={{width: "75%"}}>                
+              <WidthContainer style={{width: "75%", visibility: (browseGroupID === "gSharedStaging") ? "hidden" : "visible"}}>                
                 <GroupView 
                   group={groups['gSharedStaging']}
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
-              <WidthContainer style={{width: "10%"}}>
+              <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gSharedActive") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gSharedActive']} 
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
               ></GroupView>
               </WidthContainer>
-              <WidthContainer style={{width: "15%"}}>
+              <WidthContainer style={{width: "15%", visibility: (browseGroupID === "gSharedMainQuest") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gSharedMainQuest']} 
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
               
             </div> 
-            <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <WidthContainer style={{width: "100%"}}>
+            <div 
+              className="w-full" 
+              style={{
+                minHeight: "20%", 
+                height: "20%", 
+                maxHeight: "20%"
+              }}>
+              <WidthContainer style={{width: "100%", visibility: (browseGroupID === "gPlayer1Engaged") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gPlayer1Engaged']}
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
             </div>
@@ -383,6 +397,8 @@ export const Table = ({
                   group={groups['gPlayer1Play1']} 
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
             </div>
@@ -392,48 +408,59 @@ export const Table = ({
                   group={groups[browseGroupID]}
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  browseGroupIndices={browseGroupIndices}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupIndices={setBrowseGroupIndices}
                 ></BrowseGroup>
               </WidthContainer>
             </div>
             <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <WidthContainer style={{width: "90%"}}>
+              <WidthContainer style={{width: "90%", visibility: (browseGroupID === "gPlayer1Play2") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gPlayer1Play2']} 
                   showTitle="false" 
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
-              <WidthContainer style={{width: "10%"}}>
+              <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Event") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gPlayer1Event']} 
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
             </div>
             <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
-              <WidthContainer style={{width: "80%"}}>
+              <WidthContainer style={{width: "80%", visibility: (browseGroupID === "gPlayer1Hand") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gPlayer1Hand']} 
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
-              <WidthContainer style={{width: "10%"}}>
+              <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Deck") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gPlayer1Deck']} 
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
-              <WidthContainer style={{width: "10%"}}>
+              <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Discard") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gPlayer1Discard']} 
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupIndices={setBrowseGroupIndices}
                 ></GroupView>
               </WidthContainer>
             </div>
@@ -491,6 +518,8 @@ export const Table = ({
                 group={groups['gSharedExtra1']} 
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast} 
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupIndices={setBrowseGroupIndices}
                 showTitle="false"
               ></GroupView>
             </div>
@@ -499,6 +528,8 @@ export const Table = ({
                 group={groups['gSharedExtra2']} 
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast} 
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupIndices={setBrowseGroupIndices}
                 showTitle="false"
               ></GroupView>
             </div>
@@ -507,6 +538,8 @@ export const Table = ({
                 group={groups['gSharedExtra3']} 
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast} 
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupIndices={setBrowseGroupIndices}
                 showTitle="false"
               ></GroupView>
             </div>

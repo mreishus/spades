@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import styled from "@emotion/styled";
 import Stacks from "./Stacks";
 import Title from "./Title";
@@ -6,6 +6,7 @@ import { GROUPSINFO } from "./Constants";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
+import Dropdown from 'react-dropdown';
 
 const Container = styled.div`
   padding: 1px 1px 1px 1px;
@@ -31,6 +32,40 @@ const GroupComponent = React.memo(({
   setBrowseGroupID,
   setBrowseGroupIndices,
 }) => {
+  const [selectedCardType, setSelectedCardType] = useState('All');
+  const [selectedCardName, setSelectedCardName] = useState('');
+  const [optionValue, setOptionValue] = useState("All");
+  //const [faceupStackIDs, setFaceupStackIDs] = useState([]);
+  const stacks = group["stacks"];
+  const numStacks = stacks.length;
+
+  var faceupStackIDs = [];
+  browseGroupIndices.forEach(i => {if (stacks[i]) faceupStackIDs.push(stacks[i].id)});
+  //setFaceupStackIDs(faceupIDs);
+
+  const handleOptionClick = (event) => {
+    console.log(event.target.value);
+    setSelectedCardType(event.target.value);
+  }
+
+  // const handleSelectClick = (event) => {
+  //   var val = event.target.value;
+  //   if (val === "All") val = numStacks;
+  //   else if (val === "None") val = 0;
+  //   else val = parseInt(val);
+  //   var faceupIDs = [];
+  //   for (var i=0; i<val; i++) {
+  //     faceupIDs.push(stacks[i].id);
+  //   }
+  //   setFaceupStackIDs(faceupIDs);
+  //   setSelectedStackIndices([...Array(val).keys()]);
+  // }
+
+  const handleInputTyping = (event) => {
+    console.log(event.target.value);
+    setSelectedCardName(event.target.value);
+    //setSelectedCardType(event.target.value);
+  }
 
   const handleMenuClick = (e, data) => {
     if (data.action === "shuffle_group") {
@@ -52,22 +87,33 @@ const GroupComponent = React.memo(({
       setBrowseGroupIndices(data.indices);
     }
   }
-  const stacks = group["stacks"];
-  const browseGroupIndices2 = [1,2,3];
-  const selectedStacks = stacks.filter((x,i) => browseGroupIndices2.includes(i));
-  for (var i=0; i<selectedStacks.length; i++) {
-    const stack = selectedStacks[i];
+  
+  // const browseGroupIndices2 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+  // var selectedStacks = stacks.filter((s,i) => browseGroupIndices2.includes(i));
+  // console.log(selectedStacks);
+  var filteredStackIndices = browseGroupIndices; 
+  // Filter by selected card type
+
+  if (selectedCardType != "All") filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType));
+  if (selectedCardName != "")    filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["printname"].toLowerCase().includes(selectedCardName.toLowerCase())));
+  // Flip cards faceup
+  for (var i=0; i<stacks.length; i++) {
+    var stack = stacks[i];
     const cards = stack["cards"]
-    const card = cards[0];
-    const faceupCard = {...card, currentSide: "A"};
-    cards[0] = faceupCard;
-    const faceupStack = {...stack, cards: cards};
-    selectedStacks[i] = faceupStack;
+    var card = cards[0];
+    if (faceupStackIDs.includes(stack.id)) {
+      card = {...card, currentSide: "A"};
+    } else {
+      card = {...card, currentSide: "B"};
+    }
+    cards[0] = card;
+    stack = {...stack, cards: cards};
+    stacks[i] = stack;
   }
   const faceupGroup = {
       ...group, 
       type: "hand",
-      stacks: selectedStacks, 
+      stacks: stacks, 
     } 
   return(
     <Container>
@@ -82,10 +128,45 @@ const GroupComponent = React.memo(({
         chatBroadcast={chatBroadcast}
         group={faceupGroup}
         isCombineEnabled={false}
+        selectedStackIndices={filteredStackIndices}
       />
       </div>
       <div style={{width:"25%", height:"80%", backgroundColor:"red", float:"left"}}>
 
+        <table style={{width:"100%"}}>
+          <tr>
+            <td>
+              <input type="text" id="name" name="name" className="mb-2" placeholder="Card name..." onChange={handleInputTyping}></input>
+            </td>
+            <td></td>
+            {/* <td onChange={handleSelectClick}>
+              <select name="numFaceup" id="numFaceup">
+                <option value="" disabled selected>Loot at...</option>
+                <option value="None">None</option>
+                <option value="All">All</option>
+                <option value="1">Top 1</option>
+                <option value="5">Top 5</option>
+                <option value="10">Top 10</option>
+              </select>
+            </td> */}
+          </tr>
+          <tr onChange={handleOptionClick}>
+            <td><label><input type="radio" value="All" name="cardtype" defaultChecked/> All</label></td>
+            <td><label><input type="radio" value="Ally" name="cardtype"/> Ally</label></td>
+          </tr>
+          <tr onChange={handleOptionClick}>
+            <td><label><input type="radio" value="Enemy" name="cardtype" /> Enemy</label></td>
+            <td><label><input type="radio" value="Attachment" name="cardtype" /> Attachment</label></td>
+          </tr>
+          <tr onChange={handleOptionClick}>
+            <td><label><input type="radio" value="Location" name="cardtype" /> Location</label></td>
+            <td><label><input type="radio" value="Event" name="cardtype" /> Event</label></td>
+          </tr>
+          <tr onChange={handleOptionClick}>
+            <td><label><input type="radio" value="Location" name="cardtype" /> Treachery</label></td>
+            <td><label><input type="radio" value="Side Quest" name="cardtype" /> Side Quest</label></td>
+          </tr>
+        </table> 
       </div>
     </div>
     </Container>
@@ -131,6 +212,7 @@ export default class GroupView extends Component {
           gameBroadcast={this.props.gameBroadcast}
           chatBroadcast={this.props.chatBroadcast}
           showTitle={this.props.showTitle}
+          browseGroupIndices={this.props.browseGroupIndices}
           setBrowseGroupID={this.props.setBrowseGroupID}
           setBrowseGroupIndices={this.props.setBrowseGroupIndices}
         ></GroupComponent>
