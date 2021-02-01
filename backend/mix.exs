@@ -44,7 +44,7 @@ defmodule Spades.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:pow, "~> 1.0.19"},
-      {:swoosh, "~> 0.25.1"},
+      {:swoosh, "~> 1.3.0"},
       {:hackney, "~> 1.9"},
       {:parent, "~> 0.9.0"},
       {:accessible, "~> 0.2.1"},
