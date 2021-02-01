@@ -3,7 +3,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Chat from "../chat/Chat";
-import GroupView from "./GroupView";
+import { GroupView, GroupContainer } from "./GroupView";
 import BrowseGroup from "./BrowseGroup";
 import { reorderGroups } from "./Reorder";
 import { GiantCard } from "./GiantCard";
@@ -444,15 +444,15 @@ export const Table = ({
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
-              <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Deck") ? "hidden" : "visible"}}>
-                <GroupView 
-                  group={groups['gPlayer1Deck']} 
-                  gameBroadcast={gameBroadcast} 
-                  chatBroadcast={chatBroadcast}
-                  setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupView>
-              </WidthContainer>
+              <GroupContainer
+                group={groups['gPlayer1Deck']} 
+                width="10%"
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                browseGroupID={browseGroupID}
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+              ></GroupContainer>
               <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Discard") ? "hidden" : "visible"}}>
                 <GroupView 
                   group={groups['gPlayer1Discard']} 

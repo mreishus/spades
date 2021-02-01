@@ -21,6 +21,12 @@ const Header = styled.div`
   height: 13%;
 `;
 
+const WidthContainer = styled.div`
+  padding: 2px 2px 2px 0.5vw;
+  float: left;
+  height: 100%;
+`;
+
 const GroupComponent = React.memo(({
   group,
   gameBroadcast,
@@ -107,7 +113,7 @@ const GroupComponent = React.memo(({
 
 })
 
-export default class GroupView extends Component {
+export class GroupView extends Component {
 
   shouldComponentUpdate = (nextProps, nextState) => {
         // if (nextProps.group.id == "gSharedStaging") {
@@ -128,8 +134,6 @@ export default class GroupView extends Component {
         return true;
       }
   };
-
-
 
   render() {
     const group = this.props.group;
@@ -155,5 +159,27 @@ export default class GroupView extends Component {
     } else {
       return (<div></div>)
     }
+  }
+}
+
+export class GroupContainer extends Component {
+  render() {
+    const beingBrowsed = this.props.browseGroupID === this.props.group.id;
+    return (
+      <WidthContainer 
+        style={{
+          width: this.props.width, 
+          visibility: beingBrowsed ? "hidden" : "visible"}}>
+        <div style={{display: beingBrowsed ? "none" : "block"}}>
+          <GroupView 
+            group={this.props.group} 
+            gameBroadcast={this.props.gameBroadcast} 
+            chatBroadcast={this.props.chatBroadcast}
+            setBrowseGroupID={this.props.setBrowseGroupID}
+            setBrowseGroupTopN={this.props.setBrowseGroupTopN}
+          ></GroupView>
+        </div>
+      </WidthContainer>
+    )
   }
 }

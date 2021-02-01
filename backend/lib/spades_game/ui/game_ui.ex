@@ -146,13 +146,17 @@ defmodule SpadesGame.GameUI do
 
   def peek_group_stack_card(gameui, group_id, stack_index, card_index, player_n, tf) do
     old_card = get_card(gameui, group_id, stack_index, card_index)
-    new_card = peek_card(old_card, player_n, tf)
-    update_card(gameui, group_id, stack_index, card_index, new_card)
+    if old_card do
+      new_card = peek_card(old_card, player_n, tf)
+      update_card(gameui, group_id, stack_index, card_index, new_card)
+    else
+      gameui
+    end
   end
 
   def peek_at(gameui, group_id, stack_indices, card_indices, player_n, reset_peek) do
     gameui = if reset_peek do peek_group(gameui, group_id, player_n, false) else gameui end
-    if (Enum.count(stack_indices != Enum.count(card_indices))) do
+    if (Enum.count(stack_indices) != Enum.count(card_indices)) do
       gameui
     else
       num_indices = Enum.count(stack_indices)
@@ -160,7 +164,7 @@ defmodule SpadesGame.GameUI do
       Enum.reduce range_indices, gameui, fn i, acc ->
         stack_index = Enum.at(stack_indices, i)
         card_index = Enum.at(card_indices, i)
-        peek_group_stack_card(gameui, group_id, stack_index, card_index, player_n, true)
+        peek_group_stack_card(acc, group_id, stack_index, card_index, player_n, true)
       end
     end
   end

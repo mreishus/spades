@@ -301,7 +301,7 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:peek_at, user_id, group_id, stack_indices, card_indices, player_n, reset_peek}, _from, gameui) do
-    GameUI.move_stack(gameui, group_id, stack_indices, card_indices, player_n, reset_peek)
+    GameUI.peek_at(gameui, group_id, stack_indices, card_indices, player_n, reset_peek)
     |> save_and_reply()
   end
 
