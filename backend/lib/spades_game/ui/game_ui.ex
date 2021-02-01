@@ -128,6 +128,43 @@ defmodule SpadesGame.GameUI do
     card
   end
 
+  def peek_card(card, player_n, tf) do
+    put_in(card["peeking"][player_n],tf)
+  end
+
+  def peek_stack(stack, player_n, tf) do
+    old_cards = stack["cards"]
+    new_cards = Enum.map(old_cards, fn card -> peek_card(card, player_n, tf) end)
+    put_in(stack["cards"], new_cards)
+  end
+
+  def peek_group(gameui, group_id, player_n, tf) do
+    old_stacks = get_stacks(gameui, group_id)
+    new_stacks = Enum.map(old_stacks, fn stack -> peek_stack(stack, player_n, tf) end)
+    update_stacks(gameui, group_id, new_stacks)
+  end
+
+  def peek_group_stack_card(gameui, group_id, stack_index, card_index, player_n, tf) do
+    old_card = get_card(gameui, group_id, stack_index, card_index)
+    new_card = peek_card(old_card, player_n, tf)
+    update_card(gameui, group_id, stack_index, card_index, new_card)
+  end
+
+  def peek_at(gameui, group_id, stack_indices, card_indices, player_n, reset_peek) do
+    gameui = if reset_peek do peek_group(gameui, group_id, player_n, false) else gameui end
+    if (Enum.count(stack_indices != Enum.count(card_indices))) do
+      gameui
+    else
+      num_indices = Enum.count(stack_indices)
+      range_indices = 0..(num_indices-1)
+      Enum.reduce range_indices, gameui, fn i, acc ->
+        stack_index = Enum.at(stack_indices, i)
+        card_index = Enum.at(card_indices, i)
+        peek_group_stack_card(gameui, group_id, stack_index, card_index, player_n, true)
+      end
+    end
+  end
+
   def move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index, preserve_state \\ false) do
     # Check if dest_stack_index is negative, indicating a move to the end of a group, and adjust index accordingly
     dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stacks(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end

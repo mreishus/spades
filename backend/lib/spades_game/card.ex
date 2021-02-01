@@ -22,7 +22,7 @@ defmodule SpadesGame.Card do
         "Player2" => false,
         "Player3" => false,
         "Player4" => false
-      }
+      },
 
       "cardbackoverride" => card_row["cardbackoverride"],
       "cardencounterset" => card_row["cardencounterset"],

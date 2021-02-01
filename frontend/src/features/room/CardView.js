@@ -47,10 +47,10 @@ export const getDisplayNameFlipped = (card) => {
     return getDisplayName(getFlippedCard(card));
 }
 
-export const getCurrentFaceSRC = (card) => {
+export const getCurrentFaceSRC = (card, PlayerN) => {
     if (!card) return "";
     const currentSide = card["currentSide"];
-    if (currentSide == "A") {
+    if (currentSide == "A" || card["peeking"][PlayerN]) {
         return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
     } else { // Side B logic
         const sideBName = card["sides"]["B"]["name"];
@@ -246,7 +246,7 @@ const CardComponent = React.memo(({
                 key={inputCard.id}
                 style={{
                     position: "absolute",
-                    background: `url(${getCurrentFaceSRC(inputCard)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
+                    background: `url(${getCurrentFaceSRC(inputCard,"Player1")}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,

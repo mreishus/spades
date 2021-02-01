@@ -47,7 +47,6 @@ interface Props {
 const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) => {
   console.log('rendering roomgame');
   //const gameUIView = React.useContext(GameUIViewContext);
-  //if (gameUIView) gameBroadcast("update_groups",{groups: gameUIView.game_ui.game.groups});
 
 /*   const setKeypress = useSetKeypress();
   const activeCard = useActiveCard();

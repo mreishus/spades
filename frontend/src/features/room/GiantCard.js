@@ -8,7 +8,7 @@ export const GiantCard = () => {
     return (
         <div className="h-full" 
             style={{
-              backgroundImage: `url(${getCurrentFaceSRC(activeCard)})`,
+              backgroundImage: `url(${getCurrentFaceSRC(activeCard,"Player1")})`,
               backgroundRepeat: "no-repeat",
               backgroundSize: "contain",
               backgroundPosition: "center",

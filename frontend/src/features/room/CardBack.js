@@ -44,16 +44,16 @@ function CardBack(props) {
   var currentSideSRC;
   var currentFace;
   if (group.type=="deck" && group.stacks.length>0 && isDraggingOver && !isDraggingFrom) {
-    currentSideSRC = getCurrentFaceSRC(group.stacks[0].cards[0])
+    currentSideSRC = getCurrentFaceSRC(group.stacks[0].cards[0],"Player1")
     currentFace = getCurrentFace(group.stacks[0].cards[0])
   } else if (group.type=="deck" && group.stacks.length>1 && isDraggingFrom) {
-    currentSideSRC = getCurrentFaceSRC(group.stacks[1].cards[0])
+    currentSideSRC = getCurrentFaceSRC(group.stacks[1].cards[0],"Player1")
     currentFace = getCurrentFace(group.stacks[0].cards[0])
   } else if (group.type=="discard" && group.stacks.length>0 && isDraggingOver && !isDraggingFrom) {
-    currentSideSRC = getCurrentFaceSRC(group.stacks[0].cards[0])
+    currentSideSRC = getCurrentFaceSRC(group.stacks[0].cards[0],"Player1")
     currentFace = getCurrentFace(group.stacks[0].cards[0])
   } else if (group.type=="discard" && group.stacks.length>1 && isDraggingFrom) {
-    currentSideSRC = getCurrentFaceSRC(group.stacks[1].cards[0])
+    currentSideSRC = getCurrentFaceSRC(group.stacks[1].cards[0],"Player1")
     currentFace = getCurrentFace(group.stacks[0].cards[0])
   }
   if (currentFace) {

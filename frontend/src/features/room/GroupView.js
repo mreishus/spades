@@ -27,7 +27,7 @@ const GroupComponent = React.memo(({
   chatBroadcast,
   showTitle,
   setBrowseGroupID,
-  setBrowseGroupIndices,
+  setBrowseGroupTopN,
 }) => {
 
   const handleMenuClick = (e, data) => {
@@ -47,9 +47,7 @@ const GroupComponent = React.memo(({
       }
     } else if (data.action === "look_at") {
       setBrowseGroupID(group.id);
-      setBrowseGroupIndices(data.indices);
-    } else if (data.action === "browse") {
-      setBrowseGroupID(group.id);
+      setBrowseGroupTopN(data.topN);
     }
   }
   const numStacks = group["stacks"].length;
@@ -65,17 +63,13 @@ const GroupComponent = React.memo(({
       {/* {stack.cards.map((card, cardIndex) => ( */}
           <hr></hr>
           <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
-          <MenuItem onClick={handleMenuClick} data={{action: 'browse'}}>Browse</MenuItem>
+          <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: null}}>Browse</MenuItem>
           {(group.type === "deck" || group.type === "discard") ?
-          (<SubMenu title='Look at'>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(numStacks).keys()]}}>All</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(5).keys()]}}>Top 5</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(10).keys()]}}>Top 10</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(15).keys()]}}>Top 15</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(20).keys()]}}>Top 20</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [...Array(25).keys()]}}>Top 25</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', indices: [numStacks-1]}}>Bottom 1</MenuItem>
-          </SubMenu>) : null}
+          (<div>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Look at all</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: 5}}>Look at top 5</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: 10}}>Look at top 10</MenuItem>
+          </div>) : null}
           <SubMenu title='Move all to'>
               <SubMenu title='My Deck'>
                   <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "t"}}>Top </MenuItem>
@@ -151,7 +145,7 @@ export default class GroupView extends Component {
           chatBroadcast={this.props.chatBroadcast}
           showTitle={this.props.showTitle}
           setBrowseGroupID={this.props.setBrowseGroupID}
-          setBrowseGroupIndices={this.props.setBrowseGroupIndices}
+          setBrowseGroupTopN={this.props.setBrowseGroupTopN}
         ></GroupComponent>
 
         //   )}

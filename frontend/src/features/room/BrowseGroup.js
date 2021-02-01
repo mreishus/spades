@@ -28,9 +28,9 @@ const GroupComponent = React.memo(({
   gameBroadcast,
   chatBroadcast,
   showTitle,
-  browseGroupIndices,
+  browseGroupTopN,
   setBrowseGroupID,
-  setBrowseGroupIndices,
+  setBrowseGroupTopN,
 }) => {
   const [selectedCardType, setSelectedCardType] = useState('All');
   const [selectedCardName, setSelectedCardName] = useState('');
@@ -38,9 +38,10 @@ const GroupComponent = React.memo(({
   //const [faceupStackIDs, setFaceupStackIDs] = useState([]);
   const stacks = group["stacks"];
   const numStacks = stacks.length;
+  const groupName = GROUPSINFO[group.id].name;
 
-  var faceupStackIDs = [];
-  browseGroupIndices.forEach(i => {if (stacks[i]) faceupStackIDs.push(stacks[i].id)});
+  //var faceupStackIDs = [];
+  //browseGroupTopN.forEach(i => {if (stacks[i]) faceupStackIDs.push(stacks[i].id)});
   //setFaceupStackIDs(faceupIDs);
 
   const handleOptionClick = (event) => {
@@ -48,18 +49,23 @@ const GroupComponent = React.memo(({
     setSelectedCardType(event.target.value);
   }
 
-  // const handleSelectClick = (event) => {
-  //   var val = event.target.value;
-  //   if (val === "All") val = numStacks;
-  //   else if (val === "None") val = 0;
-  //   else val = parseInt(val);
-  //   var faceupIDs = [];
-  //   for (var i=0; i<val; i++) {
-  //     faceupIDs.push(stacks[i].id);
-  //   }
-  //   setFaceupStackIDs(faceupIDs);
-  //   setSelectedStackIndices([...Array(val).keys()]);
-  // }
+  const handleSelectClick = (event) => {
+    var topN = event.target.value;
+    
+    if (topN === "All") {
+      topN = numStacks;
+      chatBroadcast("game_update",{message: "looks at "+groupName+"."})
+    } else if (topN === "None") {
+      topN = 0; 
+      chatBroadcast("game_update",{message: "stopped looking at "+groupName+"."})
+    } else {
+      topN = parseInt(topN);
+      chatBroadcast("game_update",{message: "looks at top "+topN+" of "+groupName+"."})
+    }
+    setBrowseGroupID(group.id);
+    setBrowseGroupTopN(topN);
+    gameBroadcast("peek_at", {group_id: group.id, stack_indices: [...Array(topN).keys()], card_indices: new Array(topN).fill(0), player_n: 'Player1', reset_peek: true})
+  }
 
   const handleInputTyping = (event) => {
     console.log(event.target.value);
@@ -84,37 +90,41 @@ const GroupComponent = React.memo(({
       }
     } else if (data.action === "look_at") {
       setBrowseGroupID(group.id);
-      setBrowseGroupIndices(data.indices);
+      setBrowseGroupTopN(data.indices);
     }
   }
   
-  // const browseGroupIndices2 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
-  // var selectedStacks = stacks.filter((s,i) => browseGroupIndices2.includes(i));
+  // const browseGroupTopN2 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
+  // var selectedStacks = stacks.filter((s,i) => browseGroupTopN2.includes(i));
   // console.log(selectedStacks);
-  var filteredStackIndices = browseGroupIndices; 
-  // Filter by selected card type
 
+
+  // If browseGroupTopN not set, show all stacks
+  console.log('browseGroupTopN',browseGroupTopN)
+  var filteredStackIndices = browseGroupTopN>=0 ? [...Array(browseGroupTopN).keys()] : [...Array(numStacks).keys()]; 
+  // Filter by selected card type
   if (selectedCardType != "All") filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType));
+  // Filter by card name
   if (selectedCardName != "")    filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["printname"].toLowerCase().includes(selectedCardName.toLowerCase())));
+
   // Flip cards faceup
-  for (var i=0; i<stacks.length; i++) {
-    var stack = stacks[i];
-    const cards = stack["cards"]
-    var card = cards[0];
-    if (faceupStackIDs.includes(stack.id)) {
-      card = {...card, currentSide: "A"};
-    } else {
-      card = {...card, currentSide: "B"};
-    }
-    cards[0] = card;
-    stack = {...stack, cards: cards};
-    stacks[i] = stack;
-  }
-  const faceupGroup = {
+  // for (var i=0; i<stacks.length; i++) {
+  //   var stack = stacks[i];
+  //   const cards = stack["cards"]
+  //   var card = cards[0];
+  //   if (faceupStackIDs.includes(stack.id)) {
+  //     card = {...card, currentSide: "A"};
+  //   } else {
+  //     card = {...card, currentSide: "B"};
+  //   }
+  //   cards[0] = card;
+  //   stack = {...stack, cards: cards};
+  //   stacks[i] = stack;
+  // }
+  const fannedGroup = {
       ...group, 
       type: "hand",
-      stacks: stacks, 
-    } 
+  } 
   return(
     <Container>
       <Header>
@@ -126,7 +136,7 @@ const GroupComponent = React.memo(({
       <Stacks
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
-        group={faceupGroup}
+        group={fannedGroup}
         isCombineEnabled={false}
         selectedStackIndices={filteredStackIndices}
       />
@@ -135,20 +145,18 @@ const GroupComponent = React.memo(({
 
         <table style={{width:"100%"}}>
           <tr>
-            <td>
-              <input type="text" id="name" name="name" className="mb-2" placeholder="Card name..." onChange={handleInputTyping}></input>
-            </td>
-            <td></td>
-            {/* <td onChange={handleSelectClick}>
+            <td onChange={handleSelectClick}>
               <select name="numFaceup" id="numFaceup">
-                <option value="" disabled selected>Loot at...</option>
+                <option value="" disabled selected>Look at...</option>
                 <option value="None">None</option>
                 <option value="All">All</option>
-                <option value="1">Top 1</option>
                 <option value="5">Top 5</option>
                 <option value="10">Top 10</option>
               </select>
-            </td> */}
+            </td>
+            <td>
+              <input type="text" id="name" name="name" className="mb-2" placeholder="Card name..." onChange={handleInputTyping}></input>
+            </td>
           </tr>
           <tr onChange={handleOptionClick}>
             <td><label><input type="radio" value="All" name="cardtype" defaultChecked/> All</label></td>
@@ -175,27 +183,27 @@ const GroupComponent = React.memo(({
 
 })
 
-export default class GroupView extends Component {
+export default class BrowseGroup extends Component {
 
-  shouldComponentUpdate = (nextProps, nextState) => {
-        // if (nextProps.group.id == "gSharedStaging") {
-        //   console.log("prev",JSON.stringify(this.props.group.stacks[0].cards[0].exhausted),JSON.stringify(this.props.group.stacks[1].cards[0].exhausted))
-        //   console.log("next",JSON.stringify(nextProps.group.stacks[0].cards[0].exhausted),JSON.stringify(nextProps.group.stacks[1].cards[0].exhausted))
-        // }
-              //if (nextProps.group.updated === false) {
-      if (JSON.stringify(nextProps.group)===JSON.stringify(this.props.group)) {
+//   shouldComponentUpdate = (nextProps, nextState) => {
+//         // if (nextProps.group.id == "gSharedStaging") {
+//         //   console.log("prev",JSON.stringify(this.props.group.stacks[0].cards[0].exhausted),JSON.stringify(this.props.group.stacks[1].cards[0].exhausted))
+//         //   console.log("next",JSON.stringify(nextProps.group.stacks[0].cards[0].exhausted),JSON.stringify(nextProps.group.stacks[1].cards[0].exhausted))
+//         // }
+//               //if (nextProps.group.updated === false) {
+//       if (JSON.stringify(nextProps.group)===JSON.stringify(this.props.group)) {
 
-        return false;
-//      } else if {
+//         return false;
+// //      } else if {
 
-      } else {
-        // console.log('this.props.group');
-        // console.log(this.props.group);
-        // console.log('nextProps.group');
-        // console.log(nextProps.group);
-        return true;
-      }
-  };
+//       } else {
+//         // console.log('this.props.group');
+//         // console.log(this.props.group);
+//         // console.log('nextProps.group');
+//         // console.log(nextProps.group);
+//         return true;
+//       }
+//   };
 
 
 
@@ -212,9 +220,9 @@ export default class GroupView extends Component {
           gameBroadcast={this.props.gameBroadcast}
           chatBroadcast={this.props.chatBroadcast}
           showTitle={this.props.showTitle}
-          browseGroupIndices={this.props.browseGroupIndices}
+          browseGroupTopN={this.props.browseGroupTopN}
           setBrowseGroupID={this.props.setBrowseGroupID}
-          setBrowseGroupIndices={this.props.setBrowseGroupIndices}
+          setBrowseGroupTopN={this.props.setBrowseGroupTopN}
         ></GroupComponent>
 
         //   )}

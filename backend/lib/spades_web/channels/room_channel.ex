@@ -87,19 +87,6 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
-      "update_groups",
-      %{"groups" => groups},
-      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
-    ) do
-    GameUIServer.update_groups(room_slug, user_id, groups)
-    state = GameUIServer.state(room_slug)
-    socket = socket |> assign(:game_ui, state)
-    notify(socket)
-
-    {:reply, {:ok, client_state(socket)}, socket}
-  end
-
-  def handle_in(
     "update_gameui",
     %{"gameui" => gameui},
     %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
@@ -131,6 +118,26 @@ defmodule SpadesWeb.RoomChannel do
     %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
   ) do
     GameUIServer.reset_game(room_slug, user_id)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "peek_at",
+    %{
+      "group_id" => group_id,
+      "stack_indices" => stack_indices,
+      "card_indices" => card_indices,
+      "player_n" => player_n,
+      "reset_peek" => reset_peek,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    IO.puts("room_channel peek_at")
+    GameUIServer.peek_at(room_slug, user_id, group_id, stack_indices, card_indices, player_n, reset_peek)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)

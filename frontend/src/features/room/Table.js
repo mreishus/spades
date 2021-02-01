@@ -102,7 +102,7 @@ export const Table = ({
   // Show/hide group that allows you to browse certain cards in a group
   const [browseGroupID, setBrowseGroupID] = useState("");
   // Indices of stacks in group being browsed
-  const [browseGroupIndices, setBrowseGroupIndices] = useState(false);
+  const [browseGroupTopN, setBrowseGroupTopN] = useState(false);
   //const [cardDB, setCardDB] = useState(null);
   const [phase, setPhase] = useState(1);
   //const [selectedFile, setSelectedFile] = useState(null);
@@ -292,7 +292,6 @@ export const Table = ({
     // //     groupID2: destination.droppableId,
     // //     groupIndex2: data.groups[destination.droppableId],
     // // })
-    // gameBroadcast("update_groups",{groups: data.groups});
     // setState({
     //   columns: data.quoteMap,
     //   ordered: state.ordered
@@ -350,7 +349,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gSharedActive") ? "hidden" : "visible"}}>
@@ -359,7 +358,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "15%", visibility: (browseGroupID === "gSharedMainQuest") ? "hidden" : "visible"}}>
@@ -368,7 +367,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
               
@@ -386,7 +385,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
             </div>
@@ -398,7 +397,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
             </div>
@@ -408,9 +407,9 @@ export const Table = ({
                   group={groups[browseGroupID]}
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
-                  browseGroupIndices={browseGroupIndices}
+                  browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></BrowseGroup>
               </WidthContainer>
             </div>
@@ -422,7 +421,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Event") ? "hidden" : "visible"}}>
@@ -431,7 +430,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
             </div>
@@ -442,7 +441,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Deck") ? "hidden" : "visible"}}>
@@ -451,7 +450,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
               <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Discard") ? "hidden" : "visible"}}>
@@ -460,7 +459,7 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupIndices={setBrowseGroupIndices}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupView>
               </WidthContainer>
             </div>
@@ -519,7 +518,7 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast} 
                 setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupIndices={setBrowseGroupIndices}
+                setBrowseGroupTopN={setBrowseGroupTopN}
                 showTitle="false"
               ></GroupView>
             </div>
@@ -529,7 +528,7 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast} 
                 setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupIndices={setBrowseGroupIndices}
+                setBrowseGroupTopN={setBrowseGroupTopN}
                 showTitle="false"
               ></GroupView>
             </div>
@@ -539,7 +538,7 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast} 
                 setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupIndices={setBrowseGroupIndices}
+                setBrowseGroupTopN={setBrowseGroupTopN}
                 showTitle="false"
               ></GroupView>
             </div>

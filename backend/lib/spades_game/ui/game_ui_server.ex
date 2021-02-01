@@ -14,7 +14,7 @@ defmodule SpadesGame.GameUIServer do
   @spec start_link(String.t(), User.t(), %GameOptions{}) :: {:ok, pid} | {:error, any}
   def start_link(game_name, user, %GameOptions{} = options) do
     IO.puts("gameuiserver: start_link a")
-    a=GenServer.start_link(__MODULE__, {game_name, user, options}, name: via_tuple(game_name))
+    GenServer.start_link(__MODULE__, {game_name, user, options}, name: via_tuple(game_name))
     IO.puts("gameuiserver: start_link b")
   end
 
@@ -69,15 +69,6 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  update_groups/3: A player just moved a card.
-  """
-  @spec update_groups(String.t(), integer,  Groups.t()):: GameUI.t()
-  def update_groups(game_name, user_id, groups) do
-    IO.puts("game_ui_server: update_groups")
-    GenServer.call(via_tuple(game_name), {:update_groups, user_id, groups})
-  end
-
-  @doc """
   update_gameui/3: The game is updated.
   """
   @spec update_gameui(String.t(), integer,  GameUI.t()):: GameUI.t()
@@ -103,6 +94,16 @@ defmodule SpadesGame.GameUIServer do
   def reset_game(game_name, user_id) do
     GenServer.call(via_tuple(game_name), {:reset_game, user_id})
   end
+
+  @doc """
+  peek_at/7: A player just moved a stack.
+  """
+  @spec peek_at(String.t(), integer, String.t(), List.t(), List.t(), String.t(), boolean) :: GameUI.t()
+  def peek_at(game_name, user_id, group_id, stack_indices, card_indices, player_n, reset_peek) do
+    IO.puts("game_ui_server: peek_at")
+    GenServer.call(via_tuple(game_name), {:peek_at, user_id, group_id, stack_indices, card_indices, player_n, reset_peek})
+  end
+
 
   @doc """
   move_stack/7: A player just moved a stack.
@@ -280,14 +281,6 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
-  def handle_call({:update_groups, user_id, groups}, _from, gameui) do
-    IO.puts("game_ui_server: handle_call: update_groups a")
-    gameui = GameUI.update_groups(gameui, user_id, groups)
-    IO.puts("game_ui_server: handle_call: update_groups b")
-    gameui
-    |> save_and_reply()
-  end
-
   def handle_call({:update_gameui, user_id, updated_gameui}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_gameui a")
     updated_gameui
@@ -304,6 +297,11 @@ defmodule SpadesGame.GameUIServer do
     IO.puts("game_ui_server: handle_call: load_list a")
     new_game = Game.new(gameui["options"])
     put_in(gameui["game"], new_game)
+    |> save_and_reply()
+  end
+
+  def handle_call({:peek_at, user_id, group_id, stack_indices, card_indices, player_n, reset_peek}, _from, gameui) do
+    GameUI.move_stack(gameui, group_id, stack_indices, card_indices, player_n, reset_peek)
     |> save_and_reply()
   end
 
@@ -353,8 +351,6 @@ defmodule SpadesGame.GameUIServer do
     GameUI.move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack)
     |> save_and_reply()
   end
-
-
 
   def handle_call({:detach, user_id, group_id, stack_index, card_index}, _from, gameui) do
     old_stacks = GameUI.get_stacks(gameui, group_id)

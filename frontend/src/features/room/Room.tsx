@@ -37,7 +37,7 @@ export const Room: React.FC<Props> = ({ slug }) => {
   }, []);
   const gameBroadcast = useChannel(`room:${slug}`, onChannelMessage);
   const chatBroadcast = useChannel(`chat:${slug}`, onChatMessage);
-  //if (gameUIView) broadcast("update_groups",gameUIView.game_ui.game.groups);
+
   console.log('rendering room');
   return (
     // <Container>
