@@ -4,7 +4,7 @@ import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Chat from "../chat/Chat";
 import { GroupView, GroupContainer } from "./GroupView";
-import BrowseGroup from "./BrowseGroup";
+import BrowseContainer from "./Browse";
 import { reorderGroups } from "./Reorder";
 import { GiantCard } from "./GiantCard";
 import styled from "@emotion/styled";
@@ -391,59 +391,57 @@ export const Table = ({
             </div>
               
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%", display: browseGroupID? "none": "block"}}>
-              <WidthContainer style={{width: "100%"}}>
-                <GroupView 
-                  group={groups['gPlayer1Play1']} 
-                  gameBroadcast={gameBroadcast} 
-                  chatBroadcast={chatBroadcast}
-                  setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupView>
-              </WidthContainer>
+              <GroupContainer
+                group={groups['gPlayer1Play1']} 
+                width="100%"
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                browseGroupID={browseGroupID}
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+              ></GroupContainer>
             </div>
             <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%", display: browseGroupID? "block": "none"}}>
-              <WidthContainer style={{width: "100%"}}>
-                <BrowseGroup 
-                  group={groups[browseGroupID]}
-                  gameBroadcast={gameBroadcast} 
-                  chatBroadcast={chatBroadcast}
-                  browseGroupTopN={browseGroupTopN}
-                  setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupTopN={setBrowseGroupTopN}
-                ></BrowseGroup>
-              </WidthContainer>
+              <BrowseContainer
+                group={groups[browseGroupID]} 
+                width="100%"
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                browseGroupTopN={browseGroupID}
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+              ></BrowseContainer>
             </div>
             <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <WidthContainer style={{width: "90%", visibility: (browseGroupID === "gPlayer1Play2") ? "hidden" : "visible"}}>
-                <GroupView 
-                  group={groups['gPlayer1Play2']} 
-                  showTitle="false" 
-                  gameBroadcast={gameBroadcast} 
-                  chatBroadcast={chatBroadcast}
-                  setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupView>
-              </WidthContainer>
-              <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Event") ? "hidden" : "visible"}}>
-                <GroupView 
-                  group={groups['gPlayer1Event']} 
-                  gameBroadcast={gameBroadcast} 
-                  chatBroadcast={chatBroadcast}
-                  setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupView>
-              </WidthContainer>
+              <GroupContainer
+                group={groups['gPlayer1Play2']} 
+                width="90%"
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                browseGroupID={browseGroupID}
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+              ></GroupContainer>
+              <GroupContainer
+                group={groups['gPlayer1Event']} 
+                width="10%"
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                browseGroupID={browseGroupID}
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+              ></GroupContainer>
             </div>
             <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
-              <WidthContainer style={{width: "80%", visibility: (browseGroupID === "gPlayer1Hand") ? "hidden" : "visible"}}>
-                <GroupView 
-                  group={groups['gPlayer1Hand']} 
-                  gameBroadcast={gameBroadcast} 
-                  chatBroadcast={chatBroadcast}
-                  setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupView>
-              </WidthContainer>
+              <GroupContainer
+                group={groups['gPlayer1Hand']} 
+                width="80%"
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                browseGroupID={browseGroupID}
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+              ></GroupContainer>
               <GroupContainer
                 group={groups['gPlayer1Deck']} 
                 width="10%"
@@ -453,15 +451,15 @@ export const Table = ({
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
-              <WidthContainer style={{width: "10%", visibility: (browseGroupID === "gPlayer1Discard") ? "hidden" : "visible"}}>
-                <GroupView 
-                  group={groups['gPlayer1Discard']} 
-                  gameBroadcast={gameBroadcast} 
-                  chatBroadcast={chatBroadcast}
-                  setBrowseGroupID={setBrowseGroupID}
-                  setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupView>
-              </WidthContainer>
+              <GroupContainer
+                group={groups['gPlayer1Discard']} 
+                width="10%"
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                browseGroupID={browseGroupID}
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+              ></GroupContainer>
             </div>
           </div>
           <div className="bg-gray-300" style={{height: "3%"}}>

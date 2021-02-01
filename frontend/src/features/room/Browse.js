@@ -22,8 +22,14 @@ const Header = styled.div`
   height: 13%;
 `;
 
+const WidthContainer = styled.div`
+  padding: 2px 2px 2px 0.5vw;
+  float: left;
+  height: 100%;
+`;
 
-const GroupComponent = React.memo(({
+
+const BrowseComponent = React.memo(({
   group,
   gameBroadcast,
   chatBroadcast,
@@ -183,7 +189,7 @@ const GroupComponent = React.memo(({
 
 })
 
-export default class BrowseGroup extends Component {
+export class BrowseGroup extends Component {
 
 //   shouldComponentUpdate = (nextProps, nextState) => {
 //         // if (nextProps.group.id == "gSharedStaging") {
@@ -215,7 +221,7 @@ export default class BrowseGroup extends Component {
         // <Draggable draggableId={title} index={index}>
         //   {(provided, snapshot) => (ref={provided.innerRef} {...provided.draggableProps}>
 
-        <GroupComponent
+        <BrowseComponent
           group={this.props.group}
           gameBroadcast={this.props.gameBroadcast}
           chatBroadcast={this.props.chatBroadcast}
@@ -223,7 +229,7 @@ export default class BrowseGroup extends Component {
           browseGroupTopN={this.props.browseGroupTopN}
           setBrowseGroupID={this.props.setBrowseGroupID}
           setBrowseGroupTopN={this.props.setBrowseGroupTopN}
-        ></GroupComponent>
+        ></BrowseComponent>
 
         //   )}
         // </Draggable>
@@ -232,5 +238,22 @@ export default class BrowseGroup extends Component {
     } else {
       return (<div></div>)
     }
+  }
+}
+
+export class BrowseContainer extends Component {
+  render() {
+    return (
+      <WidthContainer style={{width: this.props.width}}>
+        <BrowseView 
+          group={this.props.group} 
+          gameBroadcast={this.props.gameBroadcast} 
+          chatBroadcast={this.props.chatBroadcast}
+          browseGroupTopN={this.props.browseGroupID}
+          setBrowseGroupID={this.props.setBrowseGroupID}
+          setBrowseGroupTopN={this.props.setBrowseGroupTopN}
+        ></BrowseView>
+      </WidthContainer>
+    )
   }
 }
