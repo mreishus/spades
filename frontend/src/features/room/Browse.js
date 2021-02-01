@@ -7,6 +7,7 @@ import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Dropdown from 'react-dropdown';
+import { GroupView } from "./GroupView";
 
 const Container = styled.div`
   padding: 1px 1px 1px 1px;
@@ -57,20 +58,28 @@ const BrowseComponent = React.memo(({
 
   const handleSelectClick = (event) => {
     var topN = event.target.value;
+    var peekStackIndices = [];
+    var peekCardIndices = [];
     
     if (topN === "All") {
       topN = numStacks;
+      peekStackIndices = [...Array(topN).keys()];
+      peekCardIndices = new Array(topN).fill(0);
       chatBroadcast("game_update",{message: "looks at "+groupName+"."})
     } else if (topN === "None") {
-      topN = 0; 
+      topN = numStacks; 
+      peekStackIndices = [];
+      peekCardIndices = [];
       chatBroadcast("game_update",{message: "stopped looking at "+groupName+"."})
     } else {
       topN = parseInt(topN);
+      peekStackIndices = [...Array(topN).keys()];
+      peekCardIndices = new Array(topN).fill(0);
       chatBroadcast("game_update",{message: "looks at top "+topN+" of "+groupName+"."})
     }
     setBrowseGroupID(group.id);
     setBrowseGroupTopN(topN);
-    gameBroadcast("peek_at", {group_id: group.id, stack_indices: [...Array(topN).keys()], card_indices: new Array(topN).fill(0), player_n: 'Player1', reset_peek: true})
+    gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: 'Player1', reset_peek: true})
   }
 
   const handleInputTyping = (event) => {
@@ -107,11 +116,11 @@ const BrowseComponent = React.memo(({
 
   // If browseGroupTopN not set, show all stacks
   console.log('browseGroupTopN',browseGroupTopN)
-  var filteredStackIndices = browseGroupTopN>=0 ? [...Array(browseGroupTopN).keys()] : [...Array(numStacks).keys()]; 
+  var filteredStackIndices = browseGroupTopN>=0 ? [...Array(browseGroupTopN).keys()] : [...Array(7).keys()]; 
   // Filter by selected card type
-  if (selectedCardType != "All") filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType));
+  //if (selectedCardType != "All") filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType));
   // Filter by card name
-  if (selectedCardName != "")    filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["printname"].toLowerCase().includes(selectedCardName.toLowerCase())));
+  //if (selectedCardName != "")    filteredStackIndices = filteredStackIndices.filter((s,i) => (stacks[s] && stacks[s]["cards"][0]["sides"]["A"]["printname"].toLowerCase().includes(selectedCardName.toLowerCase())));
 
   // Flip cards faceup
   // for (var i=0; i<stacks.length; i++) {
@@ -133,12 +142,48 @@ const BrowseComponent = React.memo(({
   } 
   return(
     <Container>
-      <Header>
-        <Title>Browsing: {group.name}</Title>
-      </Header>
+      <ContextMenuTrigger id={group.id} holdToDisplay={0}>
+        <Header>
+          <Title>Browsing: {group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+        </Header>
+      </ContextMenuTrigger> 
 
-    <div style={{height:"100%"}}>
-      <div style={{width:"75%", height:"100%", float:"left"}}>
+      {/* <ContextMenu id={group.id} style={{zIndex:1e6}}>
+          <hr></hr>
+          <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
+          <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Browse</MenuItem>
+          {(group.type === "deck" || group.type === "discard") ?
+          (<div>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Look at all</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: 5}}>Look at top 5</MenuItem>
+            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: 10}}>Look at top 10</MenuItem>
+          </div>) : null}
+          <SubMenu title='Move all to'>
+              <SubMenu title='My Deck'>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "s"}}>Shuffle in </MenuItem>
+              </SubMenu>
+              <SubMenu title='Encounter Deck'>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "s"}}>Shuffle in </MenuItem>
+              </SubMenu>
+              <SubMenu title='Encounter Deck 2 &nbsp;'>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "s"}}>Shuffle in </MenuItem>
+              </SubMenu>
+              <SubMenu title='Encounter Deck 3 &nbsp;'>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "t"}}>Top</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "b"}}>Bottom</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "s"}}>Shuffle in</MenuItem>
+              </SubMenu>
+          </SubMenu>
+      </ContextMenu> */}
+
+    {/* <div style={{height:"100%", width:"100%"}}> */}
+      {/* <div style={{width:"75%", height:"100%", float:"left"}}> */}
       <Stacks
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
@@ -146,42 +191,44 @@ const BrowseComponent = React.memo(({
         isCombineEnabled={false}
         selectedStackIndices={filteredStackIndices}
       />
-      </div>
+      {/* </div> */}
       <div style={{width:"25%", height:"80%", backgroundColor:"red", float:"left"}}>
 
         <table style={{width:"100%"}}>
-          <tr>
-            <td onChange={handleSelectClick}>
-              <select name="numFaceup" id="numFaceup">
-                <option value="" disabled selected>Look at...</option>
-                <option value="None">None</option>
-                <option value="All">All</option>
-                <option value="5">Top 5</option>
-                <option value="10">Top 10</option>
-              </select>
-            </td>
-            <td>
-              <input type="text" id="name" name="name" className="mb-2" placeholder="Card name..." onChange={handleInputTyping}></input>
-            </td>
-          </tr>
-          <tr onChange={handleOptionClick}>
-            <td><label><input type="radio" value="All" name="cardtype" defaultChecked/> All</label></td>
-            <td><label><input type="radio" value="Ally" name="cardtype"/> Ally</label></td>
-          </tr>
-          <tr onChange={handleOptionClick}>
-            <td><label><input type="radio" value="Enemy" name="cardtype" /> Enemy</label></td>
-            <td><label><input type="radio" value="Attachment" name="cardtype" /> Attachment</label></td>
-          </tr>
-          <tr onChange={handleOptionClick}>
-            <td><label><input type="radio" value="Location" name="cardtype" /> Location</label></td>
-            <td><label><input type="radio" value="Event" name="cardtype" /> Event</label></td>
-          </tr>
-          <tr onChange={handleOptionClick}>
-            <td><label><input type="radio" value="Location" name="cardtype" /> Treachery</label></td>
-            <td><label><input type="radio" value="Side Quest" name="cardtype" /> Side Quest</label></td>
-          </tr>
+          <body>
+            <tr>
+              <td onChange={handleSelectClick}>
+                <select name="numFaceup" id="numFaceup">
+                  <option value="" disabled selected>Look at...</option>
+                  <option value="None">None</option>
+                  <option value="All">All</option>
+                  <option value="5">Top 5</option>
+                  <option value="10">Top 10</option>
+                </select>
+              </td>
+              <td>
+                <input type="text" id="name" name="name" className="mb-2" placeholder="Card name..." onChange={handleInputTyping}></input>
+              </td>
+            </tr>
+            <tr onChange={handleOptionClick}>
+              <td><label><input type="radio" value="All" name="cardtype" defaultChecked/> All</label></td>
+              <td><label><input type="radio" value="Ally" name="cardtype"/> Ally</label></td>
+            </tr>
+            <tr onChange={handleOptionClick}>
+              <td><label><input type="radio" value="Enemy" name="cardtype" /> Enemy</label></td>
+              <td><label><input type="radio" value="Attachment" name="cardtype" /> Attachment</label></td>
+            </tr>
+            <tr onChange={handleOptionClick}>
+              <td><label><input type="radio" value="Location" name="cardtype" /> Location</label></td>
+              <td><label><input type="radio" value="Event" name="cardtype" /> Event</label></td>
+            </tr>
+            <tr onChange={handleOptionClick}>
+              <td><label><input type="radio" value="Location" name="cardtype" /> Treachery</label></td>
+              <td><label><input type="radio" value="Side Quest" name="cardtype" /> Side Quest</label></td>
+            </tr>
+          </body>
         </table> 
-      </div>
+      {/* </div> */}
     </div>
     </Container>
   )
@@ -189,7 +236,7 @@ const BrowseComponent = React.memo(({
 
 })
 
-export class BrowseGroup extends Component {
+export class BrowseView extends Component {
 
 //   shouldComponentUpdate = (nextProps, nextState) => {
 //         // if (nextProps.group.id == "gSharedStaging") {
@@ -211,8 +258,6 @@ export class BrowseGroup extends Component {
 //       }
 //   };
 
-
-
   render() {
     const group = this.props.group;
     if (group) {
@@ -225,7 +270,6 @@ export class BrowseGroup extends Component {
           group={this.props.group}
           gameBroadcast={this.props.gameBroadcast}
           chatBroadcast={this.props.chatBroadcast}
-          showTitle={this.props.showTitle}
           browseGroupTopN={this.props.browseGroupTopN}
           setBrowseGroupID={this.props.setBrowseGroupID}
           setBrowseGroupTopN={this.props.setBrowseGroupTopN}
@@ -241,19 +285,23 @@ export class BrowseGroup extends Component {
   }
 }
 
-export class BrowseContainer extends Component {
+export default class BrowseContainer extends Component {
   render() {
-    return (
-      <WidthContainer style={{width: this.props.width}}>
-        <BrowseView 
-          group={this.props.group} 
-          gameBroadcast={this.props.gameBroadcast} 
-          chatBroadcast={this.props.chatBroadcast}
-          browseGroupTopN={this.props.browseGroupID}
-          setBrowseGroupID={this.props.setBrowseGroupID}
-          setBrowseGroupTopN={this.props.setBrowseGroupTopN}
-        ></BrowseView>
-      </WidthContainer>
-    )
+    if (this.props.group) {
+      return (
+        <WidthContainer style={{width: this.props.width}}>
+          <GroupView
+            group={this.props.group} 
+            gameBroadcast={this.props.gameBroadcast} 
+            chatBroadcast={this.props.chatBroadcast}
+            browseGroupTopN={this.props.browseGroupTopN}
+            setBrowseGroupID={this.props.setBrowseGroupID}
+            setBrowseGroupTopN={this.props.setBrowseGroupTopN}
+          ></GroupView>
+        </WidthContainer>
+      )
+    } else {
+      return (<div></div>)
+    }
   }
 }

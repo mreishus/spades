@@ -172,7 +172,9 @@ export const handleKeyDown = (
         else if (k === "x") {
             console.log(cardIndex)
             if (cardIndex == 0) {
-                const cards = gameUI["game"]["groups"][groupID]["stacks"][stackIndex]["cards"];
+                const stack = gameUI["game"]["groups"][groupID]["stacks"][stackIndex];
+                if (!stack) return;
+                const cards = stack["cards"];
                 console.log(cards)
                 for (var i=0; i<cards.length; i++) {
                     const cardi = cards[i]

@@ -54,6 +54,10 @@ const GroupComponent = React.memo(({
     } else if (data.action === "look_at") {
       setBrowseGroupID(group.id);
       setBrowseGroupTopN(data.topN);
+      const peekStackIndices = [...Array(data.topN).keys()];
+      const peekCardIndices = new Array(data.topN).fill(0);
+      gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: 'Player1', reset_peek: true})
+  
     }
   }
   const numStacks = group["stacks"].length;
@@ -69,7 +73,7 @@ const GroupComponent = React.memo(({
       {/* {stack.cards.map((card, cardIndex) => ( */}
           <hr></hr>
           <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
-          <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: null}}>Browse</MenuItem>
+          <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Browse</MenuItem>
           {(group.type === "deck" || group.type === "discard") ?
           (<div>
             <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Look at all</MenuItem>
@@ -164,13 +168,13 @@ export class GroupView extends Component {
 
 export class GroupContainer extends Component {
   render() {
-    const beingBrowsed = this.props.browseGroupID === this.props.group.id;
+    const beingBrowsed = this.props.browseGroupID === this.props.group.id || this.props.group.id === "gPlayer1Hand";
     return (
       <WidthContainer 
         style={{
           width: this.props.width, 
           visibility: beingBrowsed ? "hidden" : "visible"}}>
-        <div style={{display: beingBrowsed ? "none" : "block"}}>
+        <div style={{width:"100%", height:"100%", display: beingBrowsed ? "none" : "block"}}>
           <GroupView 
             group={this.props.group} 
             gameBroadcast={this.props.gameBroadcast} 

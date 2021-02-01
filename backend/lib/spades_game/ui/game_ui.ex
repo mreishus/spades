@@ -160,7 +160,7 @@ defmodule SpadesGame.GameUI do
       gameui
     else
       num_indices = Enum.count(stack_indices)
-      range_indices = 0..(num_indices-1)
+      range_indices = 0..num_indices |> Enum.reverse() |> tl() |> Enum.reverse() # Extra logic to drop last element so range does not inclue n
       Enum.reduce range_indices, gameui, fn i, acc ->
         stack_index = Enum.at(stack_indices, i)
         card_index = Enum.at(card_indices, i)
