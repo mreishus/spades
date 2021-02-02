@@ -256,10 +256,10 @@ const CardComponent = React.memo(({
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
                     top: `${0.2 + (1.39-currentFace.height)*CARDSCALE/2}vw`,
-                    borderWidth: '1px',
                     borderRadius: '6px',
-                    borderColor: isActive ? 'yellow' : 'transparent',
-                    //transform: `rotate(${angles}deg)`,
+                    MozBoxShadow: isActive ? '0 0 7px yellow' : '',
+                    WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
+                    boxShadow: isActive ? '0 0 7px yellow' : '',
                     transform: `rotate(${inputCard.rotation}deg)`,
                     zIndex: zIndex,
                     cursor: "default",
@@ -271,9 +271,6 @@ const CardComponent = React.memo(({
                     MozTransitionProperty: "-moz-transform",
                     OTransitionProperty: "-o-transform",
                     transitionProperty: "transform",
-                    // WebkitBoxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
-                    // MozBoxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
-                    // boxShadow: "10px 10px 29px 5px rgba(0,0,0,0.26)",
                 }}
                 //onClick={handleClick}
                 //onDoubleClick={handleDoubleClick}
