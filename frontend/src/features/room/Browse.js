@@ -9,6 +9,7 @@ import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contex
 import Dropdown from 'react-dropdown';
 import { GroupView } from "./GroupView";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
+import { GroupContextMenu } from "./GroupContextMenu";
 
 const Container = styled.div`
   padding: 1px 1px 1px 1px;
@@ -100,27 +101,6 @@ const BrowseComponent = React.memo(({
     setSelectedCardName(event.target.value);
     //setSelectedCardType(event.target.value);
   }
-
-  const handleMenuClick = (e, data) => {
-    if (data.action === "shuffle_group") {
-      gameBroadcast("shuffle_group", {group_id: group.id})
-      chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+"."})
-    } else if (data.action === "move_stacks") {
-      if (data.position === "t") {
-        gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
-        chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to top of "+GROUPSINFO[data.destGroupID].name+"."})
-      } else if (data.position === "b") {
-        gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
-        chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to bottom of "+GROUPSINFO[data.destGroupID].name+"."})
-      } else if (data.position === "s") {
-        gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
-        chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[data.destGroupID].name+"."})
-      }
-    } else if (data.action === "look_at") {
-      setBrowseGroupID(group.id);
-      setBrowseGroupTopN(data.indices);
-    }
-  }
   
   // const browseGroupTopN2 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
   // var selectedStacks = stacks.filter((s,i) => browseGroupTopN2.includes(i));
@@ -165,52 +145,22 @@ const BrowseComponent = React.memo(({
   } 
   return(
     <Container>
+      <div style={{width:"100%", height:"20px", float:"left"}}>
       <ContextMenuTrigger id={group.id} holdToDisplay={0}>
-        <Header>
-          <div style={{width:"100%", height:"20px"}}>
-            <Title className="float-left">Browsing: {group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
-            <FontAwesomeIcon className="text-white float-right mr-2 mt-1" icon={faTimes} onClick={handleCloseClick}/>
-            
-            {/* <div style={{float:"right", height:"100%", width:"20px", backgroundColor:"red"}}>
-              <FontAwesomeIcon className="text-white float-left text-right" icon={faTimes}/>
-            </div> */}
-          </div>
+        <Header className="float-left">
+            <Title>Browsing: {group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
         </Header>
       </ContextMenuTrigger> 
 
-      {/* <ContextMenu id={group.id} style={{zIndex:1e6}}>
-          <hr></hr>
-          <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
-          <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Browse</MenuItem>
-          {(group.type === "deck" || group.type === "discard") ?
-          (<div>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: numStacks}}>Look at all</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: 5}}>Look at top 5</MenuItem>
-            <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: 10}}>Look at top 10</MenuItem>
-          </div>) : null}
-          <SubMenu title='Move all to'>
-              <SubMenu title='My Deck'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "s"}}>Shuffle in </MenuItem>
-              </SubMenu>
-              <SubMenu title='Encounter Deck'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "s"}}>Shuffle in </MenuItem>
-              </SubMenu>
-              <SubMenu title='Encounter Deck 2 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "s"}}>Shuffle in </MenuItem>
-              </SubMenu>
-              <SubMenu title='Encounter Deck 3 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "t"}}>Top</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "b"}}>Bottom</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "s"}}>Shuffle in</MenuItem>
-              </SubMenu>
-          </SubMenu>
-      </ContextMenu> */}
+      <FontAwesomeIcon className="text-white float-right mr-2 mt-1" icon={faTimes} onClick={handleCloseClick}/>
+      </div>
+      <GroupContextMenu
+        group={group}
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+        setBrowseGroupID={setBrowseGroupID}
+        setBrowseGroupTopN={setBrowseGroupTopN}
+      ></GroupContextMenu>
 
     {/* <div style={{height:"100%", width:"100%"}}> */}
       <div style={{width:"75%", height:"100%", float:"left"}}>

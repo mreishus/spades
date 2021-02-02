@@ -102,18 +102,23 @@ export const Table = ({
   // Show/hide group that allows you to browse certain cards in a group
   const [browseGroupID, setBrowseGroupID] = useState("");
   // Indices of stacks in group being browsed
-  const [browseGroupTopN, setBrowseGroupTopN] = useState(false);
+  const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   //const [cardDB, setCardDB] = useState(null);
   const [phase, setPhase] = useState(1);
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
   const inputFile = useRef(null) 
-
   console.log('Rendering groups');
   
   const toggleScratch = () => {
     if (showScratch) setShowScratch(false);
     else setShowScratch(true);
+  }
+
+  const handleBrowseSelect = (event) => {
+    const groupID = event.target.value;
+    setBrowseGroupID(groupID);
+    setBrowseGroupTopN(0);
   }
 
   const changePhase = (num) => {
@@ -348,7 +353,7 @@ export const Table = ({
                 width="75%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
-                browseGroupTopN={browseGroupTopN}
+                browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
@@ -357,7 +362,7 @@ export const Table = ({
                 width="10%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
-                browseGroupTopN={browseGroupTopN}
+                browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
@@ -366,7 +371,7 @@ export const Table = ({
                 width="15%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
-                browseGroupTopN={browseGroupTopN}
+                browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
@@ -378,7 +383,7 @@ export const Table = ({
                 width="100%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
-                browseGroupTopN={browseGroupTopN}
+                browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
@@ -459,7 +464,6 @@ export const Table = ({
             </div>
           </div>
           <div className="bg-gray-300" style={{height: "3%"}}>
-            Social links
             <Button isPrimary onClick={loadDeckFile}>
               Load Deck
             </Button>
@@ -469,6 +473,12 @@ export const Table = ({
             <Button isPrimary onClick={() => {browseGroupID? setBrowseGroupID("") : setBrowseGroupID("gSharedEncounterDeck")}}>
               Browse Group
             </Button>
+            <select name="numFaceup" id="numFaceup" onChange={handleBrowseSelect}>
+              <option value="" disabled selected>Look at...</option>
+              {Object.keys(GROUPSINFO).map((groupID, index) => {
+                return(<option value={groupID}>{GROUPSINFO[groupID].name}</option>)
+              })}
+            </select>
             <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
           </div>
           <div className="bg-gray-200" style={{height: "3%"}}>

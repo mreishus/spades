@@ -129,7 +129,11 @@ defmodule SpadesGame.GameUI do
   end
 
   def peek_card(card, player_n, tf) do
-    put_in(card["peeking"][player_n],tf)
+    if card["currentSide"] == "B" do
+      put_in(card["peeking"][player_n],tf)
+    else
+      card
+    end
   end
 
   def peek_stack(stack, player_n, tf) do
