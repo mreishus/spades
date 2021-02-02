@@ -13,19 +13,19 @@ def prettifyGoogleSheetsJSON(data):
     for i,entry in enumerate(data['feed']['entry']):
         #if i>0: break
         card_id = entry['gsx$cardid']['$t']
-        newDict[card_id] = {'sideA':{},'sideB':{}}
+        newDict[card_id] = {'sides':{'A':{},'B':{}}}
         for key,value in entry.items():
             if key[0:4] == 'gsx$':
                 key = key[4:]
                 val = unidecode.unidecode(value['$t'])
                 if key[0:5] == 'sidea':
-                    newDict[card_id]['sideA'][key[5:]] = val
+                    newDict[card_id]['sides']['A'][key[5:]] = val
                     if (key[5:] == 'name'):
-                        newDict[card_id]['sideA']['printname'] = value['$t']
+                        newDict[card_id]['sides']['A']['printname'] = value['$t']
                 elif key[0:5] == 'sideb':
-                    newDict[card_id]['sideB'][key[5:]] = val
+                    newDict[card_id]['sides']['B'][key[5:]] = val
                     if (key[5:] == 'name'):
-                        newDict[card_id]['sideB']['printname'] = value['$t']
+                        newDict[card_id]['sides']['B']['printname'] = value['$t']
                 else:
                     newDict[card_id][key] = val
     return newDict

@@ -121,7 +121,7 @@ const BrowseComponent = React.memo(({
   if (selectedCardName != "")
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stacks[s] && 
-      stacks[s]["cards"][0]["sides"]["A"]["printname"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
+      stacks[s]["cards"][0]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
       stacks[s]["cards"][0]["peeking"]["Player1"]
     ));
 

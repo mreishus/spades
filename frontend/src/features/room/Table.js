@@ -98,12 +98,13 @@ export const Table = ({
   const { gameUI, setGameUI } = useContext(GameUIContext);
   const [groups, setGroups] = useState(gameUI.game.groups);
   const [showScratch, setShowScratch] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [showSpawn, setShowSpawn] = useState(false);
+  const [spawnCardName, setSpawnCardName] = useState("");
+  const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDB));
   // Show/hide group that allows you to browse certain cards in a group
   const [browseGroupID, setBrowseGroupID] = useState("");
   // Indices of stacks in group being browsed
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
-  //const [cardDB, setCardDB] = useState(null);
   const [phase, setPhase] = useState(1);
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
@@ -121,11 +122,32 @@ export const Table = ({
     setBrowseGroupTopN(0);
   }
 
+  const handleSpawnTyping = (event) => {
+    //setSpawnCardName(event.target.value);
+    const filteredName = event.target.value;
+    const filteredIDs = []; //Object.keys(cardDB);
+    Object.keys(cardDB).map((cardID, index) => {
+      const card = cardDB[cardID]
+      const sideA = cardDB[cardID]["sides"]["A"]
+      const cardName = sideA["name"];
+      if (cardName.toLowerCase().includes(filteredName.toLowerCase())) filteredIDs.push(cardID);
+    })
+    setSpawnFilteredIDs(filteredIDs);
+  }
+
+  const handleSpawnClick = (cardID) => {
+    const cardRow = cardDB[cardID];
+    if (!cardRow) return;
+    const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupID': "gSharedStaging"}]
+    gameBroadcast("load_cards",{load_list: loadList});
+    chatBroadcast("game_update",{message: "spawned "+cardRow["sides"]["A"]["printname"]+"."});
+  }
+
   const changePhase = (num) => {
     if (num!==phase) setPhase(num);
   }
 
-  useEffect(() => {    
+  useEffect(() => {
      setGroups(gameUI.game.groups);
   }, [gameUI.game.groups]);
 
@@ -138,7 +160,6 @@ export const Table = ({
     inputFile.current.click();
   }
   const loadDeck = async(event) => {
-    console.log(cardDB);
     event.preventDefault();
     const reader = new FileReader();
     reader.onload = async (event) => { 
@@ -470,8 +491,8 @@ export const Table = ({
             <Button isPrimary onClick={resetGame}>
               Reset Game
             </Button>
-            <Button isPrimary onClick={() => {browseGroupID? setBrowseGroupID("") : setBrowseGroupID("gSharedEncounterDeck")}}>
-              Browse Group
+            <Button isPrimary onClick={() => {setShowSpawn(true)}}>
+              Spawn Card
             </Button>
             <select name="numFaceup" id="numFaceup" onChange={handleBrowseSelect}>
               <option value="" disabled selected>Look at...</option>
@@ -551,26 +572,60 @@ export const Table = ({
         </div>
       </div>
     </div>
-    {/* <Draggable>
-    <ReactModal
+
+    {/* <ReactModal
       closeTimeoutMS={200}
-      isOpen={showModal}
-      onRequestClose={() => setShowModal(false)}
-      contentLabel="Create New Game"
+      isOpen={showSpawn}
+      onRequestClose={() => setShowSpawn(false)}
+      contentLabel="Spawn a card"
       overlayClassName="fixed inset-0 bg-black-0 z-50"
       className="insert-auto overflow-auto p-5 bg-gray-700 border rounded-lg outline-none"
       style={{  content : {
-        height: "20%",
-        width: "60%",
+        height: "60%",
+        width: "40%",
         marginTop:"20%",
         zindex:1e9,
       }}}
     >
-      <div style={{height: "25vh",zIndex:1e7}}>
-      <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView>
+      <div style={{height: "25vh",zIndex:1e7,backgroundColor:"red"}}>
       </div>
+    </ReactModal> */}
+
+    <ReactModal
+      closeTimeoutMS={200}
+      isOpen={showSpawn}
+      onRequestClose={() => setShowSpawn(false)}
+      contentLabel="Create New Game"
+      overlayClassName="fixed inset-0 bg-black-50 z-10000"
+      className="insert-auto overflow-auto p-5 bg-gray-700 border max-w-lg mx-auto my-12 rounded-lg outline-none"
+    >
+      <h1 className="mb-2">Spawn a card</h1>
+      <input style={{width:"50%"}} type="text" id="name" name="name" className="mb-6 mt-5" placeholder="Card name..." onChange={handleSpawnTyping}></input>
+      {(spawnFilteredIDs.length) ? 
+        (spawnFilteredIDs.length>15) ?
+          <div className="text-white">Too many results</div> :
+          <table className="table-fixed rounded-lg">
+            <thead>
+              <tr className="text-white bg-gray-800">
+                <th className="w-1/2">Name</th>
+                <th className="w-1/2">Set</th>
+              </tr>
+            </thead>
+            {spawnFilteredIDs.map((cardID, index) => {
+              const card = cardDB[cardID]
+              const sideA = cardDB[cardID]["sides"]["A"]
+              const printName = sideA.printname;
+              return(
+                <tr className="bg-gray-600 text-white cursor-pointer hover:bg-gray-500 hover:text-black" onClick={() => handleSpawnClick(cardID)}>
+                  <td className="p-1">{printName}</td>
+                  <td>{card.cardpackname}</td>
+                </tr>
+              );
+            })}
+          </table> :
+          <div className="text-white">No results</div>
+      }
     </ReactModal>
-    </Draggable> */}
 
     {/* <Draggable>
       <div style={{height:"200px",width:"800px",top:"0px",left:"0px",position:"relative",backgroundColor:"red",zIndex:1e7}}>

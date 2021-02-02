@@ -212,7 +212,7 @@ const CardComponent = React.memo(({
 
 
     const menuID = inputCard.id+'-menu';
-    const zIndex = 1e5-cardIndex;
+    const zIndex = 1000-cardIndex;
 
     function handleMenuClick(e, data) {
         if (data.action === "detach") {
