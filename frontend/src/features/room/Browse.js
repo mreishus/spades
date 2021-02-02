@@ -237,7 +237,7 @@ const BrowseComponent = React.memo(({
                 </select>
               </td>
               <td>
-                <input type="text" id="name" name="name" className="ml-5" placeholder="Card name..." onChange={handleInputTyping}></input>
+                <input style={{width:"50%"}} type="text" id="name" name="name" className="ml-5" placeholder="Card name..." onChange={handleInputTyping}></input>
               </td>
             </tr>
             <tr onChange={handleOptionClick}>

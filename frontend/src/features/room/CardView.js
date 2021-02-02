@@ -7,6 +7,8 @@ import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { CardMouseRegion } from "./CardMouseRegion"
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
+import { faEye } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 
@@ -308,8 +310,13 @@ const CardComponent = React.memo(({
                     stackIndex={stackIndex} 
                     cardIndex={cardIndex}
                 ></TokensView>
-                
+
+                <div className="absolute top-1/2" style={{width:"10px",height:"10px",backgroundColor:"red"}}></div>
+
             </div>
+
+            
+            {/* <FontAwesomeIcon className="absolute place-self-center" icon={faEye}/> */}
             </ContextMenuTrigger>
 
             <ContextMenu id={inputCard.id} style={{zIndex:1e6}}>
