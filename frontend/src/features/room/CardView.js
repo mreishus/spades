@@ -248,6 +248,9 @@ const CardComponent = React.memo(({
                 key={inputCard.id}
                 style={{
                     position: "absolute",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "end",
                     background: `url(${getCurrentFaceSRC(inputCard,"Player1")}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
@@ -311,7 +314,9 @@ const CardComponent = React.memo(({
                     cardIndex={cardIndex}
                 ></TokensView>
 
-                <div className="absolute top-1/2" style={{width:"10px",height:"10px",backgroundColor:"red"}}></div>
+
+                {inputCard["peeking"]["Player1"]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
+                
 
             </div>
 
