@@ -10,7 +10,8 @@ defmodule SpadesGame.Card do
 
   @spec card_from_cardrow(Map.t()) :: Map.t()
   def card_from_cardrow(card_row) do
-    %{"id" => Ecto.UUID.generate,
+    %{
+      "id" => Ecto.UUID.generate,
       "rotation" => 0,
       "exhausted" => false,
       "tokens" =>Tokens.new(),
@@ -27,8 +28,8 @@ defmodule SpadesGame.Card do
       "cardbackoverride" => card_row["cardbackoverride"],
       "cardencounterset" => card_row["cardencounterset"],
       "cardid" => card_row["cardid"],
-      "cardnumber" => card_row["cardnumber"],
-      "cardquantity" => card_row["cardquantity"],
+      "cardnumber" => String.to_integer(card_row["cardnumber"]),
+      "cardquantity" => String.to_integer(card_row["cardquantity"]),
       "cardsetid" => card_row["cardsetid"],
       "cardpackname" => card_row["cardpackname"],
 

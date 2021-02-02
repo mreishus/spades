@@ -3,7 +3,7 @@ defmodule SpadesGame.GameUI do
   One level on top of Game.
   """
 
-  alias SpadesGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens}
+  alias SpadesGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens, CardFace}
 
   @type t :: Map.t()
 
@@ -322,6 +322,23 @@ defmodule SpadesGame.GameUI do
     else
       gameui
     end
+
+    # Add to starting threat
+    threat = Enum.reduce load_list, 0, fn r, acc ->
+      sideA = r["cardRow"]["sides"]["A"]
+      if sideA["type"] == "Hero" do
+        IO.puts("adding threat")
+        IO.inspect(sideA)
+        IO.inspect(acc)
+        IO.inspect(sideA["cost"])
+        IO.inspect(r["quantity"])
+        acc + CardFace.convert_to_integer(sideA["cost"])*r["quantity"]
+      else
+        acc
+      end
+    end
+
+    gameui = put_in(gameui["game"]["players"]["Player1"]["threat"], threat)
 
     # IO.puts("after_load")
     # IO.inspect(gameui["game"]["groups"])

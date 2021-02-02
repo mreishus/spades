@@ -111,12 +111,12 @@ declare module "elixir-backend" {
     phase: String;
     phase_part: String;
     groups: Groups;
+    players: { [id: string] : Player; };
   }
 
-  export declare class GamePlayer {
-    bid: null | number;
-    hand: Array<Card>;
-    tricks_won: number;
+  export declare class Player {
+    threat: number;
+    willpower: number;
   }
 
   // game_ui.game.trick --> array TrickCard

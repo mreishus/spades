@@ -510,6 +510,7 @@ export const Table = ({
               <option value="4">4</option>
             </select>
             player(s)
+            Threat: {gameUI["game"]["players"]["Player1"]["threat"]}
           </div>
         </div>
       </div>
