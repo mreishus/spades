@@ -3,7 +3,7 @@ import styled from "@emotion/styled";
 import Stacks from "./Stacks";
 import Title from "./Title";
 import { GROUPSINFO } from "./Constants";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Dropdown from 'react-dropdown';
@@ -52,6 +52,12 @@ const BrowseComponent = React.memo(({
   const handleOptionClick = (event) => {
     console.log(event.target.value);
     setSelectedCardType(event.target.value);
+  }
+
+  const handleCloseClick = (event) => {
+    setBrowseGroupID("");
+    setBrowseGroupTopN(0);
+    gameBroadcast("peek_at", {group_id: group.id, stack_indices: [], card_indices: [], player_n: "Player1", reset_peek: true})
   }
 
   const handleSelectClick = (event) => {
@@ -161,7 +167,14 @@ const BrowseComponent = React.memo(({
     <Container>
       <ContextMenuTrigger id={group.id} holdToDisplay={0}>
         <Header>
-          <Title>Browsing: {group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+          <div style={{width:"100%", height:"20px"}}>
+            <Title className="float-left">Browsing: {group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+            <FontAwesomeIcon className="text-white float-right mr-2 mt-1" icon={faTimes} onClick={handleCloseClick}/>
+            
+            {/* <div style={{float:"right", height:"100%", width:"20px", backgroundColor:"red"}}>
+              <FontAwesomeIcon className="text-white float-left text-right" icon={faTimes}/>
+            </div> */}
+          </div>
         </Header>
       </ContextMenuTrigger> 
 

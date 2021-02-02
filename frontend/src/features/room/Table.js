@@ -395,17 +395,19 @@ export const Table = ({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
             </div>
+            
             <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%", display: (browseGroupID)? "block": "none"}}>
               <BrowseContainer
-                group={groups[browseGroupID]} 
+                group={groups[browseGroupID]}
                 width="100%"
-                gameBroadcast={gameBroadcast} 
+                gameBroadcast={gameBroadcast}
                 chatBroadcast={chatBroadcast}
                 browseGroupTopN={browseGroupTopN}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></BrowseContainer>
             </div>
+
             <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <GroupContainer
                 group={groups['gPlayer1Play2']} 
