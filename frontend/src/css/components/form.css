@@ -2,7 +2,7 @@
   @apply shadow appearance-none rounded py-1 px-2 leading-normal;
 }
 .form-control:focus {
-  @apply outline-none shadow-outline;
+  @apply outline-none ring;
 }
 /*
 w-full

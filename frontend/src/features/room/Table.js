@@ -2,8 +2,9 @@ import React, { useState, useEffect, useContext, useRef } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Chat from "../chat/Chat";
-import { GroupView, GroupContainer } from "./GroupView";
+import { GroupContainer } from "./GroupView";
 import BrowseContainer from "./Browse";
 import { reorderGroups } from "./Reorder";
 import { GiantCard } from "./GiantCard";
@@ -11,8 +12,10 @@ import styled from "@emotion/styled";
 import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
 import Button from "../../components/basic/Button";
-import { getDisplayName } from "./CardView"
+import { getDisplayName, getCurrentFace } from "./CardView"
 import ReactModal from "react-modal";
+import Dropdown from 'react-dropdown';
+
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
 const WidthContainer = styled.div`
@@ -89,6 +92,23 @@ export const sectionToDiscardGroupID = (section, PlayerN) => {
   return 'gSharedOther';
 }
 
+const options = [
+  { value: 'one', label: 'One' },
+  { value: 'two', label: 'Two', className: 'myOptionClassName' },
+  {
+   type: 'group', name: 'group1', items: [
+     { value: 'three', label: 'Three', className: 'myOptionClassName' },
+     { value: 'four', label: 'Four' }
+   ]
+  },
+  {
+   type: 'group', name: 'group2', items: [
+     { value: 'five', label: 'Five' },
+     { value: 'six', label: 'Six' }
+   ]
+  }
+];
+
 export const Table = ({
   gameBroadcast,
   chatBroadcast,
@@ -108,16 +128,41 @@ export const Table = ({
   const [phase, setPhase] = useState(1);
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
+  const defaultGameDropdown = options[0];
+
+  const sumStagingThreat = () => {
+    const stagingStacks = gameUI["game"]["groups"]["gSharedStaging"]["stacks"];
+    var stagingThreat = 0;
+    stagingStacks.forEach(stack => {
+      const currentFace = getCurrentFace(stack["cards"][0]);
+      stagingThreat = stagingThreat + currentFace["threat"];
+    })
+    return stagingThreat;
+  }
+
   const inputFile = useRef(null) 
   console.log('Rendering groups');
+
+  const handleMenuClick = (data) => {
+    console.log(data);
+    if (data.action === "reset_game") {
+      gameBroadcast("reset_game",{});
+      chatBroadcast("game_update",{message: "reset the game."});
+    } else if (data.action === "load_deck") {
+      loadDeckFile();
+    } else if (data.action === "spawn_card") {
+      setShowSpawn(true);
+    } else if (data.action === "look_at") {
+      handleBrowseSelect(data.groupID);
+    }
+  }
   
   const toggleScratch = () => {
     if (showScratch) setShowScratch(false);
     else setShowScratch(true);
   }
 
-  const handleBrowseSelect = (event) => {
-    const groupID = event.target.value;
+  const handleBrowseSelect = (groupID) => {
     setBrowseGroupID(groupID);
     setBrowseGroupTopN(0);
   }
@@ -366,6 +411,200 @@ export const Table = ({
       {/* Middle panel */}
       <div className="flex w-4/5">
         <div className="flex flex-col w-full h-full">
+
+          <span className="bg-gray-300" style={{height: "6%"}}>
+
+            <ul class="top-level-menu float-left">
+              <li><a href="#">Menu</a>
+                  <ul class="second-level-menu">
+                    <li>
+                      <a  onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load Deck</a>
+                      <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
+                    </li>
+                    <li><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn Card</a></li>
+                    <li>
+                        <a href="#">Reset Game</a>
+                        <ul class="third-level-menu">
+                            <li><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
+                        </ul>
+                    </li>
+                  </ul>
+              </li>
+              <li>
+                <a href="#">Look at...</a>
+                <ul class="second-level-menu">
+                    <li>
+                        <a href="#">Shared</a>
+                        <ul class="third-level-menu">
+                          {Object.keys(GROUPSINFO).map((groupID, index) => {
+                            if (groupID.substring(0,7) === "gShared")
+                              return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
+                            else return null;
+                          })}
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Player 1</a>
+                          <ul class="third-level-menu">
+                            {Object.keys(GROUPSINFO).map((groupID, index) => {
+                              if (groupID.substring(0,8) === "gPlayer1")
+                                return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
+                              else return null;
+                            })}
+                          </ul>
+                    </li>
+                    <li>
+                        <a href="#">Player 2</a>
+                        <ul class="third-level-menu">
+                            {Object.keys(GROUPSINFO).map((groupID, index) => {
+                              if (groupID.substring(0,8) === "gPlayer2")
+                                return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
+                              else return null;
+                            })}
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Player 3</a>
+                        <ul class="third-level-menu">
+                            {Object.keys(GROUPSINFO).map((groupID, index) => {
+                              if (groupID.substring(0,8) === "gPlayer3")
+                                return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
+                              else return null;
+                            })}
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Player 4</a>
+                        <ul class="third-level-menu">
+                            {Object.keys(GROUPSINFO).map((groupID, index) => {
+                              if (groupID.substring(0,8) === "gPlayer4")
+                                return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
+                              else return null;
+                            })}
+                        </ul>
+                    </li>
+                </ul>
+              </li>
+            </ul>
+            <div className="float-left h-full" style={{backgroundColor:"red", width: "15%"}}>
+              <div class="float-left h-full w-1/3 bg-green-500">
+                <div class="h-1/2 w-full bg-red-500 flex justify-center">
+                  Round
+                </div>
+                <div class="h-1/2 w-full bg-red-800 flex justify-center">
+                  <div class="text-xl">{gameUI["game"]["round_number"]}</div>
+                  <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/time.png'}></img>
+                </div>
+              </div>
+              <div class="float-left h-full w-1/3 bg-green-500">
+                <div class="h-1/2 w-full bg-red-500 flex justify-center">
+                  Threat
+                </div>
+                <div class="h-1/2 w-full bg-red-800 flex justify-center">
+                  <div class="text-xl">{sumStagingThreat()}</div>
+                  <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/threat.png'}></img>
+                </div>
+              </div>
+              <div class="float-left h-full w-1/3 bg-green-500">
+                <div class="h-1/2 w-full bg-red-500 flex justify-center">
+                  Progress
+                </div>
+                <div class="h-1/2 w-full bg-red-800 flex justify-center">
+                  <div class="text-xl">{gameUI["game"]["round_number"]}</div>
+                  <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/progress.png'}></img>
+                </div>
+              </div>
+            
+
+
+              {/* <table className="table-fixed h-full w-full max-h-full">
+                  <tr className="bg-red-800 h-1/2 hover:bg-red-600 truncate">
+                    <td className="w-1/3 text-center">Round</td>
+                    <td className="w-1/3 text-center overflow-clip">Staging</td>
+                    <td className="w-1/3 text-center overflow-clip">Net</td>
+                  </tr>
+                  <tr className="bg-red-800 h-1/2 hover:bg-red-600 truncate">
+                    <td className="w-1/3 text-center overflow-clip">
+                      <div class="text-l">{gameUI["game"]["round_number"]}</div>
+                    </td>
+                    <td className="w-1/3 text-center truncate">Staging</td>
+                    <td className="w-1/3 text-center">Net</td>
+                  </tr>
+              </table> */}
+
+              {/* <div class="float-left h-full w-1/3 bg-green-500 flex justify-center">
+                <div class="text-xl">{gameUI["game"]["round_number"]}</div>
+                <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/time.png'}></img>
+              </div>
+              <div class="float-left h-full w-1/3 bg-green-500 flex justify-center">
+                <div class="text-xl">{gameUI["game"]["round_number"]}</div>
+                <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/threat.png'}></img>
+              </div>
+              <div class="float-left h-full w-1/3 bg-green-500 flex justify-center">
+                <div class="text-xl">{gameUI["game"]["round_number"]}</div>
+                <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/progress.png'}></img>
+              </div> */}
+            </div>
+            <div class="float-left h-full" style={{backgroundColor:"blue", width: "15%"}}>
+              <div class="float-left h-full w-1/3 bg-green-500 flex justify-center">
+                <div class="text-xl">{gameUI["game"]["round_number"]}</div>
+                <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/progress.png'}></img>
+              </div>
+              P1: Seastan
+              [T]: {gameUI["game"]["players"]["Player1"]["threat"]}
+              [W]: {gameUI["game"]["players"]["Player1"]["willpower"]}
+            </div>
+            <div class="float-left h-full" style={{backgroundColor:"green", width: "15%"}}>
+              P1: [Sit]
+              [T]: {gameUI["game"]["players"]["Player2"]["threat"]}
+              [W]: {gameUI["game"]["players"]["Player2"]["willpower"]}
+            </div>
+            <div class="float-left h-full" style={{backgroundColor:"orange", width: "15%"}}>
+              P1: [Sit]
+              [T]: {gameUI["game"]["players"]["Player3"]["threat"]}
+              [W]: {gameUI["game"]["players"]["Player3"]["willpower"]}
+            </div>
+            <div class="float-left h-fullP" style={{backgroundColor:"yellow", width: "15%"}}>
+              P1: [Sit]
+              [T]: {gameUI["game"]["players"]["Player4"]["threat"]}
+              [W]: {gameUI["game"]["players"]["Player4"]["willpower"]}
+            </div>
+            {/* <ContextMenuTrigger id="main-menu" holdToDisplay={0}>
+              <div className="w-1/12 float-left bg-gray-700 hover:bg-gray-600 text-white cursor-pointer text-center">
+                Menu
+              </div>
+            </ContextMenuTrigger> 
+
+            <ContextMenu id="main-menu" style={{zIndex:1e6}}>
+              <hr></hr>
+              <MenuItem onClick={handleMenuClick} data={{action: 'load_deck'}}>Load deck</MenuItem>
+              <MenuItem onClick={handleMenuClick} data={{action: 'spawn_card'}}>Spawn card</MenuItem>
+              <SubMenu title='Reset game'>
+                <MenuItem onClick={handleMenuClick} data={{action: 'reset_game'}}>Confirm</MenuItem>
+              </SubMenu>
+            </ContextMenu>
+
+
+            <select className="bg-gray-700 appearance-none text-white text-center w-1/12 hover:bg-gray-600"  name="numFaceup" id="numFaceup" onChange={handleBrowseSelect}>
+              <option value="" disabled selected>Look at...</option>
+              {Object.keys(GROUPSINFO).map((groupID, index) => {
+                return(<option value={groupID}>{GROUPSINFO[groupID].name}</option>)
+              })}
+            </select> */}
+            
+          </span>
+
+          {/* <div className="bg-gray-200" style={{height: "3%"}}>
+            <select name="num_players" id="num_players">
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+            player(s)
+            Threat: {gameUI["game"]["players"]["Player1"]["threat"]}
+          </div> */}
+
           <div className=""  style={{height: "94%"}}>
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
@@ -410,7 +649,7 @@ export const Table = ({
               ></GroupContainer>
             </div>
               
-            <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%", display: (browseGroupID)? "none": "block"}}>
+            <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <GroupContainer
                 group={groups['gPlayer1Play1']} 
                 width="100%"
@@ -421,39 +660,41 @@ export const Table = ({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
             </div>
-            
-            <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%", display: (browseGroupID)? "block": "none"}}>
-              <BrowseContainer
-                group={groups[browseGroupID]}
-                width="100%"
-                gameBroadcast={gameBroadcast}
-                chatBroadcast={chatBroadcast}
-                browseGroupTopN={browseGroupTopN}
-                setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupTopN={setBrowseGroupTopN}
-              ></BrowseContainer>
-            </div>
 
-            <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <GroupContainer
-                group={groups['gPlayer1Play2']} 
-                width="90%"
-                gameBroadcast={gameBroadcast} 
-                chatBroadcast={chatBroadcast}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
-              <GroupContainer
-                group={groups['gPlayer1Event']} 
-                width="10%"
-                gameBroadcast={gameBroadcast} 
-                chatBroadcast={chatBroadcast}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
-            </div>
+            {browseGroupID ? 
+              <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
+                <BrowseContainer
+                  group={groups[browseGroupID]}
+                  width="100%"
+                  gameBroadcast={gameBroadcast}
+                  chatBroadcast={chatBroadcast}
+                  browseGroupTopN={browseGroupTopN}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
+                ></BrowseContainer>
+              </div>
+              :
+              <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
+                <GroupContainer
+                  group={groups['gPlayer1Play2']} 
+                  width="90%"
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                  browseGroupID={browseGroupID}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
+                ></GroupContainer>
+                <GroupContainer
+                  group={groups['gPlayer1Event']} 
+                  width="10%"
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                  browseGroupID={browseGroupID}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
+                ></GroupContainer>
+              </div>
+            }
             <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
               <GroupContainer
                 group={groups['gPlayer1Hand']} 
@@ -483,34 +724,6 @@ export const Table = ({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
             </div>
-          </div>
-          <div className="bg-gray-300" style={{height: "3%"}}>
-            <Button isPrimary onClick={loadDeckFile}>
-              Load Deck
-            </Button>
-            <Button isPrimary onClick={resetGame}>
-              Reset Game
-            </Button>
-            <Button isPrimary onClick={() => {setShowSpawn(true)}}>
-              Spawn Card
-            </Button>
-            <select name="numFaceup" id="numFaceup" onChange={handleBrowseSelect}>
-              <option value="" disabled selected>Look at...</option>
-              {Object.keys(GROUPSINFO).map((groupID, index) => {
-                return(<option value={groupID}>{GROUPSINFO[groupID].name}</option>)
-              })}
-            </select>
-            <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
-          </div>
-          <div className="bg-gray-200" style={{height: "3%"}}>
-            <select name="num_players" id="num_players">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            player(s)
-            Threat: {gameUI["game"]["players"]["Player1"]["threat"]}
           </div>
         </div>
       </div>
@@ -601,11 +814,11 @@ export const Table = ({
       className="insert-auto overflow-auto p-5 bg-gray-700 border max-w-lg mx-auto my-12 rounded-lg outline-none"
     >
       <h1 className="mb-2">Spawn a card</h1>
-      <input style={{width:"50%"}} type="text" id="name" name="name" className="mb-6 mt-5" placeholder="Card name..." onChange={handleSpawnTyping}></input>
+      <input style={{width:"50%"}} type="text" id="name" name="name" className="mb-6 mt-5" placeholder=" Card name..." onChange={handleSpawnTyping}></input>
       {(spawnFilteredIDs.length) ? 
         (spawnFilteredIDs.length>15) ?
           <div className="text-white">Too many results</div> :
-          <table className="table-fixed rounded-lg">
+          <table className="table-fixed rounded-lg w-full">
             <thead>
               <tr className="text-white bg-gray-800">
                 <th className="w-1/2">Name</th>

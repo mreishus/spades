@@ -328,7 +328,7 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:deal_shadow, user_id, group_id, stack_index}, _from, gameui) do
     cards_size = Enum.count(GameUI.get_cards(gameui, group_id, stack_index))
-    gameui = GameUI.move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false)
+    gameui = GameUI.move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false, true)
     shadow_card = GameUI.get_card(gameui, group_id, stack_index, cards_size)
     IO.puts("shadow_card")
     if shadow_card do

@@ -230,7 +230,7 @@ defmodule SpadesGame.GameUI do
     if position == "s" do shuffle_group(gameui, dest_group_id) else gameui end
   end
 
-  def move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack \\ true) do
+  def move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack \\ true, preserve_state \\ false) do
     IO.puts("game_ui move_card")
     IO.inspect(create_new_stack)
     # Check if dest_stack_index is negative, indicating a move to the end of a group, and adjust index accordingly
@@ -243,7 +243,7 @@ defmodule SpadesGame.GameUI do
       old_orig_stack = get_stack(gameui, orig_group_id, orig_stack_index)
       old_orig_cards = get_cards(gameui, orig_group_id, orig_stack_index)
       moving_card = get_card(gameui, orig_group_id, orig_stack_index, orig_card_index)
-      moving_card = card_group_change(gameui, moving_card, orig_group_id, dest_group_id)
+      moving_card = if preserve_state do moving_card else card_group_change(gameui, moving_card, orig_group_id, dest_group_id) end
       #IO.inspect(moving_card)
       if !moving_card do
         gameui

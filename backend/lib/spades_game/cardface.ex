@@ -40,7 +40,7 @@ defmodule SpadesGame.CardFace do
       "shadow" => card_row_side["shadow"],
       "sphere" => card_row_side["sphere"],
       "text" => card_row_side["text"],
-      "threat" => card_row_side["threat"],
+      "threat" => convert_to_integer(card_row_side["threat"]),
       "traits" => card_row_side["traits"],
       "type" => card_row_side["type"],
       "unique" => card_row_side["unique"],
