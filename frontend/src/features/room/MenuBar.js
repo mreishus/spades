@@ -73,8 +73,9 @@ export const MenuBar = React.memo(({
       const stagingStacks = gameUI["game"]["groups"]["gSharedStaging"]["stacks"];
       var stagingThreat = 0;
       stagingStacks.forEach(stack => {
-        const currentFace = getCurrentFace(stack["cards"][0]);
-        stagingThreat = stagingThreat + currentFace["threat"];
+        const topCard = stack["cards"][0];
+        const currentFace = getCurrentFace(topCard);
+        stagingThreat = stagingThreat + currentFace["threat"] + topCard["tokens"]["threat"];
       })
       return stagingThreat;
     }
