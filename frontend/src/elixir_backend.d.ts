@@ -12,13 +12,6 @@ declare module "elixir-backend" {
     public player4: null | number;
   }
 
-  export declare class GameUIView {
-
-    public game_ui: GameUI;
-    public my_hand: Array<Card>;
-    public my_seat: null | Seat;
-
-  }
 
   // One side of a card
   export declare class CardFace {
@@ -91,21 +84,9 @@ declare module "elixir-backend" {
     player4: any; // GamePlayer
   }
 
-  export declare class GameUISeats {
-    player1: GameUISeat;
-    player2: GameUISeat;
-    player3: GameUISeat;
-    player4: GameUISeat;
-  }
-
-  export declare class GameUISeat {
-    sitting: SittingPlayer;
-    recently_sitting: SittingPlayer;
-    when_left_seat: null | string; // Actually contains a timestamp
-  }
 
   export declare class Game {
-    first_player: 1 | 2 | 3 | 4; // "player1"
+    first_player: String; // "player1"
     options: any;
     round_number: number;
     phase: String;
@@ -115,30 +96,11 @@ declare module "elixir-backend" {
   }
 
   export declare class Player {
+    username: String;
     threat: number;
     willpower: number;
   }
 
-  // game_ui.game.trick --> array TrickCard
-  export declare class TrickCard {
-    card: Card;
-    seat: Seat;
-  }
-
-  export declare class RotateTableContextType {
-    bottomSeat: Seat;
-    topSeat: Seat;
-    rightSeat: Seat;
-    leftSeat: Seat;
-    bottomPlayer: GamePlayer;
-    topPlayer: GamePlayer;
-    rightPlayer: GamePlayer;
-    leftPlayer: GamePlayer;
-    bottomUserId: SittingPlayer;
-    topUserId: SittingPlayer;
-    rightUserId: SittingPlayer;
-    leftUserId: SittingPlayer;
-  }
 
   // Profile: Private information about your own account.
   export declare class Profile {

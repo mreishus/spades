@@ -1,77 +1,9 @@
 import React, { Component, useState, useRef } from "react";
 import { getCurrentFace } from "./CardView"
 import { MenuBarUser } from "./MenuBarUser"
-import { GROUPSINFO } from "./Constants";
+import { GROUPSINFO, sectionToGroupID, sectionToDiscardGroupID } from "./Constants";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
-
-export const sectionToGroupID = (section, PlayerN) => {
-  switch(section) {
-    case 'Hero':
-      return 'g'+PlayerN+'Play1';
-    case 'Ally':
-      return 'g'+PlayerN+'Deck';
-    case 'Attachment':
-      return 'g'+PlayerN+'Deck';
-    case 'Event':
-      return 'g'+PlayerN+'Deck';
-    case 'Side Quest':
-      return 'g'+PlayerN+'Deck';
-    case 'Sideboard':
-      return 'g'+PlayerN+'Sideboard';
-    case 'Quest':
-      return 'gSharedQuestDeck';
-    case 'Encounter':
-      return 'gSharedEncounterDeck';
-    case 'Special':
-      return 'gSharedEncounterDeck2';
-    case 'Second Special':
-      return 'gSharedEncounterDeck3';
-    case 'Setup':
-      return 'gSharedSetAside';
-    case 'Staging Setup':
-      return 'gSharedStaging';
-    case 'Active Setup':
-      return 'gSharedActive';
-    case 'Second Quest Deck':
-      return 'gSharedQuestDeck2';
-  }
-  return 'gSharedOther';
-}
-
-export const sectionToDiscardGroupID = (section, PlayerN) => {
-  switch(section) {
-    case 'Hero':
-      return 'g'+PlayerN+'Discard';
-    case 'Ally':
-      return 'g'+PlayerN+'Discard';
-    case 'Attachment':
-      return 'g'+PlayerN+'Discard';
-    case 'Event':
-      return 'g'+PlayerN+'Discard';
-    case 'Side Quest':
-      return 'g'+PlayerN+'Discard';
-    case 'Sideboard':
-      return 'g'+PlayerN+'Discard';
-    case 'Quest':
-      return 'gSharedQuestDiscard';
-    case 'Encounter':
-      return 'gSharedEncounterDiscard';
-    case 'Special':
-      return 'gSharedEncounterDiscard2';
-    case 'Second Special':
-      return 'gSharedEncounterDiscard3';
-    case 'Setup':
-      return 'gSharedEncounterDiscard';
-    case 'Staging Setup':
-      return 'gSharedEncounterDiscard';
-    case 'Active Setup':
-      return 'gSharedEncounterDiscard';
-    case 'Second Quest Deck':
-      return 'gSharedQuestDiscard2';
-  }
-  return 'gSharedOther';
-}
 
 export const MenuBar = React.memo(({
     gameUI,
@@ -150,7 +82,7 @@ export const MenuBar = React.memo(({
     return(
       <div className="h-full">
         <ul className="top-level-menu float-left">
-        <li><a href="#">Menu</a>
+        <li><div className="h-full flex text-xl items-center justify-center" href="#">Menu</div>
             <ul className="second-level-menu">
               <li>
                 <a  onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load Deck</a>
@@ -166,7 +98,7 @@ export const MenuBar = React.memo(({
             </ul>
         </li>
         <li>
-          <a href="#">Look at...</a>
+        <div className="h-full flex text-xl items-center justify-center" href="#">Look at...</div>
           <ul className="second-level-menu">
               <li>
                   <a href="#">Shared</a>
@@ -253,6 +185,29 @@ export const MenuBar = React.memo(({
 
       <MenuBarUser
         gameUI={gameUI}
+        PlayerN={"Player1"}
+        playerIndex={0}
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+      ></MenuBarUser>
+      <MenuBarUser
+        gameUI={gameUI}
+        PlayerN={"Player2"}
+        playerIndex={0}
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+      ></MenuBarUser>
+      <MenuBarUser
+        gameUI={gameUI}
+        PlayerN={"Player3"}
+        playerIndex={0}
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+      ></MenuBarUser>
+      <MenuBarUser
+        gameUI={gameUI}
+        PlayerN={"Player4"}
+        playerIndex={0}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
       ></MenuBarUser>

@@ -12,6 +12,7 @@ defmodule SpadesGame.Player do
   @spec new() :: Player.t()
   def new() do
     %{
+      "username" => "",
       "threat" => 0,
       "willpower" => 0
     }

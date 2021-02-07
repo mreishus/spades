@@ -55,3 +55,70 @@ export const GROUPSINFO = {
     "gPlayer4Event": {name: "Player 4 Current Event"}
 }
 
+export const sectionToGroupID = (section, PlayerN) => {
+  switch(section) {
+    case 'Hero':
+      return 'g'+PlayerN+'Play1';
+    case 'Ally':
+      return 'g'+PlayerN+'Deck';
+    case 'Attachment':
+      return 'g'+PlayerN+'Deck';
+    case 'Event':
+      return 'g'+PlayerN+'Deck';
+    case 'Side Quest':
+      return 'g'+PlayerN+'Deck';
+    case 'Sideboard':
+      return 'g'+PlayerN+'Sideboard';
+    case 'Quest':
+      return 'gSharedQuestDeck';
+    case 'Encounter':
+      return 'gSharedEncounterDeck';
+    case 'Special':
+      return 'gSharedEncounterDeck2';
+    case 'Second Special':
+      return 'gSharedEncounterDeck3';
+    case 'Setup':
+      return 'gSharedSetAside';
+    case 'Staging Setup':
+      return 'gSharedStaging';
+    case 'Active Setup':
+      return 'gSharedActive';
+    case 'Second Quest Deck':
+      return 'gSharedQuestDeck2';
+  }
+  return 'gSharedOther';
+}
+
+export const sectionToDiscardGroupID = (section, PlayerN) => {
+  switch(section) {
+    case 'Hero':
+      return 'g'+PlayerN+'Discard';
+    case 'Ally':
+      return 'g'+PlayerN+'Discard';
+    case 'Attachment':
+      return 'g'+PlayerN+'Discard';
+    case 'Event':
+      return 'g'+PlayerN+'Discard';
+    case 'Side Quest':
+      return 'g'+PlayerN+'Discard';
+    case 'Sideboard':
+      return 'g'+PlayerN+'Discard';
+    case 'Quest':
+      return 'gSharedQuestDiscard';
+    case 'Encounter':
+      return 'gSharedEncounterDiscard';
+    case 'Special':
+      return 'gSharedEncounterDiscard2';
+    case 'Second Special':
+      return 'gSharedEncounterDiscard3';
+    case 'Setup':
+      return 'gSharedEncounterDiscard';
+    case 'Staging Setup':
+      return 'gSharedEncounterDiscard';
+    case 'Active Setup':
+      return 'gSharedEncounterDiscard';
+    case 'Second Quest Deck':
+      return 'gSharedQuestDiscard2';
+  }
+  return 'gSharedOther';
+}
