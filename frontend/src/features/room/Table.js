@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,7 @@ import { GroupContainer } from "./GroupView";
 import BrowseContainer from "./Browse";
 import { reorderGroups } from "./Reorder";
 import { GiantCard } from "./GiantCard";
+import { MenuBar } from "./MenuBar";
 import styled from "@emotion/styled";
 import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
@@ -15,6 +16,7 @@ import Button from "../../components/basic/Button";
 import { getDisplayName, getCurrentFace } from "./CardView"
 import ReactModal from "react-modal";
 import Dropdown from 'react-dropdown';
+import { handleBrowseTopN } from "./HandleBrowseTopN";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -24,73 +26,7 @@ const WidthContainer = styled.div`
   height: 100%;
 `;
 
-export const sectionToGroupID = (section, PlayerN) => {
-  switch(section) {
-    case 'Hero':
-      return 'g'+PlayerN+'Play1';
-    case 'Ally':
-      return 'g'+PlayerN+'Deck';
-    case 'Attachment':
-      return 'g'+PlayerN+'Deck';
-    case 'Event':
-      return 'g'+PlayerN+'Deck';
-    case 'Side Quest':
-      return 'g'+PlayerN+'Deck';
-    case 'Sideboard':
-      return 'g'+PlayerN+'Sideboard';
-    case 'Quest':
-      return 'gSharedQuestDeck';
-    case 'Encounter':
-      return 'gSharedEncounterDeck';
-    case 'Special':
-      return 'gSharedEncounterDeck2';
-    case 'Second Special':
-      return 'gSharedEncounterDeck3';
-    case 'Setup':
-      return 'gSharedSetAside';
-    case 'Staging Setup':
-      return 'gSharedStaging';
-    case 'Active Setup':
-      return 'gSharedActive';
-    case 'Second Quest Deck':
-      return 'gSharedQuestDeck2';
-  }
-  return 'gSharedOther';
-}
 
-export const sectionToDiscardGroupID = (section, PlayerN) => {
-  switch(section) {
-    case 'Hero':
-      return 'g'+PlayerN+'Discard';
-    case 'Ally':
-      return 'g'+PlayerN+'Discard';
-    case 'Attachment':
-      return 'g'+PlayerN+'Discard';
-    case 'Event':
-      return 'g'+PlayerN+'Discard';
-    case 'Side Quest':
-      return 'g'+PlayerN+'Discard';
-    case 'Sideboard':
-      return 'g'+PlayerN+'Discard';
-    case 'Quest':
-      return 'gSharedQuestDiscard';
-    case 'Encounter':
-      return 'gSharedEncounterDiscard';
-    case 'Special':
-      return 'gSharedEncounterDiscard2';
-    case 'Second Special':
-      return 'gSharedEncounterDiscard3';
-    case 'Setup':
-      return 'gSharedEncounterDiscard';
-    case 'Staging Setup':
-      return 'gSharedEncounterDiscard';
-    case 'Active Setup':
-      return 'gSharedEncounterDiscard';
-    case 'Second Quest Deck':
-      return 'gSharedQuestDiscard2';
-  }
-  return 'gSharedOther';
-}
 
 const options = [
   { value: 'one', label: 'One' },
@@ -130,32 +66,9 @@ export const Table = ({
   //const activeCard = useActiveCard();
   const defaultGameDropdown = options[0];
 
-  const sumStagingThreat = () => {
-    const stagingStacks = gameUI["game"]["groups"]["gSharedStaging"]["stacks"];
-    var stagingThreat = 0;
-    stagingStacks.forEach(stack => {
-      const currentFace = getCurrentFace(stack["cards"][0]);
-      stagingThreat = stagingThreat + currentFace["threat"];
-    })
-    return stagingThreat;
-  }
 
-  const inputFile = useRef(null) 
+
   console.log('Rendering groups');
-
-  const handleMenuClick = (data) => {
-    console.log(data);
-    if (data.action === "reset_game") {
-      gameBroadcast("reset_game",{});
-      chatBroadcast("game_update",{message: "reset the game."});
-    } else if (data.action === "load_deck") {
-      loadDeckFile();
-    } else if (data.action === "spawn_card") {
-      setShowSpawn(true);
-    } else if (data.action === "look_at") {
-      handleBrowseSelect(data.groupID);
-    }
-  }
   
   const toggleScratch = () => {
     if (showScratch) setShowScratch(false);
@@ -196,51 +109,7 @@ export const Table = ({
      setGroups(gameUI.game.groups);
   }, [gameUI.game.groups]);
 
-  const resetGame = () => {
-    gameBroadcast("reset_game",{});
-    chatBroadcast("game_update",{message: "reset the game."});
-  }
-  
-  const loadDeckFile = () => {
-    inputFile.current.click();
-  }
-  const loadDeck = async(event) => {
-    event.preventDefault();
-    const reader = new FileReader();
-    reader.onload = async (event) => { 
-      const xmltext = (event.target.result)
-      //console.log(xmltext)
-      var parseString = require('xml2js').parseString;
-      parseString(xmltext, function (err, deckJSON) {
-        console.dir(deckJSON);
-        console.log(deckJSON.deck.section);
-        const sections = deckJSON.deck.section;
-        var loadList = [];
-        sections.forEach(section => {
-          const sectionName = section['$'].name;
-          console.log(sectionName);
-          const cards = section.card;
-          if (!cards) return;
-          cards.forEach(card => {
-            const cardid = card['$'].id;
-            const quantity = parseInt(card['$'].qty);
-            var cardRow = cardDB[cardid];
-            cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,'Player1');
-            console.log(cardRow);
-            if (cardRow) {
-              loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToGroupID(sectionName,'Player1')})
-            }
-              //console.log('thiscard', cardRow);
-          })
-        })
-        console.log(loadList);
-        gameBroadcast("load_cards",{load_list: loadList});
-        chatBroadcast("game_update",{message: "loaded a deck."});
-      })
-    }
-    reader.readAsText(event.target.files[0]);
-  }
-  
+ 
 
   const onDragEnd = (result) => {
     const source = result.source;
@@ -412,187 +281,15 @@ export const Table = ({
       <div className="flex w-4/5">
         <div className="flex flex-col w-full h-full">
 
-          <span className="bg-gray-300" style={{height: "6%"}}>
-
-            <ul class="top-level-menu float-left">
-              <li><a href="#">Menu</a>
-                  <ul class="second-level-menu">
-                    <li>
-                      <a  onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load Deck</a>
-                      <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
-                    </li>
-                    <li><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn Card</a></li>
-                    <li>
-                        <a href="#">Reset Game</a>
-                        <ul class="third-level-menu">
-                            <li><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
-                        </ul>
-                    </li>
-                  </ul>
-              </li>
-              <li>
-                <a href="#">Look at...</a>
-                <ul class="second-level-menu">
-                    <li>
-                        <a href="#">Shared</a>
-                        <ul class="third-level-menu">
-                          {Object.keys(GROUPSINFO).map((groupID, index) => {
-                            if (groupID.substring(0,7) === "gShared")
-                              return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
-                            else return null;
-                          })}
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">Player 1</a>
-                          <ul class="third-level-menu">
-                            {Object.keys(GROUPSINFO).map((groupID, index) => {
-                              if (groupID.substring(0,8) === "gPlayer1")
-                                return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
-                              else return null;
-                            })}
-                          </ul>
-                    </li>
-                    <li>
-                        <a href="#">Player 2</a>
-                        <ul class="third-level-menu">
-                            {Object.keys(GROUPSINFO).map((groupID, index) => {
-                              if (groupID.substring(0,8) === "gPlayer2")
-                                return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
-                              else return null;
-                            })}
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">Player 3</a>
-                        <ul class="third-level-menu">
-                            {Object.keys(GROUPSINFO).map((groupID, index) => {
-                              if (groupID.substring(0,8) === "gPlayer3")
-                                return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
-                              else return null;
-                            })}
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">Player 4</a>
-                        <ul class="third-level-menu">
-                            {Object.keys(GROUPSINFO).map((groupID, index) => {
-                              if (groupID.substring(0,8) === "gPlayer4")
-                                return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
-                              else return null;
-                            })}
-                        </ul>
-                    </li>
-                </ul>
-              </li>
-            </ul>
-            <div className="float-left h-full" style={{backgroundColor:"red", width: "15%"}}>
-              <div class="float-left h-full w-1/3 bg-green-500">
-                <div class="h-1/2 w-full bg-red-500 flex justify-center">
-                  Round
-                </div>
-                <div class="h-1/2 w-full bg-red-800 flex justify-center">
-                  <div class="text-xl">{gameUI["game"]["round_number"]}</div>
-                  <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/time.png'}></img>
-                </div>
-              </div>
-              <div class="float-left h-full w-1/3 bg-green-500">
-                <div class="h-1/2 w-full bg-red-500 flex justify-center">
-                  Threat
-                </div>
-                <div class="h-1/2 w-full bg-red-800 flex justify-center">
-                  <div class="text-xl">{sumStagingThreat()}</div>
-                  <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/threat.png'}></img>
-                </div>
-              </div>
-              <div class="float-left h-full w-1/3 bg-green-500">
-                <div class="h-1/2 w-full bg-red-500 flex justify-center">
-                  Progress
-                </div>
-                <div class="h-1/2 w-full bg-red-800 flex justify-center">
-                  <div class="text-xl">{gameUI["game"]["round_number"]}</div>
-                  <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/progress.png'}></img>
-                </div>
-              </div>
-            
-
-
-              {/* <table className="table-fixed h-full w-full max-h-full">
-                  <tr className="bg-red-800 h-1/2 hover:bg-red-600 truncate">
-                    <td className="w-1/3 text-center">Round</td>
-                    <td className="w-1/3 text-center overflow-clip">Staging</td>
-                    <td className="w-1/3 text-center overflow-clip">Net</td>
-                  </tr>
-                  <tr className="bg-red-800 h-1/2 hover:bg-red-600 truncate">
-                    <td className="w-1/3 text-center overflow-clip">
-                      <div class="text-l">{gameUI["game"]["round_number"]}</div>
-                    </td>
-                    <td className="w-1/3 text-center truncate">Staging</td>
-                    <td className="w-1/3 text-center">Net</td>
-                  </tr>
-              </table> */}
-
-              {/* <div class="float-left h-full w-1/3 bg-green-500 flex justify-center">
-                <div class="text-xl">{gameUI["game"]["round_number"]}</div>
-                <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/time.png'}></img>
-              </div>
-              <div class="float-left h-full w-1/3 bg-green-500 flex justify-center">
-                <div class="text-xl">{gameUI["game"]["round_number"]}</div>
-                <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/threat.png'}></img>
-              </div>
-              <div class="float-left h-full w-1/3 bg-green-500 flex justify-center">
-                <div class="text-xl">{gameUI["game"]["round_number"]}</div>
-                <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/progress.png'}></img>
-              </div> */}
-            </div>
-            <div class="float-left h-full" style={{backgroundColor:"blue", width: "15%"}}>
-              <div class="float-left h-full w-1/3 bg-green-500 flex justify-center">
-                <div class="text-xl">{gameUI["game"]["round_number"]}</div>
-                <img class="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/progress.png'}></img>
-              </div>
-              P1: Seastan
-              [T]: {gameUI["game"]["players"]["Player1"]["threat"]}
-              [W]: {gameUI["game"]["players"]["Player1"]["willpower"]}
-            </div>
-            <div class="float-left h-full" style={{backgroundColor:"green", width: "15%"}}>
-              P1: [Sit]
-              [T]: {gameUI["game"]["players"]["Player2"]["threat"]}
-              [W]: {gameUI["game"]["players"]["Player2"]["willpower"]}
-            </div>
-            <div class="float-left h-full" style={{backgroundColor:"orange", width: "15%"}}>
-              P1: [Sit]
-              [T]: {gameUI["game"]["players"]["Player3"]["threat"]}
-              [W]: {gameUI["game"]["players"]["Player3"]["willpower"]}
-            </div>
-            <div class="float-left h-fullP" style={{backgroundColor:"yellow", width: "15%"}}>
-              P1: [Sit]
-              [T]: {gameUI["game"]["players"]["Player4"]["threat"]}
-              [W]: {gameUI["game"]["players"]["Player4"]["willpower"]}
-            </div>
-            {/* <ContextMenuTrigger id="main-menu" holdToDisplay={0}>
-              <div className="w-1/12 float-left bg-gray-700 hover:bg-gray-600 text-white cursor-pointer text-center">
-                Menu
-              </div>
-            </ContextMenuTrigger> 
-
-            <ContextMenu id="main-menu" style={{zIndex:1e6}}>
-              <hr></hr>
-              <MenuItem onClick={handleMenuClick} data={{action: 'load_deck'}}>Load deck</MenuItem>
-              <MenuItem onClick={handleMenuClick} data={{action: 'spawn_card'}}>Spawn card</MenuItem>
-              <SubMenu title='Reset game'>
-                <MenuItem onClick={handleMenuClick} data={{action: 'reset_game'}}>Confirm</MenuItem>
-              </SubMenu>
-            </ContextMenu>
-
-
-            <select className="bg-gray-700 appearance-none text-white text-center w-1/12 hover:bg-gray-600"  name="numFaceup" id="numFaceup" onChange={handleBrowseSelect}>
-              <option value="" disabled selected>Look at...</option>
-              {Object.keys(GROUPSINFO).map((groupID, index) => {
-                return(<option value={groupID}>{GROUPSINFO[groupID].name}</option>)
-              })}
-            </select> */}
-            
-          </span>
+          <div className="bg-gray-600 text-white" style={{height: "6%"}}>
+            <MenuBar
+              gameUI={gameUI}
+              setShowSpawn={setShowSpawn}
+              handleBrowseSelect={handleBrowseSelect}
+              gameBroadcast={gameBroadcast}
+              chatBroadcast={chatBroadcast}
+            ></MenuBar>
+          </div>
 
           {/* <div className="bg-gray-200" style={{height: "3%"}}>
             <select name="num_players" id="num_players">

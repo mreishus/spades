@@ -14,7 +14,7 @@ const Container = styled.div`
   width: ${props => props.stackWidth}vw;
   min-height: 100%;
   height: 100%;
-  min-height:  ${CARDSCALE/0.75}vw;
+  min-height: ${CARDSCALE/0.75}vw;
 `;
 
 function getStyle(provided, style) {
