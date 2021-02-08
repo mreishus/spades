@@ -148,7 +148,7 @@ const BrowseComponent = React.memo(({
       <div style={{width:"100%", height:"20px", float:"left"}}>
       <ContextMenuTrigger id={group.id} holdToDisplay={0}>
         <Header className="float-left">
-            <Title>Browsing: {group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+            <Title>Browsing: {GROUPSINFO[group.id].name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
         </Header>
       </ContextMenuTrigger> 
 

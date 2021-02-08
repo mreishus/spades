@@ -210,8 +210,8 @@ defmodule SpadesGame.GameUIServer do
   which_seat is "player1", "player2", "player3" or "player4".
   """
   @spec sit(String.t(), integer, String.t()) :: GameUI.t()
-  def sit(game_name, user_id, which_seat) do
-    GenServer.call(via_tuple(game_name), {:sit, user_id, which_seat})
+  def sit(game_name, user_id, player_n) do
+    GenServer.call(via_tuple(game_name), {:sit, user_id, player_n})
   end
 
   @doc """
@@ -379,13 +379,8 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
-  def handle_call({:sit, user_id, which_seat}, _from, gameui) do
-    new_gameui = GameUI.sit(gameui, user_id, which_seat)
-
-    if new_gameui.when_seats_full != nil do
-      push_state_to_clients_for_12_seconds()
-    end
-
+  def handle_call({:sit, user_id, player_n}, _from, gameui) do
+    new_gameui = GameUI.sit(gameui, user_id, player_n)
     save_and_reply(new_gameui)
   end
 

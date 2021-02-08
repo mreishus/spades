@@ -29,12 +29,6 @@ defmodule SpadesGame.Game do
       "round_number" => 1,
       "phase" => "roundstart",
       "phasepart" => "beginning",
-      "players" => %{
-        "Player1" => Player.new(),
-        "Player2" => Player.new(),
-        "Player3" => Player.new(),
-        "Player4" => Player.new(),
-      }
     }
   end
 

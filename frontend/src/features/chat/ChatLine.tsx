@@ -11,7 +11,7 @@ export const ChatLine: React.FC<Props> = ({ message }) => {
     return (
       <div>
         <span className="text-gray-500"></span> 
-        <span className="text-white font-bold"> <UserName userId={message.sent_by} /> {message.text}</span>
+        <span className="text-white font-bold"> <UserName userID={message.sent_by} /> {message.text}</span>
       </div>
     )
   } else {
@@ -19,7 +19,7 @@ export const ChatLine: React.FC<Props> = ({ message }) => {
       <div>
         <span className="text-gray-500"></span>
         <span className="text-blue-400">
-          <UserName userId={message.sent_by} />
+          <UserName userID={message.sent_by} />
         </span>
         <span className="text-gray-500"></span> 
         <span className="text-white"> {message.text}</span>

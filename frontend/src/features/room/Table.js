@@ -17,6 +17,7 @@ import { getDisplayName, getCurrentFace } from "./CardView"
 import ReactModal from "react-modal";
 import Dropdown from 'react-dropdown';
 import { handleBrowseTopN } from "./HandleBrowseTopN";
+import { PlayerBar } from "./PlayerBar";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -25,8 +26,6 @@ const WidthContainer = styled.div`
   float: left;
   height: 100%;
 `;
-
-
 
 const options = [
   { value: 'one', label: 'One' },
@@ -55,7 +54,8 @@ export const Table = ({
   const [groups, setGroups] = useState(gameUI.game.groups);
   const [showScratch, setShowScratch] = useState(false);
   const [showSpawn, setShowSpawn] = useState(false);
-  const [spawnCardName, setSpawnCardName] = useState("");
+  const [observingPlayerN, setObservingPlayerN] = useState("");
+  const [sittingPlayerN, setSittingPlayerN] = useState("");
   const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDB));
   // Show/hide group that allows you to browse certain cards in a group
   const [browseGroupID, setBrowseGroupID] = useState("");
@@ -288,6 +288,10 @@ export const Table = ({
               handleBrowseSelect={handleBrowseSelect}
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}
+              sittingPlayerN={sittingPlayerN}
+              setSittingPlayerN={setSittingPlayerN}
+              observingPlayerN={observingPlayerN}
+              setObservingPlayerN={setObservingPlayerN}
             ></MenuBar>
           </div>
 
@@ -393,33 +397,15 @@ export const Table = ({
               </div>
             }
             <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
-              <GroupContainer
-                group={groups['gPlayer1Hand']} 
-                width="80%"
+              <PlayerBar
+                groups={groups}
+                PlayerN={observingPlayerN}
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
-              <GroupContainer
-                group={groups['gPlayer1Deck']} 
-                width="10%"
-                gameBroadcast={gameBroadcast} 
-                chatBroadcast={chatBroadcast}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
-              <GroupContainer
-                group={groups['gPlayer1Discard']} 
-                width="10%"
-                gameBroadcast={gameBroadcast} 
-                chatBroadcast={chatBroadcast}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
+              ></PlayerBar>
             </div>
           </div>
         </div>

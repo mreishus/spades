@@ -1,26 +1,82 @@
 import React from "react";
+import UserName from "../user/UserName";
+import useProfile from "../../hooks/useProfile";
 
 export const MenuBarUser = React.memo(({
   gameUI,
   PlayerN,
+  playerIndex,
   gameBroadcast,
-  chatBroadcast
+  chatBroadcast,
+  observingPlayerN,
+  setObservingPlayerN,
 }) => {
-  const username = gameUI["game"]["players"][PlayerN]["username"];
+  const myUser = useProfile();
+  const myUserID = myUser?.id;
+  //const username = gameUI["game"]["players"][PlayerN]["username"];
+  const sittingUserID = gameUI["players"][PlayerN]["user_id"];
+  console.log('rendering '+PlayerN);
+  console.log(myUserID);
+  console.log(sittingUserID);
+  console.log(gameUI);
+
+  const handleSitClick = (action) => {
+    // Get up from any seats first
+    ["Player1","Player2","Player3","Player4"].forEach((PlayerI) => {
+      const sittingUserIDi = gameUI["players"][PlayerI]["user_id"];
+      if (sittingUserIDi === myUserID) {
+        gameBroadcast("get_up",{"PlayerN": PlayerI});
+        chatBroadcast("game_update",{message: "got up from "+PlayerI+"'s seat."});
+      }
+    })
+    // Sit in seat
+    if (action === "sit") {
+      gameBroadcast("sit",{"PlayerN": PlayerN});
+      chatBroadcast("game_update",{message: "sat in "+PlayerN+"'s seat."});
+      setObservingPlayerN(PlayerN);
+    } 
+  }
+
+  const handleObserveClick = () => {
+    setObservingPlayerN(PlayerN);
+    chatBroadcast("game_update",{message: "started observing "+PlayerN+"."});
+  }
+
+  const sitButton = () => {
+    if (sittingUserID) {
+      if (sittingUserID === myUserID) {
+        return(<div onClick={() => handleSitClick("get_up")} className={"h-full w-1/2 float-left flex justify-center bg-gray-500"}>Get up</div>)
+      } else {
+        return(<div className={"h-full w-1/2 float-left flex justify-center text-black"}>Occ</div>)
+      }
+    } else {
+      return(<div onClick={() => handleSitClick("sit")} className={"h-full w-1/2 float-left flex justify-center hover:bg-gray-500"}>Sit</div>)
+    }
+  }
   
   return(
     <div className="float-left h-full" style={{width: "15%"}}>
       <div className="float-left h-full w-2/3">
         <div className="h-1/2 w-full flex justify-center">
-          {(gameUI["game"]["first_player"] === PlayerN) ? 
+          {/* Show First player token */}
+          {(gameUI["game"]["first_player"] === playerIndex) ? 
             <img className="h-full mr-1 mb-1" src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}></img>
             : null}
-          {username ? username : PlayerN}
+          <UserName userID={sittingUserID} defaultName="<empty>"></UserName>
         </div>
 
         <div className="h-1/2 w-full cursor-default">
-          <div className="h-full w-1/2 float-left flex justify-center hover:bg-gray-500">Sit</div>
-          <div className="h-full w-1/2 float-left flex justify-center hover:bg-gray-500">Obsv</div>
+          {sitButton()}
+          {/* <div 
+            className={"h-full w-1/2 float-left flex justify-center"
+            onClick={handleSitClick}
+          >Sit</div> */}
+
+          <div 
+            className={"h-full w-1/2 float-left flex justify-center "+
+              ((observingPlayerN===PlayerN) ? "bg-gray-500" : "hover:bg-gray-500")}
+            onClick={() => handleObserveClick()}
+          >Obsv</div>
         </div>
 
       </div>
@@ -33,7 +89,7 @@ export const MenuBarUser = React.memo(({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            defaultValue={gameUI["game"]["players"]["Player1"]["threat"]}
+            defaultValue={gameUI["players"][PlayerN]["threat"]}
             type="number" min="0" step="1"
           ></input>
         </div>
@@ -44,7 +100,7 @@ export const MenuBarUser = React.memo(({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            defaultValue={gameUI["game"]["players"]["Player1"]["threat"]}
+            defaultValue={gameUI["players"][PlayerN]["willpower"]}
             type="number" min="0" step="1"
           ></input>
         </div>

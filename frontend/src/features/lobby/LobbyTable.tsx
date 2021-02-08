@@ -17,16 +17,16 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
         <Link to={"/room/" + room.slug}>{room.name}</Link>
       </td>
       <td className={tdClass}>
-        <UserName userId={room.player1} />
+        <UserName userID={room.player1} />
       </td>
       <td className={tdClass}>
-        <UserName userId={room.player2} />
+        <UserName userID={room.player2} />
       </td>
       <td className={tdClass}>
-        <UserName userId={room.player3} />
+        <UserName userID={room.player3} />
       </td>
       <td className={tdClass}>
-        <UserName userId={room.player4} />
+        <UserName userID={room.player4} />
       </td>
     </tr>
   ));

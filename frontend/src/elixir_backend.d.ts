@@ -1,6 +1,4 @@
 declare module "elixir-backend" {
-  export type Seat = "player1" | "player2" | "player3" | "player4";
-  export type SittingPlayer = null | number | "bot";
 
   export declare class Room {
     public id: number;
@@ -75,13 +73,7 @@ declare module "elixir-backend" {
     game: Game;
     game_name: string;
     options: any;
-    seats: GameUISeats;
-    status: "staging" | "playing" | "done";
-    when_seats_full: null | string; // timestamp
-    player1: any; // GamePlayer
-    player2: any; // GamePlayer
-    player3: any; // GamePlayer
-    player4: any; // GamePlayer
+    players: { [id: string] : Player; };
   }
 
 
@@ -92,13 +84,13 @@ declare module "elixir-backend" {
     phase: String;
     phase_part: String;
     groups: Groups;
-    players: { [id: string] : Player; };
   }
 
   export declare class Player {
     username: String;
     threat: number;
     willpower: number;
+    user_id: number | null;
   }
 
 

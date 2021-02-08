@@ -44,9 +44,9 @@ const GroupComponent = React.memo(({
     <Container>
       <ContextMenuTrigger id={group.id} holdToDisplay={0}>
         <Header>
-          <Title>{group.name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+          <Title>{GROUPSINFO[group.id].tablename} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
         </Header>
-      </ContextMenuTrigger> 
+      </ContextMenuTrigger>
 
       <GroupContextMenu
         group={group}

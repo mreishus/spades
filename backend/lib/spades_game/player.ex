@@ -14,7 +14,8 @@ defmodule SpadesGame.Player do
     %{
       "username" => "",
       "threat" => 0,
-      "willpower" => 0
+      "willpower" => 0,
+      "user_id" => nil,
     }
   end
 

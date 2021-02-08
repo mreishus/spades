@@ -3,7 +3,7 @@ defmodule SpadesGame.GameUI do
   One level on top of Game.
   """
 
-  alias SpadesGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens, CardFace}
+  alias SpadesGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens, CardFace, Player}
 
   @type t :: Map.t()
 
@@ -19,16 +19,12 @@ defmodule SpadesGame.GameUI do
       "options"=> options,
       "created_at"=> DateTime.utc_now(),
       "created_by"=> user,
-      "seats"=> %{
-        "player1"=> GameUISeat.new_blank(),
-        "player2"=> GameUISeat.new_blank(),
-        "player3"=> GameUISeat.new_blank(),
-        "player4"=> GameUISeat.new_blank()
-      },
-      "player1"=> nil,
-      "player2"=> nil,
-      "player3"=> nil,
-      "player4"=> nil,
+      "players" => %{
+        "Player1" => Player.new(),
+        "Player2" => Player.new(),
+        "Player3" => Player.new(),
+        "Player4" => Player.new(),
+      }
     }
   end
 
@@ -114,6 +110,11 @@ defmodule SpadesGame.GameUI do
     old_tokens = get_tokens(gameui, group_id, stack_index, card_index)
     new_tokens = put_in(old_tokens[token_type],new_value)
     update_tokens(gameui, group_id, stack_index, card_index, new_tokens)
+  end
+
+  @spec sit(GameUI.t(), integer, String.t()) :: GameUI.t()
+  def sit(gameui, user_id, player_n) do
+    put_in(gameui["players"][player_n]["user_id"], user_id)
   end
 
   # Modify the card based on where it's coming from and where it's going

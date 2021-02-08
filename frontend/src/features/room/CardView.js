@@ -317,12 +317,9 @@ const CardComponent = React.memo(({
 
             </div>
 
-            
-            {/* <FontAwesomeIcon className="absolute place-self-center" icon={faEye}/> */}
             </ContextMenuTrigger>
 
             <ContextMenu id={inputCard.id} style={{zIndex:1e6}}>
-            {/* {stack.cards.map((card, cardIndex) => ( */}
                 <hr></hr>
                 {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
                 <SubMenu title='Move to'>

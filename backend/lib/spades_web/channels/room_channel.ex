@@ -48,10 +48,22 @@ defmodule SpadesWeb.RoomChannel do
 
   def handle_in(
         "sit",
-        %{"whichSeat" => which_seat},
+        %{"PlayerN" => player_n},
         %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
       ) do
-    GameUIServer.sit(room_slug, user_id, which_seat)
+    GameUIServer.sit(room_slug, user_id, player_n)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+        "get_up",
+        %{"PlayerN" => player_n},
+        %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+      ) do
+    GameUIServer.sit(room_slug, nil, player_n)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)

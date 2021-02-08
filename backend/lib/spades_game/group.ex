@@ -8,13 +8,12 @@ defmodule SpadesGame.Group do
   @type t :: Map.t()
 
   @doc """
-  new/4: Create a new player with an empty hand.
+  new/3: Create a new player with an empty hand.
   """
-  @spec new(String.t(), String.t(), :hand | :deck | :discard | :play, String.t()) :: Map.t()
-  def new(id, name, type, controller) do
+  @spec new(String.t(), String.t(), String.t()) :: Map.t()
+  def new(id, type, controller) do
     %{
       "id"=> id,
-      "name"=> name,
       "type"=> type,
       "controller"=> controller,
       "stacks"=> []
@@ -22,7 +21,7 @@ defmodule SpadesGame.Group do
   end
 
   @doc """
-  empty/4: Empty the group.
+  empty/1: Empty the group.
   """
   @spec empty(Group.t()) :: Map.t()
   def empty(group) do
