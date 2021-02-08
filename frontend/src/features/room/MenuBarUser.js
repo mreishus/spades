@@ -1,6 +1,8 @@
 import React from "react";
 import UserName from "../user/UserName";
 import useProfile from "../../hooks/useProfile";
+import useIsLoggedIn from "../../hooks/useIsLoggedIn";
+import { Link } from "react-router-dom";
 
 export const MenuBarUser = React.memo(({
   gameUI,
@@ -11,6 +13,7 @@ export const MenuBarUser = React.memo(({
   observingPlayerN,
   setObservingPlayerN,
 }) => {
+  const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
   const myUserID = myUser?.id;
   //const username = gameUI["game"]["players"][PlayerN]["username"];
@@ -38,12 +41,19 @@ export const MenuBarUser = React.memo(({
   }
 
   const handleObserveClick = () => {
-    setObservingPlayerN(PlayerN);
-    chatBroadcast("game_update",{message: "started observing "+PlayerN+"."});
+    if (observingPlayerN === PlayerN) {
+      setObservingPlayerN(null);
+      chatBroadcast("game_update",{message: "stopped observing "+PlayerN+"."});
+    } else {
+      setObservingPlayerN(PlayerN);
+      chatBroadcast("game_update",{message: "started observing "+PlayerN+"."});
+    }
   }
 
   const sitButton = () => {
-    if (sittingUserID) {
+    if (!isLoggedIn) {
+      return(<Link to="/login" className="h-full w-1/2 float-left flex justify-center hover:bg-gray-500 text-white">Log In</Link>)
+    } else if (sittingUserID) {
       if (sittingUserID === myUserID) {
         return(<div onClick={() => handleSitClick("get_up")} className={"h-full w-1/2 float-left flex justify-center bg-gray-500"}>Get up</div>)
       } else {
@@ -62,7 +72,7 @@ export const MenuBarUser = React.memo(({
           {(gameUI["game"]["first_player"] === playerIndex) ? 
             <img className="h-full mr-1 mb-1" src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}></img>
             : null}
-          <UserName userID={sittingUserID} defaultName="<empty>"></UserName>
+          <UserName userID={sittingUserID} defaultName="< empty seat >"></UserName>
         </div>
 
         <div className="h-1/2 w-full cursor-default">
