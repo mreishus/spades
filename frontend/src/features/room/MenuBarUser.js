@@ -16,8 +16,7 @@ export const MenuBarUser = React.memo(({
   const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
   const myUserID = myUser?.id;
-  //const username = gameUI["game"]["players"][PlayerN]["username"];
-  const sittingUserID = gameUI["players"][PlayerN]["user_id"];
+  const sittingUserID = gameUI["player_ids"][PlayerN];
   console.log('rendering '+PlayerN);
   console.log(myUserID);
   console.log(sittingUserID);
@@ -26,7 +25,7 @@ export const MenuBarUser = React.memo(({
   const handleSitClick = (action) => {
     // Get up from any seats first
     ["Player1","Player2","Player3","Player4"].forEach((PlayerI) => {
-      const sittingUserIDi = gameUI["players"][PlayerI]["user_id"];
+      const sittingUserIDi = gameUI["player_ids"][PlayerI];
       if (sittingUserIDi === myUserID) {
         gameBroadcast("get_up",{"PlayerN": PlayerI});
         chatBroadcast("game_update",{message: "got up from "+PlayerI+"'s seat."});
@@ -99,7 +98,7 @@ export const MenuBarUser = React.memo(({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            defaultValue={gameUI["players"][PlayerN]["threat"]}
+            defaultValue={gameUI["game"]["player_data"][PlayerN]["threat"]}
             type="number" min="0" step="1"
           ></input>
         </div>
@@ -110,7 +109,7 @@ export const MenuBarUser = React.memo(({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            defaultValue={gameUI["players"][PlayerN]["willpower"]}
+            defaultValue={gameUI["game"]["player_data"][PlayerN]["willpower"]}
             type="number" min="0" step="1"
           ></input>
         </div>

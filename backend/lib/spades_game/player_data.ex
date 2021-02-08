@@ -1,21 +1,19 @@
-defmodule SpadesGame.Player do
+defmodule SpadesGame.PlayerData do
   @moduledoc """
   Represents a player.
   """
-  alias SpadesGame.{Player}
+  alias SpadesGame.{PlayerData}
 
   @type t :: Map.t()
 
   @doc """
   new/1:  Create a player.
   """
-  @spec new() :: Player.t()
+  @spec new() :: PlayerData.t()
   def new() do
     %{
-      "username" => "",
       "threat" => 0,
       "willpower" => 0,
-      "user_id" => nil,
     }
   end
 

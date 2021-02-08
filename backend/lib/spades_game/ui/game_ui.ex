@@ -19,11 +19,11 @@ defmodule SpadesGame.GameUI do
       "options"=> options,
       "created_at"=> DateTime.utc_now(),
       "created_by"=> user,
-      "players" => %{
-        "Player1" => Player.new(),
-        "Player2" => Player.new(),
-        "Player3" => Player.new(),
-        "Player4" => Player.new(),
+      "player_ids" => %{
+        "Player1" => nil,
+        "Player2" => nil,
+        "Player3" => nil,
+        "Player4" => nil,
       }
     }
   end
@@ -114,7 +114,7 @@ defmodule SpadesGame.GameUI do
 
   @spec sit(GameUI.t(), integer, String.t()) :: GameUI.t()
   def sit(gameui, user_id, player_n) do
-    put_in(gameui["players"][player_n]["user_id"], user_id)
+    put_in(gameui["player_ids"][player_n], user_id)
   end
 
   # Modify the card based on where it's coming from and where it's going
@@ -293,12 +293,24 @@ defmodule SpadesGame.GameUI do
     update_stacks(gameui, group_id, shuffled_stacks)
   end
 
+  def get_player_n(gameui, user_id) do
+    ids = gameui["player_ids"]
+    cond do
+      ids["Player1"] == user_id -> "Player1"
+      ids["Player2"] == user_id -> "Player2"
+      ids["Player3"] == user_id -> "Player3"
+      ids["Player4"] == user_id -> "Player4"
+      true -> nil
+    end
+  end
+
   def load_card(gameui, card_row, group_id, quantity) do
     #IO.puts("game_ui load_card a")
     #IO.inspect(card_row)
+    controller = gameui["groups"][group_id]["controller"]
 
     stacks_to_add = for _ <- 1..quantity do
-      card = Card.card_from_cardrow(card_row)
+      card = Card.card_from_cardrow(card_row, controller)
       card = card_group_change(gameui, card, group_id, group_id)
       Stack.stack_from_card(card)
     end
@@ -307,7 +319,7 @@ defmodule SpadesGame.GameUI do
     update_stacks(gameui, group_id, new_stacks)
   end
 
-  def load_cards(gameui, load_list) do
+  def load_cards(gameui, user_id, load_list) do
     # IO.puts("before_load")
     # IO.inspect(gameui["game"]["groups"])
     gameui = Enum.reduce load_list, gameui, fn r, acc ->
@@ -339,11 +351,14 @@ defmodule SpadesGame.GameUI do
       end
     end
 
-    gameui = put_in(gameui["game"]["players"]["Player1"]["threat"], threat)
-
-    # IO.puts("after_load")
-    # IO.inspect(gameui["game"]["groups"])
-    gameui
+    player_n = get_player_n(gameui, user_id)
+    if player_n do
+      IO.puts("Player n threat")
+      IO.inspect(threat)
+      gameui = put_in(gameui["game"]["player_data"][player_n]["threat"], threat)
+    else
+      gameui
+    end
   end
 
   # # @doc """

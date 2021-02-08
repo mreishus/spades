@@ -8,16 +8,16 @@ defmodule SpadesGame.Card do
 
   @type t :: Map.t()
 
-  @spec card_from_cardrow(Map.t()) :: Map.t()
-  def card_from_cardrow(card_row) do
+  @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
+  def card_from_cardrow(card_row, controller) do
     %{
       "id" => Ecto.UUID.generate,
       "rotation" => 0,
       "exhausted" => false,
       "tokens" =>Tokens.new(),
       "currentSide" => "A",
-      "owner" => "Player1",
-      "controller" => "Player1",
+      "owner" => controller,
+      "controller" => controller,
       "peeking" => %{
         "Player1" => false,
         "Player2" => false,

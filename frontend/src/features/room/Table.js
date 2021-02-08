@@ -295,17 +295,6 @@ export const Table = ({
             ></MenuBar>
           </div>
 
-          {/* <div className="bg-gray-200" style={{height: "3%"}}>
-            <select name="num_players" id="num_players">
-              <option value="1">1</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-            player(s)
-            Threat: {gameUI["game"]["players"]["Player1"]["threat"]}
-          </div> */}
-
           <div className=""  style={{height: "94%"}}>
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>

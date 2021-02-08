@@ -4,7 +4,7 @@ defmodule SpadesGame.Game do
   In early stages of the app, it only represents a
   some toy game used to test everything around it.
   """
-  alias SpadesGame.{Groups, Game, GameOptions, Player}
+  alias SpadesGame.{Groups, Game, GameOptions, PlayerData}
 
   @type t :: Map.t()
 
@@ -29,6 +29,12 @@ defmodule SpadesGame.Game do
       "round_number" => 1,
       "phase" => "roundstart",
       "phasepart" => "beginning",
+      "player_data" => %{
+        "Player1" => PlayerData.new(),
+        "Player2" => PlayerData.new(),
+        "Player3" => PlayerData.new(),
+        "Player4" => PlayerData.new(),
+      }
     }
   end
 

@@ -289,7 +289,7 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:load_cards, user_id, load_list}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: load_list a")
-    GameUI.load_cards(gameui, load_list)
+    GameUI.load_cards(gameui, user_id, load_list)
     |> save_and_reply()
   end
 

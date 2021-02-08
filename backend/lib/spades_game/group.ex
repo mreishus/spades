@@ -8,7 +8,7 @@ defmodule SpadesGame.Group do
   @type t :: Map.t()
 
   @doc """
-  new/3: Create a new player with an empty hand.
+  new/3: Create a new group.
   """
   @spec new(String.t(), String.t(), String.t()) :: Map.t()
   def new(id, type, controller) do
