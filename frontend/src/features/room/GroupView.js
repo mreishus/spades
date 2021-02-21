@@ -33,12 +33,13 @@ const GroupComponent = React.memo(({
   group,
   gameBroadcast,
   chatBroadcast,
+  PlayerN,
   showTitle,
   setBrowseGroupID,
   setBrowseGroupTopN,
 }) => {
 
-
+  console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOO',PlayerN)
   const numStacks = group["stacks"].length;
   return(
     <Container>
@@ -52,6 +53,7 @@ const GroupComponent = React.memo(({
         group={group}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
+        PlayerN={PlayerN}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></GroupContextMenu>
@@ -59,6 +61,7 @@ const GroupComponent = React.memo(({
       <Stacks
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
+        PlayerN={PlayerN}
         group={group}
         isCombineEnabled={group.type === "play"}
         selectedStackIndices={[...Array(numStacks).keys()]}
@@ -72,23 +75,9 @@ const GroupComponent = React.memo(({
 export class GroupView extends Component {
 
   shouldComponentUpdate = (nextProps, nextState) => {
-        // if (nextProps.group.id == "gSharedStaging") {
-        //   console.log("prev",JSON.stringify(this.props.group.stacks[0].cards[0].exhausted),JSON.stringify(this.props.group.stacks[1].cards[0].exhausted))
-        //   console.log("next",JSON.stringify(nextProps.group.stacks[0].cards[0].exhausted),JSON.stringify(nextProps.group.stacks[1].cards[0].exhausted))
-        // }
-              //if (nextProps.group.updated === false) {
-      if (JSON.stringify(nextProps.group)===JSON.stringify(this.props.group)) {
-
-        return false;
-//      } else if {
-
-      } else {
-        // console.log('this.props.group');
-        // console.log(this.props.group);
-        // console.log('nextProps.group');
-        // console.log(nextProps.group);
-        return true;
-      }
+      if (JSON.stringify(nextProps.group)!==JSON.stringify(this.props.group)) return true;
+      if (nextProps.PlayerN!==this.props.PlayerN) return true;
+      return false;
   };
 
   render() {
@@ -103,6 +92,7 @@ export class GroupView extends Component {
           group={this.props.group}
           gameBroadcast={this.props.gameBroadcast}
           chatBroadcast={this.props.chatBroadcast}
+          PlayerN={this.props.PlayerN}
           showTitle={this.props.showTitle}
           setBrowseGroupID={this.props.setBrowseGroupID}
           setBrowseGroupTopN={this.props.setBrowseGroupTopN}
@@ -134,6 +124,8 @@ export class GroupContainer extends Component {
                 group={this.props.group} 
                 gameBroadcast={this.props.gameBroadcast} 
                 chatBroadcast={this.props.chatBroadcast}
+                PlayerN={this.props.PlayerN}
+                showTitle={this.props.showTitle}
                 setBrowseGroupID={this.props.setBrowseGroupID}
                 setBrowseGroupTopN={this.props.setBrowseGroupTopN}
               ></GroupView>

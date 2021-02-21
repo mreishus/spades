@@ -24,7 +24,7 @@ export const MenuBarUser = React.memo(({
 
   const handleSitClick = (action) => {
     // Get up from any seats first
-    ["Player1","Player2","Player3","Player4"].forEach((PlayerI) => {
+    Object.keys(gameUI["player_ids"]).forEach((PlayerI) => {
       const sittingUserIDi = gameUI["player_ids"][PlayerI];
       if (sittingUserIDi === myUserID) {
         gameBroadcast("get_up",{"PlayerN": PlayerI});
@@ -71,7 +71,7 @@ export const MenuBarUser = React.memo(({
           {(gameUI["game"]["first_player"] === playerIndex) ? 
             <img className="h-full mr-1 mb-1" src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}></img>
             : null}
-          <UserName userID={sittingUserID} defaultName="< empty seat >"></UserName>
+          <UserName userID={sittingUserID} defaultName="Empty seat"></UserName>
         </div>
 
         <div className="h-1/2 w-full cursor-default">

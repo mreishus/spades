@@ -8,6 +8,15 @@ defmodule SpadesGame.GameUIServer do
   require Logger
   alias SpadesGame.{Game, Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack, Tokens}
 
+  def is_player(gameui, user_id) do
+    ids = gameui["player_ids"]
+    if Enum.member?([ids["Player1"], ids["Player2"], ids["Player3"], ids["Player4"]], user_id) do
+        true
+    else
+        false
+    end
+  end
+
   @doc """
   start_link/3: Generates a new game server under a provided name.
   """
@@ -50,22 +59,6 @@ defmodule SpadesGame.GameUIServer do
   @spec game_exists?(String.t()) :: boolean
   def game_exists?(game_name) do
     gameui_pid(game_name) != nil
-  end
-
-  @doc """
-  bid/3: A player just submitted a bid.
-  """
-  @spec bid(String.t(), integer | :bot, integer) :: GameUI.t()
-  def bid(game_name, user_id, bid_amount) do
-    GenServer.call(via_tuple(game_name), {:bid, user_id, bid_amount})
-  end
-
-  @doc """
-  play/3: A player just played a card.
-  """
-  @spec play(String.t(), integer | :bot, Card.t()) :: GameUI.t()
-  def play(game_name, user_id, card) do
-    GenServer.call(via_tuple(game_name), {:play, user_id, card})
   end
 
   @doc """

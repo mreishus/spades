@@ -11,6 +11,7 @@ export const MenuBar = React.memo(({
     handleBrowseSelect,
     gameBroadcast,
     chatBroadcast,
+    PlayerN,
     observingPlayerN,
     setObservingPlayerN,
   }) => {
@@ -56,10 +57,10 @@ export const MenuBar = React.memo(({
               const cardid = card['$'].id;
               const quantity = parseInt(card['$'].qty);
               var cardRow = cardDB[cardid];
-              cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,'Player1');
+              cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,PlayerN);
               console.log(cardRow);
               if (cardRow) {
-                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToGroupID(sectionName,'Player1')})
+                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToGroupID(sectionName,PlayerN)})
               }
                 //console.log('thiscard', cardRow);
             })
@@ -102,7 +103,7 @@ export const MenuBar = React.memo(({
             </ul>
         </li>
         <li>
-        <div className="h-full flex text-xl items-center justify-center" href="#">Look at...</div>
+        <div className="h-full flex text-xl items-center justify-center" href="#">View</div>
           <ul className="second-level-menu">
               <li>
                 <a href="#">Shared</a>

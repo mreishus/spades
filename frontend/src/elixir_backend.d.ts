@@ -73,7 +73,7 @@ declare module "elixir-backend" {
     game: Game;
     game_name: string;
     options: any;
-    players: { [id: string] : Player; };
+    player_ids: { [id: string] : number; };
   }
 
 
@@ -84,13 +84,12 @@ declare module "elixir-backend" {
     phase: String;
     phase_part: String;
     groups: Groups;
+    player_data: { [id: string] : Player; };
   }
 
   export declare class Player {
-    username: String;
     threat: number;
     willpower: number;
-    user_id: number | null;
   }
 
 

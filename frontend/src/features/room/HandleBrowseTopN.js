@@ -15,7 +15,12 @@ export const handleBrowseTopN = (
     var peekStackIndices = [];
     var peekCardIndices = [];
     var topNint = 0;
+
+    console.log("~~~~~~~~~~~~~~~~");
+    console.log(topNstr)
+    console.log(PlayerN)
     
+    // Set peeking based on topNstr
     if (topNstr === "All") {
       topNint = numStacks;
       peekStackIndices = [...Array(topNint).keys()];
@@ -33,6 +38,7 @@ export const handleBrowseTopN = (
       chatBroadcast("game_update",{message: "looks at top "+topNstr+" of "+groupName+"."})
     }
     setBrowseGroupID(group.id);
-    setBrowseGroupTopN(topNint);
+    console.log("looking at", topNint);
+    setBrowseGroupTopN(topNstr);
     gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: PlayerN, reset_peek: true})
 }

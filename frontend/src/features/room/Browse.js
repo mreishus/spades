@@ -31,6 +31,10 @@ const WidthContainer = styled.div`
   height: 100%;
 `;
 
+const isNormalInteger = (str) => {
+  var n = Math.floor(Number(str));
+  return n !== Infinity && String(n) === str && n >= 0;
+}
 
 const BrowseComponent = React.memo(({
   group,
@@ -40,11 +44,14 @@ const BrowseComponent = React.memo(({
   browseGroupTopN,
   setBrowseGroupID,
   setBrowseGroupTopN,
+  PlayerN,
 }) => {
+  console.log("BrowseComponent",PlayerN);
   const [selectedCardType, setSelectedCardType] = useState('All');
   const [selectedCardName, setSelectedCardName] = useState('');
   //const [faceupStackIDs, setFaceupStackIDs] = useState([]);
   const stacks = group["stacks"];
+  const numStacks = stacks.length;
 
   //var faceupStackIDs = [];
   //browseGroupTopN.forEach(i => {if (stacks[i]) faceupStackIDs.push(stacks[i].id)});
@@ -58,7 +65,7 @@ const BrowseComponent = React.memo(({
   const handleCloseClick = (event) => {
     setBrowseGroupID("");
     setBrowseGroupTopN(0);
-    gameBroadcast("peek_at", {group_id: group.id, stack_indices: [], card_indices: [], player_n: "Player1", reset_peek: true})
+    gameBroadcast("peek_at", {group_id: group.id, stack_indices: [], card_indices: [], player_n: PlayerN, reset_peek: true})
   }
 
   const handleSelectClick = (event) => {
@@ -66,7 +73,7 @@ const BrowseComponent = React.memo(({
     handleBrowseTopN(
       topNstr, 
       group,
-      "Player1",
+      PlayerN,
       gameBroadcast, 
       chatBroadcast,
       setBrowseGroupID,
@@ -107,22 +114,39 @@ const BrowseComponent = React.memo(({
   // console.log(selectedStacks);
 
 
-  // If browseGroupTopN not set, show all stacks
+  // If browseGroupTopN not set, or equal to "All" or "None", show all stacks
+  var browseGroupTopNint = isNormalInteger(browseGroupTopN) ? parseInt(browseGroupTopN) : numStacks;
+  // if (topNstr === "All") {
+  //   topNint = numStacks;
+  //   peekStackIndices = [...Array(topNint).keys()];
+  //   peekCardIndices = new Array(topNint).fill(0);
+  //   chatBroadcast("game_update",{message: "looks at "+groupName+"."})
+  // } else if (topNstr === "None") {
+  //   topNint = numStacks; 
+  //   peekStackIndices = [];
+  //   peekCardIndices = [];
+  //   chatBroadcast("game_update",{message: "stopped looking at "+groupName+"."})
+  // } else {
+  //   topNint = parseInt(topNstr);
+  //   peekStackIndices = [...Array(topNint).keys()];
+  //   peekCardIndices = new Array(topNint).fill(0);
+  //   chatBroadcast("game_update",{message: "looks at top "+topNstr+" of "+groupName+"."})
+  // }
   console.log('browseGroupTopN',browseGroupTopN)
-  var filteredStackIndices = browseGroupTopN>=0 ? [...Array(browseGroupTopN).keys()] : [...Array(7).keys()]; 
+  var filteredStackIndices = [...Array(browseGroupTopNint).keys()]; //>=0 ? [...Array(browseGroupTopN).keys()] : [...Array(7).keys()]; 
   // Filter by selected card type
   if (selectedCardType != "All") 
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stacks[s] && 
       stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType &&
-      stacks[s]["cards"][0]["peeking"]["Player1"]
+      stacks[s]["cards"][0]["peeking"][PlayerN]
     ));
   // Filter by card name
   if (selectedCardName != "")
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stacks[s] && 
       stacks[s]["cards"][0]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
-      stacks[s]["cards"][0]["peeking"]["Player1"]
+      stacks[s]["cards"][0]["peeking"][PlayerN]
     ));
 
   // Flip cards faceup
@@ -158,6 +182,7 @@ const BrowseComponent = React.memo(({
         group={group}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
+        PlayerN={PlayerN}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></GroupContextMenu>
@@ -167,6 +192,7 @@ const BrowseComponent = React.memo(({
         <Stacks
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
+          PlayerN={PlayerN}
           group={fannedGroup}
           isCombineEnabled={false}
           selectedStackIndices={filteredStackIndices}
@@ -216,60 +242,11 @@ const BrowseComponent = React.memo(({
 
 })
 
-export class BrowseView extends Component {
-
-//   shouldComponentUpdate = (nextProps, nextState) => {
-//         // if (nextProps.group.id == "gSharedStaging") {
-//         //   console.log("prev",JSON.stringify(this.props.group.stacks[0].cards[0].exhausted),JSON.stringify(this.props.group.stacks[1].cards[0].exhausted))
-//         //   console.log("next",JSON.stringify(nextProps.group.stacks[0].cards[0].exhausted),JSON.stringify(nextProps.group.stacks[1].cards[0].exhausted))
-//         // }
-//               //if (nextProps.group.updated === false) {
-//       if (JSON.stringify(nextProps.group)===JSON.stringify(this.props.group)) {
-
-//         return false;
-// //      } else if {
-
-//       } else {
-//         // console.log('this.props.group');
-//         // console.log(this.props.group);
-//         // console.log('nextProps.group');
-//         // console.log(nextProps.group);
-//         return true;
-//       }
-//   };
-
-  render() {
-    const group = this.props.group;
-    if (group) {
-      console.log('rendering',group.id);
-      return (
-        // <Draggable draggableId={title} index={index}>
-        //   {(provided, snapshot) => (ref={provided.innerRef} {...provided.draggableProps}>
-
-        <BrowseComponent
-          group={this.props.group}
-          gameBroadcast={this.props.gameBroadcast}
-          chatBroadcast={this.props.chatBroadcast}
-          browseGroupTopN={this.props.browseGroupTopN}
-          setBrowseGroupID={this.props.setBrowseGroupID}
-          setBrowseGroupTopN={this.props.setBrowseGroupTopN}
-        ></BrowseComponent>
-
-        //   )}
-        // </Draggable>
-      );
-
-    } else {
-      return (<div></div>)
-    }
-  }
-}
-
 export default class BrowseContainer extends Component {
   render() {
     if (this.props.group) {
       return (
-        <WidthContainer style={{width: this.props.width}}>
+        <WidthContainer style={{width: "100%"}}>
           <BrowseComponent
             group={this.props.group} 
             gameBroadcast={this.props.gameBroadcast} 
@@ -277,6 +254,7 @@ export default class BrowseContainer extends Component {
             browseGroupTopN={this.props.browseGroupTopN}
             setBrowseGroupID={this.props.setBrowseGroupID}
             setBrowseGroupTopN={this.props.setBrowseGroupTopN}
+            PlayerN={this.props.PlayerN}
           ></BrowseComponent>
         </WidthContainer>
       )

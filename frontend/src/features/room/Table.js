@@ -18,6 +18,8 @@ import ReactModal from "react-modal";
 import Dropdown from 'react-dropdown';
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { PlayerBar } from "./PlayerBar";
+import { GetPlayerN } from "./GetPlayerN";
+import useProfile from "../../hooks/useProfile";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -62,14 +64,17 @@ export const Table = ({
   // Indices of stacks in group being browsed
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   const [phase, setPhase] = useState(1);
+  const myUser = useProfile();
+  const myUserID = myUser?.id;
+  const PlayerN = GetPlayerN(gameUI["player_ids"], myUserID);
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
   const defaultGameDropdown = options[0];
 
 
-
   console.log('Rendering groups');
-  
+
+
   const toggleScratch = () => {
     if (showScratch) setShowScratch(false);
     else setShowScratch(true);
@@ -77,7 +82,7 @@ export const Table = ({
 
   const handleBrowseSelect = (groupID) => {
     setBrowseGroupID(groupID);
-    setBrowseGroupTopN(0);
+    setBrowseGroupTopN("All");
   }
 
   const handleSpawnTyping = (event) => {
@@ -108,8 +113,6 @@ export const Table = ({
   useEffect(() => {
      setGroups(gameUI.game.groups);
   }, [gameUI.game.groups]);
-
- 
 
   const onDragEnd = (result) => {
     const source = result.source;
@@ -288,6 +291,7 @@ export const Table = ({
               handleBrowseSelect={handleBrowseSelect}
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}
+              PlayerN={PlayerN}
               sittingPlayerN={sittingPlayerN}
               setSittingPlayerN={setSittingPlayerN}
               observingPlayerN={observingPlayerN}
@@ -303,6 +307,7 @@ export const Table = ({
                 width="75%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
+                PlayerN={PlayerN}
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
@@ -312,6 +317,7 @@ export const Table = ({
                 width="10%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
+                PlayerN={PlayerN}
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
@@ -321,6 +327,7 @@ export const Table = ({
                 width="15%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
+                PlayerN={PlayerN}
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
@@ -333,6 +340,7 @@ export const Table = ({
                 width="100%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
+                PlayerN={PlayerN}
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
@@ -345,6 +353,7 @@ export const Table = ({
                 width="100%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
+                PlayerN={PlayerN}
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
@@ -355,12 +364,13 @@ export const Table = ({
               <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
                 <BrowseContainer
                   group={groups[browseGroupID]}
-                  width="100%"
                   gameBroadcast={gameBroadcast}
                   chatBroadcast={chatBroadcast}
+                  PlayerN={PlayerN}
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
+                  playerIDs={gameUI["player_ids"]}
                 ></BrowseContainer>
               </div>
               :
@@ -370,6 +380,7 @@ export const Table = ({
                   width="90%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  PlayerN={PlayerN}
                   browseGroupID={browseGroupID}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
@@ -379,6 +390,7 @@ export const Table = ({
                   width="10%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  PlayerN={PlayerN}
                   browseGroupID={browseGroupID}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
@@ -388,9 +400,10 @@ export const Table = ({
             <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
               <PlayerBar
                 groups={groups}
-                PlayerN={observingPlayerN}
+                observingPlayerN={observingPlayerN}
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
+                PlayerN={PlayerN}
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
@@ -405,7 +418,7 @@ export const Table = ({
         <div className="flex flex-col w-full h-full">
           {/* Hovercard */}
           <div style={{height: "45%"}}>
-            <GiantCard></GiantCard>
+            <GiantCard PlayerN={PlayerN}></GiantCard>
           </div>
           {/* Chat */}
           <div 
@@ -424,6 +437,7 @@ export const Table = ({
                   width="100%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  PlayerN={PlayerN}
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
@@ -435,6 +449,7 @@ export const Table = ({
                   width="100%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  PlayerN={PlayerN}
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
@@ -446,6 +461,7 @@ export const Table = ({
                   width="100%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
+                  PlayerN={PlayerN}
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
@@ -515,7 +531,8 @@ export const Table = ({
 
     {/* <Draggable>
       <div style={{height:"200px",width:"800px",top:"0px",left:"0px",position:"relative",backgroundColor:"red",zIndex:1e7}}>
-        <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} showTitle="false"></GroupView>
+        <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
+        PlayerN={PlayerN} showTitle="false"></GroupView>
       </div>
     </Draggable> */}
 

@@ -171,6 +171,7 @@ export const handleKeyDown = (
         // Send to appropriate discard pile
         else if (k === "x") {
             console.log(cardIndex)
+            // If card is the parent card of a stack, discard the whoe stack
             if (cardIndex == 0) {
                 const stack = gameUI["game"]["groups"][groupID]["stacks"][stackIndex];
                 if (!stack) return;
@@ -190,6 +191,7 @@ export const handleKeyDown = (
                         create_new_stack: true
                     });
                 }
+            // If the card is a child card in a stack, just discard that card
             } else {
                 const discardGroupID = newCard["discardgroupid"]
                 chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupID].name+"."});
@@ -204,6 +206,8 @@ export const handleKeyDown = (
                 })
             }
         }
+        // Shufle card into owner's deck
+
         if (cardChanged) {
             setActiveCardAndLoc({
                 card: newCard, 

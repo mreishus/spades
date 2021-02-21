@@ -24,7 +24,7 @@ export const UserName: React.FC<Props> = ({ userID, defaultName }) => {
   );
 
   if (userID === null) {
-    return <span>{defaultName ? defaultName : "anonymous"}</span>;
+    return <span className="text-gray-400">{defaultName ? defaultName : "anonymous"}</span>;
   } 
   if (userID < 0) {
     return null;

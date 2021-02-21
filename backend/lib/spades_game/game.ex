@@ -18,7 +18,7 @@ defmodule SpadesGame.Game do
   end
 
   @doc """
-  new/2:  Create a game with specified options.
+  new/1:  Create a game with specified options.
   """
   @spec new(GameOptions.t()) :: Game.t()
   def new(%GameOptions{} = options) do

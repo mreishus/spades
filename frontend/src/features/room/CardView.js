@@ -150,6 +150,7 @@ const CardComponent = React.memo(({
     group,
     gameBroadcast,
     chatBroadcast,
+    PlayerN,
 }) => {
     //const [card, setCard] = useState(inputCard);
 
@@ -179,10 +180,12 @@ const CardComponent = React.memo(({
     //console.log('rendering',group.id,stackIndex,cardIndex, "comp");
 
 
-    // const onClick = (event) => {
-    //     console.log(inputCard);
-    //     return;
-    // }
+    const onClick = (event) => {
+        console.log(inputCard);
+        console.log(PlayerN);
+        console.log(inputCard["peeking"][PlayerN]);
+        return;
+    }
 
     const handleMouseOver = (event) => {
         setIsActive(true);
@@ -238,7 +241,7 @@ const CardComponent = React.memo(({
     }
     
     if (!inputCard) return <div></div>;
-    const currentFace = inputCard.sides[inputCard.currentSide];
+    const currentFace = getCurrentFace(inputCard);
     return (
         <div>
             <ContextMenuTrigger id={inputCard.id} holdToDisplay={500}> 
@@ -251,7 +254,7 @@ const CardComponent = React.memo(({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "end",
-                    background: `url(${getCurrentFaceSRC(inputCard,"Player1")}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
+                    background: `url(${getCurrentFaceSRC(inputCard,PlayerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
@@ -272,7 +275,7 @@ const CardComponent = React.memo(({
                     OTransitionProperty: "-o-transform",
                     transitionProperty: "transform",
                 }}
-                //onClick={handleClick}
+                onClick={onClick}
                 //onDoubleClick={handleDoubleClick}
                 onMouseOver={event => handleMouseOver(event)}
                 onMouseLeave={event => handleMouseLeave(event)}
@@ -311,9 +314,7 @@ const CardComponent = React.memo(({
                     cardIndex={cardIndex}
                 ></TokensView>
 
-
-                {inputCard["peeking"]["Player1"]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
-                
+                {inputCard["peeking"][PlayerN]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
 
             </div>
 
@@ -370,6 +371,7 @@ class CardClass extends Component {
                 group={this.props.group}
                 gameBroadcast={this.props.gameBroadcast}
                 chatBroadcast={this.props.chatBroadcast}
+                PlayerN={this.props.PlayerN}
             ></CardComponent>
         )
     }
@@ -381,9 +383,10 @@ const CardView = React.memo(({
     cardIndex,
     stackIndex,
     groupID,
+    group,
     gameBroadcast,
     chatBroadcast,
-    group,
+    PlayerN,
   }) => {
     //if (groupID==='gSharedStaging') console.log('rendering Cardview');
     console.log('rendering',group.id,stackIndex,cardIndex, "view");
@@ -399,6 +402,7 @@ const CardView = React.memo(({
             group={group}
             gameBroadcast={gameBroadcast}
             chatBroadcast={chatBroadcast}
+            PlayerN={PlayerN}
         ></CardClass>
 
 
