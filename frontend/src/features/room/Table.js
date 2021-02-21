@@ -412,14 +412,14 @@ export const Table = ({
           </div>
         </div>
       </div>
-      
+      <GiantCard PlayerN={PlayerN}></GiantCard>
       {/* Right panel */}
       <div className="flex w-1/5" >
         <div className="flex flex-col w-full h-full">
           {/* Hovercard */}
-          <div style={{height: "45%"}}>
+          {/* <div style={{height: "45%"}}>
             <GiantCard PlayerN={PlayerN}></GiantCard>
-          </div>
+          </div> */}
           {/* Chat */}
           <div 
             className="overflow-hidden" 

@@ -49,10 +49,23 @@ export const getDisplayNameFlipped = (card) => {
     return getDisplayName(getFlippedCard(card));
 }
 
-export const getCurrentFaceSRC = (card, PlayerN) => {
-    if (!card) return "";
+export const getVisibleSide = (card, PlayerN) => {
+    if (!card) return null;
     const currentSide = card["currentSide"];
-    if (currentSide == "A" || card["peeking"][PlayerN]) {
+    if (currentSide == "A" || card["peeking"][PlayerN]) return "A";
+    else return "B";
+}
+
+export const getVisibleFace = (card, PlayerN) => {
+    const visibleSide = getVisibleSide(card, PlayerN);
+    if (visibleSide) return card["sides"][visibleSide];
+    else return null;
+}
+
+export const getVisibleFaceSRC = (card, PlayerN) => {
+    if (!card) return "";
+    const visibleSide = getVisibleSide(card);
+    if (visibleSide == "A") {
         return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
     } else { // Side B logic
         const sideBName = card["sides"]["B"]["name"];
@@ -164,9 +177,7 @@ const CardComponent = React.memo(({
     const setActiveCard = useSetActiveCard();
 
     const [isActive, setIsActive] = useState(false);
-    const [mousePosition, setMousePosition] = useState('none');
     const displayName = getDisplayName(inputCard);
-    console.log('mousePosition ',mousePosition)
     console.log('activeCard pos ',)
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
@@ -254,7 +265,7 @@ const CardComponent = React.memo(({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "end",
-                    background: `url(${getCurrentFaceSRC(inputCard,PlayerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
+                    background: `url(${getVisibleFaceSRC(inputCard,PlayerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
@@ -291,7 +302,6 @@ const CardComponent = React.memo(({
                     groupID={groupID}
                     stackIndex={stackIndex}
                     cardIndex={cardIndex}
-                    setMousePosition={setMousePosition}
                 ></CardMouseRegion>
                 
                 <CardMouseRegion 
@@ -301,7 +311,6 @@ const CardComponent = React.memo(({
                     groupID={groupID}
                     stackIndex={stackIndex}
                     cardIndex={cardIndex}
-                    setMousePosition={setMousePosition}
                 ></CardMouseRegion>
 
                 <TokensView 

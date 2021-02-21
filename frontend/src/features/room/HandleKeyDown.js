@@ -208,14 +208,15 @@ export const handleKeyDown = (
         }
         // Shufle card into owner's deck
 
-        if (cardChanged) {
-            setActiveCardAndLoc({
-                card: newCard, 
-                groupID: activeCardAndLoc.groupID, 
-                stackIndex: activeCardAndLoc.stackIndex, 
-                cardIndex: activeCardAndLoc.cardIndex, 
-                mousePosition: activeCardAndLoc.mousePosition
-            });
-        }
+        // if (cardChanged) {
+        //     setActiveCardAndLoc({
+        //         card: newCard, 
+        //         groupID: activeCardAndLoc.groupID, 
+        //         stackIndex: activeCardAndLoc.stackIndex, 
+        //         cardIndex: activeCardAndLoc.cardIndex, 
+        //         mousePosition: activeCardAndLoc.mousePosition,
+        //         screenPosition: activeCardAndLoc.screenPosition,
+        //     });
+        // }
     }
 }
