@@ -156,7 +156,7 @@ export const MenuBar = React.memo(({
           </ul>
         </li>
       </ul>
-      <div className="float-left h-full bg-gray-600" style={{width: "15%"}}>
+      <div className="float-left h-full bg-gray-600" style={{width: "15%", marginLeft: "5%", marginRight: "5%"}}>
         <div className="float-left h-full w-1/3">
           <div className="h-1/2 w-full flex justify-center">
             Round
