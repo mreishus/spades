@@ -38,8 +38,6 @@ const GroupComponent = React.memo(({
   setBrowseGroupID,
   setBrowseGroupTopN,
 }) => {
-
-  console.log('OOOOOOOOOOOOOOOOOOOOOOOOOOOOO',PlayerN)
   const numStacks = group["stacks"].length;
   return(
     <Container>

@@ -29,7 +29,6 @@ export const handleKeyDown = (
     console.log(k);
     // Keep track of last pressed key
     setKeypress([k]);
-    console.log(keypress);
     // General hotkeys
     if (k === "e" || k === "E") {
         // Check remaining cards in encounter deck
@@ -78,7 +77,6 @@ export const handleKeyDown = (
         }
         // Draw card
         const topStack = stacks[0];
-        console.log('topStack',topStack)
         const topCard = topStack["cards"][0];
         chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+"."});
         gameBroadcast("move_stack",{
@@ -161,7 +159,8 @@ export const handleKeyDown = (
             chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
             }
             cardChanged = true;
-            gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+            gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+            //gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
         }
         // Deal shadow card
         else if (k === "s" && groupType == "play") {
@@ -170,13 +169,11 @@ export const handleKeyDown = (
         }        
         // Send to appropriate discard pile
         else if (k === "x") {
-            console.log(cardIndex)
             // If card is the parent card of a stack, discard the whoe stack
             if (cardIndex == 0) {
                 const stack = gameUI["game"]["groups"][groupID]["stacks"][stackIndex];
                 if (!stack) return;
                 const cards = stack["cards"];
-                console.log(cards)
                 for (var i=0; i<cards.length; i++) {
                     const cardi = cards[i]
                     const discardGroupID = cardi["discardgroupid"];

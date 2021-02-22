@@ -18,9 +18,6 @@ export const MenuBarUser = React.memo(({
   const myUserID = myUser?.id;
   const sittingUserID = gameUI["player_ids"][PlayerN];
   console.log('rendering '+PlayerN);
-  console.log(myUserID);
-  console.log(sittingUserID);
-  console.log(gameUI);
 
   const handleSitClick = (action) => {
     // Get up from any seats first

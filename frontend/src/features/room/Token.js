@@ -30,32 +30,37 @@ export const Token = ({
 
     function clickArrow(event,delta) {
         event.stopPropagation();
-        setAmount(amount+delta);
-
+        var newAmount = 0;
+        if ((type==="resource" || type==="progress" || type==="damage" || type==="time") && (amount+delta < 0)) {
+            newAmount = 0;
+        } else {
+            newAmount = amount+delta;
+        }
+        setAmount(newAmount);
         const newTokens = {
             ...card.tokens,
-            [type]: amount+delta,
+            [type]: newAmount,
         }
         const newCard = {
             ...card,
             tokens: newTokens,
         }
-
         // Get card name
         const cardName = newCard["sides"][newCard["currentSide"]].printname;
         // Determine total number of tokens added or removed since last broadcast
-        const totalDelta = newCard.tokens[type]-card.tokens[type];
+        const totalDelta = newAmount-card.tokens[type];
         // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
-            gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
+            gameBroadcast("increment_token",{group_id: groupID, stack_index: stackIndex, card_index: cardIndex, token_type: type, increment: totalDelta})
+            //gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
             if (delta > 0) {
                 if (delta === 1) {
                     chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" token to "+cardName+"."});
                 } else {
                     chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" tokens to "+cardName+"."});
                 }
-            } else {
+            } else if (delta < 0) {
                 if (delta === -1) {
                     chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+type+" token from "+cardName+"."});
                 } else {

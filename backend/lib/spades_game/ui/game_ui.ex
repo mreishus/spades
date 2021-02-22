@@ -112,6 +112,18 @@ defmodule SpadesGame.GameUI do
     update_tokens(gameui, group_id, stack_index, card_index, new_tokens)
   end
 
+  def toggle_exhaust(gameui, group_id, stack_index, card_index) do
+    card = get_card(gameui, group_id, stack_index, card_index)
+    new_card = if card["exhausted"] do
+      card = put_in(card["exhausted"], false)
+      put_in(card["rotation"], 0)
+    else
+      card = put_in(card["exhausted"], true)
+      put_in(card["rotation"], 90)
+    end
+    update_card(gameui, group_id, stack_index, card_index, new_card)
+  end
+
   @spec sit(GameUI.t(), integer, String.t()) :: GameUI.t()
   def sit(gameui, user_id, player_n) do
     put_in(gameui["player_ids"][player_n], user_id)

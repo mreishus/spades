@@ -173,10 +173,10 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   toggle_exhaust/5: A player just exhausted/unexhausted a card.
   """
-  @spec toggle_exhaust(String.t(), integer, Group.t(), Stack.t(), Card.t()) :: GameUI.t()
-  def toggle_exhaust(game_name, user_id, group, stack, card) do
+  @spec toggle_exhaust(String.t(), integer, String.t(), integer, integer) :: GameUI.t()
+  def toggle_exhaust(game_name, user_id, group_id, stack_index, card_index) do
     IO.puts("game_ui_server: toggle_exhaust")
-    GenServer.call(via_tuple(game_name), {:toggle_exhaust, user_id, group, stack, card})
+    GenServer.call(via_tuple(game_name), {:toggle_exhaust, user_id, group_id, stack_index, card_index})
   end
 
   @doc """
@@ -364,11 +364,9 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
-  def handle_call({:toggle_exhaust, user_id, group, stack, card}, _from, gameui) do
+  def handle_call({:toggle_exhaust, user_id, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: toggle_exhaust a")
-    gameui = GameUI.toggle_exhaust(gameui, user_id, group, stack, card)
-    IO.puts("game_ui_server: handle_call: toggle_exhaust b")
-    gameui
+    GameUI.toggle_exhaust(gameui, group_id, stack_index, card_index)
     |> save_and_reply()
   end
 

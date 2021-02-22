@@ -304,13 +304,13 @@ defmodule SpadesWeb.RoomChannel do
   def handle_in(
     "toggle_exhaust",
     %{
-      "group" => group,
-      "stack" => stack,
-      "card" => card,
+      "group_id" => group_id,
+      "stack_index" => stack_index,
+      "card_index" => card_index,
     },
     %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
   ) do
-  GameUIServer.toggle_exhaust(room_slug, user_id, group, stack, card)
+  GameUIServer.toggle_exhaust(room_slug, user_id, group_id, stack_index, card_index)
   state = GameUIServer.state(room_slug)
   socket = socket |> assign(:game_ui, state)
   notify(socket)

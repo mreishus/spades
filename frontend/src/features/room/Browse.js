@@ -46,7 +46,6 @@ const BrowseComponent = React.memo(({
   setBrowseGroupTopN,
   PlayerN,
 }) => {
-  console.log("BrowseComponent",PlayerN);
   const [selectedCardType, setSelectedCardType] = useState('All');
   const [selectedCardName, setSelectedCardName] = useState('');
   //const [faceupStackIDs, setFaceupStackIDs] = useState([]);
@@ -58,7 +57,6 @@ const BrowseComponent = React.memo(({
   //setFaceupStackIDs(faceupIDs);
 
   const handleOptionClick = (event) => {
-    console.log(event.target.value);
     setSelectedCardType(event.target.value);
   }
 
@@ -104,36 +102,13 @@ const BrowseComponent = React.memo(({
   }
 
   const handleInputTyping = (event) => {
-    console.log(event.target.value);
     setSelectedCardName(event.target.value);
     //setSelectedCardType(event.target.value);
   }
-  
-  // const browseGroupTopN2 = [1,2,3,4,5,6,7,8,9,10,11,12,13,14];
-  // var selectedStacks = stacks.filter((s,i) => browseGroupTopN2.includes(i));
-  // console.log(selectedStacks);
-
 
   // If browseGroupTopN not set, or equal to "All" or "None", show all stacks
   var browseGroupTopNint = isNormalInteger(browseGroupTopN) ? parseInt(browseGroupTopN) : numStacks;
-  // if (topNstr === "All") {
-  //   topNint = numStacks;
-  //   peekStackIndices = [...Array(topNint).keys()];
-  //   peekCardIndices = new Array(topNint).fill(0);
-  //   chatBroadcast("game_update",{message: "looks at "+groupName+"."})
-  // } else if (topNstr === "None") {
-  //   topNint = numStacks; 
-  //   peekStackIndices = [];
-  //   peekCardIndices = [];
-  //   chatBroadcast("game_update",{message: "stopped looking at "+groupName+"."})
-  // } else {
-  //   topNint = parseInt(topNstr);
-  //   peekStackIndices = [...Array(topNint).keys()];
-  //   peekCardIndices = new Array(topNint).fill(0);
-  //   chatBroadcast("game_update",{message: "looks at top "+topNstr+" of "+groupName+"."})
-  // }
-  console.log('browseGroupTopN',browseGroupTopN)
-  var filteredStackIndices = [...Array(browseGroupTopNint).keys()]; //>=0 ? [...Array(browseGroupTopN).keys()] : [...Array(7).keys()]; 
+  var filteredStackIndices = [...Array(browseGroupTopNint).keys()];
   // Filter by selected card type
   if (selectedCardType != "All") 
     filteredStackIndices = filteredStackIndices.filter((s,i) => (

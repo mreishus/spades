@@ -41,16 +41,12 @@ export const MenuBar = React.memo(({
       const reader = new FileReader();
       reader.onload = async (event) => { 
         const xmltext = (event.target.result)
-        //console.log(xmltext)
         var parseString = require('xml2js').parseString;
         parseString(xmltext, function (err, deckJSON) {
-          console.dir(deckJSON);
-          console.log(deckJSON.deck.section);
           const sections = deckJSON.deck.section;
           var loadList = [];
           sections.forEach(section => {
             const sectionName = section['$'].name;
-            console.log(sectionName);
             const cards = section.card;
             if (!cards) return;
             cards.forEach(card => {
@@ -58,14 +54,11 @@ export const MenuBar = React.memo(({
               const quantity = parseInt(card['$'].qty);
               var cardRow = cardDB[cardid];
               cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,PlayerN);
-              console.log(cardRow);
               if (cardRow) {
                 loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToGroupID(sectionName,PlayerN)})
               }
-                //console.log('thiscard', cardRow);
             })
           })
-          console.log(loadList);
           gameBroadcast("load_cards",{load_list: loadList});
           chatBroadcast("game_update",{message: "loaded a deck."});
         })

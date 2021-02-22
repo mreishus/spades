@@ -178,7 +178,6 @@ const CardComponent = React.memo(({
 
     const [isActive, setIsActive] = useState(false);
     const displayName = getDisplayName(inputCard);
-    console.log('activeCard pos ',)
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
 
@@ -363,9 +362,6 @@ class CardClass extends Component {
         ) {
             return true;
         } else {
-            //console.log('DO UPDATE!!!!!');
-            //console.log(this.props);
-            //console.log(nextProps);
             return false; 
         }
     };
