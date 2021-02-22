@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { faChevronUp, faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faStepBackward, faAngleDown, faEquals, faAngleDoubleDown, faAngleDoubleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Chat from "../chat/Chat";
@@ -72,9 +72,7 @@ export const Table = ({
   //const activeCard = useActiveCard();
   const defaultGameDropdown = options[0];
 
-
   console.log('Rendering groups');
-
 
   const toggleScratch = () => {
     if (showScratch) setShowScratch(false);
@@ -250,9 +248,25 @@ export const Table = ({
       {/* Right panel */}
       <div className="flex flex-col w-14">
         <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===7) ? "bg-gray-600" : "bg-gray-400"}`}
-          style={{writingMode:"vertical-rl"}} 
-          onClick={() => changePhase(7)}>Refresh</div>
+          className={`flex text-center p-1 select-none ${(phase===8) ? "bg-gray-600" : "bg-gray-400"}`}
+          onClick={() => changePhase(8)}>End</div>
+        <div 
+          className={`flex flex-1 text-center select-none ${(phase===7) ? "bg-gray-600" : "bg-gray-400"}`}
+        >
+          <div
+            className={`w-1/2 ${(Math.floor(phase)===7) ? "bg-gray-600" : "bg-gray-400"}`}
+            style={{writingMode:"vertical-rl"}} 
+          >
+            Refresh
+          </div>
+          <div
+            className={`w-1/2`}
+          >
+            <div className={`flex h-1/3 items-center justify-center ${(phase===7.3) ? "bg-gray-600" : "bg-gray-400"}`} onClick={() => changePhase(7.3)}><FontAwesomeIcon className="text-gray-100 fa-rotate-90" icon={faStepBackward}/></div>
+            <div className={`flex h-1/3 items-center justify-center ${(phase===7.2) ? "bg-gray-600" : "bg-gray-400"}`} onClick={() => changePhase(7.2)}><FontAwesomeIcon className="text-white" icon={faEquals}/></div>
+            <div className={`flex h-1/3 items-center justify-center ${(phase===7.1) ? "bg-gray-600" : "bg-gray-400"}`} onClick={() => changePhase(7.1)}><FontAwesomeIcon className="text-white" icon={faAngleDown}/></div>
+          </div>
+        </div>
         <div 
           className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===6) ? "bg-gray-600" : "bg-gray-400"}`}
           style={{writingMode:"vertical-rl"}} 
@@ -277,6 +291,9 @@ export const Table = ({
           className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===1) ? "bg-gray-600" : "bg-gray-400"}`}
           style={{writingMode:"vertical-rl"}} 
           onClick={() => changePhase(1)}>Resource</div>
+        <div 
+          className={`flex text-center p-1 select-none ${(phase===0) ? "bg-gray-600" : "bg-gray-400"}`}
+          onClick={() => changePhase(0)}>Start</div>
       </div>
 
 
