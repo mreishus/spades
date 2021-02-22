@@ -56,7 +56,7 @@ export const Table = ({
   const [groups, setGroups] = useState(gameUI.game.groups);
   const [showScratch, setShowScratch] = useState(false);
   const [showSpawn, setShowSpawn] = useState(false);
-  const [observingPlayerN, setObservingPlayerN] = useState("");
+  const [chatHover, setChatHover] = useState(false);
   const [sittingPlayerN, setSittingPlayerN] = useState("");
   const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDB));
   // Show/hide group that allows you to browse certain cards in a group
@@ -67,6 +67,7 @@ export const Table = ({
   const myUser = useProfile();
   const myUserID = myUser?.id;
   const PlayerN = GetPlayerN(gameUI["player_ids"], myUserID);
+  const [observingPlayerN, setObservingPlayerN] = useState(PlayerN);
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
   const defaultGameDropdown = options[0];
@@ -247,7 +248,7 @@ export const Table = ({
     >
     <div className="flex flex-1 h-full">
       {/* Right panel */}
-      <div className="flex flex-col w-8">
+      <div className="flex flex-col w-14">
         <div 
           className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===7) ? "bg-gray-600" : "bg-gray-400"}`}
           style={{writingMode:"vertical-rl"}} 
@@ -280,8 +281,8 @@ export const Table = ({
 
 
 
-      {/* Middle panel */}
-      <div className="flex w-4/5">
+      {/* Main panel */}
+      <div className="flex w-full">
         <div className="flex flex-col w-full h-full">
 
           <div className="bg-gray-600 text-white" style={{height: "6%"}}>
@@ -397,30 +398,42 @@ export const Table = ({
                 ></GroupContainer>
               </div>
             }
-            <div className=" flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%", background: "rgba(0, 0, 0, 0.5)"}}>
-              <PlayerBar
-                groups={groups}
-                observingPlayerN={observingPlayerN}
-                gameBroadcast={gameBroadcast} 
-                chatBroadcast={chatBroadcast}
-                PlayerN={PlayerN}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
-                setBrowseGroupTopN={setBrowseGroupTopN}
-              ></PlayerBar>
+            <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
+              <div className=" flex flex-1" style={{width: "75%", maxWidth: "75%", minHeight: "100%", height: "100%", maxHeight: "100%", background: "rgba(0, 0, 0, 0.5)"}}>
+                <PlayerBar
+                  groups={groups}
+                  observingPlayerN={observingPlayerN}
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                  PlayerN={PlayerN}
+                  browseGroupID={browseGroupID}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
+                ></PlayerBar>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <GiantCard PlayerN={PlayerN}></GiantCard>
-      {/* Right panel */}
+      <div 
+        className="absolute overflow-hidden" 
+        style={{height: chatHover ? "90%" : "18.5%", width: "24.3%", right: "0", bottom: "0", opacity: 0.7, zIndex: 1e6}}
+        onMouseEnter={() => setChatHover(true)}
+        onMouseLeave={() => setChatHover(false)}
+      >
+        {gameUI != null && (
+          <Chat roomName={gameUI.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
+        )}
+      </div>
+      {/* Right panel
       <div className="flex w-1/5" >
         <div className="flex flex-col w-full h-full">
-          {/* Hovercard */}
-          {/* <div style={{height: "45%"}}>
+          
+          <div style={{height: "45%"}}>
             <GiantCard PlayerN={PlayerN}></GiantCard>
-          </div> */}
-          {/* Chat */}
+          </div>
+          
           <div 
             className="overflow-hidden" 
             style={{height: showScratch ? "12%" : "57%", opacity: 0.7}}
@@ -429,7 +442,7 @@ export const Table = ({
               <Chat roomName={gameUI.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
             )}
           </div>
-          {/* Extra */}
+          
           <div style={{height: "40%", display: showScratch ? "block" : "none"}}>        
             <div style={{height: "33.3%"}}>
               <GroupContainer
@@ -472,7 +485,7 @@ export const Table = ({
             <FontAwesomeIcon className="text-white" icon={showScratch ? faChevronDown : faChevronUp}/>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
 
     {/* <ReactModal
