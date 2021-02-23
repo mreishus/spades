@@ -25,37 +25,37 @@ export const GROUPSINFO = {
     "gPlayer1Deck": {name: "Player 1 Deck", tablename: "Deck"},
     "gPlayer1Discard": {name: "Player 1 Discard", tablename: "Discard"},
     "gPlayer1Sideboard": {name: "Player 1 Sideboard", tablename: "Player 1 Sideboard"},
-    "gPlayer1Play1": {name: "Player 1 Play Area 1", tablename: "Play Area"},
-    "gPlayer1Play2": {name: "Player 1 Play Area 2", tablename: "Play Area"},
+    "gPlayer1Play1": {name: "Player 1 Play Area", tablename: "Play Area"},
+    "gPlayer1Play2": {name: "Player 1 Play Area", tablename: "Play Area"},
     "gPlayer1Engaged": {name: "Player 1 Engaged Area", tablename: "Engaged Area"},
     "gPlayer1Event": {name: "Player 1 Current Event", tablename: "Current Event"},
     "gPlayer2Hand": {name: "Player 2 Hand", tablename: "Player 2 Hand"},
     "gPlayer2Deck": {name: "Player 2 Deck", tablename: "Deck"},
     "gPlayer2Discard": {name: "Player 2 Discard", tablename: "Discard"},
     "gPlayer2Sideboard": {name: "Player 2 Sideboard", tablename: "Player 2 Sideboard"},
-    "gPlayer2Play1": {name: "Player 2 Play Area 1", tablename: "Play Area"},
-    "gPlayer2Play2": {name: "Player 2 Play Area 2", tablename: "Play Area"},
+    "gPlayer2Play1": {name: "Player 2 Play Area", tablename: "Play Area"},
+    "gPlayer2Play2": {name: "Player 2 Play Area", tablename: "Play Area"},
     "gPlayer2Engaged": {name: "Player 2 Engaged Area", tablename: "Engaged Area"},
     "gPlayer2Event": {name: "Player 2 Current Event", tablename: "Current Event"},
     "gPlayer3Hand": {name: "Player 3 Hand", tablename: "Player 3 Hand"},
     "gPlayer3Deck": {name: "Player 3 Deck", tablename: "Deck"},
     "gPlayer3Discard": {name: "Player 3 Discard", tablename: "Discard"},
     "gPlayer3Sideboard": {name: "Player 3 Sideboard", tablename: "Player 3 Sideboard"},
-    "gPlayer3Play1": {name: "Player 3 Play Area 1", tablename: "Play Area"},
-    "gPlayer3Play2": {name: "Player 3 Play Area 2", tablename: "Play Area"},
+    "gPlayer3Play1": {name: "Player 3 Play Area", tablename: "Play Area"},
+    "gPlayer3Play2": {name: "Player 3 Play Area", tablename: "Play Area"},
     "gPlayer3Engaged": {name: "Player 3 Engaged Area", tablename: "Engaged Area"},
     "gPlayer3Event": {name: "Player 3 Current Event", tablename: "Current Event"},
     "gPlayer4Hand": {name: "Player 4 Hand", tablename: "Player 4 Hand"},
     "gPlayer4Deck": {name: "Player 4 Deck", tablename: "Deck"},
     "gPlayer4Discard": {name: "Player 4 Discard", tablename: "Discard"},
     "gPlayer4Sideboard": {name: "Player 4 Sideboard", tablename: "Player 4 Sideboard"},
-    "gPlayer4Play1": {name: "Player 4 Play Area 1", tablename: "Play Area"},
-    "gPlayer4Play2": {name: "Player 4 Play Area 2", tablename: "Play Area"},
+    "gPlayer4Play1": {name: "Player 4 Play Area", tablename: "Play Area"},
+    "gPlayer4Play2": {name: "Player 4 Play Area", tablename: "Play Area"},
     "gPlayer4Engaged": {name: "Player 4 Engaged Area", tablename: "Engaged Area"},
     "gPlayer4Event": {name: "Player 4 Current Event", tablename: "Current Event"}
 }
 
-export const sectionToGroupID = (section, PlayerN) => {
+export const sectionToLoadGroupID = (section, PlayerN) => {
   switch(section) {
     case 'Hero':
       return 'g'+PlayerN+'Play1';

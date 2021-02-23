@@ -90,10 +90,9 @@ export const handleKeyDown = (
 
     // Card specific hotkeys
     if (activeCardAndLoc != null) {   
-        var newCard = activeCardAndLoc.card;
-        var newTokens = newCard.tokens;
-        var cardChanged = false;
-        const displayName = getDisplayName(newCard);
+        const activeCard = activeCardAndLoc.card;
+        const displayName = getDisplayName(activeCard);
+        const tokens = activeCard.tokens;
         const groupID = activeCardAndLoc.groupID;
         const stackIndex = activeCardAndLoc.stackIndex;
         const cardIndex = activeCardAndLoc.cardIndex;
@@ -106,11 +105,8 @@ export const handleKeyDown = (
             if (mousePosition === "top") delta = keyTokenMap[k][1];
             else if (mousePosition === "bottom") delta = -keyTokenMap[k][1];
             else delta = 0;
-            const newVal = newTokens[tokenType]+delta;
+            const newVal = tokens[tokenType]+delta;
             if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
-            newTokens = {...newTokens, [tokenType]: newVal}
-            newCard = {...newCard, tokens: newTokens}
-            cardChanged = true;
             gameBroadcast("increment_token",{group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: delta})
             if (delta > 0) {
                 if (delta === 1) {
@@ -128,39 +124,36 @@ export const handleKeyDown = (
         }
         // Set tokens to 0
         else if (k === "0" && groupType === "play") {
-            for (var tokenType in newTokens) if (newTokens.hasOwnProperty(tokenType)) newTokens = {...newTokens, [tokenType]: 0};
-            newCard = {...newCard, tokens: newTokens}
-            cardChanged = true;
-            gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+            for (var tokenType in tokens) {
+                if (tokens.hasOwnProperty(tokenType)) {
+                    gameBroadcast("increment_token",{group_id: groupID, stack_index: stackIndex, card_index: cardIndex, token_type: tokenType, increment: -tokens[tokenType]})
+                }
+            }
             chatBroadcast("game_update", {message: "cleared all tokens from "+displayName+"."});
         }
         // Flip card
         else if (k === "f") {
+            var newCard = activeCardAndLoc;
             if (newCard.currentSide === "A") {
                 newCard = {...newCard, currentSide: "B"}
             } else {
                 newCard = {...newCard, currentSide: "A"}
             }
-            cardChanged = true;
             gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
             if (displayName==="player card" || displayName==="encounter card") {
-            chatBroadcast("game_update", {message: "flipped "+getDisplayName(newCard)+" faceup."});
+                chatBroadcast("game_update", {message: "flipped "+getDisplayName(newCard)+" faceup."});
             } else {
-            chatBroadcast("game_update", {message: "flipped "+displayName+" over."});
+                chatBroadcast("game_update", {message: "flipped "+displayName+" over."});
             }
         }
         // Exhaust card
         else if (k === "a" && groupType === "play") {
-            if (newCard.exhausted) {
-            newCard = {...newCard, exhausted: false, rotation: 0}
-            chatBroadcast("game_update", {message: "readied "+displayName+"."});
+            if (activeCard.exhausted) {
+                chatBroadcast("game_update", {message: "readied "+displayName+"."});
             } else {
-            newCard = {...newCard, exhausted: true, rotation: 90}
-            chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+                chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
             }
-            cardChanged = true;
             gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-            //gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
         }
         // Deal shadow card
         else if (k === "s" && groupType == "play") {
@@ -190,7 +183,7 @@ export const handleKeyDown = (
                 }
             // If the card is a child card in a stack, just discard that card
             } else {
-                const discardGroupID = newCard["discardgroupid"]
+                const discardGroupID = activeCard["discardgroupid"]
                 chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupID].name+"."});
                 gameBroadcast("move_card", {
                     orig_group_id: groupID, 
@@ -204,6 +197,17 @@ export const handleKeyDown = (
             }
         }
         // Shufle card into owner's deck
+        else if (k === "h") {
+            // determine destination groupID
+            var destGroupID = "gSharedEncounterDeck";
+            if (activeCard.owner === "Player1") destGroupID = "gPlayer1Deck";
+            else if (activeCard.owner === "Player2") destGroupID = "gPlayer2Deck";
+            else if (activeCard.owner === "Player3") destGroupID = "gPlayer3Deck";
+            else if (activeCard.owner === "Player4") destGroupID = "gPlayer4Deck";
+            gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+            gameBroadcast("shuffle_group", {group_id: destGroupID})
+            chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupID].name+" into "+GROUPSINFO[destGroupID].name+"."})
+        }
 
         // if (cardChanged) {
         //     setActiveCardAndLoc({

@@ -346,8 +346,11 @@ defmodule SpadesGame.GameUI do
   end
 
   def load_cards(gameui, user_id, load_list) do
-    # IO.puts("before_load")
-    # IO.inspect(gameui["game"]["groups"])
+    # Get player doing the loading
+    player_n = get_player_n(gameui, user_id)
+    # Get deck sie before load
+    deck_size_before = Enum.count(get_stacks(gameui,"g"<>player_n<>"Deck"))
+
     gameui = Enum.reduce load_list, gameui, fn r, acc ->
       load_card(acc, r["cardRow"], r["groupID"], r["quantity"])
     end
@@ -366,24 +369,26 @@ defmodule SpadesGame.GameUI do
     threat = Enum.reduce load_list, 0, fn r, acc ->
       sideA = r["cardRow"]["sides"]["A"]
       if sideA["type"] == "Hero" do
-        IO.puts("adding threat")
-        IO.inspect(sideA)
-        IO.inspect(acc)
-        IO.inspect(sideA["cost"])
-        IO.inspect(r["quantity"])
         acc + CardFace.convert_to_integer(sideA["cost"])*r["quantity"]
       else
         acc
       end
     end
-
-    player_n = get_player_n(gameui, user_id)
     if player_n do
-      IO.puts("Player n threat")
-      IO.inspect(threat)
       gameui = put_in(gameui["game"]["player_data"][player_n]["threat"], threat)
     else
       gameui
+    end
+
+    # If deck size has increased from 0, assume it is at start of game and a mulligan is needed
+    round_number = gameui["game"]["round_number"]
+    round_step = gameui["game"]["round_step"]
+    deck_size_after = Enum.count(get_stacks(gameui,"g"<>player_n<>"Deck"))
+    if round_number == 1 && round_step == "0.0" && deck_size_before == 0 && deck_size_after > 6 do
+      gameui = shuffle_group(gameui, "g"<>player_n<>"Deck")
+      Enum.reduce 1..6, gameui, fn i, acc ->
+        move_stack(acc, "g"<>player_n<>"Deck", 0, "g"<>player_n<>"Hand", -1, false)
+      end
     end
   end
 

@@ -180,6 +180,15 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
+  set_round_step/3: A player changes the round step
+  """
+  @spec set_round_step(String.t(), integer, String.t()) :: GameUI.t()
+  def set_round_step(game_name, user_id, round_step) do
+    IO.puts("game_ui_server: set_round_step")
+    GenServer.call(via_tuple(game_name), {:set_round_step, round_step})
+  end
+
+  @doc """
   rewind_countdown_devtest/1: Make the "game start" countdown happen
   instantly.
   Works by moving back the "everyone sat down" timestamp by 10 minutes.
@@ -367,6 +376,11 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:toggle_exhaust, user_id, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: toggle_exhaust a")
     GameUI.toggle_exhaust(gameui, group_id, stack_index, card_index)
+    |> save_and_reply()
+  end
+
+  def handle_call({:set_round_step, round_step}, _from, gameui) do
+    put_in(gameui["game"]["round_step"], round_step)
     |> save_and_reply()
   end
 

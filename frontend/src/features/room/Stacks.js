@@ -4,16 +4,6 @@ import { Droppable, Draggable } from "react-beautiful-dnd";
 import StackView from "./StackView";
 import CardBack from "./CardBack"
 
-export const getBackgroundColor = (isDraggingOver, isDraggingFrom) => {
-  if (isDraggingOver) {
-    return 'hotpink';
-  }
-  if (isDraggingFrom) {
-    return '';
-  }
-  return 'lime';
-};
-
 const Wrapper = styled.div`
   background-color: ${props => props.isDraggingOver ? "rgba(1,1,1,0.5)" : ""};
   moz-box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.5)" : ""};

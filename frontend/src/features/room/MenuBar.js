@@ -1,7 +1,7 @@
 import React, { Component, useState, useRef } from "react";
 import { getCurrentFace } from "./CardView"
 import { MenuBarUser } from "./MenuBarUser"
-import { GROUPSINFO, sectionToGroupID, sectionToDiscardGroupID } from "./Constants";
+import { GROUPSINFO, sectionToLoadGroupID, sectionToDiscardGroupID } from "./Constants";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -20,17 +20,21 @@ export const MenuBar = React.memo(({
     const groups = gameUI["game"]["groups"];
 
     const handleMenuClick = (data) => {
-        console.log(data);
-        if (data.action === "reset_game") {
-            gameBroadcast("reset_game",{});
-            chatBroadcast("game_update",{message: "reset the game."});
-        } else if (data.action === "load_deck") {
-            loadDeckFile();
-        } else if (data.action === "spawn_card") {
-            setShowSpawn(true);
-        } else if (data.action === "look_at") {
-            handleBrowseSelect(data.groupID);
-        }
+      if (!PlayerN) {
+        alert("Please sit at the table first.");
+        return;
+      }
+      console.log(data);
+      if (data.action === "reset_game") {
+          gameBroadcast("reset_game",{});
+          chatBroadcast("game_update",{message: "reset the game."});
+      } else if (data.action === "load_deck") {
+          loadDeckFile();
+      } else if (data.action === "spawn_card") {
+          setShowSpawn(true);
+      } else if (data.action === "look_at") {
+          handleBrowseSelect(data.groupID);
+      }
     }
 
     const loadDeckFile = () => {
@@ -55,7 +59,7 @@ export const MenuBar = React.memo(({
               var cardRow = cardDB[cardid];
               cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,PlayerN);
               if (cardRow) {
-                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToGroupID(sectionName,PlayerN)})
+                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToLoadGroupID(sectionName,PlayerN)})
               }
             })
           })
