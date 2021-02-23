@@ -384,11 +384,13 @@ defmodule SpadesGame.GameUI do
     round_number = gameui["game"]["round_number"]
     round_step = gameui["game"]["round_step"]
     deck_size_after = Enum.count(get_stacks(gameui,"g"<>player_n<>"Deck"))
-    if round_number == 1 && round_step == "0.0" && deck_size_before == 0 && deck_size_after > 6 do
+    gameui = if round_number == 1 && round_step == "0.0" && deck_size_before == 0 && deck_size_after > 6 do
       gameui = shuffle_group(gameui, "g"<>player_n<>"Deck")
       Enum.reduce 1..6, gameui, fn i, acc ->
         move_stack(acc, "g"<>player_n<>"Deck", 0, "g"<>player_n<>"Hand", -1, false)
       end
+    else
+      gameui
     end
   end
 

@@ -15,6 +15,7 @@ const keyTokenMap = {
 
 export const handleKeyDown = (
     event, 
+    PlayerN,
     gameUI,
     typing, 
     keypress,
@@ -25,6 +26,10 @@ export const handleKeyDown = (
     chatBroadcast
 ) => {
     if (typing) return;
+    if (!PlayerN) {
+        alert("Please sit down to do that.")
+        return;
+    }
     const k = event.key;
     console.log(k);
     // Keep track of last pressed key
@@ -38,7 +43,7 @@ export const handleKeyDown = (
         // If no cards, check phase of game
         if (stacksLeft === 0) {
             // If quest phase, shuffle encounter discard pile into deck
-            if (gameUI["game"]["phase"] === "quest") {
+            if (gameUI["game"]["phase"] === "pQuest") {
                 gameBroadcast("move_stacks",{
                     orig_group_id: "gSharedEncounterDeck",
                     dest_group_id: "gSharedStaging", 
@@ -53,6 +58,10 @@ export const handleKeyDown = (
         }
         // Reveal card
         const topStack = stacks[0];
+        if (!topStack) {
+            chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty."});
+            return;
+        }
         const topCard = topStack["cards"][0];
         // Was shift held down? (Deal card facedown)
         const shiftHeld = keypress[0] === "Shift";

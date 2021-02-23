@@ -6,6 +6,8 @@ import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import GameUIContext from "../../contexts/GameUIContext";
 import { ChatMessage } from "elixir-backend";
 import { handleKeyDown } from "./HandleKeyDown";
+import { GetPlayerN } from "./GetPlayerN";
+import useProfile from "../../hooks/useProfile";
 
 
 
@@ -75,11 +77,15 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   const setKeypress = useSetKeypress();
   const activeCardAndLoc = useActiveCard();
   const setActiveCardAndLoc = useSetActiveCard();
+  const myUser = useProfile();
+  const myUserID = myUser?.id;
+  const PlayerN = GetPlayerN(gameUI["player_ids"], myUserID);
 
   useEffect(() => {
     const onKeyDown = (event: any) => {
       handleKeyDown(
         event, 
+        PlayerN,
         gameUI,
         typing, 
         keypress, 
@@ -108,6 +114,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
 
   return (
       <Table 
+        PlayerN={PlayerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         messages={messages}

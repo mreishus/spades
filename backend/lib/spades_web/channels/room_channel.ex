@@ -321,11 +321,12 @@ end
 def handle_in(
   "set_round_step",
   %{
+    "phase" => phase,
     "round_step" => round_step,
   },
   %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
 ) do
-GameUIServer.set_round_step(room_slug, user_id, round_step)
+GameUIServer.set_round_step(room_slug, user_id, phase, round_step)
 state = GameUIServer.state(room_slug)
 socket = socket |> assign(:game_ui, state)
 notify(socket)

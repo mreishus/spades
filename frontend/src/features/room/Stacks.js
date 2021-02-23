@@ -9,6 +9,10 @@ const Wrapper = styled.div`
   moz-box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.5)" : ""};
   webkit-box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.5)" : ""};
   box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.5)" : ""};
+  -webkit-transition: all 0.2s;
+  -moz-transition: all 0.2s;
+  -o-transition: all 0.2s;
+  transition: all 0.2s;
   padding: 0 0 0 0;
   height: 87%;
   user-select: none;
