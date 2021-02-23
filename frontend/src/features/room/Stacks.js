@@ -15,7 +15,10 @@ export const getBackgroundColor = (isDraggingOver, isDraggingFrom) => {
 };
 
 const Wrapper = styled.div`
-  background-color: ${props => props.isDraggingOver ? "rgba(1,1,1,0.4)" : ""};
+  background-color: ${props => props.isDraggingOver ? "rgba(1,1,1,0.5)" : ""};
+  moz-box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.5)" : ""};
+  webkit-box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.5)" : ""};
+  box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.5)" : ""};
   padding: 0 0 0 0;
   height: 87%;
   user-select: none;
