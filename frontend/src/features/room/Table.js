@@ -249,8 +249,9 @@ export const Table = ({
       {/* Right panel */}
       <div className="bg-gray-500" style={{width:"48px"}}>
         <PhaseButton
-          phase={"α"}
-          height={"4.5%"}
+          phase={"PStart"}
+          text={"α"}
+          height={"4%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
@@ -258,8 +259,9 @@ export const Table = ({
           }}
         ></PhaseButton>
         <PhaseButton
-          phase={"Resource"}
-          height={"13%"}
+          phase={"pResource"}
+          text={"Resource"}
+          height={"11%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
@@ -269,8 +271,9 @@ export const Table = ({
           }}
         ></PhaseButton>
         <PhaseButton
-          phase={"Planning"}
-          height={"13%"}
+          phase={"pPlanning"}
+          text={"Planning"}
+          height={"11%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
@@ -280,8 +283,9 @@ export const Table = ({
           }}
         ></PhaseButton>
         <PhaseButton
-          phase={"Quest"}
-          height={"13%"}
+          phase={"pQuest"}
+          text={"Quest"}
+          height={"17%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
@@ -293,8 +297,9 @@ export const Table = ({
           }}
         ></PhaseButton>
         <PhaseButton
-          phase={"Travel"}
-          height={"13%"}
+          phase={"pTravel"}
+          text={"Travel"}
+          height={"11%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
@@ -304,8 +309,9 @@ export const Table = ({
           }}
         ></PhaseButton>
         <PhaseButton
-          phase={"Encounter"}
-          height={"13%"}
+          phase={"pEncounter"}
+          text={"Encounter"}
+          height={"14%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
@@ -316,8 +322,9 @@ export const Table = ({
           }}
         ></PhaseButton>
         <PhaseButton
-          phase={"Combat"}
-          height={"13%"}
+          phase={"pCombat"}
+          text={"Combat"}
+          height={"17%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
@@ -329,19 +336,21 @@ export const Table = ({
           }}
         ></PhaseButton>
         <PhaseButton
-          phase={"Refresh"}
-          height={"13%"}
+          phase={"pRefresh"}
+          text={"Refresh"}
+          height={"11%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
             "7.1": "Phase starts",
-            "7.R": "7.2 & 7.3: Ready all cards, raise threat, pass 1st player token",
+            "7.R": "7.2-7.4: Ready cards, raise threat, pass 1st player token",
             "7.3": "Phase ends",
           }}
         ></PhaseButton>
         <PhaseButton
-          phase={"Ω"}
-          height={"4.5%"}
+          phase={"pEnd"}
+          text={"Ω"}
+          height={"4%"}
           gamePhasePart={gamePhasePart}
           setGamePhasePart={setGamePhasePart}
           phaseInfo={{
