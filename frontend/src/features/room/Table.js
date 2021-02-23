@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { faStepBackward, faAngleDown, faEquals, faAngleDoubleDown, faAngleDoubleUp } from "@fortawesome/free-solid-svg-icons";
+import { faStepBackward, faStepForward, faEquals, faAngleDoubleDown, faAngleDoubleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Chat from "../chat/Chat";
@@ -18,6 +18,7 @@ import ReactModal from "react-modal";
 import Dropdown from 'react-dropdown';
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { PlayerBar } from "./PlayerBar";
+import { PhaseButton } from "./PhaseButton";
 import { GetPlayerN } from "./GetPlayerN";
 import useProfile from "../../hooks/useProfile";
 
@@ -63,7 +64,7 @@ export const Table = ({
   const [browseGroupID, setBrowseGroupID] = useState("");
   // Indices of stacks in group being browsed
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
-  const [phase, setPhase] = useState(1);
+  const [gamePhasePart, setGamePhasePart] = useState(0.0);
   const myUser = useProfile();
   const myUserID = myUser?.id;
   const PlayerN = GetPlayerN(gameUI["player_ids"], myUserID);
@@ -105,9 +106,9 @@ export const Table = ({
     chatBroadcast("game_update",{message: "spawned "+cardRow["sides"]["A"]["printname"]+"."});
   }
 
-  const changePhase = (num) => {
-    if (num!==phase) setPhase(num);
-  }
+  // const changePhase = (num) => {
+  //   if (num!==phase) setPhase(num);
+  // }
 
   useEffect(() => {
      setGroups(gameUI.game.groups);
@@ -244,57 +245,154 @@ export const Table = ({
     <DragDropContext
       onDragEnd={onDragEnd}
     >
-    <div className="flex flex-1 h-full">
+    <div className="h-full flex">
       {/* Right panel */}
-      <div className="flex flex-col w-14">
-        <div 
-          className={`flex text-center p-1 select-none ${(phase===8) ? "bg-gray-600" : "bg-gray-400"}`}
-          onClick={() => changePhase(8)}>End</div>
-        <div 
-          className={`flex flex-1 text-center select-none ${(phase===7) ? "bg-gray-600" : "bg-gray-400"}`}
+      <div className="bg-gray-500" style={{width:"48px"}}>
+        <PhaseButton
+          phase={"α"}
+          height={"4.5%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "0.0": "Round starts",
+          }}
+        ></PhaseButton>
+        <PhaseButton
+          phase={"Resource"}
+          height={"13%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "1.1": "Phase starts",
+            "1.R": "1.2 & 1.3: Gain resources and draw cards",
+            "1.4": "Phase ends",
+          }}
+        ></PhaseButton>
+        <PhaseButton
+          phase={"Planning"}
+          height={"13%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "2.1": "Phase starts",
+            "2.P": "2.2 & 2.3: Play cards in turn order",
+            "2.4": "Phase ends",
+          }}
+        ></PhaseButton>
+        <PhaseButton
+          phase={"Quest"}
+          height={"13%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "3.1": "Phase starts",
+            "3.2": "Commit characters",
+            "3.3": "Staging",
+            "3.4": "Quest resolution",
+            "3.5": "Phase ends",
+          }}
+        ></PhaseButton>
+        <PhaseButton
+          phase={"Travel"}
+          height={"13%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "4.1": "Phase starts",
+            "4.2": "Travel opportunity",
+            "4.3": "Phase ends",
+          }}
+        ></PhaseButton>
+        <PhaseButton
+          phase={"Encounter"}
+          height={"13%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "5.1": "Phase starts",
+            "5.2": "Optional Engagement",
+            "5.3": "Engagement checks",
+            "5.4": "Phase ends",
+          }}
+        ></PhaseButton>
+        <PhaseButton
+          phase={"Combat"}
+          height={"13%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "6.1": "Phase starts",
+            "6.2": "Shadow cards",
+            "6.E": "6.3-6.6: Enemy attacks",
+            "6.P": "6.7-6.10: Player attacks",
+            "6.11": "Phase ends",
+          }}
+        ></PhaseButton>
+        <PhaseButton
+          phase={"Refresh"}
+          height={"13%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "7.1": "Phase starts",
+            "7.R": "7.2 & 7.3: Ready all cards, raise threat, pass 1st player token",
+            "7.3": "Phase ends",
+          }}
+        ></PhaseButton>
+        <PhaseButton
+          phase={"Ω"}
+          height={"4.5%"}
+          gamePhasePart={gamePhasePart}
+          setGamePhasePart={setGamePhasePart}
+          phaseInfo={{
+            "0.1": "Round ends",
+          }}
+        ></PhaseButton>
+        {/* <div 
+          className={`flex flex-1 text-center select-none text-gray-100 ${(phase===7) ? "bg-gray-600" : ""}`}
         >
           <div
-            className={`w-1/2 ${(Math.floor(phase)===7) ? "bg-gray-600" : "bg-gray-400"}`}
+            className={`w-1/2 ${(Math.floor(phase)===7) ? "bg-gray-600" : ""}`}
             style={{writingMode:"vertical-rl"}} 
           >
             Refresh
           </div>
           <div
-            className={`w-1/2`}
+            className="w-1/2"
           >
-            <div className={`flex h-1/3 items-center justify-center ${(phase===7.3) ? "bg-gray-600" : "bg-gray-400"}`} onClick={() => changePhase(7.3)}><FontAwesomeIcon className="text-gray-100 fa-rotate-90" icon={faStepBackward}/></div>
-            <div className={`flex h-1/3 items-center justify-center ${(phase===7.2) ? "bg-gray-600" : "bg-gray-400"}`} onClick={() => changePhase(7.2)}><FontAwesomeIcon className="text-white" icon={faEquals}/></div>
-            <div className={`flex h-1/3 items-center justify-center ${(phase===7.1) ? "bg-gray-600" : "bg-gray-400"}`} onClick={() => changePhase(7.1)}><FontAwesomeIcon className="text-white" icon={faAngleDown}/></div>
+            <div className={`flex h-1/3 items-center justify-center ${(phase===7.3) ? "bg-gray-600" : ""}`} onClick={() => changePhase(7.3)}><FontAwesomeIcon className="fa-rotate-90" icon={faStepBackward}/></div>
+            <div className={`flex h-1/3 items-center justify-center ${(phase===7.2) ? "bg-gray-600" : ""}`} onClick={() => changePhase(7.2)}><FontAwesomeIcon className="" icon={faEquals}/></div>
+            <div className={`flex h-1/3 items-center justify-center ${(phase===7.1) ? "bg-gray-600" : ""}`} onClick={() => changePhase(7.1)}><FontAwesomeIcon className="fa-rotate-90" icon={faStepForward}/></div>
           </div>
-        </div>
-        <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===6) ? "bg-gray-600" : "bg-gray-400"}`}
+        </div> */}
+        {/* <div 
+          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===6) ? "bg-gray-600" : ""}`}
           style={{writingMode:"vertical-rl"}} 
           onClick={() => changePhase(6)}>Combat</div>
         <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===5) ? "bg-gray-600" : "bg-gray-400"}`}
+          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===5) ? "bg-gray-600" : ""}`}
           style={{writingMode:"vertical-rl"}} 
           onClick={() => changePhase(5)}>Encounter</div>
         <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===4) ? "bg-gray-600" : "bg-gray-400"}`}
+          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===4) ? "bg-gray-600" : ""}`}
           style={{writingMode:"vertical-rl"}} 
           onClick={() => changePhase(4)}>Travel</div>
         <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===3) ? "bg-gray-600" : "bg-gray-400"}`}
+          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===3) ? "bg-gray-600" : ""}`}
           style={{writingMode:"vertical-rl"}} 
           onClick={() => changePhase(3)}>Quest</div>
         <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===2) ? "bg-gray-600" : "bg-gray-400"}`}
+          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===2) ? "bg-gray-600" : ""}`}
           style={{writingMode:"vertical-rl"}} 
           onClick={() => changePhase(2)}>Planning</div>
         <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===1) ? "bg-gray-600" : "bg-gray-400"}`}
+          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===1) ? "bg-gray-600" : ""}`}
           style={{writingMode:"vertical-rl"}} 
-          onClick={() => changePhase(1)}>Resource</div>
-        <div 
-          className={`flex text-center p-1 select-none ${(phase===0) ? "bg-gray-600" : "bg-gray-400"}`}
-          onClick={() => changePhase(0)}>Start</div>
-      </div>
+          onClick={() => changePhase(1)}>Resource</div> */}
+        {/* <div 
+          className={`flex text-center p-1 select-none ${(gamePhase==="End") ? "bg-gray-600" : ""}`}
+          onClick={() => setGamePhase("End")}>End</div>*/}
+      </div> 
 
 
 
