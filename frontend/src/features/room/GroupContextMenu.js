@@ -42,7 +42,7 @@ export const GroupContextMenu = React.memo(({
     }
 
     return(
-      <ContextMenu id={group.id} style={{zIndex:1e6}}>
+      <ContextMenu id={group.id} style={{zIndex:1e8}}>
           <hr></hr>
           <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
           <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: "None"}}>Browse</MenuItem>

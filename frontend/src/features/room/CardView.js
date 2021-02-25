@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 export const getCurrentFace = (card) => {
+    if (!card) return null;
     return card["sides"][card["currentSide"]];
 }
 
@@ -64,7 +65,7 @@ export const getVisibleFace = (card, PlayerN) => {
 
 export const getVisibleFaceSRC = (card, PlayerN) => {
     if (!card) return "";
-    const visibleSide = getVisibleSide(card);
+    const visibleSide = getVisibleSide(card, PlayerN);
     if (visibleSide == "A") {
         return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
     } else { // Side B logic
@@ -172,11 +173,16 @@ const CardComponent = React.memo(({
     // the shouldComponentUpdate aleady sees the next state and thinks its the same as the
     // current one, so it doesn't update.
     console.log('rendering ',groupID,stackIndex,cardIndex)
+    console.log(inputCard);
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
 
     const [isActive, setIsActive] = useState(false);
+    console.log("getting display name of")
+    console.log(inputCard)
+    console.log(inputCard["sides"])
+    console.log(inputCard["sides"][inputCard["currentSide"]]);
     const displayName = getDisplayName(inputCard);
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
@@ -327,7 +333,7 @@ const CardComponent = React.memo(({
 
             </ContextMenuTrigger>
 
-            <ContextMenu id={inputCard.id} style={{zIndex:1e6}}>
+            <ContextMenu id={inputCard.id} style={{zIndex:1e8}}>
                 <hr></hr>
                 {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
                 <SubMenu title='Move to'>

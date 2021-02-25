@@ -34,6 +34,7 @@ export const handleKeyDown = (
     console.log(k);
     // Keep track of last pressed key
     setKeypress([k]);
+    
     // General hotkeys
     if (k === "e" || k === "E") {
         // Check remaining cards in encounter deck
@@ -64,7 +65,7 @@ export const handleKeyDown = (
         }
         const topCard = topStack["cards"][0];
         // Was shift held down? (Deal card facedown)
-        const shiftHeld = keypress[0] === "Shift";
+        const shiftHeld = (k === "E"); // keypress[0] === "Shift";
         const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
         chatBroadcast("game_update",{message: message});
         gameBroadcast("move_stack",{
@@ -142,13 +143,13 @@ export const handleKeyDown = (
         }
         // Flip card
         else if (k === "f") {
-            var newCard = activeCardAndLoc;
+            var newCard = activeCard;
             if (newCard.currentSide === "A") {
                 newCard = {...newCard, currentSide: "B"}
             } else {
                 newCard = {...newCard, currentSide: "A"}
             }
-            gameBroadcast("update_card", {card: newCard, group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+            gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index: cardIndex});
             if (displayName==="player card" || displayName==="encounter card") {
                 chatBroadcast("game_update", {message: "flipped "+getDisplayName(newCard)+" faceup."});
             } else {
