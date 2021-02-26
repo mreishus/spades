@@ -20,12 +20,14 @@ defmodule SpadesGame.GameUISupervisor do
   Starts a `GameUIServer` process and supervises it.
   """
   def start_game(game_name, user, %GameOptions{} = options) do
+    IO.puts("gameuisup: start a")
+    IO.inspect(user)
     child_spec = %{
       id: GameUIServer,
       start: {GameUIServer, :start_link, [game_name, user, options]},
       restart: :transient
     }
-    IO.puts("gameuisup: start a")
+    IO.puts("gameuisup: start b")
     DynamicSupervisor.start_child(__MODULE__, child_spec)
   end
 

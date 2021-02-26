@@ -250,6 +250,7 @@ defmodule SpadesGame.GameUIServer do
       case :ets.lookup(:game_uis, game_name) do
         [] ->
           IO.puts("case 1")
+          IO.inspect(user)
           gameui = GameUI.new(game_name, user, options)
           :ets.insert(:game_uis, {game_name, gameui})
           gameui
@@ -327,27 +328,17 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:update_card, user_id, new_card, group_id, stack_index, card_index}, _from, gameui) do
-    GameUI.update_card(gameui, group_id, stack_index, card_index, new_card)
+    GameUI.update_card(gameui, [group_id, stack_index, card_index], new_card)
     |> save_and_reply()
   end
 
   def handle_call({:increment_token, user_id, group_id, stack_index, card_index, token_type, increment}, _from, gameui) do
-    old_token = GameUI.get_token(gameui, group_id, stack_index, card_index, token_type)
-    GameUI.update_token(gameui, group_id, stack_index, card_index, token_type, old_token+increment)
+    GameUI.increment_token(gameui, [group_id, stack_index, card_index], [token_type, increment])
     |> save_and_reply()
   end
 
   def handle_call({:deal_shadow, user_id, group_id, stack_index}, _from, gameui) do
-    cards_size = Enum.count(GameUI.get_cards(gameui, group_id, stack_index))
-    gameui = GameUI.move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false, true)
-    shadow_card = GameUI.get_card(gameui, group_id, stack_index, cards_size)
-    IO.puts("shadow_card")
-    if shadow_card do
-      rotated_shadow_card = put_in(shadow_card["rotation"], -30)
-      GameUI.update_card(gameui, group_id, stack_index, cards_size, rotated_shadow_card)
-    else
-      gameui
-    end
+    GameUI.deal_shadow(gameui, [group_id, stack_index, 0])
     |> save_and_reply()
   end
 
@@ -364,27 +355,13 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:detach, user_id, group_id, stack_index, card_index}, _from, gameui) do
-    old_stacks = GameUI.get_stacks(gameui, group_id)
-    old_stack = GameUI.get_stack(gameui, group_id, stack_index)
-    old_cards = GameUI.get_cards(gameui, group_id, stack_index)
-    old_card = GameUI.get_card(gameui, group_id, stack_index, card_index)
-
-    # Delete old card
-    new_cards = List.delete_at(old_cards,card_index)
-    new_stack = put_in(old_stack["cards"],new_cards)
-    new_stacks = List.replace_at(old_stacks,stack_index,new_stack)
-
-    # Insert new card
-    new_stacks = List.insert_at(new_stacks,stack_index+1,Stack.stack_from_card(old_card))
-
-    # Put stacks into gameui
-    GameUI.update_stacks(gameui, group_id, new_stacks)
+    GameUI.detach(gameui, [group_id, stack_index, card_index])
     |> save_and_reply()
   end
 
   def handle_call({:toggle_exhaust, user_id, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: toggle_exhaust a")
-    GameUI.toggle_exhaust(gameui, group_id, stack_index, card_index)
+    GameUI.toggle_exhaust(gameui, [group_id, stack_index, card_index])
     |> save_and_reply()
   end
 

@@ -13,19 +13,21 @@ defmodule SpadesGame.GameUI do
     IO.puts("game_ui new")
     #IO.inspect(game)
 
-    %{
+    gameui = %{
       "game"=> game,
       "game_name"=> game_name,
       "options"=> options,
       "created_at"=> DateTime.utc_now(),
       "created_by"=> user,
       "player_ids" => %{
-        "Player1" => nil,
+        "Player1" => user,
         "Player2" => nil,
         "Player3" => nil,
         "Player4" => nil,
       }
     }
+    IO.inspect(gameui)
+    gameui
   end
 
   def get_group(gameui,group_id) do
@@ -54,17 +56,17 @@ defmodule SpadesGame.GameUI do
     get_stack(gameui, group_id, stack_index)["cards"]
   end
 
-  def get_card(gameui, group_id, stack_index, card_index) do
-    cards = get_cards(gameui, group_id, stack_index)
-    if cards do Enum.at(cards, card_index) else nil end
+  def get_card(gameui, gsc) do
+    cards = get_cards(gameui, Enum.at(gsc, 0), Enum.at(gsc, 1))
+    if cards do Enum.at(cards, Enum.at(gsc, 2)) else nil end
   end
 
-  def get_tokens(gameui, group_id, stack_index, card_index) do
-    get_card(gameui, group_id, stack_index, card_index)["tokens"]
+  def get_tokens(gameui, gsc) do
+    get_card(gameui, gsc)["tokens"]
   end
 
-  def get_token(gameui, group_id, stack_index, card_index, token_type) do
-    get_tokens(gameui, group_id, stack_index, card_index)[token_type]
+  def get_token(gameui, gsc, token_type) do
+    get_tokens(gameui, gsc)[token_type]
   end
 
   def update_group(gameui, group_id, new_group) do
@@ -89,32 +91,44 @@ defmodule SpadesGame.GameUI do
     update_stack(gameui, group_id, stack_index, new_stack)
   end
 
-  def update_card(gameui, group_id, stack_index, card_index, new_card) do
+  def update_card(gameui, gsc, new_card) do
+    group_id = Enum.at(gsc, 0)
+    stack_index = Enum.at(gsc, 1)
+    card_index = Enum.at(gsc, 2)
     old_cards = get_cards(gameui, group_id, stack_index)
-    new_cards = List.replace_at(old_cards,card_index,new_card)
+    new_cards = List.replace_at(old_cards, card_index, new_card)
     update_cards(gameui, group_id, stack_index, new_cards)
   end
 
-  def update_tokens(gameui, group_id, stack_index, card_index, new_tokens) do
-    old_card = get_card(gameui, group_id, stack_index, card_index)
+  def update_tokens(gameui, gsc, new_tokens) do
+    old_card = get_card(gameui, gsc)
     new_card = put_in(old_card["tokens"],new_tokens)
-    update_card(gameui, group_id, stack_index, card_index, new_card)
+    update_card(gameui, gsc, new_card)
   end
+
+  def update_token(gameui, gsc, token_type, new_value) do
+    old_tokens = get_tokens(gameui, gsc)
+    new_tokens = put_in(old_tokens[token_type],new_value)
+    update_tokens(gameui, gsc, new_tokens)
+  end
+
 
   # Card actions: must be in the form fn(gameui, gsc, args)
-  def update_token(gameui, group_id, stack_index, card_index, token_type, new_value) do
-    new_value = if new_value < 0 && Enum.member?(["resource", "progress", "damage", "time"], token_type) do
+  def increment_token(gameui, gsc, options) do
+    token_type = Enum.at(options, 0)
+    increment = Enum.at(options, 1)
+    old_tokens = get_tokens(gameui, gsc)
+    old_value = old_tokens[token_type]
+    new_value = if old_value + increment < 0 && Enum.member?(["resource", "progress", "damage", "time"], token_type) do
       0
     else
-      new_value
+      old_value + increment
     end
-    old_tokens = get_tokens(gameui, group_id, stack_index, card_index)
-    new_tokens = put_in(old_tokens[token_type],new_value)
-    update_tokens(gameui, group_id, stack_index, card_index, new_tokens)
+    update_token(gameui, gsc, token_type, new_value)
   end
 
-  def toggle_exhaust(gameui, group_id, stack_index, card_index) do
-    card = get_card(gameui, group_id, stack_index, card_index)
+  def toggle_exhaust(gameui, gsc, options \\ nil) do
+    card = get_card(gameui, gsc)
     new_card = if card["exhausted"] do
       card = put_in(card["exhausted"], false)
       put_in(card["rotation"], 0)
@@ -122,7 +136,55 @@ defmodule SpadesGame.GameUI do
       card = put_in(card["exhausted"], true)
       put_in(card["rotation"], 90)
     end
-    update_card(gameui, group_id, stack_index, card_index, new_card)
+    update_card(gameui, gsc, new_card)
+  end
+
+  def flip_card(gameui, gsc, options \\ nil) do
+    old_card = get_card(gameui, gsc)
+    current_side = old_card["currentSide"]
+    new_card = if current_side == "A" do
+      put_in(old_card["currentSide"],"B")
+    else
+      put_in(old_card["currentSide"],"A")
+    end
+    update_card(gameui, gsc, new_card)
+  end
+
+  def deal_shadow(gameui, gsc, options \\ nil) do
+    group_id    = Enum.at(gsc, 0)
+    stack_index = Enum.at(gsc, 1)
+    card_index  = Enum.at(gsc, 2)
+    shadow_card = get_card(gameui, ["gSharedEncounterDeck", 0, 0])
+    IO.puts("shadow_card")
+    if shadow_card do
+      cards_size = Enum.count(GameUI.get_cards(gameui, group_id, stack_index))
+      gameui = move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false, true)
+      rotated_shadow_card = put_in(shadow_card["rotation"], -30)
+      update_card(gameui, [group_id, stack_index, cards_size], rotated_shadow_card)
+    else
+      gameui
+    end
+  end
+
+  def detach(gameui, gsc, options \\ nil) do
+    group_id = Enum.at(gsc, 0)
+    stack_index = Enum.at(gsc, 1)
+    card_index = Enum.at(gsc, 2)
+    old_stacks = get_stacks(gameui, group_id)
+    old_stack = get_stack(gameui, group_id, stack_index)
+    old_cards = get_cards(gameui, group_id, stack_index)
+    old_card = get_card(gameui, gsc)
+
+    # Delete old card
+    new_cards = List.delete_at(old_cards, card_index)
+    new_stack = put_in(old_stack["cards"], new_cards)
+    new_stacks = List.replace_at(old_stacks, stack_index, new_stack)
+
+    # Insert new card
+    new_stacks = List.insert_at(new_stacks, stack_index+1, Stack.stack_from_card(old_card))
+
+    # Put stacks into gameui
+    update_stacks(gameui, group_id, new_stacks)
   end
 
   @spec sit(GameUI.t(), integer, String.t()) :: GameUI.t()
@@ -176,11 +238,11 @@ defmodule SpadesGame.GameUI do
     update_stacks(gameui, group_id, new_stacks)
   end
 
-  def peek_group_stack_card(gameui, group_id, stack_index, card_index, player_n, tf) do
-    old_card = get_card(gameui, group_id, stack_index, card_index)
+  def peek_group_stack_card(gameui, gsc, player_n, tf) do
+    old_card = get_card(gameui, gsc)
     if old_card do
       new_card = peek_card(old_card, player_n, tf)
-      update_card(gameui, group_id, stack_index, card_index, new_card)
+      update_card(gameui, gsc, new_card)
     else
       gameui
     end
@@ -196,7 +258,7 @@ defmodule SpadesGame.GameUI do
       Enum.reduce range_indices, gameui, fn i, acc ->
         stack_index = Enum.at(stack_indices, i)
         card_index = Enum.at(card_indices, i)
-        peek_group_stack_card(acc, group_id, stack_index, card_index, player_n, true)
+        peek_group_stack_card(acc, [group_id, stack_index, card_index], player_n, true)
       end
     end
   end
@@ -208,41 +270,41 @@ defmodule SpadesGame.GameUI do
     old_orig_stacks = get_stacks(gameui, orig_group_id)
     old_stack = get_stack(gameui, orig_group_id, orig_stack_index)
     if old_stack do
-        new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
-        new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
-        old_dest_group =
-          if orig_group_id == dest_group_id do
-            new_orig_group
-          else
-            get_group(gameui,dest_group_id)
-          end
-        old_dest_stacks = old_dest_group["stacks"]
-        old_cards = old_stack["cards"]
+      new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
+      new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
+      old_dest_group =
+        if orig_group_id == dest_group_id do
+          new_orig_group
+        else
+          get_group(gameui,dest_group_id)
+        end
+      old_dest_stacks = old_dest_group["stacks"]
+      old_cards = old_stack["cards"]
 
-        new_dest_stacks =
-          # If told to preserve the state of the stack, just move it over
-          if preserve_state do
-            List.insert_at(old_dest_stacks,dest_stack_index,old_stack)
-          # Otherwise, process the movement of the stack to a different kind of group
+      new_dest_stacks =
+        # If told to preserve the state of the stack, just move it over
+        if preserve_state do
+          List.insert_at(old_dest_stacks,dest_stack_index,old_stack)
+        # Otherwise, process the movement of the stack to a different kind of group
+        else
+          new_cards = Enum.map(old_cards, fn card -> card_group_change(gameui, card, orig_group_id, dest_group_id) end)
+          # If stack leaving play, separate the stack
+          if old_dest_group["type"] != "play" do
+            stack_list_to_insert = Enum.map(new_cards, fn card -> Stack.stack_from_card(card) end)
+            # Insert list of stacks into original destination stacks
+            List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
+          # Stack is either entering play or staying in play. Keep it in one piece
           else
-            new_cards = Enum.map(old_cards, fn card -> card_group_change(gameui, card, orig_group_id, dest_group_id) end)
-            # If stack leaving play, separate the stack
-            if old_dest_group["type"] != "play" do
-              stack_list_to_insert = Enum.map(new_cards, fn card -> Stack.stack_from_card(card) end)
-              # Insert list of stacks into original destination stacks
-              List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
-            # Stack is either entering play or staying in play. Keep it in one piece
-            else
-              new_stack = put_in(old_stack["cards"],new_cards)
-              List.insert_at(old_dest_stacks,dest_stack_index,new_stack)
-            end
+            new_stack = put_in(old_stack["cards"],new_cards)
+            List.insert_at(old_dest_stacks,dest_stack_index,new_stack)
           end
-        new_dest_group = put_in(old_dest_group["stacks"], new_dest_stacks)
-        gameui_orig_removed = update_group(gameui, orig_group_id, new_orig_group)
-        update_group(gameui_orig_removed,dest_group_id,new_dest_group)
-      else
-        gameui
-      end
+        end
+      new_dest_group = put_in(old_dest_group["stacks"], new_dest_stacks)
+      gameui_orig_removed = update_group(gameui, orig_group_id, new_orig_group)
+      update_group(gameui_orig_removed,dest_group_id,new_dest_group)
+    else
+      gameui
+    end
   end
 
   def move_stacks(gameui, orig_group_id, dest_group_id, position) do
@@ -270,7 +332,7 @@ defmodule SpadesGame.GameUI do
       old_orig_stacks = get_stacks(gameui, orig_group_id)
       old_orig_stack = get_stack(gameui, orig_group_id, orig_stack_index)
       old_orig_cards = get_cards(gameui, orig_group_id, orig_stack_index)
-      moving_card = get_card(gameui, orig_group_id, orig_stack_index, orig_card_index)
+      moving_card = get_card(gameui, [orig_group_id, orig_stack_index, orig_card_index])
       moving_card = if preserve_state do moving_card else card_group_change(gameui, moving_card, orig_group_id, dest_group_id) end
       #IO.inspect(moving_card)
       if !moving_card do
@@ -302,17 +364,6 @@ defmodule SpadesGame.GameUI do
         end
       end
     end
-  end
-
-  def flip_card(gameui, group_id, stack_index, card_index) do
-    old_card = get_card(gameui, group_id, stack_index, card_index)
-    current_side = old_card["currentSide"]
-    new_card = if current_side == "A" do
-      put_in(old_card["currentSide"],"B")
-    else
-      put_in(old_card["currentSide"],"A")
-    end
-    update_card(gameui, group_id, stack_index, card_index, new_card)
   end
 
   def shuffle_group(gameui, group_id) do
@@ -424,7 +475,7 @@ defmodule SpadesGame.GameUI do
     Enum.reduce(flat_list, gameui, fn(card, acc) ->
       IO.puts("checking #{card["sides"]["A"]["name"]}")
       acc = if card["exhausted"] do
-        toggle_exhaust(acc, card["group_id"], card["stack_index"], card["card_index"])
+        toggle_exhaust(acc, [card["group_id"], card["stack_index"], card["card_index"]])
       else
         acc
       end
