@@ -96,6 +96,10 @@ export const handleKeyDown = (
             dest_stack_index: -1,
             preserve_state: false,
         });
+    } else if (k === "R") {
+        // Refresh all cards you control, and pass move token if you are the leftmost non-eliminated seat.
+        chatBroadcast("game_update",{message: "refreshes."});
+        gameBroadcast("refresh",{player_n: PlayerN});
     }
 
     // Card specific hotkeys

@@ -101,6 +101,7 @@ defmodule SpadesGame.GameUI do
     update_card(gameui, group_id, stack_index, card_index, new_card)
   end
 
+  # Card actions: must be in the form fn(gameui, gsc, args)
   def update_token(gameui, group_id, stack_index, card_index, token_type, new_value) do
     new_value = if new_value < 0 && Enum.member?(["resource", "progress", "damage", "time"], token_type) do
       0
@@ -392,6 +393,50 @@ defmodule SpadesGame.GameUI do
     else
       gameui
     end
+  end
+
+  # Take a list of maps and add the index to each one with a key given by label
+  def index_list_of_maps(list, label) do
+    Enum.map(Enum.with_index(list), fn({x,i}) -> Map.merge(x, %{label => i}) end)
+  end
+
+  # Flatten a group into a list of cards in that group, where each card has the additional keys group_id, stack_index, and card_index
+  def flatten_group(group) do
+    Enum.reduce(Enum.with_index(group["stacks"]), [], fn({stack, index}, acc) ->
+      cards = index_list_of_maps(stack["cards"],"card_index")
+      cards = Enum.map(cards, fn(c) -> Map.merge(c, %{"stack_index" => index, "group_id" => group["id"]}) end)
+      acc ++ cards
+    end)
+  end
+
+  # Obtain a flattened list of all cards in the game, where each card has the additional keys group_id, stack_index, and card_index
+  def flat_list_of_cards(gameui) do
+    all_cards = Enum.reduce(gameui["game"]["groups"], [], fn({group_id, group}, acc) ->
+      #IO.puts("flattening #{group_id}")
+      flat_group = flatten_group(group)
+      acc ++ flat_group
+    end)
+    #IO.inspect(all_cards)
+  end
+
+  def do_action_on_selected_cards(gameui, selection, action, action_argument \\ nil) do
+    flat_list = flat_list_of_cards(gameui)
+    Enum.reduce(flat_list, gameui, fn(card, acc) ->
+      IO.puts("checking #{card["sides"]["A"]["name"]}")
+      acc = if card["exhausted"] do
+        toggle_exhaust(acc, card["group_id"], card["stack_index"], card["card_index"])
+      else
+        acc
+      end
+    end)
+  end
+
+  def refresh(gameui, player_n) do
+    do_action_on_selected_cards(gameui, [], [], [])
+    #gameui
+    #action = [["exhausted"],false]
+    #condition = [["controller"],player_n]
+    #do_action_on_all_cards_matching(gameui, condition, action)
   end
 
   # # @doc """

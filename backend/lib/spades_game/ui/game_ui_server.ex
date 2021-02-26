@@ -135,7 +135,7 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  deal_shadow/4: A player just incremented a token.
+  deal_shadow/4: A player just dealt a shadow card.
   """
   @spec deal_shadow(String.t(), integer, String.t(), number) :: GameUI.t()
   def deal_shadow(game_name, user_id, group_id, stack_index) do
@@ -186,6 +186,15 @@ defmodule SpadesGame.GameUIServer do
   def set_round_step(game_name, user_id, phase, round_step) do
     IO.puts("game_ui_server: set_round_step")
     GenServer.call(via_tuple(game_name), {:set_round_step, phase, round_step})
+  end
+
+  @doc """
+  round/3: A player changes the round step
+  """
+  @spec refresh(String.t(), integer, String.t()) :: GameUI.t()
+  def refresh(game_name, user_id, player_n) do
+    IO.puts("game_ui_server: refresh")
+    GenServer.call(via_tuple(game_name), {:refresh, player_n})
   end
 
   @doc """
@@ -383,6 +392,11 @@ defmodule SpadesGame.GameUIServer do
     gameui = put_in(gameui["game"]["round_step"], round_step)
     gameui = put_in(gameui["game"]["phase"], phase)
     gameui
+    |> save_and_reply()
+  end
+
+  def handle_call({:refresh, player_n}, _from, gameui) do
+    GameUI.refresh(gameui, player_n)
     |> save_and_reply()
   end
 
