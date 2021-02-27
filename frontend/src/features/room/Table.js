@@ -247,59 +247,11 @@ export const Table = ({
         chatBroadcast={chatBroadcast}
       ></PhaseBar>
 
-        {/* <div 
-          className={`flex flex-1 text-center select-none text-gray-100 ${(phase===7) ? "bg-gray-600" : ""}`}
-        >
-          <div
-            className={`w-1/2 ${(Math.floor(phase)===7) ? "bg-gray-600" : ""}`}
-            style={{writingMode:"vertical-rl"}} 
-          >
-            Refresh
-          </div>
-          <div
-            className="w-1/2"
-          >
-            <div className={`flex h-1/3 items-center justify-center ${(phase===7.3) ? "bg-gray-600" : ""}`} onClick={() => changePhase(7.3)}><FontAwesomeIcon className="fa-rotate-90" icon={faStepBackward}/></div>
-            <div className={`flex h-1/3 items-center justify-center ${(phase===7.2) ? "bg-gray-600" : ""}`} onClick={() => changePhase(7.2)}><FontAwesomeIcon className="" icon={faEquals}/></div>
-            <div className={`flex h-1/3 items-center justify-center ${(phase===7.1) ? "bg-gray-600" : ""}`} onClick={() => changePhase(7.1)}><FontAwesomeIcon className="fa-rotate-90" icon={faStepForward}/></div>
-          </div>
-        </div> */}
-        {/* <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===6) ? "bg-gray-600" : ""}`}
-          style={{writingMode:"vertical-rl"}} 
-          onClick={() => changePhase(6)}>Combat</div>
-        <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===5) ? "bg-gray-600" : ""}`}
-          style={{writingMode:"vertical-rl"}} 
-          onClick={() => changePhase(5)}>Encounter</div>
-        <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===4) ? "bg-gray-600" : ""}`}
-          style={{writingMode:"vertical-rl"}} 
-          onClick={() => changePhase(4)}>Travel</div>
-        <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===3) ? "bg-gray-600" : ""}`}
-          style={{writingMode:"vertical-rl"}} 
-          onClick={() => changePhase(3)}>Quest</div>
-        <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===2) ? "bg-gray-600" : ""}`}
-          style={{writingMode:"vertical-rl"}} 
-          onClick={() => changePhase(2)}>Planning</div>
-        <div 
-          className={`flex flex-col flex-1 text-center p-1 select-none ${(phase===1) ? "bg-gray-600" : ""}`}
-          style={{writingMode:"vertical-rl"}} 
-          onClick={() => changePhase(1)}>Resource</div> */}
-        {/* <div 
-          className={`flex text-center p-1 select-none ${(gamePhase==="End") ? "bg-gray-600" : ""}`}
-          onClick={() => setGamePhase("End")}>End</div>*/}
-
-
-
-
       {/* Main panel */}
       <div className="flex w-full">
         <div className="flex flex-col w-full h-full">
 
-          <div className="bg-gray-600 text-white" style={{height: "6%"}}>
+          <div className="bg-gray-600 text-white" style={{height: "6%", zIndex: 1e2}}>
             <MenuBar
               gameUI={gameUI}
               setShowSpawn={setShowSpawn}
@@ -317,9 +269,9 @@ export const Table = ({
           <div className=""  style={{height: "94%"}}>
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-            <GroupContainer
-                group={groups['gSharedStaging']} 
-                width="75%"
+              <GroupContainer
+                group={groups['gSharedMainQuest']} 
+                width="8%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 PlayerN={PlayerN}
@@ -329,7 +281,37 @@ export const Table = ({
               ></GroupContainer>
               <GroupContainer
                 group={groups['gSharedActive']} 
-                width="10%"
+                width="9%"
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                PlayerN={PlayerN}
+                browseGroupID={browseGroupID}
+                setBrowseGroupID={setBrowseGroupID}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+              ></GroupContainer>
+              <div style={{
+                width: "68%", 
+                height: "100%", 
+                backgroundColor: "rgba(0,0,0,0.3)", 
+                float: "left",
+                MozBoxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
+                WebkitBoxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
+                boxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
+              }}>
+                <GroupContainer
+                  group={groups['gSharedStaging']} 
+                  width="100%"
+                  gameBroadcast={gameBroadcast} 
+                  chatBroadcast={chatBroadcast}
+                  PlayerN={PlayerN}
+                  browseGroupID={browseGroupID}
+                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupTopN={setBrowseGroupTopN}
+                ></GroupContainer>
+              </div>
+              <GroupContainer
+                group={groups['gSharedEncounterDeck']} 
+                width="7.5%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 PlayerN={PlayerN}
@@ -338,8 +320,8 @@ export const Table = ({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
               <GroupContainer
-                group={groups['gSharedMainQuest']} 
-                width="15%"
+                group={groups['gSharedEncounterDiscard']} 
+                width="7.5%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 PlayerN={PlayerN}
@@ -413,7 +395,19 @@ export const Table = ({
               </div>
             }
             <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <div className=" flex flex-1" style={{width: "75%", maxWidth: "75%", minHeight: "100%", height: "100%", maxHeight: "100%", background: "rgba(0, 0, 0, 0.5)"}}>
+              <div 
+                className=" flex flex-1" 
+                style={{
+                  width: "75%", 
+                  maxWidth: "75%", 
+                  minHeight: "100%", 
+                  height: "100%", 
+                  maxHeight: "100%", 
+                  background: "rgba(0, 0, 0, 0.3)",
+                  MozBoxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
+                  WebkitBoxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
+                  boxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
+                }}>
                 <PlayerBar
                   groups={groups}
                   observingPlayerN={observingPlayerN}
