@@ -251,7 +251,7 @@ export const Table = ({
       <div className="flex w-full">
         <div className="flex flex-col w-full h-full">
 
-          <div className="bg-gray-600 text-white" style={{height: "6%", zIndex: 1e2}}>
+          <div className="bg-gray-600 text-white" style={{height: "6%"}}>
             <MenuBar
               gameUI={gameUI}
               setShowSpawn={setShowSpawn}
@@ -294,9 +294,9 @@ export const Table = ({
                 height: "100%", 
                 backgroundColor: "rgba(0,0,0,0.3)", 
                 float: "left",
-                MozBoxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
-                WebkitBoxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
-                boxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
+                MozBoxShadow: '0 10px 10px 5px rgba(0,0,0,0.3)',
+                WebkitBoxShadow: '0 10px 10px 5px rgba(0,0,0,0.3)',
+                boxShadow: '0 10px 10px 5px rgba(0,0,0,0.3)',
               }}>
                 <GroupContainer
                   group={groups['gSharedStaging']} 
