@@ -65,7 +65,7 @@ export const MenuBarUser = React.memo(({
       <div className="float-left h-full w-2/3">
         <div className="h-1/2 w-full flex justify-center">
           {/* Show First player token */}
-          {(gameUI["game"]["first_player"] === playerIndex) ? 
+          {(gameUI["game"]["first_player"] === PlayerN) ? 
             <img className="h-full mr-1 mb-1" src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}></img>
             : null}
           <UserName userID={sittingUserID} defaultName="Empty seat"></UserName>

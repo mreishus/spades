@@ -540,8 +540,13 @@ defmodule SpadesGame.GameUI do
     seated_player_ns2 = seated_player_ns ++ seated_player_ns
     IO.inspect(seated_player_ns2)
     next = Enum.reduce(Enum.with_index(seated_player_ns2), nil, fn({player_i, index}, acc) ->
+      IO.puts("acc: #{acc}")
+      IO.puts("player_i: #{player_i}")
+      IO.puts("player_n: #{player_n}")
       if !acc && player_i == player_n do
         acc = Enum.at(seated_player_ns2, index+1)
+      else
+        acc
       end
     end)
     if next == player_n do

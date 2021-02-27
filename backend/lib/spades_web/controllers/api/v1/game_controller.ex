@@ -11,14 +11,14 @@ defmodule SpadesWeb.API.V1.GameController do
   def create(conn, _params) do
     IO.puts("game_controller create")
     # IO.inspect(conn)
-    IO.inspect(_params)
+    # IO.inspect(_params)
     game_name = NameGenerator.generate()
     IO.puts("gamecontroller create b")
-    #IO.inspect(conn)
-    #user = Pow.Plug.current_user(conn) # not working for some reason
+    IO.inspect(conn)
     user = _params["room"]["user"]
+    # user = Pow.Plug.current_user(conn)
     IO.puts("gamecontroller create c")
-    #IO.inspect(user)
+    IO.inspect(user)
     options = %GameOptions{}
     # IO.puts("gamecontroller create d")
     #IO.puts(game_name)
