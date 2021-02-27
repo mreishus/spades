@@ -535,13 +535,67 @@ defmodule SpadesGame.GameUI do
     end)
   end
 
+  def next_player(gameui, player_n) do
+    seated_player_ns = seated_non_eliminated(gameui)
+    seated_player_ns2 = seated_player_ns ++ seated_player_ns
+    IO.inspect(seated_player_ns2)
+    next = Enum.reduce(Enum.with_index(seated_player_ns2), nil, fn({player_i, index}, acc) ->
+      if !acc && player_i == player_n do
+        acc = Enum.at(seated_player_ns2, index+1)
+      end
+    end)
+    if next == player_n do
+      nil
+    else
+      next
+    end
+  end
+
+  def pass_first_player_token(gameui) do
+    current_first_player = gameui["game"]["first_player"]
+    IO.puts("current first player: #{current_first_player}")
+    next_first_player = next_player(gameui, current_first_player)
+    IO.puts("next first player: #{next_first_player}")
+    if !next_first_player do
+      gameui
+    else
+      put_in(gameui["game"]["first_player"], next_first_player)
+    end
+  end
+
+  # List of PlayerN strings of players that are seated and not eliminated
+  def seated_non_eliminated(gameui) do
+    player_ids = gameui["player_ids"]
+    player_data = gameui["game"]["player_data"]
+    Enum.reduce(["Player1","Player2","Player3","Player4"], [], fn(player_n, acc) ->
+      acc = if player_ids[player_n] && !player_data[player_n]["eliminated"] do
+        acc ++ [player_n]
+      else
+        acc
+      end
+    end)
+  end
+
+  # Get leftmost player that is not elimiated. Useful for once per round actions like passing 1st player token so
+  # that it doesn't get passed twice
+  def leftmost_non_eliminated_player_n(gameui) do
+    seated_player_ns = seated_non_eliminated(gameui)
+    Enum.at(seated_player_ns,0) || "Player1"
+  end
+
+  # Refresh cards controlled by player_n
   def refresh(gameui, player_n) do
-    function_on_matching_cards(
+    gameui = function_on_matching_cards(
       gameui,
       [["card", "exhausted", true], ["card", "controller", player_n]],
       "toggle_exhaust",
       []
     )
+    if player_n == leftmost_non_eliminated_player_n(gameui) do
+      pass_first_player_token(gameui)
+    else
+      gameui
+    end
     #functions_on_matching_cards(gameui, ["exhausted", true], toggle_exhaust(), [])
     #gameui
     #action = [["exhausted"],false]

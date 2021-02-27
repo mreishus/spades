@@ -25,7 +25,7 @@ defmodule SpadesGame.Game do
     %{
       "groups" => Groups.new(),
       "options" => options,
-      "first_player" => 1,
+      "first_player" => "Player1",
       "round_number" => 1,
       "phase" => "pBeginning",
       "round_step" => "0.0",
