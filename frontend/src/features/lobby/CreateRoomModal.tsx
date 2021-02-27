@@ -3,6 +3,8 @@ import { Redirect } from "react-router";
 import axios from "axios";
 import ReactModal from "react-modal";
 import Button from "../../components/basic/Button";
+import useProfile from "../../hooks/useProfile";
+import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 
 interface Props {
   isOpen: boolean;
@@ -15,9 +17,11 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [roomSlugCreated, setRoomSlugCreated] = useState(null);
+  const myUser = useProfile();
+  const myUserID = myUser?.id;
 
   const createRoom = async () => {
-    const data = { room: { name: "" } };
+    const data = { room: { name: "", user: myUserID } };
     setIsLoading(true);
     setIsError(false);
     console.log('creating room with ');

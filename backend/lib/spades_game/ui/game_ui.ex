@@ -26,7 +26,7 @@ defmodule SpadesGame.GameUI do
         "Player4" => nil,
       }
     }
-    IO.inspect(gameui)
+    #IO.inspect(gameui)
     gameui
   end
 
@@ -113,7 +113,25 @@ defmodule SpadesGame.GameUI do
   end
 
 
-  # Card actions: must be in the form fn(gameui, gsc, args)
+  # Card function: must be in the form fn(gameui, gsc, args)
+  def card_function(function, gameui, gsc, options) do
+    case function do
+      "increment_token" ->
+        increment_token(gameui, gsc, options)
+      "toggle_exhaust" ->
+        toggle_exhaust(gameui, gsc, options)
+      "flip_card" ->
+        deal_shadow(gameui, gsc, options)
+      "deal_shadow" ->
+        deal_shadow(gameui, gsc, options)
+      "detach" ->
+        detach(gameui, gsc, options)
+      _ ->
+        gameui
+    end
+  end
+
+
   def increment_token(gameui, gsc, options) do
     token_type = Enum.at(options, 0)
     increment = Enum.at(options, 1)
@@ -470,12 +488,15 @@ defmodule SpadesGame.GameUI do
     #IO.inspect(all_cards)
   end
 
-  def do_action_on_selected_cards(gameui, selection, action, action_argument \\ nil) do
+  def function_on_matching_cards(gameui, criteria, function, arguments \\ nil) do
     flat_list = flat_list_of_cards(gameui)
     Enum.reduce(flat_list, gameui, fn(card, acc) ->
       IO.puts("checking #{card["sides"]["A"]["name"]}")
-      acc = if card["exhausted"] do
-        toggle_exhaust(acc, [card["group_id"], card["stack_index"], card["card_index"]])
+      property = Enum.at(criteria,0)
+      value = Enum.at(criteria,1)
+      acc = if card[property] == value do
+        #toggle_exhaust(acc, [card["group_id"], card["stack_index"], card["card_index"]])
+        card_function(function, acc, [card["group_id"], card["stack_index"], card["card_index"]], arguments)
       else
         acc
       end
@@ -483,7 +504,13 @@ defmodule SpadesGame.GameUI do
   end
 
   def refresh(gameui, player_n) do
-    do_action_on_selected_cards(gameui, [], [], [])
+    function_on_matching_cards(
+      gameui,
+      ["exhausted", true],
+      "deal_shadow",
+      []
+    )
+    #functions_on_matching_cards(gameui, ["exhausted", true], toggle_exhaust(), [])
     #gameui
     #action = [["exhausted"],false]
     #condition = [["controller"],player_n]

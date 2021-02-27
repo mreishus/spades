@@ -14,6 +14,7 @@ defmodule SpadesGame.PlayerData do
     %{
       "threat" => 0,
       "willpower" => 0,
+
     }
   end
 

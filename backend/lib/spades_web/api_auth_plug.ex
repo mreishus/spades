@@ -23,6 +23,8 @@ defmodule SpadesWeb.APIAuthPlug do
   @impl true
   @spec create(Conn.t(), map(), Config.t()) :: {Conn.t(), map()}
   def create(conn, user, config) do
+    IO.puts("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+    IO.puts(user)
     store_config = store_config(config)
     token = Pow.UUID.generate()
     renew_token = Pow.UUID.generate()
