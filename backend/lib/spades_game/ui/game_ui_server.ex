@@ -216,6 +216,15 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
+  increment_round/3: A player increments the round number
+  """
+  @spec increment_round(String.t(), integer, number) :: GameUI.t()
+  def increment_round(game_name, user_id, increment) do
+    IO.puts("game_ui_server: increment_round")
+    GenServer.call(via_tuple(game_name), {:increment_round, increment})
+  end
+
+  @doc """
   rewind_countdown_devtest/1: Make the "game start" countdown happen
   instantly.
   Works by moving back the "everyone sat down" timestamp by 10 minutes.
@@ -402,6 +411,12 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:increment_threat, player_n, increment}, _from, gameui) do
     GameUI.increment_threat(gameui, player_n, increment)
+    |> save_and_reply()
+  end
+
+  def handle_call({:increment_round, increment}, _from, gameui) do
+    old_round_number = gameui["game"]["round_number"]
+    put_in(gameui["game"]["round_number"], old_round_number + increment)
     |> save_and_reply()
   end
 

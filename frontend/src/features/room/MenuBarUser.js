@@ -23,12 +23,10 @@ export const MenuBarUser = React.memo(({
   console.log('rendering '+PlayerN);
   const gameUIThreat = gameUI["game"]["player_data"][PlayerN]["threat"];
 
-
   const [threatValue, setThreatValue] = useState(gameUIThreat);
   useEffect(() => {    
     if (gameUIThreat !== threatValue) setThreatValue(gameUIThreat);
   }, [gameUIThreat]);
-
 
   const handleThreatChange = (event) => {
     const newValue = event.target.value;
@@ -42,17 +40,6 @@ export const MenuBarUser = React.memo(({
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
     }, 800);
 }
-
-/*   const handleThreatChange = (event) => {
-    const newValue = event.target.value;
-    const increment = newValue - threatValue
-    //gameBroadcast("increment_threat",{player_n: PlayerN, increment: increment});
-    if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
-    if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
-  } */
-
-
-
 
   const handleSitClick = (action) => {
     // Get up from any seats first

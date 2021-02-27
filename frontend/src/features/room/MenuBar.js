@@ -81,6 +81,21 @@ export const MenuBar = React.memo(({
       return stagingThreat;
     }
 
+    const sumPlayerWillpower = () => {
+      const playerData = gameUI["game"]["player_data"];
+      var totalWillpower = 0;
+      for (const PlayerI in playerData) {
+        if (playerData.hasOwnProperty(PlayerI)) {
+            totalWillpower = totalWillpower + playerData[PlayerI]["willpower"]
+        }
+      }
+      return totalWillpower;
+    }
+
+    const totalProgress = () => {
+      return sumPlayerWillpower() - sumStagingThreat();
+    }
+
     return(
       <div className="h-full">
         <ul className="top-level-menu float-left">
@@ -184,7 +199,7 @@ export const MenuBar = React.memo(({
             Progress
           </div>
           <div className="h-1/2 w-full flex justify-center">
-            <div className="text-xl">{gameUI["game"]["round_number"]}</div>
+            <div className="text-xl">{totalProgress()}</div>
             <img className="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/progress.png'}></img>
           </div>
         </div>

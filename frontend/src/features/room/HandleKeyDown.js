@@ -98,6 +98,10 @@ export const handleKeyDown = (
             preserve_state: false,
         });
     } else if (k === "R") {
+        if (gameUI["game"]["round_step"] !== "7.R") {
+            gameBroadcast("set_round_step", {phase: "Refresh", round_step: "7.R"}) 
+            chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
+        }
         // Refresh all cards you control
         chatBroadcast("game_update",{message: "refreshes."});
         gameBroadcast("refresh",{player_n: PlayerN});
@@ -105,8 +109,8 @@ export const handleKeyDown = (
         const newThreat = gameUI["game"]["player_data"][PlayerN]["threat"]+1;
         chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
         gameBroadcast("increment_threat",{player_n: PlayerN, increment: 1});
-        // Pass first player token only if you are the leftmost non-eliminated seat.
-        // This prevents the token moving multiple times if players refresh at different times.
+        // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
+        // This prevents, for example, the token moving multiple times if players refresh at different times.
         if (PlayerN == leftmostNonEliminatedPlayerN(gameUI)) {
             const firstPlayerN = gameUI["game"]["first_player"];
             const nextPlayerN = getNextPlayerN(gameUI, firstPlayerN);
@@ -117,9 +121,18 @@ export const handleKeyDown = (
             }
         }
     } else if (k === "N") {
-        // New resources.
-        chatBroadcast("game_update",{message: "refreshes."});
-        gameBroadcast("new_round",{player_n: PlayerN});
+        if (gameUI["game"]["round_step"] !== "1.R") {
+            gameBroadcast("set_round_step", {phase: "Resource", round_step: "1.R"}) 
+            chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
+        }
+        // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
+        // This prevents, for example, the round number increasing multiple times.
+        if (PlayerN == leftmostNonEliminatedPlayerN(gameUI)) {
+            const roundNumber = gameUI["game"]["round_number"];
+            const newRoundNumber = roundNumber + 1;
+            gameBroadcast("increment_round",{increment: 1});    
+            chatBroadcast("game_update",{message: "increased the rond number to "+newRoundNumber+"."})
+        }
     }
 
     // Card specific hotkeys
