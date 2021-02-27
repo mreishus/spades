@@ -10,12 +10,13 @@ defmodule SpadesGame.Card do
 
   @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
   def card_from_cardrow(card_row, controller) do
+    IO.puts("creating card controlled by #{controller}")
     %{
       "id" => Ecto.UUID.generate,
       "rotation" => 0,
       "exhausted" => false,
       "tokens" =>Tokens.new(),
-      "currentSide" => "A",
+      "current_side" => "A",
       "owner" => controller,
       "controller" => controller,
       "peeking" => %{

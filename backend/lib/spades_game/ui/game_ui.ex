@@ -159,11 +159,11 @@ defmodule SpadesGame.GameUI do
 
   def flip_card(gameui, gsc, options \\ nil) do
     old_card = get_card(gameui, gsc)
-    current_side = old_card["currentSide"]
+    current_side = old_card["current_side"]
     new_card = if current_side == "A" do
-      put_in(old_card["currentSide"],"B")
+      put_in(old_card["current_side"],"B")
     else
-      put_in(old_card["currentSide"],"A")
+      put_in(old_card["current_side"],"A")
     end
     update_card(gameui, gsc, new_card)
   end
@@ -226,9 +226,9 @@ defmodule SpadesGame.GameUI do
     card = if dest_group_type != "play" do Map.put(card, "tokens", Tokens.new()) else card end
     card = if dest_group_type != "play" do Map.put(card, "exhausted", false) else card end
     card = if dest_group_type != "play" do Map.put(card, "rotation", 0) else card end
-    card = if dest_group_type == "deck" do Map.put(card, "currentSide", "B") else card end
+    card = if dest_group_type == "deck" do Map.put(card, "current_side", "B") else card end
     card = if orig_group_type == "deck" and dest_group_type != "deck" do
-       flipped_card = Map.put(card, "currentSide", "A")
+       flipped_card = Map.put(card, "current_side", "A")
        reset_peeking(flipped_card)
     else
       card
@@ -237,7 +237,7 @@ defmodule SpadesGame.GameUI do
   end
 
   def peek_card(card, player_n, tf) do
-    if card["currentSide"] == "B" do
+    if card["current_side"] == "B" do
       put_in(card["peeking"][player_n],tf)
     else
       card
@@ -403,7 +403,9 @@ defmodule SpadesGame.GameUI do
   def load_card(gameui, card_row, group_id, quantity) do
     #IO.puts("game_ui load_card a")
     #IO.inspect(card_row)
-    controller = gameui["groups"][group_id]["controller"]
+    controller = gameui["game"]["groups"][group_id]["controller"]
+    IO.puts("group controller")
+    IO.inspect(gameui["groups"][group_id])
 
     stacks_to_add = for _ <- 1..quantity do
       card = Card.card_from_cardrow(card_row, controller)
@@ -488,13 +490,43 @@ defmodule SpadesGame.GameUI do
     #IO.inspect(all_cards)
   end
 
+  def passes_criteria(card, criteria) do
+    Enum.reduce(criteria, true, fn(criterion, acc) ->
+      object_to_check =
+        case Enum.at(criterion,0) do
+          "sideA" ->
+            card["sides"]["A"]
+          "sideB" ->
+            card["sides"]["B"]
+          "sideUp" ->
+            card["sides"][card["current_side"]]
+          "sideDown" ->
+            if card["current_side"] == "A" do
+              card["sides"]["B"]
+            else
+              card["sides"]["A"]
+            end
+          "tokens" ->
+            card["tokens"]
+          "peeking" ->
+            card["peeking"]
+          _ ->
+            card
+        end
+      property = Enum.at(criterion,1)
+      value = Enum.at(criterion,2)
+      passed_criterion = object_to_check[property] == value
+      acc = acc && passed_criterion
+    end)
+  end
+
   def function_on_matching_cards(gameui, criteria, function, arguments \\ nil) do
     flat_list = flat_list_of_cards(gameui)
+    #IO.inspect(gameui)
     Enum.reduce(flat_list, gameui, fn(card, acc) ->
       IO.puts("checking #{card["sides"]["A"]["name"]}")
-      property = Enum.at(criteria,0)
-      value = Enum.at(criteria,1)
-      acc = if card[property] == value do
+      IO.inspect(card["controller"])
+      acc = if passes_criteria(card, criteria) do
         #toggle_exhaust(acc, [card["group_id"], card["stack_index"], card["card_index"]])
         card_function(function, acc, [card["group_id"], card["stack_index"], card["card_index"]], arguments)
       else
@@ -506,8 +538,8 @@ defmodule SpadesGame.GameUI do
   def refresh(gameui, player_n) do
     function_on_matching_cards(
       gameui,
-      ["exhausted", true],
-      "deal_shadow",
+      [["card", "exhausted", true], ["card", "controller", player_n]],
+      "toggle_exhaust",
       []
     )
     #functions_on_matching_cards(gameui, ["exhausted", true], toggle_exhaust(), [])

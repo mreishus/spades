@@ -14,11 +14,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export const getCurrentFace = (card) => {
     if (!card) return null;
-    return card["sides"][card["currentSide"]];
+    return card["sides"][card["current_side"]];
 }
 
 export const getDisplayName = (card) => {
-    const currentSide = card["currentSide"];
+    const currentSide = card["current_side"];
     const currentFace = getCurrentFace(card);
     if (currentSide == "A") {
         const printName = currentFace["printname"];
@@ -43,7 +43,7 @@ export const getDisplayName = (card) => {
 }
 
 export const getFlippedCard = (card) => {
-    return (card["currentSide"] === "A") ? {...card, ["currentSide"]: "B"} : {...card, ["currentSide"]: "A"};
+    return (card["current_side"] === "A") ? {...card, ["current_side"]: "B"} : {...card, ["current_side"]: "A"};
 }
 
 export const getDisplayNameFlipped = (card) => {
@@ -52,7 +52,7 @@ export const getDisplayNameFlipped = (card) => {
 
 export const getVisibleSide = (card, PlayerN) => {
     if (!card) return null;
-    const currentSide = card["currentSide"];
+    const currentSide = card["current_side"];
     if (currentSide == "A" || card["peeking"][PlayerN]) return "A";
     else return "B";
 }
@@ -182,7 +182,7 @@ const CardComponent = React.memo(({
     console.log("getting display name of")
     console.log(inputCard)
     console.log(inputCard["sides"])
-    console.log(inputCard["sides"][inputCard["currentSide"]]);
+    console.log(inputCard["sides"][inputCard["current_side"]]);
     const displayName = getDisplayName(inputCard);
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
