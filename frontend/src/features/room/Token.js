@@ -54,14 +54,14 @@ export const Token = ({
         delayBroadcast = setTimeout(function() {
             gameBroadcast("increment_token",{group_id: groupID, stack_index: stackIndex, card_index: cardIndex, token_type: type, increment: totalDelta})
             //gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
-            if (delta > 0) {
-                if (delta === 1) {
+            if (totalDelta > 0) {
+                if (totalDelta === 1) {
                     chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" token to "+cardName+"."});
                 } else {
                     chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" tokens to "+cardName+"."});
                 }
-            } else if (delta < 0) {
-                if (delta === -1) {
+            } else if (totalDelta < 0) {
+                if (totalDelta === -1) {
                     chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+type+" token from "+cardName+"."});
                 } else {
                     chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+type+" tokens from "+cardName+"."});

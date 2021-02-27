@@ -15,6 +15,7 @@ defmodule SpadesGame.Card do
       "id" => Ecto.UUID.generate,
       "rotation" => 0,
       "exhausted" => false,
+      "committed" => false,
       "tokens" =>Tokens.new(),
       "current_side" => "A",
       "owner" => controller,

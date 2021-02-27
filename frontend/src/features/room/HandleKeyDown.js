@@ -1,5 +1,6 @@
 import { getDisplayName, getDisplayNameFlipped } from "./CardView";
 import { GROUPSINFO } from "./Constants";
+import { getNextPlayerN, leftmostNonEliminatedPlayerN } from "./Helpers";
 
 // const keyTokenMap: { [id: string] : Array<string | number>; } = {
 const keyTokenMap = {
@@ -97,9 +98,28 @@ export const handleKeyDown = (
             preserve_state: false,
         });
     } else if (k === "R") {
-        // Refresh all cards you control, and pass move token if you are the leftmost non-eliminated seat.
+        // Refresh all cards you control
         chatBroadcast("game_update",{message: "refreshes."});
         gameBroadcast("refresh",{player_n: PlayerN});
+        // Raise your threat
+        const newThreat = gameUI["game"]["player_data"][PlayerN]["threat"]+1;
+        chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
+        gameBroadcast("increment_threat",{player_n: PlayerN, increment: 1});
+        // Pass first player token only if you are the leftmost non-eliminated seat.
+        // This prevents the token moving multiple times if players refresh at different times.
+        if (PlayerN == leftmostNonEliminatedPlayerN(gameUI)) {
+            const firstPlayerN = gameUI["game"]["first_player"];
+            const nextPlayerN = getNextPlayerN(gameUI, firstPlayerN);
+            // If nextPlayerN is null then it's a solo game, so don't pass the token
+            if (nextPlayerN) {
+                gameBroadcast("set_first_player",{player_n: nextPlayerN});    
+                chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."})
+            }
+        }
+    } else if (k === "N") {
+        // New resources.
+        chatBroadcast("game_update",{message: "refreshes."});
+        gameBroadcast("new_round",{player_n: PlayerN});
     }
 
     // Card specific hotkeys

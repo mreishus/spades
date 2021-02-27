@@ -15,6 +15,7 @@ defmodule SpadesGame.PlayerData do
       "threat" => 0,
       "willpower" => 0,
       "eliminated" => false,
+      "cards_drawn_during_resource" => 1,
     }
   end
 

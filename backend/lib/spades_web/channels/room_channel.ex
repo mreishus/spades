@@ -349,6 +349,37 @@ notify(socket)
 {:reply, {:ok, client_state(socket)}, socket}
 end
 
+def handle_in(
+  "set_first_player",
+  %{
+    "player_n" => player_n,
+  },
+  %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+) do
+GameUIServer.set_first_player(room_slug, user_id, player_n)
+state = GameUIServer.state(room_slug)
+socket = socket |> assign(:game_ui, state)
+notify(socket)
+
+{:reply, {:ok, client_state(socket)}, socket}
+end
+
+def handle_in(
+  "increment_threat",
+  %{
+    "player_n" => player_n,
+    "increment" => increment,
+  },
+  %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+) do
+GameUIServer.increment_threat(room_slug, user_id, player_n, increment)
+state = GameUIServer.state(room_slug)
+socket = socket |> assign(:game_ui, state)
+notify(socket)
+
+{:reply, {:ok, client_state(socket)}, socket}
+end
+
   @doc """
   notify_from_outside/1: Tell everyone in the channel to send a message
   asking for a state update.

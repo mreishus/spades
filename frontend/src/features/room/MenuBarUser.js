@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import UserName from "../user/UserName";
 import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { Link } from "react-router-dom";
+
+var delayBroadcast;
 
 export const MenuBarUser = React.memo(({
   gameUI,
@@ -17,7 +19,40 @@ export const MenuBarUser = React.memo(({
   const myUser = useProfile();
   const myUserID = myUser?.id;
   const sittingUserID = gameUI["player_ids"][PlayerN];
+  //const threatValue = gameUI["game"]["player_data"][PlayerN]["threat"];
   console.log('rendering '+PlayerN);
+  const gameUIThreat = gameUI["game"]["player_data"][PlayerN]["threat"];
+
+
+  const [threatValue, setThreatValue] = useState(gameUIThreat);
+  useEffect(() => {    
+    if (gameUIThreat !== threatValue) setThreatValue(gameUIThreat);
+  }, [gameUIThreat]);
+
+
+  const handleThreatChange = (event) => {
+    const newValue = event.target.value;
+    setThreatValue(newValue);
+    const increment = newValue - gameUIThreat;
+   // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
+    if (delayBroadcast) clearTimeout(delayBroadcast);
+    delayBroadcast = setTimeout(function() {
+      gameBroadcast("increment_threat",{player_n: PlayerN, increment: increment});
+      if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
+      if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
+    }, 800);
+}
+
+/*   const handleThreatChange = (event) => {
+    const newValue = event.target.value;
+    const increment = newValue - threatValue
+    //gameBroadcast("increment_threat",{player_n: PlayerN, increment: increment});
+    if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
+    if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
+  } */
+
+
+
 
   const handleSitClick = (action) => {
     // Get up from any seats first
@@ -95,7 +130,8 @@ export const MenuBarUser = React.memo(({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            defaultValue={gameUI["game"]["player_data"][PlayerN]["threat"]}
+            value={threatValue}
+            onChange={handleThreatChange}
             type="number" min="0" step="1"
           ></input>
         </div>

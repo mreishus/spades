@@ -198,6 +198,24 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
+  set_first_player/3: Set first player
+  """
+  @spec set_first_player(String.t(), integer, String.t()) :: GameUI.t()
+  def set_first_player(game_name, user_id, player_n) do
+    IO.puts("game_ui_server: refresh")
+    GenServer.call(via_tuple(game_name), {:set_first_player, player_n})
+  end
+
+  @doc """
+  increment_threat/4: A player changes the round step
+  """
+  @spec increment_threat(String.t(), integer, String.t(), number) :: GameUI.t()
+  def increment_threat(game_name, user_id, player_n, increment) do
+    IO.puts("game_ui_server: increment_threat")
+    GenServer.call(via_tuple(game_name), {:increment_threat, player_n, increment})
+  end
+
+  @doc """
   rewind_countdown_devtest/1: Make the "game start" countdown happen
   instantly.
   Works by moving back the "everyone sat down" timestamp by 10 minutes.
@@ -374,6 +392,16 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:refresh, player_n}, _from, gameui) do
     GameUI.refresh(gameui, player_n)
+    |> save_and_reply()
+  end
+
+  def handle_call({:set_first_player, player_n}, _from, gameui) do
+    put_in(gameui["game"]["first_player"], player_n)
+    |> save_and_reply()
+  end
+
+  def handle_call({:increment_threat, player_n, increment}, _from, gameui) do
+    GameUI.increment_threat(gameui, player_n, increment)
     |> save_and_reply()
   end
 

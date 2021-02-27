@@ -596,16 +596,12 @@ defmodule SpadesGame.GameUI do
       "toggle_exhaust",
       []
     )
-    if player_n == leftmost_non_eliminated_player_n(gameui) do
-      pass_first_player_token(gameui)
-    else
-      gameui
-    end
-    #functions_on_matching_cards(gameui, ["exhausted", true], toggle_exhaust(), [])
-    #gameui
-    #action = [["exhausted"],false]
-    #condition = [["controller"],player_n]
-    #do_action_on_all_cards_matching(gameui, condition, action)
+  end
+
+  # Increment a player's threat
+  def increment_threat(gameui, player_n, increment) do
+    current_threat = gameui["game"]["player_data"][player_n]["threat"];
+    put_in(gameui["game"]["player_data"][player_n]["threat"], current_threat + increment)
   end
 
   # # @doc """
