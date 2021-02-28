@@ -146,6 +146,8 @@ export const handleKeyDown = (
     // Card specific hotkeys
     if (activeCardAndLoc != null) {   
         const activeCard = activeCardAndLoc.card;
+        var newCard = activeCard;
+        var updateActiveCard = false;
         const displayName = getDisplayName(activeCard);
         const tokens = activeCard.tokens;
         const groupID = activeCardAndLoc.groupID;
@@ -188,7 +190,6 @@ export const handleKeyDown = (
         }
         // Flip card
         else if (k === "f") {
-            var newCard = activeCard;
             if (newCard["current_side"] === "A") {
                 newCard = {...newCard, current_side: "B"}
             } else {
@@ -200,6 +201,7 @@ export const handleKeyDown = (
             } else {
                 chatBroadcast("game_update", {message: "flipped "+displayName+" over."});
             }
+            updateActiveCard = true;
         }
         // Exhaust card
         else if (k === "a" && groupType === "play") {
@@ -264,15 +266,15 @@ export const handleKeyDown = (
             chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupID].name+" into "+GROUPSINFO[destGroupID].name+"."})
         }
 
-        // if (cardChanged) {
-        //     setActiveCardAndLoc({
-        //         card: newCard, 
-        //         groupID: activeCardAndLoc.groupID, 
-        //         stackIndex: activeCardAndLoc.stackIndex, 
-        //         cardIndex: activeCardAndLoc.cardIndex, 
-        //         mousePosition: activeCardAndLoc.mousePosition,
-        //         screenPosition: activeCardAndLoc.screenPosition,
-        //     });
-        // }
+        if (updateActiveCard) {
+            setActiveCardAndLoc({
+                card: newCard, 
+                groupID: activeCardAndLoc.groupID, 
+                stackIndex: activeCardAndLoc.stackIndex, 
+                cardIndex: activeCardAndLoc.cardIndex, 
+                mousePosition: activeCardAndLoc.mousePosition,
+                screenPosition: activeCardAndLoc.screenPosition,
+            });
+        }
     }
 }
