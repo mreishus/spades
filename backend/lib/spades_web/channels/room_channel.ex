@@ -223,6 +223,7 @@ defmodule SpadesWeb.RoomChannel do
       },
       %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
     ) do
+    IO.puts("room_channel increment_token")
     GameUIServer.increment_token(room_slug, user_id, group_id, stack_index, card_index, token_type, increment)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)

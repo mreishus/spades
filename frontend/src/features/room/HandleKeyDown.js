@@ -1,6 +1,6 @@
 import { getDisplayName, getDisplayNameFlipped } from "./CardView";
 import { GROUPSINFO } from "./Constants";
-import { getNextPlayerN, leftmostNonEliminatedPlayerN } from "./Helpers";
+import { getNextPlayerN, leftmostNonEliminatedPlayerN, functionOnMatchingCards } from "./Helpers";
 
 // const keyTokenMap: { [id: string] : Array<string | number>; } = {
 const keyTokenMap = {
@@ -131,8 +131,16 @@ export const handleKeyDown = (
             const roundNumber = gameUI["game"]["round_number"];
             const newRoundNumber = roundNumber + 1;
             gameBroadcast("increment_round",{increment: 1});    
-            chatBroadcast("game_update",{message: "increased the rond number to "+newRoundNumber+"."})
+            chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
         }
+        functionOnMatchingCards(
+            gameUI, 
+            gameBroadcast, 
+            chatBroadcast, 
+            [["sideUp","type","Hero"],["card","controller",PlayerN]],
+            "increment_token",
+            ["resource", 1],
+        )
     }
 
     // Card specific hotkeys
