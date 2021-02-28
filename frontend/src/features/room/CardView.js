@@ -179,10 +179,6 @@ const CardComponent = React.memo(({
     const setActiveCard = useSetActiveCard();
 
     const [isActive, setIsActive] = useState(false);
-    console.log("getting display name of")
-    console.log(inputCard)
-    console.log(inputCard["sides"])
-    console.log(inputCard["sides"][inputCard["current_side"]]);
     const displayName = getDisplayName(inputCard);
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];

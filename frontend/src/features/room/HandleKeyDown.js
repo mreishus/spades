@@ -189,10 +189,10 @@ export const handleKeyDown = (
         // Flip card
         else if (k === "f") {
             var newCard = activeCard;
-            if (newCard.currentSide === "A") {
-                newCard = {...newCard, currentSide: "B"}
+            if (newCard["current_side"] === "A") {
+                newCard = {...newCard, current_side: "B"}
             } else {
-                newCard = {...newCard, currentSide: "A"}
+                newCard = {...newCard, current_side: "A"}
             }
             gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index: cardIndex});
             if (displayName==="player card" || displayName==="encounter card") {
@@ -217,7 +217,7 @@ export const handleKeyDown = (
         }        
         // Send to appropriate discard pile
         else if (k === "x") {
-            // If card is the parent card of a stack, discard the whoe stack
+            // If card is the parent card of a stack, discard the whole stack
             if (cardIndex == 0) {
                 const stack = gameUI["game"]["groups"][groupID]["stacks"][stackIndex];
                 if (!stack) return;
