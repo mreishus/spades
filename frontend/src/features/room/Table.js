@@ -13,7 +13,7 @@ import styled from "@emotion/styled";
 import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
 import Button from "../../components/basic/Button";
-import { getDisplayName, getCurrentFace } from "./CardView"
+import { getDisplayName, getCurrentFace } from "./Helpers"
 import ReactModal from "react-modal";
 import Dropdown from 'react-dropdown';
 import { handleBrowseTopN } from "./HandleBrowseTopN";

@@ -3,7 +3,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { CARDSCALE, playerBackSRC, encounterBackSRC} from "./Constants"
-import { getCurrentFace, getVisibleFaceSRC } from "./CardView";
+import { getCurrentFace, getVisibleFaceSRC } from "./Helpers";
 
 
 

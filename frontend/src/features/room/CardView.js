@@ -9,78 +9,79 @@ import { CardMouseRegion } from "./CardMouseRegion"
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getDisplayName, getCurrentFace, getVisibleFaceSRC } from "./Helpers";
 
 
 
-export const getCurrentFace = (card) => {
-    if (!card) return null;
-    return card["sides"][card["current_side"]];
-}
+// export const getCurrentFace = (card) => {
+//     if (!card) return null;
+//     return card["sides"][card["current_side"]];
+// }
 
-export const getDisplayName = (card) => {
-    const currentSide = card["current_side"];
-    const currentFace = getCurrentFace(card);
-    if (currentSide == "A") {
-        const printName = currentFace["printname"];
-        const id = card["id"];
-        const id4digit = id.substr(id.length - 4);
-        return printName+' ('+id4digit+')';
-    } else { // Side B logic
-        const sideBName = card["sides"]["B"]["name"];
-        if (sideBName == "player") {
-            return 'player card';
-        } else if (sideBName == "encounter") {
-            return 'encounter card';
-        } else if (sideBName) {
-            const printName = currentFace["printname"];
-            const id = card["id"];
-            const id4digit = id.substr(id.length - 4);
-            return printName+' ('+id4digit+')';
-        } else {
-            return 'undefinedCard';
-        }
-    }
-}
+// export const getDisplayName = (card) => {
+//     const currentSide = card["current_side"];
+//     const currentFace = getCurrentFace(card);
+//     if (currentSide == "A") {
+//         const printName = currentFace["printname"];
+//         const id = card["id"];
+//         const id4digit = id.substr(id.length - 4);
+//         return printName+' ('+id4digit+')';
+//     } else { // Side B logic
+//         const sideBName = card["sides"]["B"]["name"];
+//         if (sideBName == "player") {
+//             return 'player card';
+//         } else if (sideBName == "encounter") {
+//             return 'encounter card';
+//         } else if (sideBName) {
+//             const printName = currentFace["printname"];
+//             const id = card["id"];
+//             const id4digit = id.substr(id.length - 4);
+//             return printName+' ('+id4digit+')';
+//         } else {
+//             return 'undefinedCard';
+//         }
+//     }
+// }
 
-export const getFlippedCard = (card) => {
-    return (card["current_side"] === "A") ? {...card, ["current_side"]: "B"} : {...card, ["current_side"]: "A"};
-}
+// export const getFlippedCard = (card) => {
+//     return (card["current_side"] === "A") ? {...card, ["current_side"]: "B"} : {...card, ["current_side"]: "A"};
+// }
 
-export const getDisplayNameFlipped = (card) => {
-    return getDisplayName(getFlippedCard(card));
-}
+// export const getDisplayNameFlipped = (card) => {
+//     return getDisplayName(getFlippedCard(card));
+// }
 
-export const getVisibleSide = (card, PlayerN) => {
-    if (!card) return null;
-    const currentSide = card["current_side"];
-    if (currentSide == "A" || card["peeking"][PlayerN]) return "A";
-    else return "B";
-}
+// export const getVisibleSide = (card, PlayerN) => {
+//     if (!card) return null;
+//     const currentSide = card["current_side"];
+//     if (currentSide == "A" || card["peeking"][PlayerN]) return "A";
+//     else return "B";
+// }
 
-export const getVisibleFace = (card, PlayerN) => {
-    const visibleSide = getVisibleSide(card, PlayerN);
-    if (visibleSide) return card["sides"][visibleSide];
-    else return null;
-}
+// export const getVisibleFace = (card, PlayerN) => {
+//     const visibleSide = getVisibleSide(card, PlayerN);
+//     if (visibleSide) return card["sides"][visibleSide];
+//     else return null;
+// }
 
-export const getVisibleFaceSRC = (card, PlayerN) => {
-    if (!card) return "";
-    const visibleSide = getVisibleSide(card, PlayerN);
-    if (visibleSide == "A") {
-        return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
-    } else { // Side B logic
-        const sideBName = card["sides"]["B"]["name"];
-        if (sideBName == "player") {
-            return process.env.PUBLIC_URL + '/images/cardbacks/player.jpg';
-        } else if (sideBName == "encounter") {
-            return process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg';
-        } else if (sideBName) {
-            return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.B.jpg';
-        } else {
-            return '';
-        }
-    }
-}
+// export const getVisibleFaceSRC = (card, PlayerN) => {
+//     if (!card) return "";
+//     const visibleSide = getVisibleSide(card, PlayerN);
+//     if (visibleSide == "A") {
+//         return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
+//     } else { // Side B logic
+//         const sideBName = card["sides"]["B"]["name"];
+//         if (sideBName == "player") {
+//             return process.env.PUBLIC_URL + '/images/cardbacks/player.jpg';
+//         } else if (sideBName == "encounter") {
+//             return process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg';
+//         } else if (sideBName) {
+//             return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.B.jpg';
+//         } else {
+//             return '';
+//         }
+//     }
+// }
 
 
 // PREVENT DOUBLECLICK REGISTERING 2 CLICK EVENTS
@@ -166,7 +167,10 @@ const CardComponent = React.memo(({
     chatBroadcast,
     PlayerN,
 }) => {
-    //const [card, setCard] = useState(inputCard);
+/*     const [card, setCard] = useState(inputCard);
+    useEffect(() => {    
+        if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
+    }, [inputCard]); */
 
     // I know that forceUpdate is a sign I'm doing something wrong. But without it I will
     // occasionally have cards refuse to rerender ater calling a broadcast. For some reason

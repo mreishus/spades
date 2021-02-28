@@ -1,5 +1,5 @@
 import React, { Component, useState, useRef } from "react";
-import { getCurrentFace } from "./CardView"
+import { getCurrentFace } from "./Helpers"
 import { MenuBarUser } from "./MenuBarUser"
 import { GROUPSINFO, sectionToLoadGroupID, sectionToDiscardGroupID } from "./Constants";
 

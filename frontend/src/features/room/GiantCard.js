@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { useActiveCard } from "../../contexts/ActiveCardContext";
-import { getVisibleFace, getVisibleFaceSRC } from "./CardView";
+import { getVisibleFace, getVisibleFaceSRC } from "./Helpers";
 
 export const GiantCard = (PlayerN) => {
   const activeCardAndLoc = useActiveCard();
