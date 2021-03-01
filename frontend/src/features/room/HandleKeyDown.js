@@ -269,6 +269,7 @@ export const handleKeyDown = (
         }
 
         if (updateActiveCard) {
+            activeCardAndLoc.setCard(newCard);
             setActiveCardAndLoc({
                 card: newCard, 
                 groupID: activeCardAndLoc.groupID, 
@@ -276,6 +277,7 @@ export const handleKeyDown = (
                 cardIndex: activeCardAndLoc.cardIndex, 
                 mousePosition: activeCardAndLoc.mousePosition,
                 screenPosition: activeCardAndLoc.screenPosition,
+                screenPosition: activeCardAndLoc.setCard,
             });
         }
     }

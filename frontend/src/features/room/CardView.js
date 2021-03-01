@@ -167,39 +167,41 @@ const CardComponent = React.memo(({
     chatBroadcast,
     PlayerN,
 }) => {
-/*     const [card, setCard] = useState(inputCard);
+    const [card, setCard] = useState(inputCard);
     useEffect(() => {    
         if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
-    }, [inputCard]); */
+    }, [inputCard]);
 
     // I know that forceUpdate is a sign I'm doing something wrong. But without it I will
     // occasionally have cards refuse to rerender ater calling a broadcast. For some reason
     // the shouldComponentUpdate aleady sees the next state and thinks its the same as the
     // current one, so it doesn't update.
     console.log('rendering ',groupID,stackIndex,cardIndex)
-    console.log(inputCard);
+
+    console.log(inputCard);    
+    console.log(card);
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
 
     const [isActive, setIsActive] = useState(false);
-    const displayName = getDisplayName(inputCard);
+    const displayName = getDisplayName(card);
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
 
     //if (groupID==='gSharedStaging') console.log('rendering CardComponent');
-    //if (groupID==='gSharedStaging') console.log(inputCard);
+    //if (groupID==='gSharedStaging') console.log(card);
 
     // useEffect(() => {    
-    //   if (inputCard) setCard(inputCard);
-    // }, [inputCard]);
+    //   if (card) setCard(card);
+    // }, [card]);
     //console.log('rendering',group.id,stackIndex,cardIndex, "comp");
 
 
     const onClick = (event) => {
-        console.log(inputCard);
+        console.log(card);
         console.log(PlayerN);
-        console.log(inputCard["peeking"][PlayerN]);
+        console.log(card["peeking"][PlayerN]);
         return;
     }
 
@@ -215,22 +217,22 @@ const CardComponent = React.memo(({
     // const onDoubleClick = (event) => {
     //     //forceUpdate();
     //     if (group["type"] != "play") return;
-    //     if (!inputCard.exhausted) {
-    //         inputCard.exhausted = true;
-    //         inputCard.rotation = 90;
+    //     if (!card.exhausted) {
+    //         card.exhausted = true;
+    //         card.rotation = 90;
     //         chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
     //     } else {
-    //         inputCard.exhausted = false;
-    //         inputCard.rotation = 0;
+    //         card.exhausted = false;
+    //         card.rotation = 0;
     //         chatBroadcast("game_update", {message: "readied "+displayName+"."});
     //     }
-    //     gameBroadcast("update_card",{card: inputCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
+    //     gameBroadcast("update_card",{card: card, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
     //     forceUpdate();
     // }
     // const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onClick, onDoubleClick);
 
 
-    const menuID = inputCard.id+'-menu';
+    const menuID = card.id+'-menu';
     const zIndex = 1000-cardIndex;
 
     function handleMenuClick(e, data) {
@@ -255,21 +257,21 @@ const CardComponent = React.memo(({
         }
     }
     
-    if (!inputCard) return <div></div>;
-    const currentFace = getCurrentFace(inputCard);
+    if (!card) return <div></div>;
+    const currentFace = getCurrentFace(card);
     return (
         <div>
-            <ContextMenuTrigger id={inputCard.id} holdToDisplay={500}> 
+            <ContextMenuTrigger id={card.id} holdToDisplay={500}> 
 
             <div 
                 className={isActive ? 'isActive' : ''}
-                key={inputCard.id}
+                key={card.id}
                 style={{
                     position: "absolute",
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "end",
-                    background: `url(${getVisibleFaceSRC(inputCard,PlayerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${inputCard.sides["B"].src}) no-repeat` : `url(${inputCard.sides["A"].src}) no-repeat`,
+                    background: `url(${getVisibleFaceSRC(card,PlayerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
@@ -278,7 +280,7 @@ const CardComponent = React.memo(({
                     MozBoxShadow: isActive ? '0 0 7px yellow' : '',
                     WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
                     boxShadow: isActive ? '0 0 7px yellow' : '',
-                    transform: `rotate(${inputCard.rotation}deg)`,
+                    transform: `rotate(${card.rotation}deg)`,
                     zIndex: zIndex,
                     cursor: "default",
                     WebkitTransitionDuration: "0.1s",
@@ -302,23 +304,25 @@ const CardComponent = React.memo(({
                 <CardMouseRegion 
                     position={"top"}
                     top={"0%"}
-                    card={inputCard}
+                    card={card}
                     groupID={groupID}
                     stackIndex={stackIndex}
                     cardIndex={cardIndex}
+                    setCard={setCard}
                 ></CardMouseRegion>
                 
                 <CardMouseRegion 
                     position={"bottom"}
                     top={"50%"}
-                    card={inputCard}
+                    card={card}
                     groupID={groupID}
                     stackIndex={stackIndex}
                     cardIndex={cardIndex}
+                    setCard={setCard}
                 ></CardMouseRegion>
 
                 <TokensView 
-                    card={inputCard} 
+                    card={card} 
                     isActive={isActive} 
                     gameBroadcast={gameBroadcast} 
                     chatBroadcast={chatBroadcast} 
@@ -327,13 +331,13 @@ const CardComponent = React.memo(({
                     cardIndex={cardIndex}
                 ></TokensView>
 
-                {inputCard["peeking"][PlayerN]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
+                {card["peeking"][PlayerN]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
 
             </div>
 
             </ContextMenuTrigger>
 
-            <ContextMenu id={inputCard.id} style={{zIndex:1e8}}>
+            <ContextMenu id={card.id} style={{zIndex:1e8}}>
                 <hr></hr>
                 {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
                 <SubMenu title='Move to'>
@@ -343,9 +347,9 @@ const CardComponent = React.memo(({
                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gSharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
                     <SubMenu title="Owner's Deck">
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+inputCard.owner+"Deck", position: "t"}}>Top</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+inputCard.owner+"Deck", position: "b"}}>Bottom</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+inputCard.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+card.owner+"Deck", position: "t"}}>Top</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
                     <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex, destGroupID: "gSharedVictory", position: "t" }}>Victory Display</MenuItem>
                 </SubMenu>
