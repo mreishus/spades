@@ -9,7 +9,8 @@ export const CardMouseRegion = React.memo(({
     groupID,
     stackIndex,
     cardIndex,
-    setCard
+    setCard,
+    setIsActive
 }) => {
     //const activeCard = useActiveCard();
     const setActiveCard = useSetActiveCard();
@@ -25,6 +26,7 @@ export const CardMouseRegion = React.memo(({
             screenPosition: screenPosition,
             setCard: setCard,
         });
+        setIsActive(true);
     }
 
 

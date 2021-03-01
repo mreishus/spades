@@ -33,7 +33,7 @@ export const handleKeyDown = (
     const k = event.key;
     console.log(k);
     // Keep track of last pressed key
-    setKeypress([k]);
+    if (k === "Shift") setKeypress([k]);
     
     // General hotkeys
     if (k === "e" || k === "E") {
@@ -205,13 +205,13 @@ export const handleKeyDown = (
         // Exhaust card
         else if (k === "a" && groupType === "play") {
             if (activeCard.exhausted) {
-                chatBroadcast("game_update", {message: "readied "+displayName+"."});
+                //chatBroadcast("game_update", {message: "readied "+displayName+"."});
                 newCard = {...newCard, exhausted: false, rotation: 0};
             } else {
-                chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+                //chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
                 newCard = {...newCard, exhausted: true, rotation: 90};
             }
-            gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+            //gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
             updateActiveCard = true;
         }
         // Deal shadow card

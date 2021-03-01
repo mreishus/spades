@@ -206,7 +206,6 @@ const CardComponent = React.memo(({
     }
 
     const handleMouseOver = (event) => {
-        setIsActive(true);
     }
 
     const handleMouseLeave = (event) => {
@@ -309,6 +308,7 @@ const CardComponent = React.memo(({
                     stackIndex={stackIndex}
                     cardIndex={cardIndex}
                     setCard={setCard}
+                    setIsActive={setIsActive}
                 ></CardMouseRegion>
                 
                 <CardMouseRegion 
@@ -319,6 +319,7 @@ const CardComponent = React.memo(({
                     stackIndex={stackIndex}
                     cardIndex={cardIndex}
                     setCard={setCard}
+                    setIsActive={setIsActive}
                 ></CardMouseRegion>
 
                 <TokensView 

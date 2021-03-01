@@ -98,7 +98,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
     }
 
     const onKeyUp = (event: any) => {
-      setKeypress([""]);
+      if (event.key === "Shift") setKeypress([""]);
     }
 
     document.addEventListener('keydown', onKeyDown);
