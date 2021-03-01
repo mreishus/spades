@@ -176,10 +176,7 @@ const CardComponent = React.memo(({
     // occasionally have cards refuse to rerender ater calling a broadcast. For some reason
     // the shouldComponentUpdate aleady sees the next state and thinks its the same as the
     // current one, so it doesn't update.
-    console.log('rendering ',groupID,stackIndex,cardIndex)
-
-    console.log(inputCard);    
-    console.log(card);
+    console.log('rendering ',groupID,stackIndex,cardIndex);
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
@@ -203,9 +200,6 @@ const CardComponent = React.memo(({
         console.log(PlayerN);
         console.log(card["peeking"][PlayerN]);
         return;
-    }
-
-    const handleMouseOver = (event) => {
     }
 
     const handleMouseLeave = (event) => {
@@ -293,7 +287,6 @@ const CardComponent = React.memo(({
                 }}
                 onClick={onClick}
                 //onDoubleClick={handleDoubleClick}
-                onMouseOver={event => handleMouseOver(event)}
                 onMouseLeave={event => handleMouseLeave(event)}
             >
                 {/* <div style={{position:'absolute',width:"50%",height:"100%",backgroundColor:"green"}}></div>

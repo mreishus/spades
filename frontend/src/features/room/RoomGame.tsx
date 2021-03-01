@@ -1,11 +1,10 @@
 import React, {useState, useContext, useEffect} from "react";
 import ReactDOM from "react-dom";
 import { Table } from "./Table";
-import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import GameUIContext from "../../contexts/GameUIContext";
 import { ChatMessage } from "elixir-backend";
-import { handleKeyDown } from "./HandleKeyDown";
+import { HandleKeyDown } from "./HandleKeyDown";
 import { GetPlayerN } from "./GetPlayerN";
 import useProfile from "../../hooks/useProfile";
 
@@ -75,44 +74,21 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   const [typing, setTyping] = useState<Boolean>(false);
   const keypress = useKeypress();
   const setKeypress = useSetKeypress();
-  const activeCardAndLoc = useActiveCard();
-  const setActiveCardAndLoc = useSetActiveCard();
   const myUser = useProfile();
   const myUserID = myUser?.id;
   const PlayerN = GetPlayerN(gameUI["player_ids"], myUserID);
 
-  useEffect(() => {
-    const onKeyDown = (event: any) => {
-      handleKeyDown(
-        event, 
-        PlayerN,
-        gameUI,
-        typing, 
-        keypress, 
-        setKeypress,
-        activeCardAndLoc,
-        setActiveCardAndLoc, 
-        gameBroadcast, 
-        chatBroadcast,
-      )
-    }
-
-    const onKeyUp = (event: any) => {
-      if (event.key === "Shift") setKeypress([""]);
-    }
-
-    document.addEventListener('keydown', onKeyDown);
-    document.addEventListener('keyup', onKeyUp);
-
-    return () => {
-        document.removeEventListener('keydown', onKeyDown);
-        document.removeEventListener('keyup', onKeyUp);
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [gameUI, typing, keypress, activeCardAndLoc]);
-
-
   return (
+    <div className="h-full w-full">
+      <HandleKeyDown
+        PlayerN={PlayerN}
+        gameUI={gameUI}
+        typing={typing}
+        keypress={keypress}
+        setKeypress={setKeypress}
+        gameBroadcast={gameBroadcast} 
+        chatBroadcast={chatBroadcast}
+      />
       <Table 
         PlayerN={PlayerN}
         gameBroadcast={gameBroadcast}
@@ -120,7 +96,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         messages={messages}
         setTyping={setTyping}
       />
-    
+    </div>
   )
 }   
 
