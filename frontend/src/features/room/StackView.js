@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import styled from "@emotion/styled";
-import CardView from "./CardView"
-import { CARDSCALE } from "./Constants"
+import CardView from "./CardView";
+import { CARDSCALE } from "./Constants";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 
 
@@ -40,8 +41,8 @@ export default class StackView extends Component {
   
   // This optimization doesn't work because when you hover over a card somewhere earlier in the group, this card also needs to update
   // shouldComponentUpdate = (nextProps, nextState) => {
-  //     if (this.props.isDragging || this.props.isGroupedOver) return true;
-  //     if (JSON.stringify(nextProps.stack)===JSON.stringify(this.props.stack)) {
+  //     if (dragSnapshot.isDragging || this.props.isGroupedOver) return true;
+  //     if (JSON.stringify(nextProps.stack)===JSON.stringify(stack)) {
   //       return false;
   //     } else {
   //       return true;
@@ -49,44 +50,51 @@ export default class StackView extends Component {
   // };
   render() {
     console.log('Stackview',this.props.PlayerN);
+    const stack = JSON.parse(this.props.stack);
     const numStacks = this.props.numStacks > 0 ? this.props.numStacks : 1;
     var handSpacing = 100*0.8*0.8*0.8/(this.props.numStacks);
     if (handSpacing > CARDSCALE) handSpacing = CARDSCALE;
-    const stackWidth = this.props.group.type == "hand" ? handSpacing : CARDSCALE/0.72 + CARDSCALE/3*(this.props.stack.cards.length-1);
-    //const stackWidth = CARDSCALE/0.72 + CARDSCALE/3*(this.props.stack.cards.length-1);
+    const stackWidth = this.props.groupType == "hand" ? handSpacing : CARDSCALE/0.72 + CARDSCALE/3*(stack.cards.length-1);
+    //const stackWidth = CARDSCALE/0.72 + CARDSCALE/3*(stack.cards.length-1);
     return (
+      <Draggable 
+      key={stack.id} 
+      draggableId={stack.id} 
+      index={this.props.stackIndex}
+    >
+      {(dragProvided, dragSnapshot) => (
       <Container
-        isDragging={this.props.isDragging}
-        isGroupedOver={this.props.isGroupedOver}
+        isDragging={dragSnapshot.isDragging}
+        isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
         isClone={this.props.isClone}
         stackWidth={stackWidth}
-        ref={this.props.provided.innerRef}
-        {...this.props.provided.draggableProps}
-        {...this.props.provided.dragHandleProps}
-        style={getStyle(this.props.provided, this.props.style)}
-        data-is-dragging={this.props.isDragging}
-        data-testid={this.props.stack.id}
+        ref={dragProvided.innerRef}
+        {...dragProvided.draggableProps}
+        {...dragProvided.dragHandleProps}
+        style={getStyle(dragProvided, this.props.style)}
+        data-is-dragging={dragSnapshot.isDragging}
+        data-testid={stack.id}
         data-index={this.props.index}
       >
-      {this.props.stack.cards.map((card, cardIndex) => {
+      {stack.cards.map((card, cardIndex) => {
           return(
 
             <CardView
               gameBroadcast={this.props.gameBroadcast} 
               chatBroadcast={this.props.chatBroadcast} 
               PlayerN={this.props.PlayerN}
-              groupID={this.props.group.id} 
-              group={this.props.group}
+              groupID={this.props.groupID} 
               stackIndex={this.props.stackIndex}
               cardIndex={cardIndex}
-              inputCard={card} 
+              inputCard={JSON.stringify(card)} 
               key={card.id} 
             >
             </CardView>
           )
       })}
       </Container>
-
+      )}
+      </Draggable>
     );
   }
 }

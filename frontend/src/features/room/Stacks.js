@@ -48,27 +48,17 @@ const StacksList = React.memo(function StacksList(props) {
   console.log(props.selectedStackIndices);
   return stacks?.map((stack, stackIndex) => (
       (props.selectedStackIndices.includes(stackIndex)) ? (
-        <Draggable 
-          key={stack.id} 
-          draggableId={stack.id} 
-          index={stackIndex}
-        >
-          {(dragProvided, dragSnapshot) => (
             <StackView
               gameBroadcast={props.gameBroadcast}
               chatBroadcast={props.chatBroadcast}
               PlayerN={props.PlayerN}
-              group={props.group}
+              groupID={props.group.id}
+              groupType={props.group.type}
               stackIndex={stackIndex}
-              stack={stack}
+              stack={JSON.stringify(stack)}
               key={stack.id}
-              isDragging={dragSnapshot.isDragging}
-              isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
-              provided={dragProvided}
               numStacks={props.selectedStackIndices.length}
             />
-          )}
-        </Draggable>
       ) : null 
 
   ));
@@ -117,7 +107,6 @@ export default function Stacks(props) {
     selectedStackIndices,
   } = props;
   console.log('rendering stacks for ',group.id);
-  console.log(props.selectedStackIndices);
 
   return (
     <Droppable

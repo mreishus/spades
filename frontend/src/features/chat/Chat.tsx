@@ -26,4 +26,4 @@ export const Chat: React.FC<Props> = ({ chatBroadcast, messages, setTyping }) =>
     </div>
   );
 };
-export default Chat;
+export default React.memo(Chat);

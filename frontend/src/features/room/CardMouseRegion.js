@@ -26,7 +26,7 @@ export const CardMouseRegion = React.memo(({
             screenPosition: screenPosition,
             setCard: setCard,
         });
-        //setIsActive(true);
+        setIsActive(true);
     }
 
 

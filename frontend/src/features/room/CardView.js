@@ -162,7 +162,6 @@ const CardComponent = React.memo(({
     cardIndex,
     stackIndex,
     groupID,
-    group,
     gameBroadcast,
     chatBroadcast,
     PlayerN,
@@ -193,7 +192,6 @@ const CardComponent = React.memo(({
     //   if (card) setCard(card);
     // }, [card]);
     //console.log('rendering',group.id,stackIndex,cardIndex, "comp");
-
 
     const onClick = (event) => {
         console.log(card);
@@ -376,7 +374,6 @@ class CardClass extends Component {
                 cardIndex={this.props.cardIndex}
                 stackIndex={this.props.stackIndex}
                 groupID={this.props.groupID}
-                group={this.props.group}
                 gameBroadcast={this.props.gameBroadcast}
                 chatBroadcast={this.props.chatBroadcast}
                 PlayerN={this.props.PlayerN}
@@ -391,30 +388,23 @@ const CardView = React.memo(({
     cardIndex,
     stackIndex,
     groupID,
-    group,
     gameBroadcast,
     chatBroadcast,
     PlayerN,
   }) => {
     //if (groupID==='gSharedStaging') console.log('rendering Cardview');
-    console.log('rendering',group.id,stackIndex,cardIndex, "view");
-
-
+    console.log('rendering',groupID,stackIndex,cardIndex, "view");
+    const cardObj = JSON.parse(inputCard);
     return (
-
         <CardClass
-            inputCard={inputCard}
+            inputCard={cardObj}
             cardIndex={cardIndex}
             stackIndex={stackIndex}
             groupID={groupID}
-            group={group}
             gameBroadcast={gameBroadcast}
             chatBroadcast={chatBroadcast}
             PlayerN={PlayerN}
         ></CardClass>
-
-
-
     )
 });
 

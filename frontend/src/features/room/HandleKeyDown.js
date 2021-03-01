@@ -318,7 +318,7 @@ export const HandleKeyDown = ({
                     cardIndex: activeCardAndLoc.cardIndex, 
                     mousePosition: activeCardAndLoc.mousePosition,
                     screenPosition: activeCardAndLoc.screenPosition,
-                    screenPosition: activeCardAndLoc.setCard,
+                    setCard: activeCardAndLoc.setCard,
                 });
             }
         }
