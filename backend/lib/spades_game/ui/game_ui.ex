@@ -20,98 +20,80 @@ defmodule SpadesGame.GameUI do
       "created_at"=> DateTime.utc_now(),
       "created_by"=> user,
       "player_ids" => %{
-        "Player1" => user,
-        "Player2" => nil,
-        "Player3" => nil,
-        "Player4" => nil,
+        "player1" => user,
+        "player2" => nil,
+        "player3" => nil,
+        "player4" => nil,
       }
     }
     #IO.inspect(gameui)
     gameui
   end
 
-  def get_group(gameui,group_id) do
-    gameui["game"]["groups"][group_id]
+  def get_group(gameui, group_id) do
+    gameui["game"]["groupById"][group_id]
   end
 
-  def get_group_type(gameui,group_id) do
-    group = gameui["game"]["groups"][group_id]
-    if group do
-      group["type"]
-    else
-      nil
-    end
+  def get_group_controller(gameui, group_id) do
+    gameui["game"]["groupById"][group_id]["controller"]
   end
 
-  def get_stacks(gameui,group_id) do
-    get_group(gameui,group_id)["stacks"]
+  def get_group_type(gameui, group_id) do
+    group = get_group(gameui, group_id)
+    if group do group["type"] else nil end
   end
 
-  def get_stack(gameui, group_id, stack_index) do
-    stacks = get_stacks(gameui, group_id)
-    if stacks do Enum.at(stacks, stack_index) else nil end
+  def get_stack_ids(gameui, group_id) do
+    get_group(gameui,group_id)["stackIds"]
   end
 
-  def get_cards(gameui, group_id, stack_index) do
-    get_stack(gameui, group_id, stack_index)["cards"]
+  def get_stack(gameui, stack_id) do
+    gameui["game"]["stackById"][stack_id]
   end
 
-  def get_card(gameui, gsc) do
-    cards = get_cards(gameui, Enum.at(gsc, 0), Enum.at(gsc, 1))
-    if cards do Enum.at(cards, Enum.at(gsc, 2)) else nil end
+  def get_card_ids(gameui, stack_id) do
+    get_stack(gameui, stack_id)["cardIds"]
   end
 
-  def get_tokens(gameui, gsc) do
-    get_card(gameui, gsc)["tokens"]
+  def get_card(gameui, card_id) do
+    gameui["game"]["cardById"][card_id]
   end
 
-  def get_token(gameui, gsc, token_type) do
-    get_tokens(gameui, gsc)[token_type]
+  def get_tokens(gameui, card_id) do
+    gameui["game"]["tokensById"][card_id]
   end
 
-  def update_group(gameui, group_id, new_group) do
-    put_in(gameui["game"]["groups"][group_id], new_group)
+  def get_token(gameui, card_id, token_type) do
+    get_tokens(gameui, card_id)[token_type]
   end
 
-  def update_stacks(gameui, group_id, new_stacks) do
-    old_group = get_group(gameui,group_id)
-    new_group = put_in(old_group["stacks"], new_stacks)
-    update_group(gameui, group_id, new_group)
+  def update_group(gameui, new_group) do
+    put_in(gameui["game"]["groupById"][new_group["id"]], new_group)
   end
 
-  def update_stack(gameui, group_id, stack_index, new_stack) do
-    old_stacks = get_stacks(gameui, group_id)
-    new_stacks = List.replace_at(old_stacks, stack_index, new_stack)
-    update_stacks(gameui, group_id, new_stacks)
+  def update_stack_ids(gameui, group_id, new_stack_ids) do
+    put_in(gameui["game"]["groupById"][group_id]["stackIds"], new_stack_ids)
   end
 
-  def update_cards(gameui, group_id, stack_index, new_cards) do
-    old_stack = get_stack(gameui, group_id, stack_index)
-    new_stack = put_in(old_stack["cards"], new_cards)
-    update_stack(gameui, group_id, stack_index, new_stack)
+  def update_stack(gameui, new_stack) do
+    put_in(gameui["game"]["stackById"][new_stack["id"]], new_stack)
   end
 
-  def update_card(gameui, gsc, new_card) do
-    group_id = Enum.at(gsc, 0)
-    stack_index = Enum.at(gsc, 1)
-    card_index = Enum.at(gsc, 2)
-    old_cards = get_cards(gameui, group_id, stack_index)
-    new_cards = List.replace_at(old_cards, card_index, new_card)
-    update_cards(gameui, group_id, stack_index, new_cards)
+  def update_card_ids(gameui, stack_id, new_stack_ids) do
+    put_in(gameui["game"]["stackById"][stack_id]["stackIds"], new_stack_ids)
   end
 
-  def update_tokens(gameui, gsc, new_tokens) do
-    old_card = get_card(gameui, gsc)
-    new_card = put_in(old_card["tokens"],new_tokens)
-    update_card(gameui, gsc, new_card)
+  def update_card(gameui, new_card) do
+    put_in(gameui["game"]["cardById"][new_card["id"]], new_card)
   end
 
-  def update_token(gameui, gsc, token_type, new_value) do
-    old_tokens = get_tokens(gameui, gsc)
-    new_tokens = put_in(old_tokens[token_type],new_value)
-    update_tokens(gameui, gsc, new_tokens)
+  def update_tokens(gameui, new_tokens) do
+    put_in(gameui["game"]["tokensById"][new_tokens["id"]], new_tokens)
   end
 
+  def update_token(gameui, tokens_id, token_type, new_value) do
+    put_in(gameui["game"]["tokensById"][tokens_id][token_type], new_tokens)
+  end
 
   # Card function: must be in the form fn(gameui, gsc, args)
   def card_function(function, gameui, gsc, options) do
@@ -212,10 +194,10 @@ defmodule SpadesGame.GameUI do
 
   def reset_peeking(card) do
     Map.put(card, "peeking", %{
-      "Player1" => false,
-      "Player2" => false,
-      "Player3" => false,
-      "Player4" => false
+      "player1" => false,
+      "player2" => false,
+      "player3" => false,
+      "player4" => false
     })
   end
 
@@ -281,49 +263,88 @@ defmodule SpadesGame.GameUI do
     end
   end
 
-  def move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index, preserve_state \\ false) do
-    # Check if dest_stack_index is negative, indicating a move to the end of a group, and adjust index accordingly
-    dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stacks(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
-    old_orig_group = get_group(gameui, orig_group_id)
-    old_orig_stacks = get_stacks(gameui, orig_group_id)
-    old_stack = get_stack(gameui, orig_group_id, orig_stack_index)
-    if old_stack do
-      new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
-      new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
-      old_dest_group =
-        if orig_group_id == dest_group_id do
-          new_orig_group
-        else
-          get_group(gameui,dest_group_id)
-        end
-      old_dest_stacks = old_dest_group["stacks"]
-      old_cards = old_stack["cards"]
-
-      new_dest_stacks =
-        # If told to preserve the state of the stack, just move it over
-        if preserve_state do
-          List.insert_at(old_dest_stacks,dest_stack_index,old_stack)
-        # Otherwise, process the movement of the stack to a different kind of group
-        else
-          new_cards = Enum.map(old_cards, fn card -> card_group_change(gameui, card, orig_group_id, dest_group_id) end)
-          # If stack leaving play, separate the stack
-          if old_dest_group["type"] != "play" do
-            stack_list_to_insert = Enum.map(new_cards, fn card -> Stack.stack_from_card(card) end)
-            # Insert list of stacks into original destination stacks
-            List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
-          # Stack is either entering play or staying in play. Keep it in one piece
-          else
-            new_stack = put_in(old_stack["cards"],new_cards)
-            List.insert_at(old_dest_stacks,dest_stack_index,new_stack)
-          end
-        end
-      new_dest_group = put_in(old_dest_group["stacks"], new_dest_stacks)
-      gameui_orig_removed = update_group(gameui, orig_group_id, new_orig_group)
-      update_group(gameui_orig_removed,dest_group_id,new_dest_group)
-    else
-      gameui
-    end
+  def get_group_id_by_stack_id(gameui, stack_id) do
+    Enum.reduce(gameui["game"]["groupById"], [], fn({group_id, group}) ->
+      acc = if stack_id in group["stackIds"] do group_id else acc end
+    end)
   end
+
+  def get_stack_index_by_stack_id(gameui, group_id, stack_id) do
+    stack_ids = get_stack_ids(gameui, group_id)
+    Enum.find_index(stack_ids, fn id -> id == stack_id end)
+  end
+
+  def flatten_group(group) do
+    Enum.reduce(Enum.with_index(group["stacks"]), [], fn({stack, index}, acc) ->
+      cards = index_list_of_maps(stack["cards"],"card_index")
+      cards = Enum.map(cards, fn(c) -> Map.merge(c, %{"stack_index" => index, "group_id" => group["id"]}) end)
+      acc ++ cards
+  end)
+
+  def move_stack(gameui, stack_id, dest_group_id, dest_stack_index, combine \\ false, preserve_state \\ false) do
+    orig_group_id = get_group_id_by_stack_id(gameui, stack_id)
+    orig_stack_index = get_stack_index_by_stack_id(gameui, orig_group_id, stack_id)
+    # If destination is negative, count backward from the end
+    dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stack_ids(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
+    # Delete from old position
+    old_orig_stack_ids = get_stack_ids(gameui, orig_group_id)
+    stack_id = old_orig_stack_ids[orig_stack_index]
+    new_orig_stack_ids = List.delete_at(old_orig_stack_ids, orig_stack_index)
+    gameui = update_stack_ids(gameui, orig_group_id, new_orig_stack_ids)
+    # Add to new position
+    old_dest_stack_ids = get_stack_ids(gameui, dest_group_id)
+    new_dest_stack_ids = List.insert_at(old_dest_stack_ids, dest_stack_index, )
+    gameui = update_stack_ids(gameui, dest_group_id, new_dest_stack_ids)
+    # Update gameui
+    gameui
+    |> update_stack_ids(orig_group_id, new_orig_stack_ids)
+    |> update_stack_ids(dest_group_id, new_dest_stack_ids)
+    #|> set_viewership(stack_id)
+  end
+
+  # def move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index, preserve_state \\ false) do
+  #   # Check if dest_stack_index is negative, indicating a move to the end of a group, and adjust index accordingly
+  #   dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stacks(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
+  #   old_orig_group = get_group(gameui, orig_group_id)
+  #   old_orig_stacks = get_stacks(gameui, orig_group_id)
+  #   old_stack = get_stack(gameui, orig_group_id, orig_stack_index)
+  #   if old_stack do
+  #     new_orig_stacks = List.delete_at(old_orig_stacks,orig_stack_index)
+  #     new_orig_group = put_in(old_orig_group["stacks"],new_orig_stacks)
+  #     old_dest_group =
+  #       if orig_group_id == dest_group_id do
+  #         new_orig_group
+  #       else
+  #         get_group(gameui,dest_group_id)
+  #       end
+  #     old_dest_stacks = old_dest_group["stacks"]
+  #     old_cards = old_stack["cards"]
+
+  #     new_dest_stacks =
+  #       # If told to preserve the state of the stack, just move it over
+  #       if preserve_state do
+  #         List.insert_at(old_dest_stacks,dest_stack_index,old_stack)
+  #       # Otherwise, process the movement of the stack to a different kind of group
+  #       else
+  #         new_cards = Enum.map(old_cards, fn card -> card_group_change(gameui, card, orig_group_id, dest_group_id) end)
+  #         # If stack leaving play, separate the stack
+  #         if old_dest_group["type"] != "play" do
+  #           stack_list_to_insert = Enum.map(new_cards, fn card -> Stack.stack_from_card(card) end)
+  #           # Insert list of stacks into original destination stacks
+  #           List.flatten(List.insert_at(old_dest_stacks,dest_stack_index,stack_list_to_insert))
+  #         # Stack is either entering play or staying in play. Keep it in one piece
+  #         else
+  #           new_stack = put_in(old_stack["cards"],new_cards)
+  #           List.insert_at(old_dest_stacks,dest_stack_index,new_stack)
+  #         end
+  #       end
+  #     new_dest_group = put_in(old_dest_group["stacks"], new_dest_stacks)
+  #     gameui_orig_removed = update_group(gameui, orig_group_id, new_orig_group)
+  #     update_group(gameui_orig_removed,dest_group_id,new_dest_group)
+  #   else
+  #     gameui
+  #   end
+  # end
 
   def move_stacks(gameui, orig_group_id, dest_group_id, position) do
     orig_stacks = get_stacks(gameui, orig_group_id)
@@ -392,78 +413,126 @@ defmodule SpadesGame.GameUI do
   def get_player_n(gameui, user_id) do
     ids = gameui["player_ids"]
     cond do
-      ids["Player1"] == user_id -> "Player1"
-      ids["Player2"] == user_id -> "Player2"
-      ids["Player3"] == user_id -> "Player3"
-      ids["Player4"] == user_id -> "Player4"
+      ids["player1"] == user_id -> "player1"
+      ids["player2"] == user_id -> "player2"
+      ids["player3"] == user_id -> "player3"
+      ids["player4"] == user_id -> "player4"
       true -> nil
     end
   end
 
-  def load_card(gameui, card_row, group_id, quantity) do
-    #IO.puts("game_ui load_card a")
-    #IO.inspect(card_row)
-    controller = gameui["game"]["groups"][group_id]["controller"]
-    IO.puts("group controller")
-    IO.inspect(gameui["groups"][group_id])
-
-    stacks_to_add = for _ <- 1..quantity do
-      card = Card.card_from_cardrow(card_row, controller)
-      card = card_group_change(gameui, card, group_id, group_id)
-      Stack.stack_from_card(card)
-    end
-    old_stacks = get_stacks(gameui, group_id)
-    new_stacks = old_stacks ++ stacks_to_add
-    update_stacks(gameui, group_id, new_stacks)
+  def insert_stack_in_group(gameui, group_id, stack, index) do
+    old_stack_ids = gameui["game"]["groupById"][group_id]["stackIds"]
+    new_stack_ids = List.insert_at(old_stack_ids, index, stack["id"])
+    new_group = put_in(gameui["game"]["groupById"][group_id]["stackIds"], new_stack_ids)
+    update_group = (gameui, new_group)
   end
+
+  def update_stack(gameui, stack) do
+    put_in(gameui["game"]["stackById"][stack["id"]],stack)
+  end
+
+  def insert_card_in_stack(gameui, stack_id, card, index) do
+    old_card_ids = gameui["game"]["stackById"][stack_id]["cardIds"]
+    new_card_ids = List.insert_at(old_card_ids, index, card["id"])
+    new_stack = put_in(gameui["game"]["stackById"][group_id]["stackIds"], new_stack_ids)
+    update_stack = (gameui, new_stack)
+  end
+
+  def update_card(gameui, card) do
+    put_in(gameui["game"]["cardById"][card["id"]],card)
+  end
+
+  def update_tokens(gameui, card, tokens) do
+    put_in(gameui["game"]["tokensById"][card["id"]],tokens)
+  end
+
+  def add_card_row_to_group(gameui, group_id, card_row) do
+    controller = get_group_controller(group_id)
+    group_size = Enum.count(get_stack_ids(gameui, group_id))
+    # Can't insert a card directly into a group need to make a stack first
+    new_stack = Stack.new()
+    new_tokens = Tokens.new()
+    new_card = Card.card_from_cardrow(card_row, controlled, new_tokens["id"])
+    gameui
+    |> update_stack(new_stack)
+    |> insert_stack_in_group(group_id, new_stack, group_size)
+    |> update_card(new_card)
+    |> insert_card_in_stack(new_stack["id"], card, 0)
+    |> update_tokens(new_tokens)
+  end
+
+  def load_card(gameui, card_row, group_id, quantity) do
+    Enum.reduce(1..quantity, gameui, fn(index, acc) ->
+      acc = add_card_to_group(gameui, group_id, new_card)
+    end)
+  end
+
+
+
+  # def load_card(gameui, card_row, group_id, quantity) do
+  #   #IO.puts("game_ui load_card a")
+  #   #IO.inspect(card_row)
+  #   controller = gameui["game"]["groupById"][group_id]["controller"]
+  #   IO.puts("group controller")
+
+  #   stacks_to_add = for _ <- 1..quantity do
+  #     card = Card.card_from_cardrow(card_row, controller)
+  #     card = card_group_change(gameui, card, group_id, group_id)
+  #     Stack.stack_from_card(card)
+  #   end
+  #   old_stacks = get_stacks(gameui, group_id)
+  #   new_stacks = old_stacks ++ stacks_to_add
+  #   update_stacks(gameui, group_id, new_stacks)
+  # end
 
   def load_cards(gameui, user_id, load_list) do
     # Get player doing the loading
     player_n = get_player_n(gameui, user_id)
     # Get deck sie before load
-    deck_size_before = Enum.count(get_stacks(gameui,"g"<>player_n<>"Deck"))
+    deck_size_before = Enum.count(get_stack_ids(gameui,"g"<>player_n<>"Deck"))
 
-    gameui = Enum.reduce load_list, gameui, fn r, acc ->
+    gameui = Enum.reduce(load_list, gameui, fn r, acc ->
       load_card(acc, r["cardRow"], r["groupID"], r["quantity"])
-    end
+    end)
 
-    # Check if we should load the first quest card
-    IO.puts("checking quest")
-    IO.inspect(Enum.count(get_stacks(gameui,"gSharedQuestDeck")))
-    IO.inspect(Enum.count(get_stacks(gameui,"gSharedMainQuest")))
-    gameui = if Enum.count(get_stacks(gameui,"gSharedQuestDeck"))>0 && Enum.count(get_stacks(gameui,"gSharedMainQuest"))==0 do
-      move_stack(gameui, "gSharedQuestDeck", 0, "gSharedMainQuest", 0)
-    else
-      gameui
-    end
+    # # Check if we should load the first quest card
+    # IO.puts("checking quest")
+    # IO.inspect(Enum.count(get_stack_ids(gameui,"gSharedQuestDeck")))
+    # IO.inspect(Enum.count(get_stack_ids(gameui,"gSharedMainQuest")))
+    # gameui = if Enum.count(get_stack_ids(gameui,"gSharedQuestDeck"))>0 && Enum.count(get_stack_ids(gameui,"gSharedMainQuest"))==0 do
+    #   move_stack(gameui, "gSharedQuestDeck", 0, "gSharedMainQuest", 0)
+    # else
+    #   gameui
+    # end
 
-    # Add to starting threat
-    threat = Enum.reduce load_list, 0, fn r, acc ->
-      sideA = r["cardRow"]["sides"]["A"]
-      if sideA["type"] == "Hero" do
-        acc + CardFace.convert_to_integer(sideA["cost"])*r["quantity"]
-      else
-        acc
-      end
-    end
-    gameui = if player_n do
-      put_in(gameui["game"]["player_data"][player_n]["threat"], threat)
-    else
-      gameui
-    end
+    # # Add to starting threat
+    # threat = Enum.reduce load_list, 0, fn r, acc ->
+    #   sideA = r["cardRow"]["sides"]["A"]
+    #   if sideA["type"] == "Hero" do
+    #     acc + CardFace.convert_to_integer(sideA["cost"])*r["quantity"]
+    #   else
+    #     acc
+    #   end
+    # end
+    # gameui = if player_n do
+    #   put_in(gameui["game"]["player_data"][player_n]["threat"], threat)
+    # else
+    #   gameui
+    # end
 
-    # If deck size has increased from 0, assume it is at start of game and a mulligan is needed
-    round_number = gameui["game"]["round_number"]
-    round_step = gameui["game"]["round_step"]
-    deck_size_after = Enum.count(get_stacks(gameui,"g"<>player_n<>"Deck"))
-    gameui = if round_number == 0 && round_step == "0.0" && deck_size_before == 0 && deck_size_after > 6 do
-      gameui = shuffle_group(gameui, "g"<>player_n<>"Deck")
-      Enum.reduce 1..6, gameui, fn i, acc ->
-        move_stack(acc, "g"<>player_n<>"Deck", 0, "g"<>player_n<>"Hand", -1, false)
-      end
-    else
-      gameui
-    end
+    # # If deck size has increased from 0, assume it is at start of game and a mulligan is needed
+    # round_number = gameui["game"]["round_number"]
+    # round_step = gameui["game"]["round_step"]
+    # deck_size_after = Enum.count(get_stacks(gameui,"g"<>player_n<>"Deck"))
+    # gameui = if round_number == 0 && round_step == "0.0" && deck_size_before == 0 && deck_size_after > 6 do
+    #   gameui = shuffle_group(gameui, "g"<>player_n<>"Deck")
+    #   Enum.reduce 1..6, gameui, fn i, acc ->
+    #     move_stack(acc, "g"<>player_n<>"Deck", 0, "g"<>player_n<>"Hand", -1, false)
+    #   end
+    # else
+    #   gameui
+    # end
   end
 
   # Take a list of maps and add the index to each one with a key given by label

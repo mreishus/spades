@@ -10,13 +10,27 @@ defmodule SpadesGame.Stack do
 
   @spec stack_from_card(Card.t()) :: Map.t()
   def stack_from_card(card) do
-    %{"id" => Ecto.UUID.generate, "cards" => [card]}
+    %{"id" => Ecto.UUID.generate, "cards" => [card.id]}
   end
 
-  @spec stack_from_cardrow(Map.t(), String.t()) :: Map.t()
-  def stack_from_cardrow(card_row, controller) do
+  @spec stack_from_card(Map.t(), Card.t()) :: Map.t()
+  def stack_from_cardrow(card) do
     #IO.puts("card_row")
     #IO.inspect(card_row)
-    %{"id" => Ecto.UUID.generate, "cards" => [Card.card_from_cardrow(card_row, controller)]}
+    %{
+      "id" => Ecto.UUID.generate,
+      "cards" => [card)]
+    }
   end
+end
+
+@spec stack_from_cardrow(Map.t(), String.t()) :: Map.t()
+def stack_from_cardrow(card_row, controller) do
+  #IO.puts("card_row")
+  #IO.inspect(card_row)
+  %{
+    "id" => Ecto.UUID.generate,
+    "cards" => [Card.card_from_cardrow(card_row, controller)]
+  }
+end
 end

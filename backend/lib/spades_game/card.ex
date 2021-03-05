@@ -9,7 +9,7 @@ defmodule SpadesGame.Card do
   @type t :: Map.t()
 
   @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
-  def card_from_cardrow(card_row, controller) do
+  def card_from_cardrow(card_row, controller, tokens_id) do
     IO.puts("creating card controlled by #{controller}")
     %{
       "id" => Ecto.UUID.generate,
@@ -17,25 +17,26 @@ defmodule SpadesGame.Card do
       "exhausted" => false,
       "committed" => false,
       "tokens" =>Tokens.new(),
-      "current_side" => "A",
+      "currentSide" => "A",
       "owner" => controller,
       "controller" => controller,
       "peeking" => %{
-        "Player1" => false,
-        "Player2" => false,
-        "Player3" => false,
-        "Player4" => false
+        "player1" => false,
+        "player2" => false,
+        "player3" => false,
+        "player4" => false
       },
+      "tokensId" => tokens_id,
 
-      "cardbackoverride" => card_row["cardbackoverride"],
-      "cardencounterset" => card_row["cardencounterset"],
-      "cardid" => card_row["cardid"],
-      "cardnumber" => String.to_integer(card_row["cardnumber"]),
-      "cardquantity" => String.to_integer(card_row["cardquantity"]),
-      "cardsetid" => card_row["cardsetid"],
-      "cardpackname" => card_row["cardpackname"],
+      "cardBackOverride" => card_row["cardbackoverride"],
+      "cardEncounterSet" => card_row["cardencounterset"],
+      "cardDbId" => card_row["cardid"],
+      "cardNumber" => String.to_integer(card_row["cardnumber"]),
+      "cardQuantity" => String.to_integer(card_row["cardquantity"]),
+      "cardSetId" => card_row["cardsetid"],
+      "cardPackName" => card_row["cardpackname"],
 
-      "discardgroupid" => card_row["discardgroupid"],
+      "discardGroupId" => card_row["discardgroupid"],
 
       "sides"=> %{
         "A"=>CardFace.cardface_from_cardrowside(card_row["sides"]["A"]),

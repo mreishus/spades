@@ -8,7 +8,9 @@ defmodule SpadesGame.Tokens do
 
   @spec new() :: Map.t()
   def new() do
-    %{"resource"=> 0,
+    %{
+      "id"=> Ecto.UUID.generate,
+      "resource"=> 0,
       "progress"=> 0,
       "damage"=> 0,
       "time"=> 0,
@@ -16,6 +18,7 @@ defmodule SpadesGame.Tokens do
       "willpower"=> 0,
       "attack"=> 0,
       "defense"=> 0,
+      "hitpoints"=> 0,
     }
   end
 end

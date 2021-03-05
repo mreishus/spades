@@ -77,7 +77,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   const myUser = useProfile();
   const myUserID = myUser?.id;
   const PlayerN = GetPlayerN(gameUI["player_ids"], myUserID);
-
+  console.log(gameUI);
   return (
     <div className="h-full w-full">
       <HandleKeyDown

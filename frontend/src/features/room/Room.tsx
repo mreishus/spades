@@ -1,27 +1,35 @@
 import React, { useState, useCallback } from "react";
+import { useSelector, useDispatch } from 'react-redux'
 import RoomGame from "./RoomGame";
 import GameUIContext from "../../contexts/GameUIContext";
 import {KeypressProvider} from '../../contexts/KeypressContext'
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
 import useChannel from "../../hooks/useChannel";
 import { GameUI, ChatMessage } from "elixir-backend";
+import { setGame } from "./gameSlice"
 
 interface Props {
   slug: string;
 }
 
 export const Room: React.FC<Props> = ({ slug }) => {
+  const selectCardById = (state: any) => state.game.cardById;
+  const dispatch = useDispatch();
+  const cardById = useSelector(selectCardById);
+
   const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
     console.log("[room] Got channel message", event, payload);
+    console.log("Got new game state: ", payload.response);
     if (
       event === "phx_reply" &&
       payload.response != null &&
       payload.response.game_ui != null
     ) {
       const { game_ui } = payload.response;
-      //console.log("Got new game state: ", game_ui_view);
-      setGameUI(game_ui);
+      //setGameUI(game_ui);
+      dispatch(setGame(game_ui.game));
+
     }
   }, []);
   

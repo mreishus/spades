@@ -10,7 +10,7 @@ import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContex
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDisplayName, getCurrentFace, getVisibleFaceSRC } from "./Helpers";
-
+import { setGame } from "./gameSlice"
 
 
 // export const getCurrentFace = (card) => {
@@ -156,7 +156,6 @@ const useClickPreventionOnDoubleClick = (onClick, onDoubleClick) => {
 
 
 
-
 const CardComponent = React.memo(({
     inputCard,
     cardIndex,
@@ -166,6 +165,9 @@ const CardComponent = React.memo(({
     chatBroadcast,
     PlayerN,
 }) => {
+    const storeCard = state => state.game.cardById[inputCard.id];
+    const dispatch = useDispatch();
+    const hello = useSelector(storeCard);
     const [card, setCard] = useState(inputCard);
     useEffect(() => {    
         if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
@@ -175,7 +177,7 @@ const CardComponent = React.memo(({
     // occasionally have cards refuse to rerender ater calling a broadcast. For some reason
     // the shouldComponentUpdate aleady sees the next state and thinks its the same as the
     // current one, so it doesn't update.
-    console.log('rendering ',groupID,stackIndex,cardIndex);
+    console.log('rendering ',groupID,stackIndex,cardIndex, hello);
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
@@ -197,6 +199,8 @@ const CardComponent = React.memo(({
         console.log(card);
         console.log(PlayerN);
         console.log(card["peeking"][PlayerN]);
+        const newGame = {"hello": "world"};
+        dispatch(setGame(newGame));
         return;
     }
 
