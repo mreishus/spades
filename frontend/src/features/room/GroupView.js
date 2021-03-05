@@ -33,7 +33,7 @@ const GroupComponent = React.memo(({
   group,
   gameBroadcast,
   chatBroadcast,
-  PlayerN,
+  playerN,
   showTitle,
   setBrowseGroupID,
   setBrowseGroupTopN,
@@ -51,7 +51,7 @@ const GroupComponent = React.memo(({
         group={group}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
-        PlayerN={PlayerN}
+        playerN={playerN}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></GroupContextMenu>
@@ -59,7 +59,7 @@ const GroupComponent = React.memo(({
       <Stacks
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
-        PlayerN={PlayerN}
+        playerN={playerN}
         group={group}
         isCombineEnabled={group.type === "play"}
         selectedStackIndices={[...Array(numStacks).keys()]}
@@ -74,7 +74,7 @@ export class GroupView extends Component {
 
   shouldComponentUpdate = (nextProps, nextState) => {
       if (JSON.stringify(nextProps.group)!==JSON.stringify(this.props.group)) return true;
-      if (nextProps.PlayerN!==this.props.PlayerN) return true;
+      if (nextProps.playerN!==this.props.playerN) return true;
       return false;
   };
 
@@ -90,7 +90,7 @@ export class GroupView extends Component {
           group={this.props.group}
           gameBroadcast={this.props.gameBroadcast}
           chatBroadcast={this.props.chatBroadcast}
-          PlayerN={this.props.PlayerN}
+          playerN={this.props.playerN}
           showTitle={this.props.showTitle}
           setBrowseGroupID={this.props.setBrowseGroupID}
           setBrowseGroupTopN={this.props.setBrowseGroupTopN}
@@ -122,7 +122,7 @@ export class GroupContainer extends Component {
                 group={this.props.group} 
                 gameBroadcast={this.props.gameBroadcast} 
                 chatBroadcast={this.props.chatBroadcast}
-                PlayerN={this.props.PlayerN}
+                playerN={this.props.playerN}
                 showTitle={this.props.showTitle}
                 setBrowseGroupID={this.props.setBrowseGroupID}
                 setBrowseGroupTopN={this.props.setBrowseGroupTopN}

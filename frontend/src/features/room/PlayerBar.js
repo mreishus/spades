@@ -6,7 +6,7 @@ export const PlayerBar = React.memo(({
   observingPlayerN,
   gameBroadcast,
   chatBroadcast,
-  PlayerN,
+  playerN,
   browseGroupID,
   setBrowseGroupID,
   setBrowseGroupTopN,
@@ -18,7 +18,7 @@ export const PlayerBar = React.memo(({
         width="80%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
-        PlayerN={PlayerN}
+        playerN={playerN}
         browseGroupID={browseGroupID}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
@@ -28,7 +28,7 @@ export const PlayerBar = React.memo(({
         width="10%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
-        PlayerN={PlayerN}
+        playerN={playerN}
         browseGroupID={browseGroupID}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
@@ -38,7 +38,7 @@ export const PlayerBar = React.memo(({
         width="10%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
-        PlayerN={PlayerN}
+        playerN={playerN}
         browseGroupID={browseGroupID}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}

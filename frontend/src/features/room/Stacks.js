@@ -51,7 +51,7 @@ const StacksList = React.memo(function StacksList(props) {
             <StackView
               gameBroadcast={props.gameBroadcast}
               chatBroadcast={props.chatBroadcast}
-              PlayerN={props.PlayerN}
+              playerN={props.playerN}
               groupID={props.group.id}
               groupType={props.group.type}
               stackIndex={stackIndex}
@@ -70,7 +70,7 @@ function DropZoneContainer(props) {
     isDraggingFrom, 
     gameBroadcast, 
     chatBroadcast, 
-    PlayerN,
+    playerN,
     group, 
     stacks, 
     dropProvided, 
@@ -85,7 +85,7 @@ function DropZoneContainer(props) {
           isDraggingFrom={isDraggingFrom}
           gameBroadcast={gameBroadcast} 
           chatBroadcast={chatBroadcast} 
-          PlayerN={PlayerN}
+          playerN={playerN}
           group={group} 
           stacks={stacks}
           selectedStackIndices={selectedStackIndices}
@@ -100,7 +100,7 @@ export default function Stacks(props) {
   const {
     gameBroadcast,
     chatBroadcast,
-    PlayerN,
+    playerN,
     group,
     isDropDisabled,
     isCombineEnabled,
@@ -129,7 +129,7 @@ export default function Stacks(props) {
                 isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
                 gameBroadcast={gameBroadcast}
                 chatBroadcast={chatBroadcast}
-                PlayerN={PlayerN}
+                playerN={playerN}
                 group={group}
                 stacks={group.stacks}
                 dropProvided={dropProvided}

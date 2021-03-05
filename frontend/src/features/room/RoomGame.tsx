@@ -5,7 +5,7 @@ import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import GameUIContext from "../../contexts/GameUIContext";
 import { ChatMessage } from "elixir-backend";
 import { HandleKeyDown } from "./HandleKeyDown";
-import { GetPlayerN } from "./GetPlayerN";
+import { GetPlayerN } from "./Helpers";
 import useProfile from "../../hooks/useProfile";
 
 
@@ -76,12 +76,12 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   const setKeypress = useSetKeypress();
   const myUser = useProfile();
   const myUserID = myUser?.id;
-  const PlayerN = GetPlayerN(gameUI["player_ids"], myUserID);
+  const playerN = GetPlayerN(gameUI["player_ids"], myUserID);
   console.log(gameUI);
   return (
     <div className="h-full w-full">
       <HandleKeyDown
-        PlayerN={PlayerN}
+        playerN={playerN}
         gameUI={gameUI}
         typing={typing}
         keypress={keypress}
@@ -90,7 +90,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         chatBroadcast={chatBroadcast}
       />
       <Table 
-        PlayerN={PlayerN}
+        playerN={playerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         messages={messages}

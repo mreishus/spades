@@ -53,20 +53,35 @@ export const GROUPSINFO = {
     "gPlayer4Event": {name: "Player 4 Current Event", tablename: "Current Event"}
 }
 
-export const sectionToLoadGroupID = (section, PlayerN) => {
+export const playerNum = (playerN) => {
+  switch(playerN) {
+    case 'player1':
+      return 1;
+    case 'player2':
+      return 2;
+    case 'player3':
+      return 3;
+    case 'player4':
+      return 4;
+  }
+  return null;
+} 
+
+export const sectionToLoadGroupID = (section, playerN) => {
+  const num = playerNum(playerN)
   switch(section) {
     case 'Hero':
-      return 'g'+PlayerN+'Play1';
+      return 'gPlayer'+playerNum+'Play1';
     case 'Ally':
-      return 'g'+PlayerN+'Deck';
+      return 'gPlayer'+playerNum+'Deck';
     case 'Attachment':
-      return 'g'+PlayerN+'Deck';
+      return 'gPlayer'+playerNum+'Deck';
     case 'Event':
-      return 'g'+PlayerN+'Deck';
+      return 'gPlayer'+playerNum+'Deck';
     case 'Side Quest':
-      return 'g'+PlayerN+'Deck';
+      return 'gPlayer'+playerNum+'Deck';
     case 'Sideboard':
-      return 'g'+PlayerN+'Sideboard';
+      return 'gPlayer'+playerNum+'Sideboard';
     case 'Quest':
       return 'gSharedQuestDeck';
     case 'Encounter':
@@ -87,20 +102,21 @@ export const sectionToLoadGroupID = (section, PlayerN) => {
   return 'gSharedOther';
 }
 
-export const sectionToDiscardGroupID = (section, PlayerN) => {
+export const sectionToDiscardGroupID = (section, playerN) => {
+  const num = playerNum(playerN)
   switch(section) {
     case 'Hero':
-      return 'g'+PlayerN+'Discard';
+      return 'gPlayer'+playerNum+'Discard';
     case 'Ally':
-      return 'g'+PlayerN+'Discard';
+      return 'gPlayer'+playerNum+'Discard';
     case 'Attachment':
-      return 'g'+PlayerN+'Discard';
+      return 'gPlayer'+playerNum+'Discard';
     case 'Event':
-      return 'g'+PlayerN+'Discard';
+      return 'gPlayer'+playerNum+'Discard';
     case 'Side Quest':
-      return 'g'+PlayerN+'Discard';
+      return 'gPlayer'+playerNum+'Discard';
     case 'Sideboard':
-      return 'g'+PlayerN+'Discard';
+      return 'gPlayer'+playerNum+'Discard';
     case 'Quest':
       return 'gSharedQuestDiscard';
     case 'Encounter':

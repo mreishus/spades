@@ -49,7 +49,7 @@ export default class StackView extends Component {
   //     }
   // };
   render() {
-    console.log('Stackview',this.props.PlayerN);
+    console.log('Stackview',this.props.playerN);
     const stack = JSON.parse(this.props.stack);
     const numStacks = this.props.numStacks > 0 ? this.props.numStacks : 1;
     var handSpacing = 100*0.8*0.8*0.8/(this.props.numStacks);
@@ -82,7 +82,7 @@ export default class StackView extends Component {
             <CardView
               gameBroadcast={this.props.gameBroadcast} 
               chatBroadcast={this.props.chatBroadcast} 
-              PlayerN={this.props.PlayerN}
+              playerN={this.props.playerN}
               groupID={this.props.groupID} 
               stackIndex={this.props.stackIndex}
               cardIndex={cardIndex}

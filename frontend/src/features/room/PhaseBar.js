@@ -5,7 +5,7 @@ export const PhaseBar = React.memo(({
   gameUI,
   gameBroadcast,
   chatBroadcast,
-  PlayerN,
+  playerN,
 }) => {
   return(
     <div className="bg-gray-500" style={{width:"48px"}}>

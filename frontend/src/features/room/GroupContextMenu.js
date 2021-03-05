@@ -7,7 +7,7 @@ export const GroupContextMenu = React.memo(({
     group,
     gameBroadcast,
     chatBroadcast,
-    PlayerN,
+    playerN,
     setBrowseGroupID,
     setBrowseGroupTopN,
 }) => {
@@ -32,7 +32,7 @@ export const GroupContextMenu = React.memo(({
           handleBrowseTopN(
             topNstr, 
             group,
-            PlayerN,
+            playerN,
             gameBroadcast, 
             chatBroadcast,
             setBrowseGroupID,

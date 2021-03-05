@@ -155,6 +155,9 @@ const useClickPreventionOnDoubleClick = (onClick, onDoubleClick) => {
 
 
 
+    // const storeCard = state => state.game.cardById[inputCard.id];
+    // const dispatch = useDispatch();
+    // const hello = useSelector(storeCard);
 
 const CardComponent = React.memo(({
     inputCard,
@@ -163,11 +166,8 @@ const CardComponent = React.memo(({
     groupID,
     gameBroadcast,
     chatBroadcast,
-    PlayerN,
+    playerN,
 }) => {
-    const storeCard = state => state.game.cardById[inputCard.id];
-    const dispatch = useDispatch();
-    const hello = useSelector(storeCard);
     const [card, setCard] = useState(inputCard);
     useEffect(() => {    
         if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
@@ -177,7 +177,7 @@ const CardComponent = React.memo(({
     // occasionally have cards refuse to rerender ater calling a broadcast. For some reason
     // the shouldComponentUpdate aleady sees the next state and thinks its the same as the
     // current one, so it doesn't update.
-    console.log('rendering ',groupID,stackIndex,cardIndex, hello);
+    console.log('rendering ',groupID,stackIndex,cardIndex);
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
@@ -197,10 +197,10 @@ const CardComponent = React.memo(({
 
     const onClick = (event) => {
         console.log(card);
-        console.log(PlayerN);
-        console.log(card["peeking"][PlayerN]);
+        console.log(playerN);
+        console.log(card["peeking"][playerN]);
         const newGame = {"hello": "world"};
-        dispatch(setGame(newGame));
+        //dispatch(setGame(newGame));
         return;
     }
 
@@ -266,7 +266,7 @@ const CardComponent = React.memo(({
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "end",
-                    background: `url(${getVisibleFaceSRC(card,PlayerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
+                    background: `url(${getVisibleFaceSRC(card,playerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
                     height: `${CARDSCALE*currentFace.height}vw`,
                     width: `${CARDSCALE*currentFace.width}vw`,
                     left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
@@ -327,7 +327,7 @@ const CardComponent = React.memo(({
                     cardIndex={cardIndex}
                 ></TokensView>
 
-                {card["peeking"][PlayerN]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
+                {card["peeking"][playerN]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
 
             </div>
 
@@ -380,7 +380,7 @@ class CardClass extends Component {
                 groupID={this.props.groupID}
                 gameBroadcast={this.props.gameBroadcast}
                 chatBroadcast={this.props.chatBroadcast}
-                PlayerN={this.props.PlayerN}
+                playerN={this.props.playerN}
             ></CardComponent>
         )
     }
@@ -394,7 +394,7 @@ const CardView = React.memo(({
     groupID,
     gameBroadcast,
     chatBroadcast,
-    PlayerN,
+    playerN,
   }) => {
     //if (groupID==='gSharedStaging') console.log('rendering Cardview');
     console.log('rendering',groupID,stackIndex,cardIndex, "view");
@@ -407,7 +407,7 @@ const CardView = React.memo(({
             groupID={groupID}
             gameBroadcast={gameBroadcast}
             chatBroadcast={chatBroadcast}
-            PlayerN={PlayerN}
+            playerN={playerN}
         ></CardClass>
     )
 });

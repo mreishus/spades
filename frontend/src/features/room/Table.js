@@ -63,7 +63,7 @@ export const Table = ({
   const [browseGroupID, setBrowseGroupID] = useState("");
   // Indices of stacks in group being browsed
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
-  const [observingPlayerN, setObservingPlayerN] = useState(PlayerN);
+  const [observingPlayerN, setObservingPlayerN] = useState(playerN);
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
   const defaultGameDropdown = options[0];

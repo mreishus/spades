@@ -36,22 +36,22 @@ export const getDisplayNameFlipped = (card) => {
   return getDisplayName(getFlippedCard(card));
 }
 
-export const getVisibleSide = (card, PlayerN) => {
+export const getVisibleSide = (card, playerN) => {
   if (!card) return null;
   const currentSide = card["current_side"];
-  if (currentSide == "A" || card["peeking"][PlayerN]) return "A";
+  if (currentSide == "A" || card["peeking"][playerN]) return "A";
   else return "B";
 }
 
-export const getVisibleFace = (card, PlayerN) => {
-  const visibleSide = getVisibleSide(card, PlayerN);
+export const getVisibleFace = (card, playerN) => {
+  const visibleSide = getVisibleSide(card, playerN);
   if (visibleSide) return card["sides"][visibleSide];
   else return null;
 }
 
-export const getVisibleFaceSRC = (card, PlayerN) => {
+export const getVisibleFaceSRC = (card, playerN) => {
   if (!card) return "";
-  const visibleSide = getVisibleSide(card, PlayerN);
+  const visibleSide = getVisibleSide(card, playerN);
   if (visibleSide == "A") {
       return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
   } else { // Side B logic
@@ -68,7 +68,15 @@ export const getVisibleFaceSRC = (card, PlayerN) => {
   }
 }
 
- // List of PlayerN strings of players that are seated and not eliminated
+export const GetPlayerN = (playerIDs, id) => {
+  var playerN = null;
+  Object.keys(playerIDs).forEach(playerI => {
+    if (playerIDs[playerI] === id) playerN = playerI;
+  })
+  return playerN;
+}
+
+ // List of playerN strings of players that are seated and not eliminated
 export const seatedNonEliminated = (gameUI) => {
   const playerIDs = gameUI["player_ids"]
   const playerData = gameUI["game"]["player_data"]
@@ -86,14 +94,14 @@ export const leftmostNonEliminatedPlayerN = (gameUI) => {
   return seatedPlayerNs[0];
 }
 
-export const getNextPlayerN = (gameUI, PlayerN) => {
+export const getNextPlayerN = (gameUI, playerN) => {
   const seatedPlayerNs = seatedNonEliminated(gameUI);
   const seatedPlayerNs2 = seatedPlayerNs.concat(seatedPlayerNs);
   var nextPlayerN = null;
   for (var i=0; i<seatedPlayerNs2.length/2; i++) {
-    if (seatedPlayerNs2[i] === PlayerN) nextPlayerN = seatedPlayerNs2[i+1];
+    if (seatedPlayerNs2[i] === playerN) nextPlayerN = seatedPlayerNs2[i+1];
   }
-  if (nextPlayerN === PlayerN) nextPlayerN = null;
+  if (nextPlayerN === playerN) nextPlayerN = null;
   return nextPlayerN;
 }
 

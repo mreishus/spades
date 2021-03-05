@@ -16,7 +16,7 @@ const keyTokenMap = {
 }
 
 export const HandleKeyDown = ({
-    PlayerN,
+    playerN,
     gameUI,
     typing, 
     keypress,
@@ -31,7 +31,7 @@ export const HandleKeyDown = ({
         const onKeyDown = (event) => {
             handleKeyDown(
                 event, 
-                PlayerN,
+                playerN,
                 gameUI,
                 typing, 
                 keypress, 
@@ -57,7 +57,7 @@ export const HandleKeyDown = ({
 
     const handleKeyDown = (
         event, 
-        PlayerN,
+        playerN,
         gameUI,
         typing, 
         keypress, 
@@ -67,7 +67,7 @@ export const HandleKeyDown = ({
     ) => {
 
         if (typing) return;
-        if (!PlayerN) {
+        if (!playerN) {
             alert("Please sit down to do that.")
             return;
         }
@@ -144,14 +144,14 @@ export const HandleKeyDown = ({
             }
             // Refresh all cards you control
             chatBroadcast("game_update",{message: "refreshes."});
-            gameBroadcast("refresh",{player_n: PlayerN});
+            gameBroadcast("refresh",{player_n: playerN});
             // Raise your threat
-            const newThreat = gameUI["game"]["player_data"][PlayerN]["threat"]+1;
+            const newThreat = gameUI["game"]["player_data"][playerN]["threat"]+1;
             chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
-            gameBroadcast("increment_threat",{player_n: PlayerN, increment: 1});
+            gameBroadcast("increment_threat",{player_n: playerN, increment: 1});
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
-            if (PlayerN == leftmostNonEliminatedPlayerN(gameUI)) {
+            if (playerN == leftmostNonEliminatedPlayerN(gameUI)) {
                 const firstPlayerN = gameUI["game"]["first_player"];
                 const nextPlayerN = getNextPlayerN(gameUI, firstPlayerN);
                 // If nextPlayerN is null then it's a solo game, so don't pass the token
@@ -167,7 +167,7 @@ export const HandleKeyDown = ({
             }
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the round number increasing multiple times.
-            if (PlayerN == leftmostNonEliminatedPlayerN(gameUI)) {
+            if (playerN == leftmostNonEliminatedPlayerN(gameUI)) {
                 const roundNumber = gameUI["game"]["round_number"];
                 const newRoundNumber = roundNumber + 1;
                 gameBroadcast("increment_round",{increment: 1});    
@@ -177,7 +177,7 @@ export const HandleKeyDown = ({
                 gameUI, 
                 gameBroadcast, 
                 chatBroadcast, 
-                [["sideUp","type","Hero"],["card","controller",PlayerN]],
+                [["sideUp","type","Hero"],["card","controller",playerN]],
                 "increment_token",
                 ["resource", 1],
             )

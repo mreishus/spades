@@ -44,7 +44,7 @@ const BrowseComponent = React.memo(({
   browseGroupTopN,
   setBrowseGroupID,
   setBrowseGroupTopN,
-  PlayerN,
+  playerN,
 }) => {
   const [selectedCardType, setSelectedCardType] = useState('All');
   const [selectedCardName, setSelectedCardName] = useState('');
@@ -63,7 +63,7 @@ const BrowseComponent = React.memo(({
   const handleCloseClick = (event) => {
     setBrowseGroupID("");
     setBrowseGroupTopN(0);
-    gameBroadcast("peek_at", {group_id: group.id, stack_indices: [], card_indices: [], player_n: PlayerN, reset_peek: true})
+    gameBroadcast("peek_at", {group_id: group.id, stack_indices: [], card_indices: [], player_n: playerN, reset_peek: true})
   }
 
   const handleSelectClick = (event) => {
@@ -71,7 +71,7 @@ const BrowseComponent = React.memo(({
     handleBrowseTopN(
       topNstr, 
       group,
-      PlayerN,
+      playerN,
       gameBroadcast, 
       chatBroadcast,
       setBrowseGroupID,
@@ -114,14 +114,14 @@ const BrowseComponent = React.memo(({
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stacks[s] && 
       stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType &&
-      stacks[s]["cards"][0]["peeking"][PlayerN]
+      stacks[s]["cards"][0]["peeking"][playerN]
     ));
   // Filter by card name
   if (selectedCardName != "")
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stacks[s] && 
       stacks[s]["cards"][0]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
-      stacks[s]["cards"][0]["peeking"][PlayerN]
+      stacks[s]["cards"][0]["peeking"][playerN]
     ));
 
   // Flip cards faceup
@@ -157,7 +157,7 @@ const BrowseComponent = React.memo(({
         group={group}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
-        PlayerN={PlayerN}
+        playerN={playerN}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></GroupContextMenu>
@@ -167,7 +167,7 @@ const BrowseComponent = React.memo(({
         <Stacks
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
-          PlayerN={PlayerN}
+          playerN={playerN}
           group={fannedGroup}
           isCombineEnabled={false}
           selectedStackIndices={filteredStackIndices}
@@ -229,7 +229,7 @@ export default class BrowseContainer extends Component {
             browseGroupTopN={this.props.browseGroupTopN}
             setBrowseGroupID={this.props.setBrowseGroupID}
             setBrowseGroupTopN={this.props.setBrowseGroupTopN}
-            PlayerN={this.props.PlayerN}
+            playerN={this.props.playerN}
           ></BrowseComponent>
         </WidthContainer>
       )

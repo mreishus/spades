@@ -3,7 +3,7 @@ import { GROUPSINFO } from "./Constants";
 export const handleBrowseTopN = (
     topNstr, 
     group,
-    PlayerN,
+    playerN,
     gameBroadcast, 
     chatBroadcast,
     setBrowseGroupID,
@@ -35,5 +35,5 @@ export const handleBrowseTopN = (
     }
     setBrowseGroupID(group.id);
     setBrowseGroupTopN(topNstr);
-    gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: PlayerN, reset_peek: true})
+    gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: playerN, reset_peek: true})
 }

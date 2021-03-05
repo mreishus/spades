@@ -48,7 +48,7 @@ defmodule SpadesWeb.RoomChannel do
 
   def handle_in(
         "sit",
-        %{"PlayerN" => player_n},
+        %{"playerN" => player_n},
         %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
       ) do
     GameUIServer.sit(room_slug, user_id, player_n)
@@ -60,7 +60,7 @@ defmodule SpadesWeb.RoomChannel do
 
   def handle_in(
         "get_up",
-        %{"PlayerN" => player_n},
+        %{"playerN" => player_n},
         %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
       ) do
     GameUIServer.sit(room_slug, nil, player_n)
