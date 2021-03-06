@@ -27,8 +27,8 @@ export const Room: React.FC<Props> = ({ slug }) => {
       payload.response.game_ui != null
     ) {
       const { game_ui } = payload.response;
-      //setGameUI(game_ui);
-      dispatch(setGame(game_ui.game));
+      setGameUI(game_ui);
+      //dispatch(setGame(game_ui.game));
 
     }
   }, []);

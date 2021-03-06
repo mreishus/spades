@@ -1,14 +1,12 @@
-import Ecto
-
 defmodule SpadesGame.Card do
   @moduledoc """
   Represents a playing card.
   """
-  alias SpadesGame.{Card,CardFace,Tokens}
+  alias SpadesGame.{CardFace}
 
   @type t :: Map.t()
 
-  @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
+  @spec card_from_cardrow(Map.t(), String.t(), String.t()) :: Map.t()
   def card_from_cardrow(card_row, controller, tokens_id) do
     IO.puts("creating card controlled by #{controller}")
     %{

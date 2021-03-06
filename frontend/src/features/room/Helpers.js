@@ -1,13 +1,13 @@
 export const getCurrentFace = (card) => {
   if (!card) return null;
-  return card["sides"][card["current_side"]];
+  return card["sides"][card["currentSide"]];
 }
 
 export const getDisplayName = (card) => {
-  const currentSide = card["current_side"];
+  const currentSide = card["currentSide"];
   const currentFace = getCurrentFace(card);
   if (currentSide == "A") {
-      const printName = currentFace["printname"];
+      const printName = currentFace["printName"];
       const id = card["id"];
       const id4digit = id.substr(id.length - 4);
       return printName+' ('+id4digit+')';
@@ -18,7 +18,7 @@ export const getDisplayName = (card) => {
       } else if (sideBName == "encounter") {
           return 'encounter card';
       } else if (sideBName) {
-          const printName = currentFace["printname"];
+          const printName = currentFace["printName"];
           const id = card["id"];
           const id4digit = id.substr(id.length - 4);
           return printName+' ('+id4digit+')';
@@ -29,7 +29,7 @@ export const getDisplayName = (card) => {
 }
 
 export const getFlippedCard = (card) => {
-  return (card["current_side"] === "A") ? {...card, ["current_side"]: "B"} : {...card, ["current_side"]: "A"};
+  return (card["currentSide"] === "A") ? {...card, ["currentSide"]: "B"} : {...card, ["currentSide"]: "A"};
 }
 
 export const getDisplayNameFlipped = (card) => {
@@ -38,7 +38,7 @@ export const getDisplayNameFlipped = (card) => {
 
 export const getVisibleSide = (card, playerN) => {
   if (!card) return null;
-  const currentSide = card["current_side"];
+  const currentSide = card["currentSide"];
   if (currentSide == "A" || card["peeking"][playerN]) return "A";
   else return "B";
 }
@@ -78,11 +78,11 @@ export const GetPlayerN = (playerIDs, id) => {
 
  // List of playerN strings of players that are seated and not eliminated
 export const seatedNonEliminated = (gameUI) => {
-  const playerIDs = gameUI["player_ids"]
-  const playerData = gameUI["game"]["player_data"]
+  const playerIDs = gameUI["playerIds"]
+  const playerById = gameUI["game"]["playerById"]
   var seated = []
   Object.keys(playerIDs).forEach((PlayerI) => {
-    if (playerIDs[PlayerI] && !playerData[PlayerI]["eliminated"]) {
+    if (playerIDs[PlayerI] && !playerById[PlayerI]["eliminated"]) {
       seated.push(PlayerI);
     }
   })
@@ -106,10 +106,10 @@ export const getNextPlayerN = (gameUI, playerN) => {
 }
 
 export const flatListOfCards = (gameUI) => {
-  const groups = gameUI["game"]["groups"];
+  const groupById = gameUI["game"]["groupById"];
   const allCards = [];
-  Object.keys(groups).forEach((groupID) => {
-    const group = groups[groupID];
+  Object.keys(groupById).forEach((groupID) => {
+    const group = groupById[groupID];
     console.log("flattening",groupID);
     const stacks = group["stacks"];
     console.log(stacks);
@@ -151,7 +151,7 @@ export const passesCriteria = (card, criteria) => {
         break;
       case "sideDown":
         console.log("dwn");
-        if (card["current_side"] == "A") objectToCheck = card["sides"]["B"];
+        if (card["currentSide"] == "A") objectToCheck = card["sides"]["B"];
         else objectToCheck = card["sides"]["A"];
         break;
       case "tokens":
@@ -186,7 +186,7 @@ const listOfMatchingCards = (gameUI, criteria) => {
 export const functionOnMatchingCards = (gameUI, gameBroadcast, chatBroadcast, criteria, func, args ) => {
   const cards = listOfMatchingCards(gameUI, criteria);
   for (var card of cards) {
-    const cardName = getCurrentFace(card).printname;
+    const cardName = getCurrentFace(card).printName;
     const groupID = card["group_id"];
     const stackIndex = card["stack_index"];
     const cardIndex = card["card_index"];

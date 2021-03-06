@@ -79,7 +79,7 @@ export const HandleKeyDown = ({
         // General hotkeys
         if (k === "e" || k === "E") {
             // Check remaining cards in encounter deck
-            const gSharedEncounterDeck = gameUI["game"]["groups"]["gSharedEncounterDeck"];
+            const gSharedEncounterDeck = gameUI["game"]["groupById"]["gSharedEncounterDeck"];
             const stacks = gSharedEncounterDeck["stacks"];
             const stacksLeft = stacks.length;
             // If no cards, check phase of game
@@ -118,7 +118,7 @@ export const HandleKeyDown = ({
             });
         } else if (k === "d") {
             // Check remaining cards in deck
-            const gPlayer1Deck = gameUI["game"]["groups"]["gPlayer1Deck"];
+            const gPlayer1Deck = gameUI["game"]["groupById"]["gPlayer1Deck"];
             const stacks = gPlayer1Deck["stacks"];
             const stacksLeft = stacks.length;
             // If no cards, give error message and break
@@ -146,7 +146,7 @@ export const HandleKeyDown = ({
             chatBroadcast("game_update",{message: "refreshes."});
             gameBroadcast("refresh",{player_n: playerN});
             // Raise your threat
-            const newThreat = gameUI["game"]["player_data"][playerN]["threat"]+1;
+            const newThreat = gameUI["game"]["playerById"][playerN]["threat"]+1;
             chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
             gameBroadcast("increment_threat",{player_n: playerN, increment: 1});
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
@@ -193,7 +193,7 @@ export const HandleKeyDown = ({
             const groupID = activeCardAndLoc.groupID;
             const stackIndex = activeCardAndLoc.stackIndex;
             const cardIndex = activeCardAndLoc.cardIndex;
-            const groupType = gameUI["game"]["groups"][groupID]["type"];
+            const groupType = gameUI["game"]["groupById"][groupID]["type"];
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 const tokenType = keyTokenMap[k][0];
@@ -230,7 +230,7 @@ export const HandleKeyDown = ({
             }
             // Flip card
             else if (k === "f") {
-                if (newCard["current_side"] === "A") {
+                if (newCard["currentSide"] === "A") {
                     newCard = {...newCard, current_side: "B"}
                 } else {
                     newCard = {...newCard, current_side: "A"}
@@ -264,7 +264,7 @@ export const HandleKeyDown = ({
             else if (k === "x") {
                 // If card is the parent card of a stack, discard the whole stack
                 if (cardIndex == 0) {
-                    const stack = gameUI["game"]["groups"][groupID]["stacks"][stackIndex];
+                    const stack = gameUI["game"]["groupById"][groupID]["stacks"][stackIndex];
                     if (!stack) return;
                     const cards = stack["cards"];
                     for (var i=0; i<cards.length; i++) {

@@ -2,7 +2,6 @@ defmodule SpadesGame.Tokens do
   @moduledoc """
   Tokens on a card.
   """
-  alias SpadesGame.Tokens
 
   @type t :: Map.t()
 
@@ -18,7 +17,7 @@ defmodule SpadesGame.Tokens do
       "willpower"=> 0,
       "attack"=> 0,
       "defense"=> 0,
-      "hitpoints"=> 0,
+      "hitPoints"=> 0,
     }
   end
 end

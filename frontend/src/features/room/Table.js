@@ -98,7 +98,7 @@ export const Table = ({
     if (!cardRow) return;
     const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupID': "gSharedStaging"}]
     gameBroadcast("load_cards",{load_list: loadList});
-    chatBroadcast("game_update",{message: "spawned "+cardRow["sides"]["A"]["printname"]+"."});
+    chatBroadcast("game_update",{message: "spawned "+cardRow["sides"]["A"]["printName"]+"."});
   }
 
   // const changePhase = (num) => {
@@ -114,7 +114,7 @@ export const Table = ({
     const sourceStacks = groupByID[source.droppableId].stacks;
     const sourceStack = sourceStacks[source.index];    
     const topOfSourceStack = sourceStack.cards[0];
-    const topCardNameSource = topOfSourceStack["sides"][topOfSourceStack["current_side"]].printname;
+    const topCardNameSource = topOfSourceStack["sides"][topOfSourceStack["currentSide"]].printName;
 
     if (result.combine) {
       const destination = result.combine;
@@ -129,7 +129,7 @@ export const Table = ({
       if (!destination.index) return;
       var destStack = destStacks[destination.index];
       const topOfDestStack = destStack.cards[0];
-      const topCardNameDest = topOfDestStack["sides"][topOfDestStack["current_side"]].printname;
+      const topCardNameDest = topOfDestStack["sides"][topOfDestStack["currentSide"]].printName;
       // remove from original
       const newDestStackCards = destStack.cards.concat(sourceStack.cards);
       const newDestStack = {
@@ -202,7 +202,7 @@ export const Table = ({
       ...gameUI,
       "game": {
         ...gameUI.game,
-        "groups": data["groupById"]
+        "groupById": data["groupById"]
       }
     }   
     setGroups(data["groupById"])
@@ -270,7 +270,7 @@ export const Table = ({
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <GroupContainer
-                group={groupByID['gSharedMainQuest']} 
+                groupID={'gSharedMainQuest'} 
                 width="8%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -280,7 +280,7 @@ export const Table = ({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
               <GroupContainer
-                group={groupByID['gSharedActive']} 
+                groupID={'gSharedActive'} 
                 width="9%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -299,7 +299,7 @@ export const Table = ({
                 boxShadow: '0 10px 10px 5px rgba(0,0,0,0.3)',
               }}>
                 <GroupContainer
-                  group={groupByID['gSharedStaging']} 
+                  groupID={'gSharedStaging'} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -310,7 +310,7 @@ export const Table = ({
                 ></GroupContainer>
               </div>
               <GroupContainer
-                group={groupByID['gSharedEncounterDeck']} 
+                groupID={'gSharedEncounterDeck'} 
                 width="7.5%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -320,7 +320,7 @@ export const Table = ({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></GroupContainer>
               <GroupContainer
-                group={groupByID['gSharedEncounterDiscard']} 
+                groupID={'gSharedEncounterDiscard'} 
                 width="7.5%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -333,7 +333,7 @@ export const Table = ({
             </div> 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <GroupContainer
-                group={groupByID['gPlayer1Engaged']} 
+                groupID={'gPlayer1Engaged'} 
                 width="100%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -346,7 +346,7 @@ export const Table = ({
               
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <GroupContainer
-                group={groupByID['gPlayer1Play1']} 
+                groupID={'gPlayer1Play1'} 
                 width="100%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -360,20 +360,20 @@ export const Table = ({
             {browseGroupID ? 
               <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
                 <BrowseContainer
-                  group={groupByID[browseGroupID]}
+                  groupID={browseGroupID}
                   gameBroadcast={gameBroadcast}
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                  playerIDs={gameUI["player_ids"]}
+                  playerIDs={gameUI["playerIds"]}
                 ></BrowseContainer>
               </div>
               :
               <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
                 <GroupContainer
-                  group={groupByID['gPlayer1Play2']} 
+                  groupID={'gPlayer1Play2'} 
                   width="90%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -383,7 +383,7 @@ export const Table = ({
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></GroupContainer>
                 <GroupContainer
-                  group={groupByID['gPlayer1Event']} 
+                  groupID={'gPlayer1Event'} 
                   width="10%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -537,7 +537,7 @@ export const Table = ({
             {spawnFilteredIDs.map((cardID, index) => {
               const card = cardDB[cardID]
               const sideA = cardDB[cardID]["sides"]["A"]
-              const printName = sideA.printname;
+              const printName = sideA.printName;
               return(
                 <tr className="bg-gray-600 text-white cursor-pointer hover:bg-gray-500 hover:text-black" onClick={() => handleSpawnClick(cardID)}>
                   <td className="p-1">{printName}</td>

@@ -16,11 +16,7 @@ interface Props {
   messages: Array<ChatMessage>;
 }
 
-
-
 // class RoomGame extends React.Component<Props> {
-
-  
 
 //   handleKeyDown(event: any) {
 //     let ac = ReactDOM.findDOMNode(this)?.getElementsByClassName('isActive') // Returns the elements
@@ -76,7 +72,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   const setKeypress = useSetKeypress();
   const myUser = useProfile();
   const myUserID = myUser?.id;
-  const playerN = GetPlayerN(gameUI["player_ids"], myUserID);
+  const playerN = GetPlayerN(gameUI["playerIds"], myUserID);
   console.log(gameUI);
   return (
     <div className="h-full w-full">

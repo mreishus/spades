@@ -9,8 +9,8 @@ defmodule SpadesGame.GameUIServer do
   alias SpadesGame.{Game, Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack, Tokens}
 
   def is_player(gameui, user_id) do
-    ids = gameui["player_ids"]
-    if Enum.member?([ids["Player1"], ids["Player2"], ids["Player3"], ids["Player4"]], user_id) do
+    ids = gameui["playerIds"]
+    if Enum.member?([ids["player1"], ids["player2"], ids["player3"], ids["player4"]], user_id) do
         true
     else
         false

@@ -16,7 +16,7 @@ defmodule SpadesGame.Group do
       "id"=> id,
       "type"=> type,
       "controller"=> controller,
-      #"stacks"=> []
+      "stackIds"=> []
     }
   end
 

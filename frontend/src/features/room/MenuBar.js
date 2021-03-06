@@ -18,7 +18,7 @@ export const MenuBar = React.memo(({
   }) => {
     
     const inputFile = useRef(null);
-    const groups = gameUI["game"]["groups"];
+    const groupById = gameUI["game"]["groupById"];
 
     const handleMenuClick = (data) => {
       if (!playerN) {
@@ -72,9 +72,11 @@ export const MenuBar = React.memo(({
     }
     
     const sumStagingThreat = () => {
-      const stagingStacks = gameUI["game"]["groups"]["gSharedStaging"]["stacks"];
+      console.log(gameUI["game"]["groupById"])
+      const stagingStackIds = gameUI["game"]["groupById"]["gSharedStaging"]["stackIds"];
       var stagingThreat = 0;
-      stagingStacks.forEach(stack => {
+      stagingStackIds.forEach(stackId => {
+        const stack = gameUI["game"]["stackById"][stackId];
         const topCard = stack["cards"][0];
         const currentFace = getCurrentFace(topCard);
         stagingThreat = stagingThreat + currentFace["threat"] + topCard["tokens"]["threat"];
@@ -83,11 +85,11 @@ export const MenuBar = React.memo(({
     }
 
     const sumPlayerWillpower = () => {
-      const playerData = gameUI["game"]["player_data"];
+      const playerById = gameUI["game"]["playerById"];
       var totalWillpower = 0;
-      for (const PlayerI in playerData) {
-        if (playerData.hasOwnProperty(PlayerI)) {
-            totalWillpower = totalWillpower + playerData[PlayerI]["willpower"]
+      for (const PlayerI in playerById) {
+        if (playerById.hasOwnProperty(PlayerI)) {
+            totalWillpower = totalWillpower + playerById[PlayerI]["willpower"]
         }
       }
       return totalWillpower;
@@ -122,7 +124,7 @@ export const MenuBar = React.memo(({
                 <a href="#">Shared</a>
                 <ul className="third-level-menu">
                   {Object.keys(GROUPSINFO).map((groupID, index) => {
-                    const group = groups[groupID];
+                    const group = groupById[groupID];
                     if (group["controller"] === "Shared")
                       return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
                     else return null;
@@ -133,7 +135,7 @@ export const MenuBar = React.memo(({
                 <a href="#">Player 1</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupID, index) => {
-                    const group = groups[groupID];
+                    const group = groupById[groupID];
                     if (group["controller"] === "Player1")
                         return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
                       else return null;
@@ -144,7 +146,7 @@ export const MenuBar = React.memo(({
                   <a href="#">Player 2</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupID, index) => {
-                      const group = groups[groupID];
+                      const group = groupById[groupID];
                       if (group["controller"] === "Player2")
                           return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
                         else return null;
@@ -155,7 +157,7 @@ export const MenuBar = React.memo(({
                   <a href="#">Player 3</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupID, index) => {
-                      const group = groups[groupID];
+                      const group = groupById[groupID];
                       if (group["controller"] === "Player3")
                           return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
                         else return null;
@@ -166,7 +168,7 @@ export const MenuBar = React.memo(({
                   <a href="#">Player 4</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupID, index) => {
-                      const group = groups[groupID];
+                      const group = groupById[groupID];
                       if (group["controller"] === "Player4")
                           return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
                         else return null;
