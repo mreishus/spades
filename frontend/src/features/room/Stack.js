@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "@emotion/styled";
-import CardView from "./Card";
+import CardView from "./CardView";
 import { CARDSCALE } from "./Constants";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
@@ -78,6 +78,7 @@ export default class StackView extends Component {
       >
       {stack.cards.map((card, cardIndex) => {
           return(
+
             <CardView
               gameBroadcast={this.props.gameBroadcast} 
               chatBroadcast={this.props.chatBroadcast} 
