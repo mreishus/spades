@@ -1,5 +1,5 @@
 import React from "react";
-import { GroupContainer } from "./GroupView";
+import { Group } from "./Group";
 
 export const PlayerBar = React.memo(({
   groups,
@@ -13,8 +13,8 @@ export const PlayerBar = React.memo(({
 }) => {
   return (
     <div className="h-full w-full">
-      <GroupContainer
-        group={groups['g'+observingPlayerN+'Hand']} 
+      <Group
+        groupID={'g'+observingPlayerN+'Hand'} 
         width="80%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
@@ -22,9 +22,9 @@ export const PlayerBar = React.memo(({
         browseGroupID={browseGroupID}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
-      ></GroupContainer>
-      <GroupContainer
-        group={groups['g'+observingPlayerN+'Deck']} 
+      ></Group>
+      <Group
+        groupID={'g'+observingPlayerN+'Deck'} 
         width="10%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
@@ -32,9 +32,9 @@ export const PlayerBar = React.memo(({
         browseGroupID={browseGroupID}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
-      ></GroupContainer>
-      <GroupContainer
-        group={groups['g'+observingPlayerN+'Discard']} 
+      ></Group>
+      <Group
+        groupID={'g'+observingPlayerN+'Discard'} 
         width="10%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
@@ -42,7 +42,7 @@ export const PlayerBar = React.memo(({
         browseGroupID={browseGroupID}
         setBrowseGroupID={setBrowseGroupID}
         setBrowseGroupTopN={setBrowseGroupTopN}
-      ></GroupContainer>
+      ></Group>
     </div>
   )
 })

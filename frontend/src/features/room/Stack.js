@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import styled from "@emotion/styled";
-import CardView from "./CardView";
+import CardView from "./Card";
 import { CARDSCALE } from "./Constants";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";

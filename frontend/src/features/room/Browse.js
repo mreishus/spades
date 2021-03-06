@@ -7,7 +7,7 @@ import { faChevronDown, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Dropdown from 'react-dropdown';
-import { GroupView } from "./GroupView";
+import { GroupView } from "./Group";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { GroupContextMenu } from "./GroupContextMenu";
 
@@ -49,7 +49,7 @@ const BrowseComponent = React.memo(({
   const [selectedCardType, setSelectedCardType] = useState('All');
   const [selectedCardName, setSelectedCardName] = useState('');
   //const [faceupStackIDs, setFaceupStackIDs] = useState([]);
-  const stacks = group["stacks"];
+  const stacks = group["stackIds"];
   const numStacks = stacks.length;
 
   //var faceupStackIDs = [];

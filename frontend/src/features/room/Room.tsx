@@ -6,16 +6,16 @@ import {KeypressProvider} from '../../contexts/KeypressContext'
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
 import useChannel from "../../hooks/useChannel";
 import { GameUI, ChatMessage } from "elixir-backend";
-import { setGame } from "./gameSlice"
+import { setStore } from "./gameSlice"
 
 interface Props {
   slug: string;
 }
 
 export const Room: React.FC<Props> = ({ slug }) => {
-  const selectCardById = (state: any) => state.game.cardById;
+  const storeSelector = (state: any) => state;
   const dispatch = useDispatch();
-  const cardById = useSelector(selectCardById);
+  const store = useSelector(storeSelector);
 
   const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
@@ -28,7 +28,8 @@ export const Room: React.FC<Props> = ({ slug }) => {
     ) {
       const { game_ui } = payload.response;
       setGameUI(game_ui);
-      //dispatch(setGame(game_ui.game));
+      console.log("dispatching to game")
+      dispatch(setStore(game_ui));
 
     }
   }, []);
@@ -54,7 +55,7 @@ export const Room: React.FC<Props> = ({ slug }) => {
       >
 
       <KeypressProvider value={[""]}>
-        {gameUI != null && (
+        {store != null && gameUI != null && (
           <GameUIContext.Provider value={{gameUI, setGameUI}}>
             <ActiveCardProvider value={null}>
               <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} messages={messages}/>

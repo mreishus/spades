@@ -25,7 +25,7 @@ defmodule SpadesGame.Group do
   """
   @spec empty(Group.t()) :: Map.t()
   def empty(group) do
-    %{group | "stacks"=> []}
+    %{group | "stackIds"=> []}
   end
 
 end

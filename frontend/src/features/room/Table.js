@@ -4,7 +4,7 @@ import { faStepBackward, faStepForward, faEquals, faAngleDoubleDown, faAngleDoub
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Chat from "../chat/Chat";
-import { GroupContainer } from "./GroupView";
+import { Group } from "./Group";
 import BrowseContainer from "./Browse";
 import { reorderGroups } from "./Reorder";
 import { GiantCard } from "./GiantCard";
@@ -269,7 +269,7 @@ export const Table = ({
           <div className=""  style={{height: "94%"}}>
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <GroupContainer
+              <Group
                 groupID={'gSharedMainQuest'} 
                 width="8%"
                 gameBroadcast={gameBroadcast} 
@@ -278,8 +278,8 @@ export const Table = ({
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
-              <GroupContainer
+              ></Group>
+              <Group
                 groupID={'gSharedActive'} 
                 width="9%"
                 gameBroadcast={gameBroadcast} 
@@ -288,7 +288,7 @@ export const Table = ({
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
+              ></Group>
               <div style={{
                 width: "68%", 
                 height: "100%", 
@@ -298,7 +298,7 @@ export const Table = ({
                 WebkitBoxShadow: '0 10px 10px 5px rgba(0,0,0,0.3)',
                 boxShadow: '0 10px 10px 5px rgba(0,0,0,0.3)',
               }}>
-                <GroupContainer
+                <Group
                   groupID={'gSharedStaging'} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
@@ -307,9 +307,9 @@ export const Table = ({
                   browseGroupID={browseGroupID}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupContainer>
+                ></Group>
               </div>
-              <GroupContainer
+              <Group
                 groupID={'gSharedEncounterDeck'} 
                 width="7.5%"
                 gameBroadcast={gameBroadcast} 
@@ -318,8 +318,8 @@ export const Table = ({
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
-              <GroupContainer
+              ></Group>
+              <Group
                 groupID={'gSharedEncounterDiscard'} 
                 width="7.5%"
                 gameBroadcast={gameBroadcast} 
@@ -328,11 +328,11 @@ export const Table = ({
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
+              ></Group>
               
             </div> 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <GroupContainer
+              <Group
                 groupID={'gPlayer1Engaged'} 
                 width="100%"
                 gameBroadcast={gameBroadcast} 
@@ -341,11 +341,11 @@ export const Table = ({
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
+              ></Group>
             </div>
               
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-              <GroupContainer
+              <Group
                 groupID={'gPlayer1Play1'} 
                 width="100%"
                 gameBroadcast={gameBroadcast} 
@@ -354,7 +354,7 @@ export const Table = ({
                 browseGroupID={browseGroupID}
                 setBrowseGroupID={setBrowseGroupID}
                 setBrowseGroupTopN={setBrowseGroupTopN}
-              ></GroupContainer>
+              ></Group>
             </div>
 
             {browseGroupID ? 
@@ -372,7 +372,7 @@ export const Table = ({
               </div>
               :
               <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-                <GroupContainer
+                <Group
                   groupID={'gPlayer1Play2'} 
                   width="90%"
                   gameBroadcast={gameBroadcast} 
@@ -381,8 +381,8 @@ export const Table = ({
                   browseGroupID={browseGroupID}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupContainer>
-                <GroupContainer
+                ></Group>
+                <Group
                   groupID={'gPlayer1Event'} 
                   width="10%"
                   gameBroadcast={gameBroadcast} 
@@ -391,7 +391,7 @@ export const Table = ({
                   browseGroupID={browseGroupID}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupContainer>
+                ></Group>
               </div>
             }
             <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
@@ -453,7 +453,7 @@ export const Table = ({
           
           <div style={{height: "40%", display: showScratch ? "block" : "none"}}>        
             <div style={{height: "33.3%"}}>
-              <GroupContainer
+              <Group
                   group={groups['gSharedExtra1']} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
@@ -462,10 +462,10 @@ export const Table = ({
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupContainer>
+                ></Group>
             </div>      
             <div style={{height: "33.3%"}}>
-              <GroupContainer
+              <Group
                   group={groups['gSharedExtra2']} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
@@ -474,10 +474,10 @@ export const Table = ({
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupContainer>
+                ></Group>
             </div>      
             <div style={{height: "33.3%"}}>
-              <GroupContainer
+              <Group
                   group={groups['gSharedExtra3']} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
@@ -486,7 +486,7 @@ export const Table = ({
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                ></GroupContainer>
+                ></Group>
             </div>
           </div>
           <div className="text-center" onClick={() => toggleScratch()} style={{height: "3%"}}>

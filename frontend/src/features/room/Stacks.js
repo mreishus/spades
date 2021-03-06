@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import StackView from "./StackView";
+import StackView from "./Stack";
 import CardBack from "./CardBack"
 
 const Wrapper = styled.div`

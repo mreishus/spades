@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { useSelector, useDispatch } from 'react-redux'
 import styled from "@emotion/styled";
 import Stacks from "./Stacks";
 import Title from "./Title";
@@ -29,6 +30,8 @@ const WidthContainer = styled.div`
   height: 100%;
 `;
 
+
+
 const GroupComponent = React.memo(({
   group,
   gameBroadcast,
@@ -38,6 +41,7 @@ const GroupComponent = React.memo(({
   setBrowseGroupID,
   setBrowseGroupTopN,
 }) => {
+
   const numStacks = group["stacks"].length;
   return(
     <Container>
@@ -106,8 +110,67 @@ export class GroupView extends Component {
   }
 }
 
+export const Group = React.memo(({
+  groupID,
+  width,
+  gameBroadcast,
+  chatBroadcast,
+  playerN,
+  showTitle,
+  setBrowseGroupID,
+  setBrowseGroupTopN,
+}) => {
+  const storeGroup = state => state?.gameUI?.game.groupById[groupID];
+  const dispatch = useDispatch();
+  const group = useSelector(storeGroup);
+  if (!group) return null;
+  console.log("rendering group ",group);
+  const numStacks = group["stackIds"].length;
+  return(
+    <WidthContainer 
+      style={{
+        width: width, 
+        // visibility: beingBrowsed ? "hidden" : "visible"
+      }}>
+      {/* {beingBrowsed? <div></div> : */}
+        <div style={{width:"100%", height:"100%"}}>
+          <Container>
+            <ContextMenuTrigger id={group.id} holdToDisplay={0}>
+              <Header>
+                <Title>{GROUPSINFO[group.id].tablename} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+              </Header>
+            </ContextMenuTrigger>
+
+            <GroupContextMenu
+              group={group}
+              gameBroadcast={gameBroadcast}
+              chatBroadcast={chatBroadcast}
+              playerN={playerN}
+              setBrowseGroupID={setBrowseGroupID}
+              setBrowseGroupTopN={setBrowseGroupTopN}
+            ></GroupContextMenu>
+            
+            <Stacks
+              gameBroadcast={gameBroadcast}
+              chatBroadcast={chatBroadcast}
+              playerN={playerN}
+              group={group}
+              isCombineEnabled={group.type === "play"}
+              selectedStackIndices={[...Array(numStacks).keys()]}
+            />
+          </Container>
+        </div>
+      }
+    )
+    </WidthContainer>
+  )
+})
+
 export class GroupContainer extends Component {
+
+
   render() {
+
     if (this.props.group) {
       const beingBrowsed = this.props.browseGroupID === this.props.group.id;
       return (
