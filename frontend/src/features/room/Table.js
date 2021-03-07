@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { DragDropContext } from "react-beautiful-dnd";
 import { faStepBackward, faStepForward, faEquals, faAngleDoubleDown, faAngleDoubleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,7 +11,6 @@ import { reorderGroups } from "./Reorder";
 import { GiantCard } from "./GiantCard";
 import { MenuBar } from "./MenuBar";
 import styled from "@emotion/styled";
-import GameUIContext from "../../contexts/GameUIContext";
 import { GROUPSINFO } from "./Constants"
 import Button from "../../components/basic/Button";
 import { getDisplayName, getCurrentFace } from "./Helpers"
@@ -28,23 +28,6 @@ const WidthContainer = styled.div`
   height: 100%;
 `;
 
-const options = [
-  { value: 'one', label: 'One' },
-  { value: 'two', label: 'Two', className: 'myOptionClassName' },
-  {
-   type: 'group', name: 'group1', items: [
-     { value: 'three', label: 'Three', className: 'myOptionClassName' },
-     { value: 'four', label: 'Four' }
-   ]
-  },
-  {
-   type: 'group', name: 'group2', items: [
-     { value: 'five', label: 'Five' },
-     { value: 'six', label: 'Six' }
-   ]
-  }
-];
-
 export const Table = ({
   playerN,
   gameBroadcast,
@@ -52,8 +35,12 @@ export const Table = ({
   messages,
   setTyping
 }) => {
-  const { gameUI, setGameUI } = useContext(GameUIContext);
-  const [groupByID, setGroups] = useState(gameUI.game["groupById"]);
+
+  const gameUiStore = state => state.gameUi;
+  const dispatch = useDispatch();
+  const gameUi = useSelector(gameUiStore);
+  //const { gameUi, setGameUi } = useContext(GameUiContext);
+  const [groupById, setGroups] = useState(gameUi.game["groupById"]);
   const [showScratch, setShowScratch] = useState(false);
   const [showSpawn, setShowSpawn] = useState(false);
   const [chatHover, setChatHover] = useState(false);
@@ -66,7 +53,6 @@ export const Table = ({
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
-  const defaultGameDropdown = options[0];
 
   console.log('Rendering groups');
 
@@ -106,19 +92,19 @@ export const Table = ({
   // }
 
   useEffect(() => {
-     setGroups(gameUI.game["groupById"]);
-  }, [gameUI.game["groupById"]]);
+     setGroups(gameUi.game["groupById"]);
+  }, [gameUi.game["groupById"]]);
 
   const onDragEnd = (result) => {
     const source = result.source;
-    const sourceStacks = groupByID[source.droppableId].stacks;
+    const sourceStacks = groupById[source.droppableId].stacks;
     const sourceStack = sourceStacks[source.index];    
     const topOfSourceStack = sourceStack.cards[0];
     const topCardNameSource = topOfSourceStack["sides"][topOfSourceStack["currentSide"]].printName;
 
     if (result.combine) {
       const destination = result.combine;
-      const destStacks = groupByID[destination.droppableId].stacks;
+      const destStacks = groupById[destination.droppableId].stacks;
 
       for(var i in destStacks) {
         if(destStacks[i].id == destination.draggableId){
@@ -143,27 +129,26 @@ export const Table = ({
       newSourceStacks.splice(source.index, 1);
 
       const newGroups = {
-        ...groupByID,
+        ...groupById,
         [destination.droppableId]: {
-          ...groupByID[destination.droppableId],
+          ...groupById[destination.droppableId],
           stacks: newDestStacks,
         },
         [source.droppableId]: {
-          ...groupByID[source.droppableId],
+          ...groupById[source.droppableId],
           stacks: newSourceStacks,
         },
       };
-      const newGameUI = {
-        ...gameUI,
+      const newGameUi = {
+        ...gameUi,
         game: {
-          ...gameUI.game,
+          ...gameUi.game,
           groups: newGroups
         }
       }   
       
-      setGroups(newGroups);
-      setGameUI(newGameUI);
-      gameBroadcast("update_gameui",{gameui: newGameUI});    
+      dispatch(setGroups(newGroups));
+      gameBroadcast("update_gameui",{gameui: newGameUi});    
       chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfSourceStack)+" from "+GROUPSINFO[source.droppableId].name+" to "+getDisplayName(topOfDestStack)+" in "+GROUPSINFO[destination.droppableId].name+"."})
  
 
@@ -193,20 +178,19 @@ export const Table = ({
     }
 
     const data = reorderGroups({
-      groups: groupByID,
+      groups: groupById,
       source,
       destination
     });
 
-    const newGameUI = {
-      ...gameUI,
+    const newGameUi = {
+      ...gameUi,
       "game": {
-        ...gameUI.game,
+        ...gameUi.game,
         "groupById": data["groupById"]
       }
     }   
-    setGroups(data["groupById"])
-    setGameUI(newGameUI)
+    dispatch(setGroups(data["groupById"]))
     //setGroups(newGroups);
     gameBroadcast("move_stack",{
       orig_group_id: source.droppableId, 
@@ -218,7 +202,7 @@ export const Table = ({
     const sourceGroupTitle = GROUPSINFO[source.droppableId].name;
     const destGroupTitle = GROUPSINFO[destination.droppableId].name;
     if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfSourceStack)+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
-    //gameBroadcast("update_gameui",{gameui: newGameUI});
+    //gameBroadcast("update_gameui",{gameui: newGameUi});
 
 
     // setGroups(data["groupById"]);
@@ -242,7 +226,7 @@ export const Table = ({
     >
     <div className="h-full flex">
       <PhaseBar
-        gameUI={gameUI}
+        gameUi={gameUi}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
       ></PhaseBar>
@@ -253,7 +237,7 @@ export const Table = ({
 
           <div className="bg-gray-600 text-white" style={{height: "6%"}}>
             <MenuBar
-              gameUI={gameUI}
+              gameUi={gameUi}
               setShowSpawn={setShowSpawn}
               handleBrowseSelect={handleBrowseSelect}
               gameBroadcast={gameBroadcast}
@@ -367,7 +351,7 @@ export const Table = ({
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupID={setBrowseGroupID}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                  playerIDs={gameUI["playerIds"]}
+                  playerIDs={gameUi["playerIds"]}
                 ></BrowseContainer>
               </div>
               :
@@ -409,7 +393,7 @@ export const Table = ({
                   boxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
                 }}>
                 <PlayerBar
-                  groups={groupByID}
+                  groups={groupById}
                   observingPlayerN={observingPlayerN}
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -430,8 +414,8 @@ export const Table = ({
         onMouseEnter={() => setChatHover(true)}
         onMouseLeave={() => setChatHover(false)}
       >
-        {gameUI != null && (
-          <Chat roomName={gameUI.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
+        {gameUi != null && (
+          <Chat roomName={gameUi.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
         )}
       </div>
       {/* Right panel
@@ -446,8 +430,8 @@ export const Table = ({
             className="overflow-hidden" 
             style={{height: showScratch ? "12%" : "57%", opacity: 0.7}}
           >
-            {gameUI != null && (
-              <Chat roomName={gameUI.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
+            {gameUi != null && (
+              <Chat roomName={gameUi.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
             )}
           </div>
           

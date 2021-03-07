@@ -10,11 +10,15 @@ const gameUiSlice = createSlice({
       console.log("setting game", payload)
       state.game = payload;
     },
+    setPlayerIds: (state, { payload }) => {
+      console.log("setting playerIds", payload)
+      state.playerIds = payload;
+    },
     increment: state => {
       state.count += 1;
     },
   },
 });
 
-export const { setGame, increment } = gameUiSlice.actions;
+export const { setGame, setPlayerIds, increment } = gameUiSlice.actions;
 export default gameUiSlice.reducer;

@@ -6,18 +6,18 @@ import {KeypressProvider} from '../../contexts/KeypressContext'
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
 import useChannel from "../../hooks/useChannel";
 import { GameUI, ChatMessage } from "elixir-backend";
-import { setGame } from "./gameUiSlice"
+import { setGame, setPlayerIds } from "./gameUiSlice";
 
 interface Props {
   slug: string;
 }
 
 export const Room: React.FC<Props> = ({ slug }) => {
-  const storeSelector = (state: any) => state;
+  const gameUiStore = (state: any) => state.gameUi;
   const dispatch = useDispatch();
-  const store = useSelector(storeSelector);
+  const gameUi = useSelector(gameUiStore);
 
-  const [gameUI, setGameUI] = useState<GameUI | null>(null);
+  //const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
     console.log("[room] Got channel message", event, payload);
     console.log("Got new game state: ", payload.response);
@@ -27,10 +27,10 @@ export const Room: React.FC<Props> = ({ slug }) => {
       payload.response.game_ui != null
     ) {
       const { game_ui } = payload.response;
-      setGameUI(game_ui);
       console.log("dispatching to game", game_ui.game)
       dispatch(setGame(game_ui.game));
-
+      dispatch(setPlayerIds(game_ui.playerIds));
+      //dispatch(setGame(game_ui.game));
     }
   }, []);
   
@@ -55,12 +55,12 @@ export const Room: React.FC<Props> = ({ slug }) => {
       >
 
       <KeypressProvider value={[""]}>
-        {store != null && gameUI != null && (
-          <GameUIContext.Provider value={{gameUI, setGameUI}}>
+        {gameUi != null && (
+          //<GameUIContext.Provider value={{gameUI, setGameUI}}>
             <ActiveCardProvider value={null}>
               <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} messages={messages}/>
             </ActiveCardProvider>
-         </GameUIContext.Provider>
+         //</GameUIContext.Provider>
         )}
         </KeypressProvider>
       </div>

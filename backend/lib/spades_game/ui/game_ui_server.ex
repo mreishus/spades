@@ -393,7 +393,7 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:set_round_step, phase, round_step}, _from, gameui) do
-    gameui = put_in(gameui["game"]["round_step"], round_step)
+    gameui = put_in(gameui["game"]["roundStep"], round_step)
     gameui = put_in(gameui["game"]["phase"], phase)
     gameui
     |> save_and_reply()

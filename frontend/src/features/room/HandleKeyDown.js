@@ -1,4 +1,5 @@
 import React, { useEffect} from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { getDisplayName, getDisplayNameFlipped, getNextPlayerN, leftmostNonEliminatedPlayerN, functionOnMatchingCards } from "./Helpers";
@@ -17,7 +18,6 @@ const keyTokenMap = {
 
 export const HandleKeyDown = ({
     playerN,
-    gameUI,
     typing, 
     keypress,
     setKeypress, 
@@ -27,12 +27,15 @@ export const HandleKeyDown = ({
     const activeCardAndLoc = useActiveCard();
     const setActiveCardAndLoc = useSetActiveCard();
 
+
+    const storeGameUi = state => state?.gameUi;
+    const gameUi = useSelector(storeGameUi);
+
     useEffect(() => {
         const onKeyDown = (event) => {
             handleKeyDown(
                 event, 
                 playerN,
-                gameUI,
                 typing, 
                 keypress, 
                 setKeypress,
@@ -53,12 +56,11 @@ export const HandleKeyDown = ({
             document.removeEventListener('keyup', onKeyUp);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [gameUI, typing, keypress, activeCardAndLoc]);
+    }, [gameUi, typing, keypress, activeCardAndLoc]);
 
     const handleKeyDown = (
         event, 
         playerN,
-        gameUI,
         typing, 
         keypress, 
         setKeypress,
@@ -79,13 +81,13 @@ export const HandleKeyDown = ({
         // General hotkeys
         if (k === "e" || k === "E") {
             // Check remaining cards in encounter deck
-            const sharedEncounterDeck = gameUI["game"]["groupById"]["sharedEncounterDeck"];
+            const sharedEncounterDeck = gameUi["game"]["groupById"]["sharedEncounterDeck"];
             const stacks = sharedEncounterDeck["stacks"];
             const stacksLeft = stacks.length;
             // If no cards, check phase of game
             if (stacksLeft === 0) {
                 // If quest phase, shuffle encounter discard pile into deck
-                if (gameUI["game"]["phase"] === "pQuest") {
+                if (gameUi["game"]["phase"] === "pQuest") {
                     gameBroadcast("move_stacks",{
                         orig_group_id: "sharedEncounterDeck",
                         dest_group_id: "sharedStaging", 
@@ -118,7 +120,7 @@ export const HandleKeyDown = ({
             });
         } else if (k === "d") {
             // Check remaining cards in deck
-            const player1Deck = gameUI["game"]["groupById"]["player1Deck"];
+            const player1Deck = gameUi["game"]["groupById"]["player1Deck"];
             const stacks = player1Deck["stacks"];
             const stacksLeft = stacks.length;
             // If no cards, give error message and break
@@ -138,7 +140,7 @@ export const HandleKeyDown = ({
                 preserve_state: false,
             });
         } else if (k === "R") {
-            if (gameUI["game"]["round_step"] !== "7.R") {
+            if (gameUi["game"]["roundStep"] !== "7.R") {
                 gameBroadcast("set_round_step", {phase: "Refresh", round_step: "7.R"}) 
                 chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
             }
@@ -146,14 +148,14 @@ export const HandleKeyDown = ({
             chatBroadcast("game_update",{message: "refreshes."});
             gameBroadcast("refresh",{player_n: playerN});
             // Raise your threat
-            const newThreat = gameUI["game"]["playerData"][playerN]["threat"]+1;
+            const newThreat = gameUi["game"]["playerData"][playerN]["threat"]+1;
             chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
             gameBroadcast("increment_threat",{player_n: playerN, increment: 1});
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
-            if (playerN == leftmostNonEliminatedPlayerN(gameUI)) {
-                const firstPlayerN = gameUI["game"]["first_player"];
-                const nextPlayerN = getNextPlayerN(gameUI, firstPlayerN);
+            if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
+                const firstPlayerN = gameUi["game"]["first_player"];
+                const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
                 // If nextPlayerN is null then it's a solo game, so don't pass the token
                 if (nextPlayerN) {
                     gameBroadcast("set_first_player",{player_n: nextPlayerN});    
@@ -161,20 +163,20 @@ export const HandleKeyDown = ({
                 }
             }
         } else if (k === "N") {
-            if (gameUI["game"]["round_step"] !== "1.R") {
+            if (gameUi["game"]["roundStep"] !== "1.R") {
                 gameBroadcast("set_round_step", {phase: "Resource", round_step: "1.R"}) 
                 chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
             }
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the round number increasing multiple times.
-            if (playerN == leftmostNonEliminatedPlayerN(gameUI)) {
-                const roundNumber = gameUI["game"]["round_number"];
+            if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
+                const roundNumber = gameUi["game"]["round_number"];
                 const newRoundNumber = roundNumber + 1;
                 gameBroadcast("increment_round",{increment: 1});    
                 chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
             }
             functionOnMatchingCards(
-                gameUI, 
+                gameUi, 
                 gameBroadcast, 
                 chatBroadcast, 
                 [["sideUp","type","Hero"],["card","controller",playerN]],
@@ -193,7 +195,7 @@ export const HandleKeyDown = ({
             const groupId = activeCardAndLoc.groupId;
             const stackIndex = activeCardAndLoc.stackIndex;
             const cardIndex = activeCardAndLoc.cardIndex;
-            const groupType = gameUI["game"]["groupById"][groupId]["type"];
+            const groupType = gameUi["game"]["groupById"][groupId]["type"];
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 const tokenType = keyTokenMap[k][0];
@@ -264,7 +266,7 @@ export const HandleKeyDown = ({
             else if (k === "x") {
                 // If card is the parent card of a stack, discard the whole stack
                 if (cardIndex == 0) {
-                    const stack = gameUI["game"]["groupById"][groupId]["stacks"][stackIndex];
+                    const stack = gameUi["game"]["groupById"][groupId]["stacks"][stackIndex];
                     if (!stack) return;
                     const cards = stack["cards"];
                     for (var i=0; i<cards.length; i++) {

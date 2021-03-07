@@ -4,7 +4,6 @@ import UserName from "../user/UserName";
 import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { Link } from "react-router-dom";
-import { setGame, increment } from "./gameUiSlice"
 
 var delayBroadcast;
 
@@ -16,27 +15,31 @@ export const MenuBarUser = ({
   observingPlayerN,
   setObservingPlayerN,
 }) => {
-  const storePlayerIds = state => state.gameUi.playerIds;
-  const playerIds = useSelector(storePlayerIds);
-  const storePlayerData = state => state.gameUi.game.playerData;
-  const playerData = useSelector(storePlayerData);  
-  
+  const playerIdsStore = state => state?.gameUi?.playerIds;
+  const playerIds = useSelector(playerIdsStore);
+  const playerDataStore = state => state?.gameUi?.game?.playerData;
+  const playerData = useSelector(playerDataStore);  
+  const firstPlayerStore = state => state?.gameUi?.game?.firstPlayer;
+  const firstPlayer = useSelector(firstPlayerStore);  
+  const isLoggedIn = useIsLoggedIn();
+  const myUser = useProfile();
+  const myUserID = myUser?.id;  
+  const gameUIThreat = playerData ? playerData[playerN]["threat"] : 0;
+  const [threatValue, setThreatValue] = useState(gameUIThreat);
+  useEffect(() => {    
+    if (gameUIThreat !== threatValue) setThreatValue(gameUIThreat);
+  }, [gameUIThreat]);
+
   if (!playerIds) return null;
   if (!playerData) return null;
 
   console.log("menubaruser ", playerN);
 
-  const isLoggedIn = useIsLoggedIn();
-  const myUser = useProfile();
-  const myUserID = myUser?.id;
+
   const sittingUserID = playerIds[playerN];
   console.log('rendering '+playerN);
-  const gameUIThreat = playerData[playerN]["threat"];
 
-  const [threatValue, setThreatValue] = useState(gameUIThreat);
-  useEffect(() => {    
-    if (gameUIThreat !== threatValue) setThreatValue(gameUIThreat);
-  }, [gameUIThreat]);
+
 
   const handleThreatChange = (event) => {
     const newValue = event.target.value;
@@ -97,7 +100,7 @@ export const MenuBarUser = ({
       <div className="float-left h-full w-2/3">
         <div className="h-1/2 w-full flex justify-center">
           {/* Show First player token */}
-          {(gameUI["game"]["first_player"] === playerN) ? 
+          {(firstPlayer === playerN) ? 
             <img className="h-full mr-1 mb-1" src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}></img>
             : null}
           <UserName userID={sittingUserID} defaultName="Empty seat"></UserName>

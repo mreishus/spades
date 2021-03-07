@@ -1,4 +1,5 @@
 import React, {useState, useContext, useEffect} from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import ReactDOM from "react-dom";
 import { Table } from "./Table";
 import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
@@ -43,6 +44,14 @@ interface Props {
 
 const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) => {
   console.log('rendering roomgame');
+  const storePlayerIds = (state : any) => state?.gameUi?.playerIds;
+  const playerIds = useSelector(storePlayerIds);
+  const [typing, setTyping] = useState<Boolean>(false);
+  const keypress = useKeypress();
+  const setKeypress = useSetKeypress();
+  const myUser = useProfile();
+  const myUserID = myUser?.id;
+  if (!playerIds) return null;
   //const gameUIView = React.useContext(GameUIViewContext);
 
 /*   const setKeypress = useSetKeypress();
@@ -66,19 +75,12 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
   document.addEventListener('keydown', onKeyDown);
   document.addEventListener('keyup', onKeyUp);
  */
-  const { gameUI, setGameUI } = useContext(GameUIContext);
-  const [typing, setTyping] = useState<Boolean>(false);
-  const keypress = useKeypress();
-  const setKeypress = useSetKeypress();
-  const myUser = useProfile();
-  const myUserID = myUser?.id;
-  const playerN = GetPlayerN(gameUI["playerIds"], myUserID);
-  console.log(gameUI);
+  //const { gameUI, setGameUI } = useContext(GameUIContext);
+  const playerN = GetPlayerN(playerIds, myUserID);
   return (
     <div className="h-full w-full">
       <HandleKeyDown
         playerN={playerN}
-        gameUI={gameUI}
         typing={typing}
         keypress={keypress}
         setKeypress={setKeypress}
