@@ -54,35 +54,30 @@ export const MenuBarUser = ({
 }
 
   const handleSitClick = (action) => {
-    const newGame = {"count": count+1};
-    dispatch(increment());
-    // // Get up from any seats first
-    // Object.keys(gameUI["playerIds"]).forEach((playerI) => {
-    //   const sittingUserIDi = gameUI["playerIds"][playerI];
-    //   if (sittingUserIDi === myUserID) {
-    //     gameBroadcast("get_up",{"PlayerN": playerI});
-    //     chatBroadcast("game_update",{message: "got up from "+playerI+"'s seat."});
-    //   }
-    // })
-    // // Sit in seat
-    // if (action === "sit") {
-    //   gameBroadcast("sit",{"PlayerN": playerN});
-    //   chatBroadcast("game_update",{message: "sat in "+playerN+"'s seat."});
-    //   setObservingPlayerN(playerN);
-    // } 
+    // Get up from any seats first
+    Object.keys(gameUI["playerIds"]).forEach((playerI) => {
+      const sittingUserIDi = gameUI["playerIds"][playerI];
+      if (sittingUserIDi === myUserID) {
+        gameBroadcast("get_up",{"playerN": playerI});
+        chatBroadcast("game_update",{message: "got up from "+playerI+"'s seat."});
+      }
+    })
+    // Sit in seat
+    if (action === "sit") {
+      gameBroadcast("sit",{"playerN": playerN});
+      chatBroadcast("game_update",{message: "sat in "+playerN+"'s seat."});
+      setObservingPlayerN(playerN);
+    } 
   }
 
   const handleObserveClick = () => {
-    const newGame = {"count": 1};
-    dispatch(setGame(newGame));
-    //forceUpdate();
-    // if (observingPlayerN === playerN) {
-    //   setObservingPlayerN(null);
-    //   chatBroadcast("game_update",{message: "stopped observing "+playerN+"."});
-    // } else {
-    //   setObservingPlayerN(playerN);
-    //   chatBroadcast("game_update",{message: "started observing "+playerN+"."});
-    // }
+    if (observingPlayerN === playerN) {
+      setObservingPlayerN(null);
+      chatBroadcast("game_update",{message: "stopped observing "+playerN+"."});
+    } else {
+      setObservingPlayerN(playerN);
+      chatBroadcast("game_update",{message: "started observing "+playerN+"."});
+    }
   }
 
   const sitButton = () => {

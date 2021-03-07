@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import styled from "@emotion/styled";
-import CardView from "./Card";
+import { Card } from "./Card";
 import { CARDSCALE } from "./Constants";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
@@ -37,129 +38,54 @@ function getStyle(provided, style) {
 // things we should be doing in the selector as we do not know if consumers
 // will be using PureComponent
 
-export default class StackView extends Component {
-  
-  // This optimization doesn't work because when you hover over a card somewhere earlier in the group, this card also needs to update
-  // shouldComponentUpdate = (nextProps, nextState) => {
-  //     if (dragSnapshot.isDragging || this.props.isGroupedOver) return true;
-  //     if (JSON.stringify(nextProps.stack)===JSON.stringify(stack)) {
-  //       return false;
-  //     } else {
-  //       return true;
-  //     }
-  // };
-  render() {
-    console.log('Stackview',this.props.playerN);
-    const stack = JSON.parse(this.props.stack);
-    const numStacks = this.props.numStacks > 0 ? this.props.numStacks : 1;
-    var handSpacing = 100*0.8*0.8*0.8/(this.props.numStacks);
-    if (handSpacing > CARDSCALE) handSpacing = CARDSCALE;
-    const stackWidth = this.props.groupType == "hand" ? handSpacing : CARDSCALE/0.72 + CARDSCALE/3*(stack.cards.length-1);
-    //const stackWidth = CARDSCALE/0.72 + CARDSCALE/3*(stack.cards.length-1);
-    return (
-      <Draggable 
-      key={stack.id} 
-      draggableId={stack.id} 
-      index={this.props.stackIndex}
+export const Stack = (
+  gameBroadcast,
+  chatBroadcast,
+  playerN,
+  groupType,
+  stackIndex,
+  stackId,
+  numStacks,
+) => {
+  const storeStack = state => state?.gameUi?.game?.stackById[stackId];
+  const stack = useSelector(storeStack);
+  if (!stack) return null;
+  const cardIds = stack.cardIds;
+  console.log('Stackview',playerN);
+  // Calculate size of stack for proper spacing. Changes base on group type and number of stack in group.
+  const numStacksNonZero = numStacks > 0 ? numStacks : 1;
+  var handSpacing = 100*0.8*0.8*0.8/(numStacksNonZero);
+  if (handSpacing > CARDSCALE) handSpacing = CARDSCALE;
+  const stackWidth = groupType == "hand" ? handSpacing : CARDSCALE/0.72 + CARDSCALE/3*(cardIds.length-1);
+  //const stackWidth = CARDSCALE/0.72 + CARDSCALE/3*(stack.cards.length-1);
+  return (
+    <Draggable 
+      key={stackId} 
+      draggableId={stackId} 
+      index={stackIndex}
     >
       {(dragProvided, dragSnapshot) => (
-      <Container
-        isDragging={dragSnapshot.isDragging}
-        isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
-        isClone={this.props.isClone}
-        stackWidth={stackWidth}
-        ref={dragProvided.innerRef}
-        {...dragProvided.draggableProps}
-        {...dragProvided.dragHandleProps}
-        style={getStyle(dragProvided, this.props.style)}
-        data-is-dragging={dragSnapshot.isDragging}
-        data-testid={stack.id}
-        data-index={this.props.index}
-      >
-      {stack.cards.map((card, cardIndex) => {
-          return(
-
-            <CardView
-              gameBroadcast={this.props.gameBroadcast} 
-              chatBroadcast={this.props.chatBroadcast} 
-              playerN={this.props.playerN}
-              groupId={this.props.groupId} 
-              stackIndex={this.props.stackIndex}
-              cardIndex={cardIndex}
-              inputCard={JSON.stringify(card)} 
-              key={card.id} 
-            >
-            </CardView>
-          )
-      })}
-      </Container>
+        <Container
+          isDragging={dragSnapshot.isDragging}
+          isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
+          stackWidth={stackWidth}
+          ref={dragProvided.innerRef}
+          {...dragProvided.draggableProps}
+          {...dragProvided.dragHandleProps}
+        >
+          {cardIds.map((cardId, cardIndex) => {
+            return(
+              <Card
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast} 
+                playerN={playerN}
+                cardId={cardId} 
+                cardIndex={cardIndex}
+              />
+            )
+        })}
+        </Container>
       )}
-      </Draggable>
-    );
-  }
-}
-
-
-
-/* 
-
-function StackView(props) {
-  const {
-    gameBroadcast,
-    group,
-    stackIndex,
-    stack,
-    isDragging,
-    isGroupedOver,
-    provided,
-    style,
-    isClone,
-    index,
-  } = props;
-
-  console.log(group.id,group.stacks.length);
-  var handSpacing = 100*0.8*0.8*0.8/(group.stacks.length);
-  if (handSpacing > CARDSCALE) handSpacing = CARDSCALE;
-  const stackWidth = group.type == "hand" ? handSpacing : CARDSCALE/0.75 + CARDSCALE/3*(stack.cards.length-1);
-
-  console.log('rendering',group.id,stackIndex);
-  //console.log(stackIndex);
-  //console.log(stack.cards);
-
-  return (
-
-    <Container
-      isDragging={isDragging}
-      isGroupedOver={isGroupedOver}
-      isClone={isClone}
-      stackWidth={stackWidth}
-      ref={provided.innerRef}
-      {...provided.draggableProps}
-      {...provided.dragHandleProps}
-      style={getStyle(provided, style)}
-      data-is-dragging={isDragging}
-      data-testid={stack.id}
-      data-index={index}
-    >
-      {stack.cards.map((card, cardIndex) => {
-          return(
-    
-            <CardView
-              gameBroadcast={gameBroadcast} 
-              groupId={group.id} 
-              group={group}
-              stackIndex={stackIndex}
-              cardIndex={cardIndex}
-              inputCard={card} 
-              key={card.id} 
-            >
-            </CardView>
-          )
-      })}
-    </Container>
-
-
+    </Draggable>
   );
-} */
-
-//export default StackView;
+}

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, Component } from "react";
-import { TokensView } from './TokensView';
+import { useSelector, useDispatch } from 'react-redux';
+import { Tokens } from './Tokens';
 import { playerBackSRC, encounterBackSRC } from "./Constants"
 import { getCardFaceSRC } from "./CardBack"
 import { CARDSCALE, GROUPSINFO } from "./Constants"
@@ -87,27 +88,23 @@ const useClickPreventionOnDoubleClick = (onClick, onDoubleClick) => {
     // const dispatch = useDispatch();
     // const hello = useSelector(storeCard);
 
-const CardComponent = React.memo(({
-    inputCard,
-    cardIndex,
-    stackIndex,
-    groupId,
+export const Card = React.memo(({
+    cardId,
     gameBroadcast,
     chatBroadcast,
     playerN,
+    cardIndex,
 }) => {
-    const [card, setCard] = useState(inputCard);
-    useEffect(() => {    
-        if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
-    }, [inputCard]);
+    const storeCard = state => state?.gameUi?.game?.cardById[cardId];
+    const card = useSelector(storeCard);
+    if (!card) return null;
+    // useEffect(() => {    
+    //     if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
+    // }, [inputCard]);
 
-    // I know that forceUpdate is a sign I'm doing something wrong. But without it I will
-    // occasionally have cards refuse to rerender ater calling a broadcast. For some reason
-    // the shouldComponentUpdate aleady sees the next state and thinks its the same as the
-    // current one, so it doesn't update.
-    console.log('rendering ',groupId,stackIndex,cardIndex);
-    const [, updateState] = React.useState();
-    const forceUpdate = React.useCallback(() => updateState({}), []);
+    console.log('rendering card ',card);
+    // const [, updateState] = React.useState();
+    // const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
 
     const [isActive, setIsActive] = useState(false);
@@ -126,9 +123,7 @@ const CardComponent = React.memo(({
     const onClick = (event) => {
         console.log(card);
         console.log(playerN);
-        console.log(card["peeking"][playerN]);
-        const newGame = {"hello": "world"};
-        //dispatch(setGame(newGame));
+        console.log(card.peeking[playerN]);
         return;
     }
 
@@ -160,27 +155,25 @@ const CardComponent = React.memo(({
 
     function handleMenuClick(e, data) {
         if (data.action === "detach") {
-            gameBroadcast("detach", {group_id: groupId, stack_index: stackIndex, card_index: cardIndex})
-            chatBroadcast("game_update",{message: "detached "+displayName+"."})
+            gameBroadcast("card_action", {action: "detach", options: [cardId]})
+            chatBroadcast("game_update", {message: "detached "+displayName+"."})
         }
         else if (data.action === "move_card") {
-            const sourceGroupTitle = GROUPSINFO[groupId].name;
             const destGroupTitle = GROUPSINFO[data.destGroupID].name;
             if (data.position === "t") {
-                gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
-                chatBroadcast("game_update",{message: "moved "+displayName+" from "+sourceGroupTitle+" to top of "+destGroupTitle+"."})
+                gameBroadcast("card_action", {action: "move_card", options: [data.destGroupID, 0, 0, true, false]})
+                chatBroadcast("game_update",{message: "moved "+displayName+" to top of "+destGroupTitle+"."})
             } else if (data.position === "b") {
-                gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: -1, dest_card_index: 0, create_new_stack: true})
-                chatBroadcast("game_update",{message: "moved "+displayName+" from "+sourceGroupTitle+" to bottom of "+destGroupTitle+"."})
+                gameBroadcast("card_action", {action: "move_card", options: [data.destGroupID, -1, 0, true, false]})
+                chatBroadcast("game_update",{message: "moved "+displayName+" to bottom of "+destGroupTitle+"."})
             } else if (data.position === "s") {
-                gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("card_action", {action: "move_card", options: [data.destGroupID, 0, 0, true, false]})
                 gameBroadcast("shuffle_group", {group_id: data.destGroupID})
-                chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+sourceGroupTitle+" into "+destGroupTitle+"."})
+                chatBroadcast("game_update",{message: "shuffled "+displayName+" into "+destGroupTitle+"."})
             }
         }
     }
     
-    if (!card) return <div></div>;
     const currentFace = getCurrentFace(card);
     return (
         <div>
@@ -219,44 +212,30 @@ const CardComponent = React.memo(({
                 //onDoubleClick={handleDoubleClick}
                 onMouseLeave={event => handleMouseLeave(event)}
             >
-                {/* <div style={{position:'absolute',width:"50%",height:"100%",backgroundColor:"green"}}></div>
-                <div style={{position:'absolute',width:"100%",height:"50%",backgroundColor:"red"}}></div>
-                <div style={{position:'absolute',left:"50%",width:"50%",height:"100%",backgroundColor:"blue"}}></div> */}
 
                 <CardMouseRegion 
                     position={"top"}
                     top={"0%"}
                     card={card}
-                    groupId={groupId}
-                    stackIndex={stackIndex}
-                    cardIndex={cardIndex}
-                    setCard={setCard}
                     setIsActive={setIsActive}
-                ></CardMouseRegion>
+                />
                 
                 <CardMouseRegion 
                     position={"bottom"}
                     top={"50%"}
                     card={card}
-                    groupId={groupId}
-                    stackIndex={stackIndex}
-                    cardIndex={cardIndex}
-                    setCard={setCard}
                     setIsActive={setIsActive}
-                ></CardMouseRegion>
-
-                <TokensView 
-                    card={card} 
-                    isActive={isActive} 
-                    gameBroadcast={gameBroadcast} 
-                    chatBroadcast={chatBroadcast} 
-                    groupId={groupId} 
-                    stackIndex={stackIndex} 
-                    cardIndex={cardIndex}
-                ></TokensView>
-
+                />
+                { isActive && (
+                    <Tokens
+                        cardType={currentFace.cardType}
+                        tokensId={card.tokensId}
+                        isActive={isActive}
+                        gameBroadcast={gameBroadcast}
+                        chatBroadcast={chatBroadcast}
+                    />
+                )}
                 {card["peeking"][playerN]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
-
             </div>
 
             </ContextMenuTrigger>
@@ -275,7 +254,7 @@ const CardComponent = React.memo(({
                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
-                    <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', groupId: groupId, stackIndex: stackIndex, cardIndex: cardIndex, destGroupID: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
+                    <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', destGroupID: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
                 </SubMenu>
             </ContextMenu>
         </div>
@@ -283,64 +262,64 @@ const CardComponent = React.memo(({
 })
 
 
-class CardClass extends Component {
+// class CardClass extends Component {
 
-    shouldComponentUpdate = (nextProps, nextState) => {
+//     shouldComponentUpdate = (nextProps, nextState) => {
         
-        if ( 
-            (JSON.stringify(nextProps.inputCard)!==JSON.stringify(this.props.inputCard)) ||
-            (nextProps.groupId!==this.props.groupId) ||
-            (nextProps.stackIndex!==this.props.stackIndex) ||
-            (nextProps.cardIndex!==this.props.cardIndex)
-        ) {
-            return true;
-        } else {
-            return false; 
-        }
-    };
+//         if ( 
+//             (JSON.stringify(nextProps.inputCard)!==JSON.stringify(this.props.inputCard)) ||
+//             (nextProps.groupId!==this.props.groupId) ||
+//             (nextProps.stackIndex!==this.props.stackIndex) ||
+//             (nextProps.cardIndex!==this.props.cardIndex)
+//         ) {
+//             return true;
+//         } else {
+//             return false; 
+//         }
+//     };
   
-    render() {
-        return(
-            <CardComponent
-                inputCard={this.props.inputCard}
-                cardIndex={this.props.cardIndex}
-                stackIndex={this.props.stackIndex}
-                groupId={this.props.groupId}
-                gameBroadcast={this.props.gameBroadcast}
-                chatBroadcast={this.props.chatBroadcast}
-                playerN={this.props.playerN}
-            ></CardComponent>
-        )
-    }
-}
+//     render() {
+//         return(
+//             <CardComponent
+//                 inputCard={this.props.inputCard}
+//                 cardIndex={this.props.cardIndex}
+//                 stackIndex={this.props.stackIndex}
+//                 groupId={this.props.groupId}
+//                 gameBroadcast={this.props.gameBroadcast}
+//                 chatBroadcast={this.props.chatBroadcast}
+//                 playerN={this.props.playerN}
+//             ></CardComponent>
+//         )
+//     }
+// }
 
 
-const CardView = React.memo(({
-    inputCard,
-    cardIndex,
-    stackIndex,
-    groupId,
-    gameBroadcast,
-    chatBroadcast,
-    playerN,
-  }) => {
-    //if (groupId==='sharedStaging') console.log('rendering Cardview');
-    console.log('rendering',groupId,stackIndex,cardIndex, "view");
-    const cardObj = JSON.parse(inputCard);
-    return (
-        <CardClass
-            inputCard={cardObj}
-            cardIndex={cardIndex}
-            stackIndex={stackIndex}
-            groupId={groupId}
-            gameBroadcast={gameBroadcast}
-            chatBroadcast={chatBroadcast}
-            playerN={playerN}
-        ></CardClass>
-    )
-});
+// const CardView = React.memo(({
+//     inputCard,
+//     cardIndex,
+//     stackIndex,
+//     groupId,
+//     gameBroadcast,
+//     chatBroadcast,
+//     playerN,
+//   }) => {
+//     //if (groupId==='sharedStaging') console.log('rendering Cardview');
+//     console.log('rendering',groupId,stackIndex,cardIndex, "view");
+//     const cardObj = JSON.parse(inputCard);
+//     return (
+//         <CardClass
+//             inputCard={cardObj}
+//             cardIndex={cardIndex}
+//             stackIndex={stackIndex}
+//             groupId={groupId}
+//             gameBroadcast={gameBroadcast}
+//             chatBroadcast={chatBroadcast}
+//             playerN={playerN}
+//         ></CardClass>
+//     )
+// });
 
-export default CardView;
+// export default CardView;
 
 
 

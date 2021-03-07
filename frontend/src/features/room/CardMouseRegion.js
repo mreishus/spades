@@ -6,10 +6,6 @@ export const CardMouseRegion = React.memo(({
     position,
     top,
     card,
-    groupId,
-    stackIndex,
-    cardIndex,
-    setCard,
     setIsActive
 }) => {
     //const activeCard = useActiveCard();
@@ -18,13 +14,9 @@ export const CardMouseRegion = React.memo(({
     const handleMouseOver = (event, mousePosition) => {
         const screenPosition = event.clientX > (window.innerWidth/2) ? "right" : "left";
         setActiveCard({
-            card: card, 
-            groupId: groupId, 
-            stackIndex: stackIndex, 
-            cardIndex: cardIndex, 
+            card: card,
             mousePosition: mousePosition, 
             screenPosition: screenPosition,
-            setCard: setCard,
         });
         setIsActive(true);
     }

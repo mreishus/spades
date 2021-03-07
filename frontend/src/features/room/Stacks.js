@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import Stack from "./Stack";
+import { Stack } from "./Stack";
 import CardBack from "./CardBack"
 
 const Wrapper = styled.div`
@@ -46,32 +46,31 @@ const StacksList = (
   stackIds,
   selectedStackIndices,
 ) => {
-  return(<div>Stack</div>);
-  // const pile = (groupType=="deck" || groupType=="discard")
+  const pile = (groupType=="deck" || groupType=="discard")
 
-  // // Truncate stacked piles
-  // var stacks;
-  // if (pile && isDraggingOver && !isDraggingFrom) stacks = [];
-  // else if (pile && stacks.length>1) stacks = [stacks[0]]
-  // else stacks = stacks;
-  // console.log('rendering stacks for ',groupId);
-  // console.log(selectedStackIndices);
-  // return (
-  //   stackIds?.map((stackId, stackIndex) => (
-  //     (selectedStackIndices.includes(stackIndex)) ? (
-  //           <Stack
-  //             gameBroadcast={gameBroadcast}
-  //             chatBroadcast={chatBroadcast}
-  //             playerN={playerN}
-  //             groupId={groupId}
-  //             groupType={groupType}
-  //             stackIndex={stackIndex}
-  //             stackId={stackId}
-  //             numStacks={selectedStackIndices.length}
-  //           />
-  //     ) : null 
-  //   ))
-  // ) 
+  // Truncate stacked piles
+  var stackIdsToShow;
+  if (pile && isDraggingOver && !isDraggingFrom) stackIdsToShow = [];
+  else if (pile && stackIds.length>1) stackIdsToShow = [stackIds[0]]
+  else stackIdsToShow = stackIds;
+  if (!stackIdsToShow) return null;
+  console.log('rendering stacks');
+  console.log(selectedStackIndices);
+  return (
+    stackIdsToShow?.map((stackId, stackIndex) => (
+      (selectedStackIndices.includes(stackIndex)) ? (
+        <Stack
+          gameBroadcast={gameBroadcast}
+          chatBroadcast={chatBroadcast}
+          playerN={playerN}
+          groupType={groupType}
+          stackIndex={stackIndex}
+          stackId={stackId}
+          numStacks={selectedStackIndices.length}
+        /> 
+      ) : null 
+    ))
+  ) 
 };
 
 // function DropZoneContainer(props) {
@@ -107,29 +106,29 @@ const StacksList = (
 // }
 
 
-export const Stacks = (
+export const Stacks = ({
   gameBroadcast,
   chatBroadcast,
   playerN,
   groupId,
-  groupType,
   stackIds,
-  isDropDisabled,
+  groupType,
   isCombineEnabled,
-  selectedStackIndices
-) => {
+  selectedStackIndices,
+}) => {
+  console.log("rendering stacks ",playerN,groupId,groupType,stackIds)
   return(
     <Droppable
       droppableId={groupId}
       key={groupId}
-      isDropDisabled={isDropDisabled}
+      isDropDisabled={false}
       isCombineEnabled={isCombineEnabled}
       direction={groupType=="deck" || groupType=="discard" ? "vertical" : "horizontal"}
     >
       {(dropProvided, dropSnapshot) => (
         <Wrapper
           isDraggingOver={dropSnapshot.isDraggingOver}
-          isDropDisabled={isDropDisabled}
+          isDropDisabled={false}
           isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
           {...dropProvided.droppableProps}
           type={groupType}

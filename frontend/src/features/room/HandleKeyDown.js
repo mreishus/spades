@@ -300,10 +300,10 @@ export const HandleKeyDown = ({
             else if (k === "h") {
                 // determine destination groupId
                 var destGroupID = "sharedEncounterDeck";
-                if (activeCard.owner === "Player1") destGroupID = "player1Deck";
-                else if (activeCard.owner === "Player2") destGroupID = "gPlayer2Deck";
-                else if (activeCard.owner === "Player3") destGroupID = "gPlayer3Deck";
-                else if (activeCard.owner === "Player4") destGroupID = "gPlayer4Deck";
+                if (activeCard.owner === "player1") destGroupID = "player1Deck";
+                else if (activeCard.owner === "player2") destGroupID = "gPlayer2Deck";
+                else if (activeCard.owner === "player3") destGroupID = "gPlayer3Deck";
+                else if (activeCard.owner === "player4") destGroupID = "gPlayer4Deck";
                 gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
                 gameBroadcast("shuffle_group", {group_id: destGroupID})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupID].name+"."})
