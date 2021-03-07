@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "@emotion/styled";
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import StackView from "./Stack";
+import Stack from "./Stack";
 import CardBack from "./CardBack"
 
 const Wrapper = styled.div`
@@ -16,14 +16,14 @@ const Wrapper = styled.div`
   padding: 0 0 0 0;
   height: 87%;
   user-select: none;
-  overflow-x: ${props => (props.type=="deck" || props.type=="discard") ? "none" : "auto"};
-  overflow-y: ${props => (props.type=="deck" || props.type=="discard") ? "hidden" : "none"};
+  overflow-x: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "none" : "auto"};
+  overflow-y: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "hidden" : "none"};
   max-height: 87%;
 `;
 
 const DropZone = styled.div`
   /* stop the list collapsing when empty */
-  display: ${props => (props.group.type=="deck" || props.group.type=="discard") ? "" : "flex"};
+  display: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "" : "flex"};
   width: 100%;
   height: 100%;
   min-height: 100%;
@@ -36,85 +36,95 @@ const Container = styled.div`
 `;
 /* stylelint-enable */
 
-const StacksList = React.memo(function StacksList(props) {
-  const pile = (props.group.type=="deck" || props.group.type=="discard")
+const StacksList = (
+  isDraggingOver,
+  isDraggingFrom,
+  gameBroadcast,
+  chatBroadcast,
+  playerN,
+  groupType,
+  stackIds,
+  selectedStackIndices,
+) => {
+  return(<div>Stack</div>);
+  // const pile = (groupType=="deck" || groupType=="discard")
 
-  // Truncate stacked piles
-  var stacks;
-  if (pile && props.isDraggingOver && !props.isDraggingFrom) stacks = [];
-  else if (pile && props.stacks.length>1) stacks = [props.stacks[0]]
-  else stacks = props.stacks;
-  console.log('rendering stacks for ',props.group.id);
-  console.log(props.selectedStackIndices);
-  return stacks?.map((stack, stackIndex) => (
-      (props.selectedStackIndices.includes(stackIndex)) ? (
-            <StackView
-              gameBroadcast={props.gameBroadcast}
-              chatBroadcast={props.chatBroadcast}
-              playerN={props.playerN}
-              groupID={props.group.id}
-              groupType={props.group.type}
-              stackIndex={stackIndex}
-              stack={JSON.stringify(stack)}
-              key={stack.id}
-              numStacks={props.selectedStackIndices.length}
-            />
-      ) : null 
+  // // Truncate stacked piles
+  // var stacks;
+  // if (pile && isDraggingOver && !isDraggingFrom) stacks = [];
+  // else if (pile && stacks.length>1) stacks = [stacks[0]]
+  // else stacks = stacks;
+  // console.log('rendering stacks for ',groupId);
+  // console.log(selectedStackIndices);
+  // return (
+  //   stackIds?.map((stackId, stackIndex) => (
+  //     (selectedStackIndices.includes(stackIndex)) ? (
+  //           <Stack
+  //             gameBroadcast={gameBroadcast}
+  //             chatBroadcast={chatBroadcast}
+  //             playerN={playerN}
+  //             groupId={groupId}
+  //             groupType={groupType}
+  //             stackIndex={stackIndex}
+  //             stackId={stackId}
+  //             numStacks={selectedStackIndices.length}
+  //           />
+  //     ) : null 
+  //   ))
+  // ) 
+};
 
-  ));
-});
+// function DropZoneContainer(props) {
+//   const { 
+//     isDraggingOver, 
+//     isDraggingFrom, 
+//     gameBroadcast, 
+//     chatBroadcast, 
+//     playerN,
+//     group, 
+//     stacks, 
+//     dropProvided, 
+//     selectedStackIndices } = props;
 
-function DropZoneContainer(props) {
-  const { 
-    isDraggingOver, 
-    isDraggingFrom, 
-    gameBroadcast, 
-    chatBroadcast, 
-    playerN,
-    group, 
-    stacks, 
-    dropProvided, 
-    selectedStackIndices } = props;
+//   return (
+//     <Container>
+//       <CardBack group={group} isDraggingOver={isDraggingOver} isDraggingFrom={isDraggingFrom}></CardBack>
+//       <DropZone ref={dropProvided.innerRef} group={group}>
+//         <StacksList
+//           isDraggingOver={isDraggingOver}
+//           isDraggingFrom={isDraggingFrom}
+//           gameBroadcast={gameBroadcast} 
+//           chatBroadcast={chatBroadcast} 
+//           playerN={playerN}
+//           group={group} 
+//           stacks={stacks}
+//           selectedStackIndices={selectedStackIndices}
+//         />
+//         {dropProvided.placeholder}
+//       </DropZone>
+//     </Container>
+//   );
+// }
 
-  return (
-    <Container>
-      <CardBack group={group} isDraggingOver={isDraggingOver} isDraggingFrom={isDraggingFrom}></CardBack>
-      <DropZone ref={dropProvided.innerRef} group={group}>
-        <StacksList
-          isDraggingOver={isDraggingOver}
-          isDraggingFrom={isDraggingFrom}
-          gameBroadcast={gameBroadcast} 
-          chatBroadcast={chatBroadcast} 
-          playerN={playerN}
-          group={group} 
-          stacks={stacks}
-          selectedStackIndices={selectedStackIndices}
-        />
-        {dropProvided.placeholder}
-      </DropZone>
-    </Container>
-  );
-}
 
-export default function Stacks(props) {
-  const {
-    gameBroadcast,
-    chatBroadcast,
-    playerN,
-    group,
-    isDropDisabled,
-    isCombineEnabled,
-    selectedStackIndices,
-  } = props;
-  console.log('rendering stacks for ',group.id);
-
-  return (
+export const Stacks = (
+  gameBroadcast,
+  chatBroadcast,
+  playerN,
+  groupId,
+  groupType,
+  stackIds,
+  isDropDisabled,
+  isCombineEnabled,
+  selectedStackIndices
+) => {
+  return(
     <Droppable
-      droppableId={group.id}
-      key={group.id}
+      droppableId={groupId}
+      key={groupId}
       isDropDisabled={isDropDisabled}
       isCombineEnabled={isCombineEnabled}
-      direction={group.type=="deck" || group.type=="discard" ? "vertical" : "horizontal"}
+      direction={groupType=="deck" || groupType=="discard" ? "vertical" : "horizontal"}
     >
       {(dropProvided, dropSnapshot) => (
         <Wrapper
@@ -122,21 +132,80 @@ export default function Stacks(props) {
           isDropDisabled={isDropDisabled}
           isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
           {...dropProvided.droppableProps}
-          type={group.type}
+          type={groupType}
         >
-            <DropZoneContainer
+          <Container>
+            <CardBack 
+              groupType={groupType} 
+              stackIds={stackIds} 
+              isDraggingOver={dropSnapshot.isDraggingOver} 
+              isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}>
+            </CardBack>
+            <DropZone ref={dropProvided.innerRef} groupType={groupType}>
+              <StacksList
                 isDraggingOver={dropSnapshot.isDraggingOver}
                 isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
-                gameBroadcast={gameBroadcast}
-                chatBroadcast={chatBroadcast}
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast} 
                 playerN={playerN}
-                group={group}
-                stacks={group.stacks}
-                dropProvided={dropProvided}
+                groupType={groupType} 
+                stacksIds={stackIds}
                 selectedStackIndices={selectedStackIndices}
-            />
+              />
+              {dropProvided.placeholder}
+            </DropZone>
+          </Container>
         </Wrapper>
       )}
     </Droppable>
-  );
-}
+  )
+} 
+
+
+
+
+
+// export default function Stacks(props) {
+//   const {
+//     gameBroadcast,
+//     chatBroadcast,
+//     playerN,
+//     group,
+//     isDropDisabled,
+//     isCombineEnabled,
+//     selectedStackIndices,
+//   } = props;
+//   console.log('rendering stacks for ',groupId);
+
+//   return (
+//     <Droppable
+//       droppableId={groupId}
+//       key={groupId}
+//       isDropDisabled={isDropDisabled}
+//       isCombineEnabled={isCombineEnabled}
+//       direction={group.type=="deck" || group.type=="discard" ? "vertical" : "horizontal"}
+//     >
+//       {(dropProvided, dropSnapshot) => (
+//         <Wrapper
+//           isDraggingOver={dropSnapshot.isDraggingOver}
+//           isDropDisabled={isDropDisabled}
+//           isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
+//           {...dropProvided.droppableProps}
+//           type={group.type}
+//         >
+//             <DropZoneContainer
+//                 isDraggingOver={dropSnapshot.isDraggingOver}
+//                 isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
+//                 gameBroadcast={gameBroadcast}
+//                 chatBroadcast={chatBroadcast}
+//                 playerN={playerN}
+//                 group={group}
+//                 stacks={group.stacks}
+//                 dropProvided={dropProvided}
+//                 selectedStackIndices={selectedStackIndices}
+//             />
+//         </Wrapper>
+//       )}
+//     </Droppable>
+//   );
+// }

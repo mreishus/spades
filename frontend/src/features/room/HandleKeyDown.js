@@ -79,19 +79,19 @@ export const HandleKeyDown = ({
         // General hotkeys
         if (k === "e" || k === "E") {
             // Check remaining cards in encounter deck
-            const gSharedEncounterDeck = gameUI["game"]["groupById"]["gSharedEncounterDeck"];
-            const stacks = gSharedEncounterDeck["stacks"];
+            const sharedEncounterDeck = gameUI["game"]["groupById"]["sharedEncounterDeck"];
+            const stacks = sharedEncounterDeck["stacks"];
             const stacksLeft = stacks.length;
             // If no cards, check phase of game
             if (stacksLeft === 0) {
                 // If quest phase, shuffle encounter discard pile into deck
                 if (gameUI["game"]["phase"] === "pQuest") {
                     gameBroadcast("move_stacks",{
-                        orig_group_id: "gSharedEncounterDeck",
-                        dest_group_id: "gSharedStaging", 
+                        orig_group_id: "sharedEncounterDeck",
+                        dest_group_id: "sharedStaging", 
                         position: "s",
                     });
-                    chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["gSharedEncounterDiscard"].name+" into "+GROUPSINFO["gSharedEncounterDeck"].name+"."});
+                    chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["sharedEncounterDiscard"].name+" into "+GROUPSINFO["sharedEncounterDeck"].name+"."});
                 } else {
                     // If not quest phase, give error message and break
                     chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty and it's not the quest phase."});
@@ -110,16 +110,16 @@ export const HandleKeyDown = ({
             const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
             chatBroadcast("game_update",{message: message});
             gameBroadcast("move_stack",{
-                orig_group_id: "gSharedEncounterDeck", 
+                orig_group_id: "sharedEncounterDeck", 
                 orig_stack_index: 0, 
-                dest_group_id: "gSharedStaging", 
+                dest_group_id: "sharedStaging", 
                 dest_stack_index: -1,
                 preserve_state: shiftHeld,
             });
         } else if (k === "d") {
             // Check remaining cards in deck
-            const gPlayer1Deck = gameUI["game"]["groupById"]["gPlayer1Deck"];
-            const stacks = gPlayer1Deck["stacks"];
+            const player1Deck = gameUI["game"]["groupById"]["player1Deck"];
+            const stacks = player1Deck["stacks"];
             const stacksLeft = stacks.length;
             // If no cards, give error message and break
             if (stacksLeft === 0) {
@@ -131,9 +131,9 @@ export const HandleKeyDown = ({
             const topCard = topStack["cards"][0];
             chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+"."});
             gameBroadcast("move_stack",{
-                orig_group_id: "gPlayer1Deck", 
+                orig_group_id: "player1Deck", 
                 orig_stack_index: 0, 
-                dest_group_id: "gPlayer1Hand", 
+                dest_group_id: "player1Hand", 
                 dest_stack_index: -1,
                 preserve_state: false,
             });
@@ -190,10 +190,10 @@ export const HandleKeyDown = ({
             var updateActiveCard = false;
             const displayName = getDisplayName(activeCard);
             const tokens = activeCard.tokens;
-            const groupID = activeCardAndLoc.groupID;
+            const groupId = activeCardAndLoc.groupId;
             const stackIndex = activeCardAndLoc.stackIndex;
             const cardIndex = activeCardAndLoc.cardIndex;
-            const groupType = gameUI["game"]["groupById"][groupID]["type"];
+            const groupType = gameUI["game"]["groupById"][groupId]["type"];
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 const tokenType = keyTokenMap[k][0];
@@ -204,7 +204,7 @@ export const HandleKeyDown = ({
                 else delta = 0;
                 const newVal = tokens[tokenType]+delta;
                 if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
-                gameBroadcast("increment_token",{group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: delta})
+                gameBroadcast("increment_token",{group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: delta})
                 if (delta > 0) {
                     if (delta === 1) {
                         chatBroadcast("game_update",{message: "added "+delta+" "+tokenType+" token to "+displayName+"."});
@@ -223,7 +223,7 @@ export const HandleKeyDown = ({
             else if (k === "0" && groupType === "play") {
                 for (var tokenType in tokens) {
                     if (tokens.hasOwnProperty(tokenType)) {
-                        gameBroadcast("increment_token",{group_id: groupID, stack_index: stackIndex, card_index: cardIndex, token_type: tokenType, increment: -tokens[tokenType]})
+                        gameBroadcast("increment_token",{group_id: groupId, stack_index: stackIndex, card_index: cardIndex, token_type: tokenType, increment: -tokens[tokenType]})
                     }
                 }
                 chatBroadcast("game_update", {message: "cleared all tokens from "+displayName+"."});
@@ -235,7 +235,7 @@ export const HandleKeyDown = ({
                 } else {
                     newCard = {...newCard, current_side: "A"}
                 }
-                gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index: cardIndex});
+                gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index: cardIndex});
                 if (displayName==="player card" || displayName==="encounter card") {
                     chatBroadcast("game_update", {message: "flipped "+getDisplayName(newCard)+" faceup."});
                 } else {
@@ -252,19 +252,19 @@ export const HandleKeyDown = ({
                     chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
                     newCard = {...newCard, exhausted: true, rotation: 90};
                 }
-                gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+                gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
                 updateActiveCard = true;
             }
             // Deal shadow card
             else if (k === "s" && groupType == "play") {
-                gameBroadcast("deal_shadow", {group_id: activeCardAndLoc.groupID, stack_index: activeCardAndLoc.stackIndex});
+                gameBroadcast("deal_shadow", {group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex});
                 chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
             }        
             // Send to appropriate discard pile
             else if (k === "x") {
                 // If card is the parent card of a stack, discard the whole stack
                 if (cardIndex == 0) {
-                    const stack = gameUI["game"]["groupById"][groupID]["stacks"][stackIndex];
+                    const stack = gameUI["game"]["groupById"][groupId]["stacks"][stackIndex];
                     if (!stack) return;
                     const cards = stack["cards"];
                     for (var i=0; i<cards.length; i++) {
@@ -272,7 +272,7 @@ export const HandleKeyDown = ({
                         const discardGroupID = cardi["discardgroupid"];
                         chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+GROUPSINFO[discardGroupID].name+"."});
                         gameBroadcast("move_card",{
-                            orig_group_id: groupID, 
+                            orig_group_id: groupId, 
                             orig_stack_index: stackIndex, 
                             orig_card_index: cardIndex, 
                             dest_group_id: discardGroupID,
@@ -286,7 +286,7 @@ export const HandleKeyDown = ({
                     const discardGroupID = activeCard["discardgroupid"]
                     chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupID].name+"."});
                     gameBroadcast("move_card", {
-                        orig_group_id: groupID, 
+                        orig_group_id: groupId, 
                         orig_stack_index: stackIndex, 
                         orig_card_index: cardIndex, 
                         dest_group_id: discardGroupID, 
@@ -298,22 +298,22 @@ export const HandleKeyDown = ({
             }
             // Shufle card into owner's deck
             else if (k === "h") {
-                // determine destination groupID
-                var destGroupID = "gSharedEncounterDeck";
-                if (activeCard.owner === "Player1") destGroupID = "gPlayer1Deck";
+                // determine destination groupId
+                var destGroupID = "sharedEncounterDeck";
+                if (activeCard.owner === "Player1") destGroupID = "player1Deck";
                 else if (activeCard.owner === "Player2") destGroupID = "gPlayer2Deck";
                 else if (activeCard.owner === "Player3") destGroupID = "gPlayer3Deck";
                 else if (activeCard.owner === "Player4") destGroupID = "gPlayer4Deck";
-                gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
                 gameBroadcast("shuffle_group", {group_id: destGroupID})
-                chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupID].name+" into "+GROUPSINFO[destGroupID].name+"."})
+                chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupID].name+"."})
             }
 
             if (updateActiveCard) {
                 activeCardAndLoc.setCard(newCard);
                 setActiveCardAndLoc({
                     card: newCard, 
-                    groupID: activeCardAndLoc.groupID, 
+                    groupId: activeCardAndLoc.groupId, 
                     stackIndex: activeCardAndLoc.stackIndex, 
                     cardIndex: activeCardAndLoc.cardIndex, 
                     mousePosition: activeCardAndLoc.mousePosition,

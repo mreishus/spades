@@ -108,9 +108,9 @@ export const getNextPlayerN = (gameUI, playerN) => {
 export const flatListOfCards = (gameUI) => {
   const groupById = gameUI["game"]["groupById"];
   const allCards = [];
-  Object.keys(groupById).forEach((groupID) => {
-    const group = groupById[groupID];
-    console.log("flattening",groupID);
+  Object.keys(groupById).forEach((groupId) => {
+    const group = groupById[groupId];
+    console.log("flattening",groupId);
     const stacks = group["stacks"];
     console.log(stacks);
     for (var s = 0; s < stacks.length; s++) {
@@ -121,7 +121,7 @@ export const flatListOfCards = (gameUI) => {
         const card = cards[c];
         const indexedCard = {
           ...card,
-          ["group_id"]: groupID,
+          ["group_id"]: groupId,
           ["stack_index"]: s,
           ["card_index"]: c, 
         }
@@ -187,7 +187,7 @@ export const functionOnMatchingCards = (gameUI, gameBroadcast, chatBroadcast, cr
   const cards = listOfMatchingCards(gameUI, criteria);
   for (var card of cards) {
     const cardName = getCurrentFace(card).printName;
-    const groupID = card["group_id"];
+    const groupId = card["group_id"];
     const stackIndex = card["stack_index"];
     const cardIndex = card["card_index"];
     console.log("performing function on matching cards")
@@ -196,7 +196,7 @@ export const functionOnMatchingCards = (gameUI, gameBroadcast, chatBroadcast, cr
         const tokenType = args[0];
         const increment = args[1];
         console.log("increment_token", tokenType, increment);
-        gameBroadcast("increment_token",{group_id: groupID, stack_index: stackIndex, card_index: cardIndex, token_type: tokenType, increment: increment})
+        gameBroadcast("increment_token",{group_id: groupId, stack_index: stackIndex, card_index: cardIndex, token_type: tokenType, increment: increment})
         if (increment > 0) {
             if (increment === 1) chatBroadcast("game_update",{message: "added "+increment+" "+tokenType+" token to "+cardName+"."});
             else chatBroadcast("game_update",{message: "added "+increment+" "+tokenType+" tokens to "+cardName+"."});

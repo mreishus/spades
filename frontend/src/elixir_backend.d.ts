@@ -33,7 +33,7 @@ declare module "elixir-backend" {
 
   export declare class CardAndLoc {
     card: Card;
-    groupID: String;
+    groupId: String;
     stackIndex: number;
     cardIndex: number;
   }

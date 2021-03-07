@@ -201,11 +201,11 @@ defmodule SpadesGame.GameUI do
   def deal_shadow(gameui, card, options \\ nil) do
     {group_id, stack_index, card_index} = gsc(gameui, card)
     gameui
-    # shadow_card = get_card(gameui, ["gSharedEncounterDeck", 0, 0])
+    # shadow_card = get_card(gameui, ["sharedEncounterDeck", 0, 0])
     # IO.puts("shadow_card")
     # if shadow_card do
     #   cards_size = Enum.count(GameUI.get_card_ids(gameui, stack_id, stack_index))
-    #   gameui = move_card(gameui, "gSharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false, true)
+    #   gameui = move_card(gameui, "sharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false, true)
     #   rotated_shadow_card = put_in(shadow_card["rotation"], -30)
     #   update_card(gameui, rotated_shadow_card)
     # else
@@ -586,10 +586,10 @@ defmodule SpadesGame.GameUI do
 
     # # Check if we should load the first quest card
     # IO.puts("checking quest")
-    # IO.inspect(Enum.count(get_stack_ids(gameui,"gSharedQuestDeck")))
-    # IO.inspect(Enum.count(get_stack_ids(gameui,"gSharedMainQuest")))
-    # gameui = if Enum.count(get_stack_ids(gameui,"gSharedQuestDeck"))>0 && Enum.count(get_stack_ids(gameui,"gSharedMainQuest"))==0 do
-    #   move_stack(gameui, "gSharedQuestDeck", 0, "gSharedMainQuest", 0)
+    # IO.inspect(Enum.count(get_stack_ids(gameui,"sharedQuestDeck")))
+    # IO.inspect(Enum.count(get_stack_ids(gameui,"sharedMainQuest")))
+    # gameui = if Enum.count(get_stack_ids(gameui,"sharedQuestDeck"))>0 && Enum.count(get_stack_ids(gameui,"sharedMainQuest"))==0 do
+    #   move_stack(gameui, "sharedQuestDeck", 0, "sharedMainQuest", 0)
     # else
     #   gameui
     # end

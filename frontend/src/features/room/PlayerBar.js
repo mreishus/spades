@@ -11,10 +11,11 @@ export const PlayerBar = React.memo(({
   setBrowseGroupID,
   setBrowseGroupTopN,
 }) => {
+  if (!observingPlayerN) return null;
   return (
     <div className="h-full w-full">
       <Group
-        groupID={'g'+observingPlayerN+'Hand'} 
+        groupId={observingPlayerN+'Hand'} 
         width="80%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
@@ -24,7 +25,7 @@ export const PlayerBar = React.memo(({
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></Group>
       <Group
-        groupID={'g'+observingPlayerN+'Deck'} 
+        groupId={observingPlayerN+'Deck'} 
         width="10%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
@@ -34,7 +35,7 @@ export const PlayerBar = React.memo(({
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></Group>
       <Group
-        groupID={'g'+observingPlayerN+'Discard'} 
+        groupId={observingPlayerN+'Discard'} 
         width="10%"
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}

@@ -83,7 +83,7 @@ export default class StackView extends Component {
               gameBroadcast={this.props.gameBroadcast} 
               chatBroadcast={this.props.chatBroadcast} 
               playerN={this.props.playerN}
-              groupID={this.props.groupID} 
+              groupId={this.props.groupId} 
               stackIndex={this.props.stackIndex}
               cardIndex={cardIndex}
               inputCard={JSON.stringify(card)} 
@@ -146,7 +146,7 @@ function StackView(props) {
     
             <CardView
               gameBroadcast={gameBroadcast} 
-              groupID={group.id} 
+              groupId={group.id} 
               group={group}
               stackIndex={stackIndex}
               cardIndex={cardIndex}

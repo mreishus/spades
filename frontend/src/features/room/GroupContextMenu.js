@@ -54,24 +54,24 @@ export const GroupContextMenu = React.memo(({
           </div>) : null}
           <SubMenu title='Move all to'>
               <SubMenu title='My Deck'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gPlayer1Deck", position: "s"}}>Shuffle in </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "player1Deck", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "player1Deck", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "player1Deck", position: "s"}}>Shuffle in </MenuItem>
               </SubMenu>
               <SubMenu title='Encounter Deck'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck", position: "s"}}>Shuffle in </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck", position: "s"}}>Shuffle in </MenuItem>
               </SubMenu>
               <SubMenu title='Encounter Deck 2 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck1", position: "s"}}>Shuffle in </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck1", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck1", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck1", position: "s"}}>Shuffle in </MenuItem>
               </SubMenu>
               <SubMenu title='Encounter Deck 3 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "t"}}>Top</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "b"}}>Bottom</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "gSharedEncounterDeck2", position: "s"}}>Shuffle in</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck2", position: "t"}}>Top</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck2", position: "b"}}>Bottom</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck2", position: "s"}}>Shuffle in</MenuItem>
               </SubMenu>
           </SubMenu>
       </ContextMenu>

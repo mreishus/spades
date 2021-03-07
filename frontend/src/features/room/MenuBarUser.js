@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import UserName from "../user/UserName";
 import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { Link } from "react-router-dom";
+import { setGame, increment } from "./gameUiSlice"
 
 var delayBroadcast;
 
-export const MenuBarUser = React.memo(({
+export const MenuBarUser = ({
   gameUI,
   playerN,
   playerIndex,
@@ -15,6 +17,17 @@ export const MenuBarUser = React.memo(({
   observingPlayerN,
   setObservingPlayerN,
 }) => {
+  const storeGame = state => state.gameUi;
+  const dispatch = useDispatch();
+  const game = useSelector(storeGame);
+  console.log("menubaruser game", game);
+
+  // const [, updateState] = React.useState();
+  // const forceUpdate = React.useCallback(() => updateState({}), []);
+
+  const storeCount = state => state.gameUi.count;
+  const count = useSelector(storeCount);
+
   const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
   const myUserID = myUser?.id;
@@ -41,30 +54,35 @@ export const MenuBarUser = React.memo(({
 }
 
   const handleSitClick = (action) => {
-    // Get up from any seats first
-    Object.keys(gameUI["playerIds"]).forEach((playerI) => {
-      const sittingUserIDi = gameUI["playerIds"][playerI];
-      if (sittingUserIDi === myUserID) {
-        gameBroadcast("get_up",{"PlayerN": playerI});
-        chatBroadcast("game_update",{message: "got up from "+playerI+"'s seat."});
-      }
-    })
-    // Sit in seat
-    if (action === "sit") {
-      gameBroadcast("sit",{"PlayerN": playerN});
-      chatBroadcast("game_update",{message: "sat in "+playerN+"'s seat."});
-      setObservingPlayerN(playerN);
-    } 
+    const newGame = {"count": count+1};
+    dispatch(increment());
+    // // Get up from any seats first
+    // Object.keys(gameUI["playerIds"]).forEach((playerI) => {
+    //   const sittingUserIDi = gameUI["playerIds"][playerI];
+    //   if (sittingUserIDi === myUserID) {
+    //     gameBroadcast("get_up",{"PlayerN": playerI});
+    //     chatBroadcast("game_update",{message: "got up from "+playerI+"'s seat."});
+    //   }
+    // })
+    // // Sit in seat
+    // if (action === "sit") {
+    //   gameBroadcast("sit",{"PlayerN": playerN});
+    //   chatBroadcast("game_update",{message: "sat in "+playerN+"'s seat."});
+    //   setObservingPlayerN(playerN);
+    // } 
   }
 
   const handleObserveClick = () => {
-    if (observingPlayerN === playerN) {
-      setObservingPlayerN(null);
-      chatBroadcast("game_update",{message: "stopped observing "+playerN+"."});
-    } else {
-      setObservingPlayerN(playerN);
-      chatBroadcast("game_update",{message: "started observing "+playerN+"."});
-    }
+    const newGame = {"count": 1};
+    dispatch(setGame(newGame));
+    //forceUpdate();
+    // if (observingPlayerN === playerN) {
+    //   setObservingPlayerN(null);
+    //   chatBroadcast("game_update",{message: "stopped observing "+playerN+"."});
+    // } else {
+    //   setObservingPlayerN(playerN);
+    //   chatBroadcast("game_update",{message: "started observing "+playerN+"."});
+    // }
   }
 
   const sitButton = () => {
@@ -136,4 +154,4 @@ export const MenuBarUser = React.memo(({
       
     </div>
   )
-})
+}

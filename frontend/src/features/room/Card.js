@@ -10,8 +10,7 @@ import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContex
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDisplayName, getCurrentFace, getVisibleFaceSRC } from "./Helpers";
-import { setGame } from "./gameSlice"
-
+import { setGame } from "./gameUiSlice"
 
 // PREVENT DOUBLECLICK REGISTERING 2 CLICK EVENTS
 export const delay = n => new Promise(resolve => setTimeout(resolve, n));
@@ -92,7 +91,7 @@ const CardComponent = React.memo(({
     inputCard,
     cardIndex,
     stackIndex,
-    groupID,
+    groupId,
     gameBroadcast,
     chatBroadcast,
     playerN,
@@ -106,7 +105,7 @@ const CardComponent = React.memo(({
     // occasionally have cards refuse to rerender ater calling a broadcast. For some reason
     // the shouldComponentUpdate aleady sees the next state and thinks its the same as the
     // current one, so it doesn't update.
-    console.log('rendering ',groupID,stackIndex,cardIndex);
+    console.log('rendering ',groupId,stackIndex,cardIndex);
     const [, updateState] = React.useState();
     const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
@@ -116,8 +115,8 @@ const CardComponent = React.memo(({
     //const groups = gameUIView.game_ui.game.groups;
     //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
 
-    //if (groupID==='gSharedStaging') console.log('rendering CardComponent');
-    //if (groupID==='gSharedStaging') console.log(card);
+    //if (groupId==='sharedStaging') console.log('rendering CardComponent');
+    //if (groupId==='sharedStaging') console.log(card);
 
     // useEffect(() => {    
     //   if (card) setCard(card);
@@ -150,7 +149,7 @@ const CardComponent = React.memo(({
     //         card.rotation = 0;
     //         chatBroadcast("game_update", {message: "readied "+displayName+"."});
     //     }
-    //     gameBroadcast("update_card",{card: card, group_id: groupID, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
+    //     gameBroadcast("update_card",{card: card, group_id: groupId, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
     //     forceUpdate();
     // }
     // const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onClick, onDoubleClick);
@@ -161,20 +160,20 @@ const CardComponent = React.memo(({
 
     function handleMenuClick(e, data) {
         if (data.action === "detach") {
-            gameBroadcast("detach", {group_id: groupID, stack_index: stackIndex, card_index: cardIndex})
+            gameBroadcast("detach", {group_id: groupId, stack_index: stackIndex, card_index: cardIndex})
             chatBroadcast("game_update",{message: "detached "+displayName+"."})
         }
         else if (data.action === "move_card") {
-            const sourceGroupTitle = GROUPSINFO[groupID].name;
+            const sourceGroupTitle = GROUPSINFO[groupId].name;
             const destGroupTitle = GROUPSINFO[data.destGroupID].name;
             if (data.position === "t") {
-                gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
                 chatBroadcast("game_update",{message: "moved "+displayName+" from "+sourceGroupTitle+" to top of "+destGroupTitle+"."})
             } else if (data.position === "b") {
-                gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: -1, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: -1, dest_card_index: 0, create_new_stack: true})
                 chatBroadcast("game_update",{message: "moved "+displayName+" from "+sourceGroupTitle+" to bottom of "+destGroupTitle+"."})
             } else if (data.position === "s") {
-                gameBroadcast("move_card", {orig_group_id: groupID, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: data.destGroupID, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
                 gameBroadcast("shuffle_group", {group_id: data.destGroupID})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+sourceGroupTitle+" into "+destGroupTitle+"."})
             }
@@ -228,7 +227,7 @@ const CardComponent = React.memo(({
                     position={"top"}
                     top={"0%"}
                     card={card}
-                    groupID={groupID}
+                    groupId={groupId}
                     stackIndex={stackIndex}
                     cardIndex={cardIndex}
                     setCard={setCard}
@@ -239,7 +238,7 @@ const CardComponent = React.memo(({
                     position={"bottom"}
                     top={"50%"}
                     card={card}
-                    groupID={groupID}
+                    groupId={groupId}
                     stackIndex={stackIndex}
                     cardIndex={cardIndex}
                     setCard={setCard}
@@ -251,7 +250,7 @@ const CardComponent = React.memo(({
                     isActive={isActive} 
                     gameBroadcast={gameBroadcast} 
                     chatBroadcast={chatBroadcast} 
-                    groupID={groupID} 
+                    groupId={groupId} 
                     stackIndex={stackIndex} 
                     cardIndex={cardIndex}
                 ></TokensView>
@@ -267,16 +266,16 @@ const CardComponent = React.memo(({
                 {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
                 <SubMenu title='Move to'>
                     <SubMenu title='Encounter Deck'>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gSharedEncounterDeck", position: "t"}}>Top</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gSharedEncounterDeck", position: "b"}}>Bottom</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "gSharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "sharedEncounterDeck", position: "t"}}>Top</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "sharedEncounterDeck", position: "b"}}>Bottom</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "sharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
                     <SubMenu title="Owner's Deck">
                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+card.owner+"Deck", position: "t"}}>Top</MenuItem>
                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupID: "g"+card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
-                    <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', groupID: groupID, stackIndex: stackIndex, cardIndex: cardIndex, destGroupID: "gSharedVictory", position: "t" }}>Victory Display</MenuItem>
+                    <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', groupId: groupId, stackIndex: stackIndex, cardIndex: cardIndex, destGroupID: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
                 </SubMenu>
             </ContextMenu>
         </div>
@@ -290,7 +289,7 @@ class CardClass extends Component {
         
         if ( 
             (JSON.stringify(nextProps.inputCard)!==JSON.stringify(this.props.inputCard)) ||
-            (nextProps.groupID!==this.props.groupID) ||
+            (nextProps.groupId!==this.props.groupId) ||
             (nextProps.stackIndex!==this.props.stackIndex) ||
             (nextProps.cardIndex!==this.props.cardIndex)
         ) {
@@ -306,7 +305,7 @@ class CardClass extends Component {
                 inputCard={this.props.inputCard}
                 cardIndex={this.props.cardIndex}
                 stackIndex={this.props.stackIndex}
-                groupID={this.props.groupID}
+                groupId={this.props.groupId}
                 gameBroadcast={this.props.gameBroadcast}
                 chatBroadcast={this.props.chatBroadcast}
                 playerN={this.props.playerN}
@@ -320,20 +319,20 @@ const CardView = React.memo(({
     inputCard,
     cardIndex,
     stackIndex,
-    groupID,
+    groupId,
     gameBroadcast,
     chatBroadcast,
     playerN,
   }) => {
-    //if (groupID==='gSharedStaging') console.log('rendering Cardview');
-    console.log('rendering',groupID,stackIndex,cardIndex, "view");
+    //if (groupId==='sharedStaging') console.log('rendering Cardview');
+    console.log('rendering',groupId,stackIndex,cardIndex, "view");
     const cardObj = JSON.parse(inputCard);
     return (
         <CardClass
             inputCard={cardObj}
             cardIndex={cardIndex}
             stackIndex={stackIndex}
-            groupID={groupID}
+            groupId={groupId}
             gameBroadcast={gameBroadcast}
             chatBroadcast={chatBroadcast}
             playerN={playerN}

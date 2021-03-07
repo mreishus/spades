@@ -75,8 +75,8 @@ export const Table = ({
     else setShowScratch(true);
   }
 
-  const handleBrowseSelect = (groupID) => {
-    setBrowseGroupID(groupID);
+  const handleBrowseSelect = (groupId) => {
+    setBrowseGroupID(groupId);
     setBrowseGroupTopN("All");
   }
 
@@ -96,7 +96,7 @@ export const Table = ({
   const handleSpawnClick = (cardID) => {
     const cardRow = cardDB[cardID];
     if (!cardRow) return;
-    const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupID': "gSharedStaging"}]
+    const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': "sharedStaging"}]
     gameBroadcast("load_cards",{load_list: loadList});
     chatBroadcast("game_update",{message: "spawned "+cardRow["sides"]["A"]["printName"]+"."});
   }
@@ -225,9 +225,9 @@ export const Table = ({
     // // gameBroadcast(
     // //   "update_2_groups",
     // //   {
-    // //     groupID1: source.droppableId,
+    // //     groupId1: source.droppableId,
     // //     groupIndex1: data["groupById"][source.droppableId],
-    // //     groupID2: destination.droppableId,
+    // //     groupId2: destination.droppableId,
     // //     groupIndex2: data["groupById"][destination.droppableId],
     // // })
     // setState({
@@ -270,7 +270,7 @@ export const Table = ({
 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <Group
-                groupID={'gSharedMainQuest'} 
+                groupId={'sharedMainQuest'} 
                 width="8%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -280,7 +280,7 @@ export const Table = ({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
               <Group
-                groupID={'gSharedActive'} 
+                groupId={'sharedActive'} 
                 width="9%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -299,7 +299,7 @@ export const Table = ({
                 boxShadow: '0 10px 10px 5px rgba(0,0,0,0.3)',
               }}>
                 <Group
-                  groupID={'gSharedStaging'} 
+                  groupId={'sharedStaging'} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -310,7 +310,7 @@ export const Table = ({
                 ></Group>
               </div>
               <Group
-                groupID={'gSharedEncounterDeck'} 
+                groupId={'sharedEncounterDeck'} 
                 width="7.5%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -320,7 +320,7 @@ export const Table = ({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
               <Group
-                groupID={'gSharedEncounterDiscard'} 
+                groupId={'sharedEncounterDiscard'} 
                 width="7.5%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -333,7 +333,7 @@ export const Table = ({
             </div> 
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <Group
-                groupID={'gPlayer1Engaged'} 
+                groupId={'player1Engaged'} 
                 width="100%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -346,7 +346,7 @@ export const Table = ({
               
             <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <Group
-                groupID={'gPlayer1Play1'} 
+                groupId={'player1Play1'} 
                 width="100%"
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
@@ -360,7 +360,7 @@ export const Table = ({
             {browseGroupID ? 
               <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
                 <BrowseContainer
-                  groupID={browseGroupID}
+                  groupId={browseGroupID}
                   gameBroadcast={gameBroadcast}
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
@@ -373,7 +373,7 @@ export const Table = ({
               :
               <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
                 <Group
-                  groupID={'gPlayer1Play2'} 
+                  groupId={'player1Play2'} 
                   width="90%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -383,7 +383,7 @@ export const Table = ({
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></Group>
                 <Group
-                  groupID={'gPlayer1Event'} 
+                  groupId={'player1Event'} 
                   width="10%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -454,7 +454,7 @@ export const Table = ({
           <div style={{height: "40%", display: showScratch ? "block" : "none"}}>        
             <div style={{height: "33.3%"}}>
               <Group
-                  group={groups['gSharedExtra1']} 
+                  group={groups['sharedExtra1']} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -466,7 +466,7 @@ export const Table = ({
             </div>      
             <div style={{height: "33.3%"}}>
               <Group
-                  group={groups['gSharedExtra2']} 
+                  group={groups['sharedExtra2']} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -478,7 +478,7 @@ export const Table = ({
             </div>      
             <div style={{height: "33.3%"}}>
               <Group
-                  group={groups['gSharedExtra3']} 
+                  group={groups['sharedExtra3']} 
                   width="100%"
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -552,7 +552,7 @@ export const Table = ({
 
     {/* <Draggable>
       <div style={{height:"200px",width:"800px",top:"0px",left:"0px",position:"relative",backgroundColor:"red",zIndex:1e7}}>
-        <GroupView group={groups['gSharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
+        <GroupView group={groups['sharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
         playerN={playerN} showTitle="false"></GroupView>
       </div>
     </Draggable> */}

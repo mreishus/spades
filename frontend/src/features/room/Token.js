@@ -14,12 +14,12 @@ export const Token = ({
     showButtons,
     gameBroadcast,
     chatBroadcast,
-    groupID,
+    groupId,
     stackIndex,
     cardIndex,
 }) => {
-    console.log('rendering tokens on ',groupID,stackIndex)
-    //console.log(gameUI.game.groups[groupID].stacks)
+    console.log('rendering tokens on ',groupId,stackIndex)
+    //console.log(gameUI.game.groups[groupId].stacks)
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
     const [amount, setAmount] = useState(card.tokens[type]);
@@ -52,8 +52,8 @@ export const Token = ({
         // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
-            gameBroadcast("increment_token",{group_id: groupID, stack_index: stackIndex, card_index: cardIndex, token_type: type, increment: totalDelta})
-            //gameBroadcast("update_card", {card: newCard, group_id: groupID, stack_index: stackIndex, card_index:cardIndex});
+            gameBroadcast("increment_token",{group_id: groupId, stack_index: stackIndex, card_index: cardIndex, token_type: type, increment: totalDelta})
+            //gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index:cardIndex});
             if (totalDelta > 0) {
                 if (totalDelta === 1) {
                     chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" token to "+cardName+"."});

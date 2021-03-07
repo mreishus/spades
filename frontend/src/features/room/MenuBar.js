@@ -1,8 +1,8 @@
 import React, { Component, useState, useRef } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentFace } from "./Helpers"
 import { MenuBarUser } from "./MenuBarUser"
 import { GROUPSINFO, sectionToLoadGroupID, sectionToDiscardGroupID } from "./Constants";
-import { useSelector, useDispatch } from 'react-redux'
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -18,7 +18,11 @@ export const MenuBar = React.memo(({
   }) => {
     
     const inputFile = useRef(null);
-    const groupById = gameUI["game"]["groupById"];
+    const gameGroup = state => state?.gameUi?.game;
+    const game = useSelector(gameGroup);
+    if (!game) return null;
+    const groupById = game.groupById;
+    console.log("rendering menubar ",groupById)
 
     const handleMenuClick = (data) => {
       if (!playerN) {
@@ -34,7 +38,7 @@ export const MenuBar = React.memo(({
       } else if (data.action === "spawn_card") {
           setShowSpawn(true);
       } else if (data.action === "look_at") {
-          handleBrowseSelect(data.groupID);
+          handleBrowseSelect(data.groupId);
       }
     }
 
@@ -60,7 +64,7 @@ export const MenuBar = React.memo(({
               var cardRow = cardDB[cardid];
               cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,playerN);
               if (cardRow) {
-                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupID': sectionToLoadGroupID(sectionName,playerN)})
+                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': sectionToLoadGroupID(sectionName,playerN)})
               }
             })
           })
@@ -72,11 +76,11 @@ export const MenuBar = React.memo(({
     }
     
     const sumStagingThreat = () => {
-      console.log(gameUI["game"]["groupById"])
-      const stagingStackIds = gameUI["game"]["groupById"]["gSharedStaging"]["stackIds"];
+      console.log(groupById)
+      const stagingStackIds = groupById.sharedStaging.stackIds;
       var stagingThreat = 0;
       stagingStackIds.forEach(stackId => {
-        const stack = gameUI["game"]["stackById"][stackId];
+        const stack = game.stackById[stackId];
         const topCard = stack["cards"][0];
         const currentFace = getCurrentFace(topCard);
         stagingThreat = stagingThreat + currentFace["threat"] + topCard["tokens"]["threat"];
@@ -85,11 +89,11 @@ export const MenuBar = React.memo(({
     }
 
     const sumPlayerWillpower = () => {
-      const playerById = gameUI["game"]["playerById"];
+      const playerById = game.playerById;
       var totalWillpower = 0;
-      for (const PlayerI in playerById) {
-        if (playerById.hasOwnProperty(PlayerI)) {
-            totalWillpower = totalWillpower + playerById[PlayerI]["willpower"]
+      for (const playerI in playerById) {
+        if (playerById.hasOwnProperty(playerI)) {
+            totalWillpower = totalWillpower + playerById[playerI]["willpower"]
         }
       }
       return totalWillpower;
@@ -122,55 +126,50 @@ export const MenuBar = React.memo(({
           <ul className="second-level-menu">
               <li>
                 <a href="#">Shared</a>
-                <ul className="third-level-menu">
-                  {Object.keys(GROUPSINFO).map((groupID, index) => {
-                    const group = groupById[groupID];
-                    if (group["controller"] === "Shared")
-                      return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
-                    else return null;
-                  })}
-                </ul>
-              </li>
-              <li>
-                <a href="#">Player 1</a>
                   <ul className="third-level-menu">
-                    {Object.keys(GROUPSINFO).map((groupID, index) => {
-                    const group = groupById[groupID];
-                    if (group["controller"] === "Player1")
-                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
+                    {Object.keys(GROUPSINFO).map((groupId, index) => {
+                      if (groupId.startsWith("shared"))
+                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
                       else return null;
                     })}
                 </ul>
               </li>
               <li>
-                  <a href="#">Player 2</a>
+                <a href="#">Player 1</a>
                   <ul className="third-level-menu">
-                    {Object.keys(GROUPSINFO).map((groupID, index) => {
-                      const group = groupById[groupID];
-                      if (group["controller"] === "Player2")
-                          return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
-                        else return null;
-                      })}
-                  </ul>
+                    {Object.keys(GROUPSINFO).map((groupId, index) => {
+                      if (groupId.startsWith("player1"))
+                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                      else return null;
+                    })}
+                </ul>
               </li>
               <li>
-                  <a href="#">Player 3</a>
+                <a href="#">Player 2</a>
                   <ul className="third-level-menu">
-                    {Object.keys(GROUPSINFO).map((groupID, index) => {
-                      const group = groupById[groupID];
-                      if (group["controller"] === "Player3")
-                          return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
-                        else return null;
-                      })}
-                  </ul>
+                    {Object.keys(GROUPSINFO).map((groupId, index) => {
+                      if (groupId.startsWith("player2"))
+                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                      else return null;
+                    })}
+                </ul>
+              </li>
+              <li>
+                <a href="#">Player 3</a>
+                  <ul className="third-level-menu">
+                    {Object.keys(GROUPSINFO).map((groupId, index) => {
+                      if (groupId.startsWith("player3"))
+                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                      else return null;
+                    })}
+                </ul>
               </li>
               <li>
                   <a href="#">Player 4</a>
-                  <ul className="third-level-menu">
-                    {Object.keys(GROUPSINFO).map((groupID, index) => {
-                      const group = groupById[groupID];
-                      if (group["controller"] === "Player4")
-                          return(<li><a onClick={() => handleMenuClick({action:"look_at",groupID:groupID})} href="#">{GROUPSINFO[groupID].name}</a></li>) 
+                    <ul className="third-level-menu">
+                      {Object.keys(GROUPSINFO).map((groupId, index) => {
+                        if (groupId.startsWith("player4"))
+                          return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
                         else return null;
                       })}
                   </ul>
@@ -184,7 +183,7 @@ export const MenuBar = React.memo(({
             Round
           </div>
           <div className="h-1/2 w-full flex justify-center">
-            <div className="text-xl">{gameUI["game"]["round_number"]}</div>
+            <div className="text-xl">{game["round_number"]}</div>
             <img className="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/time.png'}></img>
           </div>
         </div>

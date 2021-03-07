@@ -1,12 +1,12 @@
 import React, { useState, useCallback } from "react";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
 import RoomGame from "./RoomGame";
 import GameUIContext from "../../contexts/GameUIContext";
 import {KeypressProvider} from '../../contexts/KeypressContext'
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
 import useChannel from "../../hooks/useChannel";
 import { GameUI, ChatMessage } from "elixir-backend";
-import { setStore } from "./gameSlice"
+import { setGame } from "./gameUiSlice"
 
 interface Props {
   slug: string;
@@ -28,8 +28,8 @@ export const Room: React.FC<Props> = ({ slug }) => {
     ) {
       const { game_ui } = payload.response;
       setGameUI(game_ui);
-      console.log("dispatching to game")
-      dispatch(setStore(game_ui));
+      console.log("dispatching to game", game_ui.game)
+      dispatch(setGame(game_ui.game));
 
     }
   }, []);

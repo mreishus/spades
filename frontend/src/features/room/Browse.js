@@ -1,6 +1,6 @@
 import React, { Component, useState } from "react";
 import styled from "@emotion/styled";
-import Stacks from "./Stacks";
+import { Stacks } from "./Stacks";
 import Title from "./Title";
 import { GROUPSINFO } from "./Constants";
 import { faChevronDown, faTimes } from "@fortawesome/free-solid-svg-icons";

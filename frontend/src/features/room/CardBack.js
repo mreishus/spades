@@ -1,11 +1,10 @@
 /* The image shown below the deck of cards*/
 
 import React from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import styled from "@emotion/styled";
 import { CARDSCALE, playerBackSRC, encounterBackSRC} from "./Constants"
 import { getCurrentFace, getVisibleFaceSRC } from "./Helpers";
-
-
 
 // const Container = styled.div`
 //     height: ${props => (CARDSCALE * props.cardFace.height)}vw,
@@ -36,26 +35,37 @@ const Container = styled.div`
 
 function CardBack(props) {
   const {
-    group,
+    groupType,
+    stackIds,
     isDraggingOver,
     isDraggingFrom,
     playerN,
   } = props;
 
+  const storeStack0 = state => state.gameUi.game.stackById[stackIds[0]];
+  const stack0 = useSelector(storeStack0);
+  const storeStack1 = state => state.gameUi.game.stackById[stackIds[1]];
+  const stack1 = useSelector(storeStack1);
+  const storeCard0 = state => state.gameUi.game.cardById[stack0.cardIds[0]];
+  const card0 = useSelector(storeCard0);
+  const storeCard1 = state => state.gameUi.game.cardById[stack1.cardIds[0]];
+  const card1 = useSelector(storeCard1);
+
   var currentSideSRC;
   var currentFace;
-  if (group.type=="deck" && group.stacks.length>0 && isDraggingOver && !isDraggingFrom) {
-    currentSideSRC = getVisibleFaceSRC(group.stacks[0].cards[0],playerN)
-    currentFace = getCurrentFace(group.stacks[0].cards[0])
-  } else if (group.type=="deck" && group.stacks.length>1 && isDraggingFrom) {
-    currentSideSRC = getVisibleFaceSRC(group.stacks[1].cards[0],playerN)
-    currentFace = getCurrentFace(group.stacks[0].cards[0])
-  } else if (group.type=="discard" && group.stacks.length>0 && isDraggingOver && !isDraggingFrom) {
-    currentSideSRC = getVisibleFaceSRC(group.stacks[0].cards[0],playerN)
-    currentFace = getCurrentFace(group.stacks[0].cards[0])
-  } else if (group.type=="discard" && group.stacks.length>1 && isDraggingFrom) {
-    currentSideSRC = getVisibleFaceSRC(group.stacks[1].cards[0],playerN)
-    currentFace = getCurrentFace(group.stacks[0].cards[0])
+  const groupSize = stackIds.length;
+  if (groupType=="deck" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
+    currentSideSRC = getVisibleFaceSRC(card0, playerN)
+    currentFace = getCurrentFace(card0)
+  } else if (groupType=="deck" && groupSize>1 && isDraggingFrom) {
+    currentSideSRC = getVisibleFaceSRC(card1, playerN)
+    currentFace = getCurrentFace(card0)
+  } else if (groupType=="discard" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
+    currentSideSRC = getVisibleFaceSRC(card0, playerN)
+    currentFace = getCurrentFace(card0)
+  } else if (groupType=="discard" && groupSize>1 && isDraggingFrom) {
+    currentSideSRC = getVisibleFaceSRC(card1, playerN)
+    currentFace = getCurrentFace(card0)
   }
   if (currentFace) {
     return (

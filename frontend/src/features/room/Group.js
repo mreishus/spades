@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import { useSelector, useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux';
 import styled from "@emotion/styled";
-import Stacks from "./Stacks";
+import { Stacks } from "./Stacks";
 import Title from "./Title";
 import { GROUPSINFO } from "./Constants";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
@@ -111,7 +111,7 @@ export class GroupView extends Component {
 }
 
 export const Group = React.memo(({
-  groupID,
+  groupId,
   width,
   gameBroadcast,
   chatBroadcast,
@@ -120,8 +120,11 @@ export const Group = React.memo(({
   setBrowseGroupID,
   setBrowseGroupTopN,
 }) => {
-  const storeGroup = state => state?.gameUI?.game.groupById[groupID];
-  const dispatch = useDispatch();
+  console.log("rendering group ",groupId);
+  const storeGame = state => state.gameUi.game;
+  const game = useSelector(storeGame);
+  console.log("game", game);
+  const storeGroup = state => state?.gameUi?.game?.groupById[groupId];
   const group = useSelector(storeGroup);
   if (!group) return null;
   console.log("rendering group ",group);
@@ -137,7 +140,7 @@ export const Group = React.memo(({
           <Container>
             <ContextMenuTrigger id={group.id} holdToDisplay={0}>
               <Header>
-                <Title>{GROUPSINFO[group.id].tablename} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+                Hello<Title>{GROUPSINFO[group.id].tablename} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
               </Header>
             </ContextMenuTrigger>
 
@@ -154,7 +157,7 @@ export const Group = React.memo(({
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}
               playerN={playerN}
-              group={group}
+              stackIds={group.stackIds}
               isCombineEnabled={group.type === "play"}
               selectedStackIndices={[...Array(numStacks).keys()]}
             />
@@ -167,7 +170,6 @@ export const Group = React.memo(({
 })
 
 export class GroupContainer extends Component {
-
 
   render() {
 

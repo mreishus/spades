@@ -6,7 +6,7 @@ export const CardMouseRegion = React.memo(({
     position,
     top,
     card,
-    groupID,
+    groupId,
     stackIndex,
     cardIndex,
     setCard,
@@ -19,7 +19,7 @@ export const CardMouseRegion = React.memo(({
         const screenPosition = event.clientX > (window.innerWidth/2) ? "right" : "left";
         setActiveCard({
             card: card, 
-            groupID: groupID, 
+            groupId: groupId, 
             stackIndex: stackIndex, 
             cardIndex: cardIndex, 
             mousePosition: mousePosition, 
