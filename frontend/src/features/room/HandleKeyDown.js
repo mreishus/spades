@@ -146,7 +146,7 @@ export const HandleKeyDown = ({
             chatBroadcast("game_update",{message: "refreshes."});
             gameBroadcast("refresh",{player_n: playerN});
             // Raise your threat
-            const newThreat = gameUI["game"]["playerById"][playerN]["threat"]+1;
+            const newThreat = gameUI["game"]["playerData"][playerN]["threat"]+1;
             chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
             gameBroadcast("increment_threat",{player_n: playerN, increment: 1});
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.

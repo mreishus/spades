@@ -604,7 +604,7 @@ defmodule SpadesGame.GameUI do
     #   end
     # end
     # gameui = if player_n do
-    #   put_in(gameui["game"]["playerById"][player_n]["threat"], threat)
+    #   put_in(gameui["game"]["playerData"][player_n]["threat"], threat)
     # else
     #   gameui
     # end
@@ -730,9 +730,9 @@ defmodule SpadesGame.GameUI do
   # List of PlayerN strings of players that are seated and not eliminated
   def seated_non_eliminated(gameui) do
     player_ids = gameui["playerIds"]
-    player_by_id = gameui["game"]["playerById"]
+    player_data = gameui["game"]["playerData"]
     Enum.reduce(["player1","player2","player3","player4"], [], fn(player_n, acc) ->
-      acc = if player_ids[player_n] && !player_by_id[player_n]["eliminated"] do
+      acc = if player_ids[player_n] && !player_data[player_n]["eliminated"] do
         acc ++ [player_n]
       else
         acc
@@ -759,8 +759,8 @@ defmodule SpadesGame.GameUI do
 
   # Increment a player's threat
   def increment_threat(gameui, player_n, increment) do
-    current_threat = gameui["game"]["playerById"][player_n]["threat"];
-    put_in(gameui["game"]["playerById"][player_n]["threat"], current_threat + increment)
+    current_threat = gameui["game"]["playerData"][player_n]["threat"];
+    put_in(gameui["game"]["playerData"][player_n]["threat"], current_threat + increment)
   end
 
   # # @doc """

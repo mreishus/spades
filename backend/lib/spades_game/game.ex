@@ -33,7 +33,7 @@ defmodule SpadesGame.Game do
       "stackById" => %{},
       "cardById"  => %{},
       "tokensById" => %{},
-      "playerById" => %{
+      "playerData" => %{
         "player1" => PlayerData.new(),
         "player2" => PlayerData.new(),
         "player3" => PlayerData.new(),

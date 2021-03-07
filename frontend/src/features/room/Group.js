@@ -30,86 +30,6 @@ const WidthContainer = styled.div`
   height: 100%;
 `;
 
-
-
-// const GroupComponent = React.memo(({
-//   group,
-//   gameBroadcast,
-//   chatBroadcast,
-//   playerN,
-//   showTitle,
-//   setBrowseGroupID,
-//   setBrowseGroupTopN,
-// }) => {
-
-//   const numStacks = group["stacks"].length;
-//   return(
-//     <Container>
-//       <ContextMenuTrigger id={group.id} holdToDisplay={0}>
-//         <Header>
-//           <Title>{GROUPSINFO[group.id].tablename} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
-//         </Header>
-//       </ContextMenuTrigger>
-
-//       <GroupContextMenu
-//         group={group}
-//         gameBroadcast={gameBroadcast}
-//         chatBroadcast={chatBroadcast}
-//         playerN={playerN}
-//         setBrowseGroupID={setBrowseGroupID}
-//         setBrowseGroupTopN={setBrowseGroupTopN}
-//       ></GroupContextMenu>
-      
-//       <Stacks
-//         gameBroadcast={gameBroadcast}
-//         chatBroadcast={chatBroadcast}
-//         playerN={playerN}
-//         groupId={group.id}
-//         isCombineEnabled={group.type === "play"}
-//         selectedStackIndices={[...Array(numStacks).keys()]}
-//       />
-//     </Container>
-//   )
-
-
-// })
-
-// export class GroupView extends Component {
-
-//   shouldComponentUpdate = (nextProps, nextState) => {
-//       if (JSON.stringify(nextProps.group)!==JSON.stringify(this.props.group)) return true;
-//       if (nextProps.playerN!==this.props.playerN) return true;
-//       return false;
-//   };
-
-//   render() {
-//     const group = this.props.group;
-//     if (group) {
-//       console.log('rendering',group.id);
-//       return (
-//         // <Draggable draggableId={title} index={index}>
-//         //   {(provided, snapshot) => (ref={provided.innerRef} {...provided.draggableProps}>
-
-//         <GroupComponent
-//           group={this.props.group}
-//           gameBroadcast={this.props.gameBroadcast}
-//           chatBroadcast={this.props.chatBroadcast}
-//           playerN={this.props.playerN}
-//           showTitle={this.props.showTitle}
-//           setBrowseGroupID={this.props.setBrowseGroupID}
-//           setBrowseGroupTopN={this.props.setBrowseGroupTopN}
-//         ></GroupComponent>
-
-//         //   )}
-//         // </Draggable>
-//       );
-
-//     } else {
-//       return (<div></div>)
-//     }
-//   }
-// }
-
 export const Group = React.memo(({
   groupId,
   width,
@@ -121,9 +41,6 @@ export const Group = React.memo(({
   setBrowseGroupTopN,
 }) => {
   console.log("rendering group ",groupId);
-  const storeGame = state => state.gameUi.game;
-  const game = useSelector(storeGame);
-  console.log("game", game);
   const storeGroup = state => state?.gameUi?.game?.groupById[groupId];
   const group = useSelector(storeGroup);
   if (!group) return null;
@@ -170,37 +87,3 @@ export const Group = React.memo(({
     </WidthContainer>
   )
 })
-
-// export class GroupContainer extends Component {
-
-//   render() {
-
-//     if (this.props.group) {
-//       const beingBrowsed = this.props.browseGroupID === this.props.group.id;
-//       return (
-//         <WidthContainer 
-//           style={{
-//             width: this.props.width, 
-//             visibility: beingBrowsed ? "hidden" : "visible"
-//           }}>
-//           {beingBrowsed? <div></div> :
-//             <div style={{width:"100%", height:"100%"}}>
-//               <GroupView 
-//                 group={this.props.group} 
-//                 gameBroadcast={this.props.gameBroadcast} 
-//                 chatBroadcast={this.props.chatBroadcast}
-//                 playerN={this.props.playerN}
-//                 showTitle={this.props.showTitle}
-//                 setBrowseGroupID={this.props.setBrowseGroupID}
-//                 setBrowseGroupTopN={this.props.setBrowseGroupTopN}
-//               ></GroupView>
-//             </div>
-//           }
-
-//         </WidthContainer>
-//       )
-//     } else {
-//       return (<div></div>)
-//     }
-//   }
-// }

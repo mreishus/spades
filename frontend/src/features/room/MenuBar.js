@@ -89,11 +89,11 @@ export const MenuBar = React.memo(({
     }
 
     const sumPlayerWillpower = () => {
-      const playerById = game.playerById;
+      const playerData = game.playerData;
       var totalWillpower = 0;
-      for (const playerI in playerById) {
-        if (playerById.hasOwnProperty(playerI)) {
-            totalWillpower = totalWillpower + playerById[playerI]["willpower"]
+      for (const playerI in playerData) {
+        if (playerData.hasOwnProperty(playerI)) {
+            totalWillpower = totalWillpower + playerData[playerI]["willpower"]
         }
       }
       return totalWillpower;
@@ -210,7 +210,6 @@ export const MenuBar = React.memo(({
       <MenuBarUser
         gameUI={gameUI}
         playerN={"player1"}
-        playerIndex={1}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
@@ -219,7 +218,6 @@ export const MenuBar = React.memo(({
       <MenuBarUser
         gameUI={gameUI}
         playerN={"player2"}
-        playerIndex={2}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
@@ -228,7 +226,6 @@ export const MenuBar = React.memo(({
       <MenuBarUser
         gameUI={gameUI}
         playerN={"player3"}
-        playerIndex={3}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
@@ -237,7 +234,6 @@ export const MenuBar = React.memo(({
       <MenuBarUser
         gameUI={gameUI}
         playerN={"player4"}
-        playerIndex={4}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}

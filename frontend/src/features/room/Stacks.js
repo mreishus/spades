@@ -73,39 +73,6 @@ const StacksList = (
   ) 
 };
 
-// function DropZoneContainer(props) {
-//   const { 
-//     isDraggingOver, 
-//     isDraggingFrom, 
-//     gameBroadcast, 
-//     chatBroadcast, 
-//     playerN,
-//     group, 
-//     stacks, 
-//     dropProvided, 
-//     selectedStackIndices } = props;
-
-//   return (
-//     <Container>
-//       <CardBack group={group} isDraggingOver={isDraggingOver} isDraggingFrom={isDraggingFrom}></CardBack>
-//       <DropZone ref={dropProvided.innerRef} group={group}>
-//         <StacksList
-//           isDraggingOver={isDraggingOver}
-//           isDraggingFrom={isDraggingFrom}
-//           gameBroadcast={gameBroadcast} 
-//           chatBroadcast={chatBroadcast} 
-//           playerN={playerN}
-//           group={group} 
-//           stacks={stacks}
-//           selectedStackIndices={selectedStackIndices}
-//         />
-//         {dropProvided.placeholder}
-//       </DropZone>
-//     </Container>
-//   );
-// }
-
-
 export const Stacks = ({
   gameBroadcast,
   chatBroadcast,
@@ -161,50 +128,3 @@ export const Stacks = ({
 } 
 
 
-
-
-
-// export default function Stacks(props) {
-//   const {
-//     gameBroadcast,
-//     chatBroadcast,
-//     playerN,
-//     group,
-//     isDropDisabled,
-//     isCombineEnabled,
-//     selectedStackIndices,
-//   } = props;
-//   console.log('rendering stacks for ',groupId);
-
-//   return (
-//     <Droppable
-//       droppableId={groupId}
-//       key={groupId}
-//       isDropDisabled={isDropDisabled}
-//       isCombineEnabled={isCombineEnabled}
-//       direction={group.type=="deck" || group.type=="discard" ? "vertical" : "horizontal"}
-//     >
-//       {(dropProvided, dropSnapshot) => (
-//         <Wrapper
-//           isDraggingOver={dropSnapshot.isDraggingOver}
-//           isDropDisabled={isDropDisabled}
-//           isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
-//           {...dropProvided.droppableProps}
-//           type={group.type}
-//         >
-//             <DropZoneContainer
-//                 isDraggingOver={dropSnapshot.isDraggingOver}
-//                 isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
-//                 gameBroadcast={gameBroadcast}
-//                 chatBroadcast={chatBroadcast}
-//                 playerN={playerN}
-//                 group={group}
-//                 stacks={group.stacks}
-//                 dropProvided={dropProvided}
-//                 selectedStackIndices={selectedStackIndices}
-//             />
-//         </Wrapper>
-//       )}
-//     </Droppable>
-//   );
-// }

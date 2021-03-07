@@ -79,10 +79,10 @@ export const GetPlayerN = (playerIDs, id) => {
  // List of playerN strings of players that are seated and not eliminated
 export const seatedNonEliminated = (gameUI) => {
   const playerIDs = gameUI["playerIds"]
-  const playerById = gameUI["game"]["playerById"]
+  const playerData = gameUI["game"]["playerData"]
   var seated = []
   Object.keys(playerIDs).forEach((PlayerI) => {
-    if (playerIDs[PlayerI] && !playerById[PlayerI]["eliminated"]) {
+    if (playerIDs[PlayerI] && !playerData[PlayerI]["eliminated"]) {
       seated.push(PlayerI);
     }
   })

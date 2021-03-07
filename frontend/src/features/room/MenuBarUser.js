@@ -11,29 +11,27 @@ var delayBroadcast;
 export const MenuBarUser = ({
   gameUI,
   playerN,
-  playerIndex,
   gameBroadcast,
   chatBroadcast,
   observingPlayerN,
   setObservingPlayerN,
 }) => {
-  const storeGame = state => state.gameUi;
-  const dispatch = useDispatch();
-  const game = useSelector(storeGame);
-  console.log("menubaruser game", game);
+  const storePlayerIds = state => state.gameUi.playerIds;
+  const playerIds = useSelector(storePlayerIds);
+  const storePlayerData = state => state.gameUi.game.playerData;
+  const playerData = useSelector(storePlayerData);  
+  
+  if (!playerIds) return null;
+  if (!playerData) return null;
 
-  // const [, updateState] = React.useState();
-  // const forceUpdate = React.useCallback(() => updateState({}), []);
-
-  const storeCount = state => state.gameUi.count;
-  const count = useSelector(storeCount);
+  console.log("menubaruser ", playerN);
 
   const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
   const myUserID = myUser?.id;
-  const sittingUserID = gameUI["playerIds"][playerN];
+  const sittingUserID = playerIds[playerN];
   console.log('rendering '+playerN);
-  const gameUIThreat = gameUI["game"]["playerById"][playerN]["threat"];
+  const gameUIThreat = playerData[playerN]["threat"];
 
   const [threatValue, setThreatValue] = useState(gameUIThreat);
   useEffect(() => {    
@@ -44,19 +42,19 @@ export const MenuBarUser = ({
     const newValue = event.target.value;
     setThreatValue(newValue);
     const increment = newValue - gameUIThreat;
-   // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
+    // Set up a delayed broadcast to update the game state that interrupts itself if the button is clicked again shortly after.
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
       gameBroadcast("increment_threat",{player_n: playerN, increment: increment});
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
     }, 800);
-}
+  }
 
   const handleSitClick = (action) => {
     // Get up from any seats first
-    Object.keys(gameUI["playerIds"]).forEach((playerI) => {
-      const sittingUserIDi = gameUI["playerIds"][playerI];
+    Object.keys(playerIds).forEach((playerI) => {
+      const sittingUserIDi = playerIds[playerI];
       if (sittingUserIDi === myUserID) {
         gameBroadcast("get_up",{"playerN": playerI});
         chatBroadcast("game_update",{message: "got up from "+playerI+"'s seat."});
@@ -141,7 +139,7 @@ export const MenuBarUser = ({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            defaultValue={gameUI["game"]["playerById"][playerN]["willpower"]}
+            defaultValue={playerData[playerN]["willpower"]}
             type="number" min="0" step="1"
           ></input>
         </div>
