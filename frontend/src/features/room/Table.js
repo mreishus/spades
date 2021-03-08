@@ -47,7 +47,7 @@ export const Table = ({
   const [sittingPlayerN, setSittingPlayerN] = useState("");
   const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDB));
   // Show/hide group that allows you to browse certain cards in a group
-  const [browseGroupID, setBrowseGroupID] = useState("");
+  const [browseGroupId, setBrowseGroupId] = useState("");
   // Indices of stacks in group being browsed
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
@@ -62,7 +62,7 @@ export const Table = ({
   }
 
   const handleBrowseSelect = (groupId) => {
-    setBrowseGroupID(groupId);
+    setBrowseGroupId(groupId);
     setBrowseGroupTopN("All");
   }
 
@@ -259,8 +259,8 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 playerN={playerN}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
+                browseGroupId={browseGroupId}
+                setBrowseGroupId={setBrowseGroupId}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
               <Group
@@ -269,8 +269,8 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 playerN={playerN}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
+                browseGroupId={browseGroupId}
+                setBrowseGroupId={setBrowseGroupId}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
               <div style={{
@@ -288,8 +288,8 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
-                  browseGroupID={browseGroupID}
-                  setBrowseGroupID={setBrowseGroupID}
+                  browseGroupId={browseGroupId}
+                  setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></Group>
               </div>
@@ -299,8 +299,8 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 playerN={playerN}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
+                browseGroupId={browseGroupId}
+                setBrowseGroupId={setBrowseGroupId}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
               <Group
@@ -309,8 +309,8 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 playerN={playerN}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
+                browseGroupId={browseGroupId}
+                setBrowseGroupId={setBrowseGroupId}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
               
@@ -322,8 +322,8 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 playerN={playerN}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
+                browseGroupId={browseGroupId}
+                setBrowseGroupId={setBrowseGroupId}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
             </div>
@@ -335,21 +335,21 @@ export const Table = ({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast}
                 playerN={playerN}
-                browseGroupID={browseGroupID}
-                setBrowseGroupID={setBrowseGroupID}
+                browseGroupId={browseGroupId}
+                setBrowseGroupId={setBrowseGroupId}
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
             </div>
 
-            {browseGroupID ? 
+            {browseGroupId ? 
               <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
                 <BrowseContainer
-                  groupId={browseGroupID}
+                  groupId={browseGroupId}
                   gameBroadcast={gameBroadcast}
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
                   browseGroupTopN={browseGroupTopN}
-                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
                   playerIDs={gameUi["playerIds"]}
                 ></BrowseContainer>
@@ -362,8 +362,8 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
-                  browseGroupID={browseGroupID}
-                  setBrowseGroupID={setBrowseGroupID}
+                  browseGroupId={browseGroupId}
+                  setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></Group>
                 <Group
@@ -372,8 +372,8 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
-                  browseGroupID={browseGroupID}
-                  setBrowseGroupID={setBrowseGroupID}
+                  browseGroupId={browseGroupId}
+                  setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></Group>
               </div>
@@ -398,8 +398,8 @@ export const Table = ({
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
-                  browseGroupID={browseGroupID}
-                  setBrowseGroupID={setBrowseGroupID}
+                  browseGroupId={browseGroupId}
+                  setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></PlayerBar>
               </div>
@@ -444,7 +444,7 @@ export const Table = ({
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
                   browseGroupTopN={browseGroupTopN}
-                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></Group>
             </div>      
@@ -456,7 +456,7 @@ export const Table = ({
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
                   browseGroupTopN={browseGroupTopN}
-                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></Group>
             </div>      
@@ -468,7 +468,7 @@ export const Table = ({
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
                   browseGroupTopN={browseGroupTopN}
-                  setBrowseGroupID={setBrowseGroupID}
+                  setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></Group>
             </div>

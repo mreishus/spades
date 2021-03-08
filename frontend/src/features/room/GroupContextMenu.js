@@ -8,7 +8,7 @@ export const GroupContextMenu = React.memo(({
     gameBroadcast,
     chatBroadcast,
     playerN,
-    setBrowseGroupID,
+    setBrowseGroupId,
     setBrowseGroupTopN,
 }) => {
 
@@ -18,14 +18,14 @@ export const GroupContextMenu = React.memo(({
           chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+"."})
         } else if (data.action === "move_stacks") {
           if (data.position === "t") {
-            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
-            chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to top of "+GROUPSINFO[data.destGroupID].name+"."})
+            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupId, position: data.position})
+            chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to top of "+GROUPSINFO[data.destGroupId].name+"."})
           } else if (data.position === "b") {
-            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
-            chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to bottom of "+GROUPSINFO[data.destGroupID].name+"."})
+            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupId, position: data.position})
+            chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to bottom of "+GROUPSINFO[data.destGroupId].name+"."})
           } else if (data.position === "s") {
-            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupID, position: data.position})
-            chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[data.destGroupID].name+"."})
+            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupId, position: data.position})
+            chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[data.destGroupId].name+"."})
           }
         } else if (data.action === "look_at") {
           const topNstr = data.topN;
@@ -35,7 +35,7 @@ export const GroupContextMenu = React.memo(({
             playerN,
             gameBroadcast, 
             chatBroadcast,
-            setBrowseGroupID,
+            setBrowseGroupId,
             setBrowseGroupTopN
           ) 
         }
@@ -54,24 +54,24 @@ export const GroupContextMenu = React.memo(({
           </div>) : null}
           <SubMenu title='Move all to'>
               <SubMenu title='My Deck'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "player1Deck", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "player1Deck", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "player1Deck", position: "s"}}>Shuffle in </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "player1Deck", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "player1Deck", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "player1Deck", position: "s"}}>Shuffle in </MenuItem>
               </SubMenu>
               <SubMenu title='Encounter Deck'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck", position: "s"}}>Shuffle in </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck", position: "s"}}>Shuffle in </MenuItem>
               </SubMenu>
               <SubMenu title='Encounter Deck 2 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck1", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck1", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck1", position: "s"}}>Shuffle in </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck1", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck1", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck1", position: "s"}}>Shuffle in </MenuItem>
               </SubMenu>
               <SubMenu title='Encounter Deck 3 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck2", position: "t"}}>Top</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck2", position: "b"}}>Bottom</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupID: "sharedEncounterDeck2", position: "s"}}>Shuffle in</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "t"}}>Top</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "b"}}>Bottom</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "s"}}>Shuffle in</MenuItem>
               </SubMenu>
           </SubMenu>
       </ContextMenu>

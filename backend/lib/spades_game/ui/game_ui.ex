@@ -524,10 +524,9 @@ defmodule SpadesGame.GameUI do
   end
 
   def insert_stack_in_group(gameui, group_id, stack, index) do
-    old_stack_ids = gameui["game"]["groupById"][group_id]["stackIds"]
+    old_stack_ids = get_stack_ids(gameui, group_id)
     new_stack_ids = List.insert_at(old_stack_ids, index, stack["id"])
-    new_group = put_in(gameui["game"]["groupById"][group_id]["stackIds"], new_stack_ids)
-    update_group(gameui, new_group)
+    update_stack_ids(gameui, group_id, new_stack_ids)
   end
 
   def insert_card_in_stack(gameui, stack_id, card, index) do
@@ -538,11 +537,15 @@ defmodule SpadesGame.GameUI do
 
   def add_card_row_to_group(gameui, group_id, card_row) do
     controller = get_group_controller(gameui, group_id)
+    IO.puts("add_card_row_to_group")
+    IO.inspect(gameui)
+    IO.inspect(group_id)
+    IO.inspect(card_row)
     group_size = Enum.count(get_stack_ids(gameui, group_id))
     # Can't insert a card directly into a group need to make a stack first
     new_tokens = Tokens.new()
     new_card = Card.card_from_cardrow(card_row, controller, new_tokens["id"])
-    new_stack = Stack.new(new_card)
+    new_stack = Stack.stack_from_card(new_card)
     gameui
     |> insert_stack_in_group(group_id, new_stack, group_size)
     |> update_stack(new_stack)
@@ -578,10 +581,10 @@ defmodule SpadesGame.GameUI do
     # Get player doing the loading
     player_n = get_player_n(gameui, user_id)
     # Get deck sie before load
-    deck_size_before = Enum.count(get_stack_ids(gameui,"g"<>player_n<>"Deck"))
+    deck_size_before = Enum.count(get_stack_ids(gameui, player_n<>"Deck"))
 
     gameui = Enum.reduce(load_list, gameui, fn r, acc ->
-      load_card(acc, r["cardRow"], r["groupID"], r["quantity"])
+      load_card(acc, r["cardRow"], r["groupId"], r["quantity"])
     end)
 
     # # Check if we should load the first quest card

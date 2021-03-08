@@ -42,7 +42,7 @@ const BrowseComponent = React.memo(({
   chatBroadcast,
   showTitle,
   browseGroupTopN,
-  setBrowseGroupID,
+  setBrowseGroupId,
   setBrowseGroupTopN,
   playerN,
 }) => {
@@ -61,7 +61,7 @@ const BrowseComponent = React.memo(({
   }
 
   const handleCloseClick = (event) => {
-    setBrowseGroupID("");
+    setBrowseGroupId("");
     setBrowseGroupTopN(0);
     gameBroadcast("peek_at", {group_id: group.id, stack_indices: [], card_indices: [], player_n: playerN, reset_peek: true})
   }
@@ -74,7 +74,7 @@ const BrowseComponent = React.memo(({
       playerN,
       gameBroadcast, 
       chatBroadcast,
-      setBrowseGroupID,
+      setBrowseGroupId,
       setBrowseGroupTopN
     )
     // var peekStackIndices = [];
@@ -96,7 +96,7 @@ const BrowseComponent = React.memo(({
     //   peekCardIndices = new Array(topN).fill(0);
     //   chatBroadcast("game_update",{message: "looks at top "+topN+" of "+groupName+"."})
     // }
-    // setBrowseGroupID(group.id);
+    // setBrowseGroupId(group.id);
     // setBrowseGroupTopN(topN);
     // gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: 'Player1', reset_peek: true})
   }
@@ -158,7 +158,7 @@ const BrowseComponent = React.memo(({
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         playerN={playerN}
-        setBrowseGroupID={setBrowseGroupID}
+        setBrowseGroupId={setBrowseGroupId}
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></GroupContextMenu>
 
@@ -227,7 +227,7 @@ export default class BrowseContainer extends Component {
             gameBroadcast={this.props.gameBroadcast} 
             chatBroadcast={this.props.chatBroadcast}
             browseGroupTopN={this.props.browseGroupTopN}
-            setBrowseGroupID={this.props.setBrowseGroupID}
+            setBrowseGroupId={this.props.setBrowseGroupId}
             setBrowseGroupTopN={this.props.setBrowseGroupTopN}
             playerN={this.props.playerN}
           ></BrowseComponent>

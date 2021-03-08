@@ -38,7 +38,7 @@ function getStyle(provided, style) {
 // things we should be doing in the selector as we do not know if consumers
 // will be using PureComponent
 
-export const Stack = (
+export const Stack = ({
   gameBroadcast,
   chatBroadcast,
   playerN,
@@ -46,12 +46,12 @@ export const Stack = (
   stackIndex,
   stackId,
   numStacks,
-) => {
-  const storeStack = state => state?.gameUi?.game?.stackById[stackId];
-  const stack = useSelector(storeStack);
+}) => {
+  const stackStore = state => state?.gameUi?.game?.stackById[stackId];
+  const stack = useSelector(stackStore);
   if (!stack) return null;
   const cardIds = stack.cardIds;
-  console.log('Stackview',playerN);
+  console.log('Stack',stack);
   // Calculate size of stack for proper spacing. Changes base on group type and number of stack in group.
   const numStacksNonZero = numStacks > 0 ? numStacks : 1;
   var handSpacing = 100*0.8*0.8*0.8/(numStacksNonZero);

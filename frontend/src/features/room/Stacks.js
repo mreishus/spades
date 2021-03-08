@@ -36,7 +36,7 @@ const Container = styled.div`
 `;
 /* stylelint-enable */
 
-const StacksList = (
+const StacksList = ({
   isDraggingOver,
   isDraggingFrom,
   gameBroadcast,
@@ -45,14 +45,16 @@ const StacksList = (
   groupType,
   stackIds,
   selectedStackIndices,
-) => {
+}) => {
   const pile = (groupType=="deck" || groupType=="discard")
-
+  //return(<div>{groupType}</div>)
   // Truncate stacked piles
+  console.log("rendering stackslist ",pile, isDraggingOver, isDraggingFrom, stackIds, playerN, groupType, selectedStackIndices)
   var stackIdsToShow;
   if (pile && isDraggingOver && !isDraggingFrom) stackIdsToShow = [];
   else if (pile && stackIds.length>1) stackIdsToShow = [stackIds[0]]
   else stackIdsToShow = stackIds;
+  console.log("rendering stackslist ",stackIdsToShow, pile, isDraggingOver, isDraggingFrom, stackIds)
   if (!stackIdsToShow) return null;
   console.log('rendering stacks');
   console.log(selectedStackIndices);
@@ -98,7 +100,7 @@ export const Stacks = ({
           isDropDisabled={false}
           isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
           {...dropProvided.droppableProps}
-          type={groupType}
+          groupType={groupType}
         >
           <Container>
             <CardBack 
@@ -115,7 +117,7 @@ export const Stacks = ({
                 chatBroadcast={chatBroadcast} 
                 playerN={playerN}
                 groupType={groupType} 
-                stacksIds={stackIds}
+                stackIds={stackIds}
                 selectedStackIndices={selectedStackIndices}
               />
               {dropProvided.placeholder}

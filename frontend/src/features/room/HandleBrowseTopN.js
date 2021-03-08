@@ -6,7 +6,7 @@ export const handleBrowseTopN = (
     playerN,
     gameBroadcast, 
     chatBroadcast,
-    setBrowseGroupID,
+    setBrowseGroupId,
     setBrowseGroupTopN,
 ) => {
     const stacks = group["stacks"];
@@ -33,7 +33,7 @@ export const handleBrowseTopN = (
       peekCardIndices = new Array(topNint).fill(0);
       chatBroadcast("game_update",{message: "looks at top "+topNstr+" of "+groupName+"."})
     }
-    setBrowseGroupID(group.id);
+    setBrowseGroupId(group.id);
     setBrowseGroupTopN(topNstr);
     gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: playerN, reset_peek: true})
 }

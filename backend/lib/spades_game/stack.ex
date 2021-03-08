@@ -10,7 +10,7 @@ defmodule SpadesGame.Stack do
   def empty_stack() do
     %{
       "id" => Ecto.UUID.generate,
-      "card_ids" => []
+      "cardIds" => []
     }
   end
 
@@ -18,7 +18,7 @@ defmodule SpadesGame.Stack do
   def stack_from_card(card) do
     %{
       "id" => Ecto.UUID.generate,
-      "card_ids" => [card["id"]]
+      "cardIds" => [card["id"]]
     }
   end
 
@@ -28,7 +28,7 @@ defmodule SpadesGame.Stack do
     #IO.inspect(card_row)
     %{
       "id" => Ecto.UUID.generate,
-      "card_ids" => [card["id"]]
+      "cardIds" => [card["id"]]
     }
   end
 
@@ -38,7 +38,7 @@ defmodule SpadesGame.Stack do
     #IO.inspect(card_row)
     %{
       "id" => Ecto.UUID.generate,
-      "card_ids" => [Card.card_from_cardrow(card_row, controller)]
+      "cardIds" => [Card.card_from_cardrow(card_row, controller)]
     }
   end
 end

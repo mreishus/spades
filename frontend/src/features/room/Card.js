@@ -216,18 +216,19 @@ export const Card = React.memo(({
                 <CardMouseRegion 
                     position={"top"}
                     top={"0%"}
-                    card={card}
+                    cardId={card.id}
                     setIsActive={setIsActive}
                 />
                 
                 <CardMouseRegion 
                     position={"bottom"}
                     top={"50%"}
-                    card={card}
+                    cardId={card.id}
                     setIsActive={setIsActive}
                 />
                 { isActive && (
                     <Tokens
+                        cardName={currentFace.name}
                         cardType={currentFace.cardType}
                         tokensId={card.tokensId}
                         isActive={isActive}

@@ -14,7 +14,6 @@ defmodule SpadesGame.Card do
       "rotation" => 0,
       "exhausted" => false,
       "committed" => false,
-      "tokens" =>Tokens.new(),
       "currentSide" => "A",
       "owner" => controller,
       "controller" => controller,

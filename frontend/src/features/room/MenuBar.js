@@ -2,7 +2,7 @@ import React, { Component, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentFace } from "./Helpers"
 import { MenuBarUser } from "./MenuBarUser"
-import { GROUPSINFO, sectionToLoadGroupID, sectionToDiscardGroupID } from "./Constants";
+import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -59,12 +59,12 @@ export const MenuBar = React.memo(({
             const cards = section.card;
             if (!cards) return;
             cards.forEach(card => {
-              const cardid = card['$'].id;
+              const cardDbId = card['$'].id;
               const quantity = parseInt(card['$'].qty);
-              var cardRow = cardDB[cardid];
-              cardRow['discardgroupid'] = sectionToDiscardGroupID(sectionName,playerN);
+              var cardRow = cardDB[cardDbId];
+              cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
               if (cardRow) {
-                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': sectionToLoadGroupID(sectionName,playerN)})
+                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': sectionToLoadGroupId(sectionName,playerN)})
               }
             })
           })
@@ -208,7 +208,6 @@ export const MenuBar = React.memo(({
       </div>
 
       <MenuBarUser
-        gameUI={gameUI}
         playerN={"player1"}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
@@ -216,7 +215,6 @@ export const MenuBar = React.memo(({
         setObservingPlayerN={setObservingPlayerN}
       ></MenuBarUser>
       <MenuBarUser
-        gameUI={gameUI}
         playerN={"player2"}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
@@ -224,7 +222,6 @@ export const MenuBar = React.memo(({
         setObservingPlayerN={setObservingPlayerN}
       ></MenuBarUser>
       <MenuBarUser
-        gameUI={gameUI}
         playerN={"player3"}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
@@ -232,7 +229,6 @@ export const MenuBar = React.memo(({
         setObservingPlayerN={setObservingPlayerN}
       ></MenuBarUser>
       <MenuBarUser
-        gameUI={gameUI}
         playerN={"player4"}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}

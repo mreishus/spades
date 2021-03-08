@@ -37,7 +37,7 @@ export const Group = React.memo(({
   chatBroadcast,
   playerN,
   showTitle,
-  setBrowseGroupID,
+  setBrowseGroupId,
   setBrowseGroupTopN,
 }) => {
   console.log("rendering group ",groupId);
@@ -48,7 +48,7 @@ export const Group = React.memo(({
   const group = useSelector(storeGroup);
   if (!group) return null;
   console.log("rendering group ",group);
-  const numStacks = group["stackIds"].length;
+  const numStacks = group.stackIds.length;
   return(
     <WidthContainer 
       style={{
@@ -69,10 +69,9 @@ export const Group = React.memo(({
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}
               playerN={playerN}
-              setBrowseGroupID={setBrowseGroupID}
+              setBrowseGroupId={setBrowseGroupId}
               setBrowseGroupTopN={setBrowseGroupTopN}
             ></GroupContextMenu>
-            
             <Stacks
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}

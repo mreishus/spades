@@ -7,8 +7,8 @@ export const PlayerBar = React.memo(({
   gameBroadcast,
   chatBroadcast,
   playerN,
-  browseGroupID,
-  setBrowseGroupID,
+  browseGroupId,
+  setBrowseGroupId,
   setBrowseGroupTopN,
 }) => {
   if (!observingPlayerN) return null;
@@ -20,8 +20,8 @@ export const PlayerBar = React.memo(({
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
         playerN={playerN}
-        browseGroupID={browseGroupID}
-        setBrowseGroupID={setBrowseGroupID}
+        browseGroupId={browseGroupId}
+        setBrowseGroupId={setBrowseGroupId}
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></Group>
       <Group
@@ -30,8 +30,8 @@ export const PlayerBar = React.memo(({
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
         playerN={playerN}
-        browseGroupID={browseGroupID}
-        setBrowseGroupID={setBrowseGroupID}
+        browseGroupId={browseGroupId}
+        setBrowseGroupId={setBrowseGroupId}
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></Group>
       <Group
@@ -40,8 +40,8 @@ export const PlayerBar = React.memo(({
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
         playerN={playerN}
-        browseGroupID={browseGroupID}
-        setBrowseGroupID={setBrowseGroupID}
+        browseGroupId={browseGroupId}
+        setBrowseGroupId={setBrowseGroupId}
         setBrowseGroupTopN={setBrowseGroupTopN}
       ></Group>
     </div>

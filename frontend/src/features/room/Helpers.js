@@ -53,7 +53,7 @@ export const getVisibleFaceSRC = (card, playerN) => {
   if (!card) return "";
   const visibleSide = getVisibleSide(card, playerN);
   if (visibleSide == "A") {
-      return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.jpg';
+      return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.jpg';
   } else { // Side B logic
       const sideBName = card["sides"]["B"]["name"];
       if (sideBName == "player") {
@@ -61,7 +61,7 @@ export const getVisibleFaceSRC = (card, playerN) => {
       } else if (sideBName == "encounter") {
           return process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg';
       } else if (sideBName) {
-          return process.env.PUBLIC_URL + '/images/cards/' + card['cardid'] + '.B.jpg';
+          return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.B.jpg';
       } else {
           return '';
       }
@@ -209,6 +209,35 @@ export const functionOnMatchingCards = (gameUI, gameBroadcast, chatBroadcast, cr
   }
 }
 
+export const getGroupByStackId = (groupById, stackId) => {
+  const groupIds = Object.keys(groupById);
+  for (groupId of groupIds) {
+    const group = groupById[groupId]; 
+    if (group.stackIds.includes(cardId)) return group; 
+  }
+  return null;
+}
+
+export const getStackByCardId = (stackById, cardId) => {
+  const stackIds = Object.keys(stackById);
+  for (stackId of stackIds) {
+    const stack = stackById[stackId]; 
+    if (stack.cardIds.includes(cardId)) return stack; 
+  }
+  return null;
+}
+
+export const getGroupIdStackIndexCardIndex = (game, cardId) => {
+  const stack = getStackByCardId(game.stackById, cardId);
+  if (!stack) return null;
+  const group = getGroupByStackId(game.groupById, stack.id);
+  if (!group) return null;
+  return ({
+    groupId: group.id, 
+    stackIndex: group.stackIds.indexOf(stack.id), 
+    cardIndex: stack.cardIds.indexOf(cardId)
+  })
+}
 
 
 

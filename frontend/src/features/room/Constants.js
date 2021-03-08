@@ -67,7 +67,7 @@ export const playerNum = (playerN) => {
   return null;
 } 
 
-export const sectionToLoadGroupID = (section, playerN) => {
+export const sectionToLoadGroupId = (section, playerN) => {
   switch(section) {
     case 'Hero':
       return playerN+'Play1';
@@ -101,7 +101,7 @@ export const sectionToLoadGroupID = (section, playerN) => {
   return 'sharedOther';
 }
 
-export const sectionToDiscardGroupID = (section, playerN) => {
+export const sectionToDiscardGroupId = (section, playerN) => {
   switch(section) {
     case 'Hero':
       return playerN+'Discard';

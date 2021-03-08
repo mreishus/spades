@@ -8,13 +8,14 @@ import { Link } from "react-router-dom";
 var delayBroadcast;
 
 export const MenuBarUser = ({
-  gameUI,
   playerN,
   gameBroadcast,
   chatBroadcast,
   observingPlayerN,
   setObservingPlayerN,
 }) => {
+  const gameUiStore = state => state?.gameUi;
+  const gameUi = useSelector(gameUiStore);
   const playerIdsStore = state => state?.gameUi?.playerIds;
   const playerIds = useSelector(playerIdsStore);
   const playerDataStore = state => state?.gameUi?.game?.playerData;
@@ -72,6 +73,8 @@ export const MenuBarUser = ({
   }
 
   const handleObserveClick = () => {
+    console.log(gameUi);
+    return;
     if (observingPlayerN === playerN) {
       setObservingPlayerN(null);
       chatBroadcast("game_update",{message: "stopped observing "+playerN+"."});

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from 'react-redux';
 import { CARDSCALE } from "./Constants";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -7,26 +8,29 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 var delayBroadcast;
 
 export const Token = ({
+    tokensId,
+    cardName,
     type,
-    card,
     left,
     top,
     showButtons,
     gameBroadcast,
     chatBroadcast,
-    groupId,
-    stackIndex,
-    cardIndex,
 }) => {
-    console.log('rendering tokens on ',groupId,stackIndex)
+    const tokenStore = state => state?.gameUi?.game?.tokensById[tokensId]?.type;
+    const tokenValue = useSelector(tokenStore);
+    console.log('rendering tokens on ',tokensId);
     //console.log(gameUI.game.groups[groupId].stacks)
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
-    const [amount, setAmount] = useState(card.tokens[type]);
+    const [amount, setAmount] = useState(tokenValue);
 
     useEffect(() => {    
-        if (card.tokens[type] !== amount) setAmount(card.tokens[type]);
-    }, [card.tokens[type]]);
+        if (tokenValue !== amount) setAmount(tokenValue);
+    }, [tokenValue]);
+
+
+    if (!tokenValue) return null;
 
     function clickArrow(event,delta) {
         event.stopPropagation();
@@ -37,22 +41,12 @@ export const Token = ({
             newAmount = amount+delta;
         }
         setAmount(newAmount);
-        const newTokens = {
-            ...card.tokens,
-            [type]: newAmount,
-        }
-        const newCard = {
-            ...card,
-            tokens: newTokens,
-        }
-        // Get card name
-        const cardName = newCard["sides"][newCard["currentSide"]].printName;
         // Determine total number of tokens added or removed since last broadcast
-        const totalDelta = newAmount-card.tokens[type];
+        const totalDelta = newAmount-tokenValue;
         // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
-            gameBroadcast("increment_token",{group_id: groupId, stack_index: stackIndex, card_index: cardIndex, token_type: type, increment: totalDelta})
+            gameBroadcast("increment_token",{tokens_id: tokensId, type: type, increment: totalDelta})
             //gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index:cardIndex});
             if (totalDelta > 0) {
                 if (totalDelta === 1) {
