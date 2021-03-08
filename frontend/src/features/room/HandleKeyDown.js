@@ -2,7 +2,15 @@ import React, { useEffect} from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
-import { getDisplayName, getDisplayNameFlipped, getNextPlayerN, leftmostNonEliminatedPlayerN, functionOnMatchingCards, getGroupIdStackIndexCardIndex } from "./Helpers";
+import { 
+    getDisplayName, 
+    getDisplayNameFlipped, 
+    getNextPlayerN, 
+    leftmostNonEliminatedPlayerN, 
+    functionOnMatchingCards, 
+    getGroupIdStackIndexCardIndex,
+    getStackByCardId,
+} from "./Helpers";
 
 // const keyTokenMap: { [id: string] : Array<string | number>; } = {
 const keyTokenMap = {
@@ -196,7 +204,12 @@ export const HandleKeyDown = ({
             const groupId = gsc.groupId;
             const stackIndex = gsc.stackIndex;
             const cardIndex = gsc.cardIndex;
-            const groupType = gameUi.game.groupById.groupId.type;
+            console.log("card hotkey")
+            console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
+            console.log(gsc);
+            console.log(groupId);
+            console.log(gameUi.game.groupById);
+            const groupType = gameUi.game.groupById[groupId].type;
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 const tokenType = keyTokenMap[k][0];
@@ -267,26 +280,23 @@ export const HandleKeyDown = ({
             else if (k === "x") {
                 // If card is the parent card of a stack, discard the whole stack
                 if (cardIndex == 0) {
-                    const stack = getStackByCardId(gameUi.stackById, activeCardId);
+                    const stack = getStackByCardId(gameUi.game.stackById, activeCardId);
                     if (!stack) return;
                     const cardIds = stack.cardIds;
-                    for (var i=0; i<cardIds.length; i++) {
-                        const cardi = gameUi.game.cardById[cardIds[i]];
-                        const discardGroupId = cardi["discardgroupid"];
+                    for (var cardId of cardIds) {
+                        const cardi = gameUi.game.cardById[cardId];
+                        console.log("discarding ", cardi);
+                        const discardGroupId = cardi["discardGroupId"];
                         chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+GROUPSINFO[discardGroupId].name+"."});
-                        gameBroadcast("move_card",{
-                            orig_group_id: groupId, 
-                            orig_stack_index: stackIndex, 
-                            orig_card_index: cardIndex, 
-                            dest_group_id: discardGroupId,
-                            dest_stack_index: 0,
-                            dest_card_index: 0, 
-                            create_new_stack: true
-                        });
+                        gameBroadcast("card_action",{
+                            action: "move_card",
+                            card_id: cardId,
+                            options: [discardGroupId, 0, 0, false, false]
+                        })
                     }
                 // If the card is a child card in a stack, just discard that card
                 } else {
-                    const discardGroupId = activeCard["discardgroupid"]
+                    const discardGroupId = activeCard["discardGroupId"]
                     chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupId].name+"."});
                     gameBroadcast("move_card", {
                         orig_group_id: groupId, 

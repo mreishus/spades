@@ -10,7 +10,7 @@ export const getDisplayName = (card) => {
       const printName = currentFace["printName"];
       const id = card["id"];
       const id4digit = id.substr(id.length - 4);
-      return printName+' ('+id4digit+')';
+      return printName;//+' ('+id4digit+')'; // Add unique identifier?
   } else { // Side B logic
       const sideBName = card["sides"]["B"]["name"];
       if (sideBName == "player") {
@@ -21,7 +21,7 @@ export const getDisplayName = (card) => {
           const printName = currentFace["printName"];
           const id = card["id"];
           const id4digit = id.substr(id.length - 4);
-          return printName+' ('+id4digit+')';
+          return printName;//+' ('+id4digit+')'; // Add unique identifier?
       } else {
           return 'undefinedCard';
       }
@@ -211,16 +211,16 @@ export const functionOnMatchingCards = (gameUI, gameBroadcast, chatBroadcast, cr
 
 export const getGroupByStackId = (groupById, stackId) => {
   const groupIds = Object.keys(groupById);
-  for (groupId of groupIds) {
+  for (var groupId of groupIds) {
     const group = groupById[groupId]; 
-    if (group.stackIds.includes(cardId)) return group; 
+    if (group.stackIds.includes(stackId)) return group; 
   }
   return null;
 }
 
 export const getStackByCardId = (stackById, cardId) => {
   const stackIds = Object.keys(stackById);
-  for (stackId of stackIds) {
+  for (var stackId of stackIds) {
     const stack = stackById[stackId]; 
     if (stack.cardIds.includes(cardId)) return stack; 
   }

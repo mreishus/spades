@@ -155,10 +155,10 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   move_card/9: A player just moved a card.
   """
-  @spec move_card(String.t(), integer, String.t(), number, number, String.t(), number, number, boolean) :: GameUI.t()
-  def move_card(game_name, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack) do
+  @spec move_card(String.t(), integer, String.t(), String.t(), number, number, boolean) :: GameUI.t()
+  def move_card(game_name, user_id, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack) do
     IO.puts("game_ui_server: move_card")
-    GenServer.call(via_tuple(game_name), {:move_card, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack})
+    GenServer.call(via_tuple(game_name), {:move_card, user_id, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack})
   end
 
   @doc """
@@ -177,6 +177,15 @@ defmodule SpadesGame.GameUIServer do
   def toggle_exhaust(game_name, user_id, group_id, stack_index, card_index) do
     IO.puts("game_ui_server: toggle_exhaust")
     GenServer.call(via_tuple(game_name), {:toggle_exhaust, user_id, group_id, stack_index, card_index})
+  end
+
+  @doc """
+  card_action/5: A player just exhausted/unexhausted a card.
+  """
+  @spec card_action(String.t(), integer, String.t(), integer, integer) :: GameUI.t()
+  def card_action(game_name, user_id, action, card_id, options) do
+    IO.puts("game_ui_server: card_action")
+    GenServer.call(via_tuple(game_name), {:card_action, user_id, action, card_id, options})
   end
 
   @doc """
@@ -374,10 +383,10 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
-  def handle_call({:move_card, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack}, _from, gameui) do
+  def handle_call({:move_card, user_id, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack}, _from, gameui) do
     # Check if dest_stack_index is negative, meaning counting from the bottom
     IO.puts("game_ui_server move_card")
-    GameUI.move_card(gameui, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack)
+    GameUI.move_card(gameui, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack)
     |> save_and_reply()
   end
 
@@ -389,6 +398,12 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:toggle_exhaust, user_id, group_id, stack_index, card_index}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: toggle_exhaust a")
     GameUI.toggle_exhaust(gameui, [group_id, stack_index, card_index])
+    |> save_and_reply()
+  end
+
+  def handle_call({:card_action, user_id, action, card_id, options}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: card_action a")
+    GameUI.card_action(gameui, action, card_id, options)
     |> save_and_reply()
   end
 
