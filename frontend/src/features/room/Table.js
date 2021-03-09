@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { DragDropContext } from "react-beautiful-dnd";
 import { faStepBackward, faStepForward, faEquals, faAngleDoubleDown, faAngleDoubleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Chat from "../chat/Chat";
 import { Group } from "./Group";
 import BrowseContainer from "./Browse";
-import { reorderGroups } from "./Reorder";
 import { GiantCard } from "./GiantCard";
 import { MenuBar } from "./MenuBar";
 import styled from "@emotion/styled";
@@ -20,7 +18,6 @@ import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { PlayerBar } from "./PlayerBar";
 import { PhaseBar } from "./PhaseBar";
 import { setStackIds, setCardIds } from "./gameUiSlice";
-import { HandleDragStack } from "./HandleDragStack";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -97,9 +94,6 @@ export const Table = ({
   //    setGroups(gameUi.game["groupById"]);
   // }, [gameUi.game["groupById"]]);
 
-  const onDragEnd = (result) => {
-    return(<HandleDragStack result={result}/>);
-  }
 
 
   // const onDragEnd = (result) => {
@@ -234,9 +228,7 @@ export const Table = ({
   // };
 
   return (
-    <DragDropContext
-      onDragEnd={onDragEnd}
-    >
+
     <div className="h-full flex">
       <PhaseBar
         gameUi={gameUi}
@@ -491,72 +483,45 @@ export const Table = ({
           </div>
         </div>
       </div> */}
-    </div>
 
-    {/* <ReactModal
-      closeTimeoutMS={200}
-      isOpen={showSpawn}
-      onRequestClose={() => setShowSpawn(false)}
-      contentLabel="Spawn a card"
-      overlayClassName="fixed inset-0 bg-black-0 z-50"
-      className="insert-auto overflow-auto p-5 bg-gray-700 border rounded-lg outline-none"
-      style={{  content : {
-        height: "60%",
-        width: "40%",
-        marginTop:"20%",
-        zindex:1e9,
-      }}}
-    >
-      <div style={{height: "25vh",zIndex:1e7,backgroundColor:"red"}}>
-      </div>
-    </ReactModal> */}
 
-    <ReactModal
-      closeTimeoutMS={200}
-      isOpen={showSpawn}
-      onRequestClose={() => setShowSpawn(false)}
-      contentLabel="Create New Game"
-      overlayClassName="fixed inset-0 bg-black-50 z-10000"
-      className="insert-auto overflow-auto p-5 bg-gray-700 border max-w-lg mx-auto my-12 rounded-lg outline-none"
-    >
-      <h1 className="mb-2">Spawn a card</h1>
-      <input style={{width:"50%"}} type="text" id="name" name="name" className="mb-6 mt-5" placeholder=" Card name..." onChange={handleSpawnTyping}></input>
-      {(spawnFilteredIDs.length) ? 
-        (spawnFilteredIDs.length>15) ?
-          <div className="text-white">Too many results</div> :
-          <table className="table-fixed rounded-lg w-full">
-            <thead>
-              <tr className="text-white bg-gray-800">
-                <th className="w-1/2">Name</th>
-                <th className="w-1/2">Set</th>
-              </tr>
-            </thead>
-            {spawnFilteredIDs.map((cardID, index) => {
-              const card = cardDB[cardID]
-              const sideA = cardDB[cardID]["sides"]["A"]
-              const printName = sideA.printName;
-              return(
-                <tr className="bg-gray-600 text-white cursor-pointer hover:bg-gray-500 hover:text-black" onClick={() => handleSpawnClick(cardID)}>
-                  <td className="p-1">{printName}</td>
-                  <td>{card.cardpackname}</td>
+      <ReactModal
+        closeTimeoutMS={200}
+        isOpen={showSpawn}
+        onRequestClose={() => setShowSpawn(false)}
+        contentLabel="Create New Game"
+        overlayClassName="fixed inset-0 bg-black-50 z-10000"
+        className="insert-auto overflow-auto p-5 bg-gray-700 border max-w-lg mx-auto my-12 rounded-lg outline-none"
+      >
+        <h1 className="mb-2">Spawn a card</h1>
+        <input style={{width:"50%"}} type="text" id="name" name="name" className="mb-6 mt-5" placeholder=" Card name..." onChange={handleSpawnTyping}></input>
+        {(spawnFilteredIDs.length) ? 
+          (spawnFilteredIDs.length>15) ?
+            <div className="text-white">Too many results</div> :
+            <table className="table-fixed rounded-lg w-full">
+              <thead>
+                <tr className="text-white bg-gray-800">
+                  <th className="w-1/2">Name</th>
+                  <th className="w-1/2">Set</th>
                 </tr>
-              );
-            })}
-          </table> :
-          <div className="text-white">No results</div>
-      }
-    </ReactModal>
+              </thead>
+              {spawnFilteredIDs.map((cardID, index) => {
+                const card = cardDB[cardID]
+                const sideA = cardDB[cardID]["sides"]["A"]
+                const printName = sideA.printName;
+                return(
+                  <tr className="bg-gray-600 text-white cursor-pointer hover:bg-gray-500 hover:text-black" onClick={() => handleSpawnClick(cardID)}>
+                    <td className="p-1">{printName}</td>
+                    <td>{card.cardpackname}</td>
+                  </tr>
+                );
+              })}
+            </table> :
+            <div className="text-white">No results</div>
+        }
+      </ReactModal>
 
-    {/* <Draggable>
-      <div style={{height:"200px",width:"800px",top:"0px",left:"0px",position:"relative",backgroundColor:"red",zIndex:1e7}}>
-        <GroupView group={groups['sharedExtra1']} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}
-        playerN={playerN} showTitle="false"></GroupView>
-      </div>
-    </Draggable> */}
-
-
-
-    </DragDropContext>
+    </div>
 
   );
 }

@@ -7,6 +7,7 @@ import GameUIContext from "../../contexts/GameUIContext";
 import { ChatMessage } from "elixir-backend";
 import { HandleKeyDown } from "./HandleKeyDown";
 import { GetPlayerN } from "./Helpers";
+import { DragContainer } from "./DragContainer";
 import useProfile from "../../hooks/useProfile";
 
 
@@ -87,7 +88,7 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
       />
-      <Table 
+      <DragContainer 
         playerN={playerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}

@@ -1,80 +1,50 @@
-// @flow
-
-// a little function to help us with reordering the result
+// A little function to help us with reordering the result
 const Reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
-
   return result;
 };
 
-export default Reorder;
+export const reorderGroupStackIds = (groupById, orig, dest) => {
+  const origGroupStackIds = groupById[orig.droppableId].stackIds;
+  const destGroupStackIds = groupById[dest.droppableId].stackIds;
+  const stack = origGroupStackIds[orig.index];
+  const stackId = stack.id;
 
-export const reorderGroups = ({ groups, source, destination }) => {
-  const sourceStacks = groups[source.droppableId].stacks;
-  const destStacks = groups[destination.droppableId].stacks;
-  const stack = sourceStacks[source.index];
-
-  // moving to same list
-  if (source.droppableId === destination.droppableId) {
-    const reorderedStacks = Reorder(sourceStacks, source.index, destination.index);
-    const newGroups = {
-      ...groups,
-      [source.droppableId]: {
-        ...groups[source.droppableId],
-        stacks: reorderedStacks
+  // Moving to same list
+  if (orig.droppableId === dest.droppableId) {
+    const reorderedStackIds = Reorder(origGroupStackIds, orig.index, dest.index);
+    const newGroupById = {
+      ...groupById,
+      [orig.droppableId]: {
+        ...groupById[orig.droppableId],
+        stackIds: reorderedStackIds
       }
     };
-    return {
-      groups: newGroups
-    };
+    return newGroupById;
   }
 
-  // moving to different list
+  // Moving to different list
 
-  // remove from original
-  const newSourceStacks = Array.from(sourceStacks);
-  newSourceStacks.splice(source.index, 1);
-  // insert into next
-  const newDestStacks = Array.from(destStacks);
-  newDestStacks.splice(destination.index, 0, stack);
+  // Remove from original
+  const newOrigGroupStackIds = Array.from(origGroupStackIds);
+  newOrigGroupStackIds.splice(orig.index, 1);
+  // Insert into next
+  const newDestGroupStackIds = Array.from(destGroupStackIds);
+  newDestGroupStackIds.splice(dest.index, 0, stack);
 
-  const newGroups = {
-    ...groups,
-    [source.droppableId]: {
-      ...groups[source.droppableId],
-      stacks: newSourceStacks,
+  const newGroupById = {
+    ...groupById,
+    [orig.droppableId]: {
+      ...groupById[orig.droppableId],
+      stackIds: newOrigGroupStackIds,
     },
-    [destination.droppableId]: {
-      ...groups[destination.droppableId],
-      stacks: newDestStacks,
+    [dest.droppableId]: {
+      ...groupById[dest.droppableId],
+      stackIds: newDestGroupStackIds,
     }
   };
 
-  return {
-    groups: newGroups
-  };
+  return newGroupById;
 };
-
-export function moveBetween({ list1, list2, source, destination }) {
-  const newFirst = Array.from(list1.values);
-  const newSecond = Array.from(list2.values);
-
-  const moveFrom = source.droppableId === list1.id ? newFirst : newSecond;
-  const moveTo = moveFrom === newFirst ? newSecond : newFirst;
-
-  const [moved] = moveFrom.splice(source.index, 1);
-  moveTo.splice(destination.index, 0, moved);
-
-  return {
-    list1: {
-      ...list1,
-      values: newFirst
-    },
-    list2: {
-      ...list2,
-      values: newSecond
-    }
-  };
-}

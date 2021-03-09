@@ -1,7 +1,10 @@
 
 import React, { useState, useEffect, useContext } from "react";
+import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from 'react-redux';
 import { setStackIds, setCardIds } from "./gameUiSlice";
+import { reorderGroupStackIds } from "./Reorder";
+import Table from "./Table";
 
 export const DragContainer = ({
   playerN,
@@ -13,7 +16,7 @@ export const DragContainer = ({
   const gameStore = state => state?.gameUi?.game;
   const dispatch = useDispatch();
   const game = useSelector(gameStore);
-  
+
   const onDragEnd = (result) => {
     console.log("drag end ",result);
     const groupById = game.groupById;
@@ -27,21 +30,22 @@ export const DragContainer = ({
     const topOfOrigStackCardId = origStackCardIds[0];
     const topOfOrigStackCard = game.cardById[topOfOrigStackCardId];
 
+    // Combine
     if (result.combine) {
       console.log("combine");
-      const destination = result.combine;
-      const destGroupId = destination.droppableId;
+      const dest = result.combine;
+      const destGroupId = dest.droppableId;
       const destGroupStackIds = groupById[destGroupId].stackIds;
       console.log(destGroupStackIds)
 
-      destination.index = -1;
+      dest.index = -1;
       for(var i=0; i<=destGroupStackIds.length; i++) {
-        if(destGroupStackIds[i] == destination.draggableId){
-          destination.index = i;
+        if(destGroupStackIds[i] == dest.draggableId){
+          dest.index = i;
         }
       }
-      if (!destination.index < 0) return;
-      const destStackId = destGroupStackIds[destination.index];
+      if (!dest.index < 0) return;
+      const destStackId = destGroupStackIds[dest.index];
       console.log(destStackId)
       const destStack = game.stackById[destStackId];
       console.log(destStack)
@@ -54,8 +58,7 @@ export const DragContainer = ({
       const newDestStackCardIds = destStackCardIds.concat(origStackCardIds);
       console.log(newDestStackCardIds)
 
-      console.log(origGroupId, orig.index, destGroupId, destination.index);
-      //dispatch()
+      console.log(origGroupId, orig.index, destGroupId, dest.index);
 
       const newDestStack = {
         ...destStack,
@@ -72,7 +75,6 @@ export const DragContainer = ({
       dispatch(setStackIds(newOrigGroup))
       dispatch(setCardIds(newDestStack))
 
-      //dispatch(setGroups(newGroups));
       //gameBroadcast("update_gameui",{gameui: newGameUi});    
       //chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[orig.droppableId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destination.droppableId].name+"."})
 
@@ -88,20 +90,25 @@ export const DragContainer = ({
       // return;
     }
 
-    // dropped nowhere
+    // Dropped nowhere
     if (!result.destination) {
       return;
     }
-    const destination = result.destination;
+    const dest = result.destination;
 
-    // did not move anywhere - can bail early
+    // Did not move anywhere - can bail early
     if (
-      orig.droppableId === destination.droppableId &&
-      orig.index === destination.index
+      orig.droppableId === dest.droppableId &&
+      orig.index === dest.index
     ) {
       return;
     }
 
+    // Moved to a different group
+    const newGroupById = reorderGroupStackIds(groupById, orig, dest);
+
+    dispatch(setStackIds(newGroupById[orig.droppableId]))
+    dispatch(setStackIds(newGroupById[dest.droppableId]))
     // const data = reorderGroups({
     //   groups: groupById,
     //   source: orig,
@@ -145,4 +152,15 @@ export const DragContainer = ({
     // });
   }
 
+  return(
+    <DragDropContext onDragEnd={onDragEnd}>
+      <Table
+        playerN={playerN}
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+        messages={messages}
+        setTyping={setTyping}
+      />
+    </DragDropContext>
+  )
 };
