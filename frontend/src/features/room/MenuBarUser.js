@@ -36,11 +36,7 @@ export const MenuBarUser = ({
 
   console.log("menubaruser ", playerN);
 
-
   const sittingUserID = playerIds[playerN];
-  console.log('rendering '+playerN);
-
-
 
   const handleThreatChange = (event) => {
     const newValue = event.target.value;

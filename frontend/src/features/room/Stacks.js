@@ -49,15 +49,12 @@ const StacksList = ({
   const pile = (groupType=="deck" || groupType=="discard")
   //return(<div>{groupType}</div>)
   // Truncate stacked piles
-  console.log("rendering stackslist ",pile, isDraggingOver, isDraggingFrom, stackIds, playerN, groupType, selectedStackIndices)
   var stackIdsToShow;
   if (pile && isDraggingOver && !isDraggingFrom) stackIdsToShow = [];
   else if (pile && stackIds.length>1) stackIdsToShow = [stackIds[0]]
   else stackIdsToShow = stackIds;
-  console.log("rendering stackslist ",stackIdsToShow, pile, isDraggingOver, isDraggingFrom, stackIds)
   if (!stackIdsToShow) return null;
   console.log('rendering stacks');
-  console.log(selectedStackIndices);
   return (
     stackIdsToShow?.map((stackId, stackIndex) => (
       (selectedStackIndices.includes(stackIndex)) ? (

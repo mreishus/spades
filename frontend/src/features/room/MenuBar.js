@@ -22,7 +22,7 @@ export const MenuBar = React.memo(({
     const game = useSelector(gameGroup);
     if (!game) return null;
     const groupById = game.groupById;
-    console.log("rendering menubar ",groupById)
+    console.log("rendering menubar")
 
     const handleMenuClick = (data) => {
       if (!playerN) {
@@ -76,7 +76,6 @@ export const MenuBar = React.memo(({
     }
     
     const sumStagingThreat = () => {
-      console.log(groupById)
       const stagingStackIds = groupById.sharedStaging.stackIds;
       var stagingThreat = 0;
       stagingStackIds.forEach(stackId => {

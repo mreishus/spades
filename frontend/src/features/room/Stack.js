@@ -51,7 +51,7 @@ export const Stack = ({
   const stack = useSelector(stackStore);
   if (!stack) return null;
   const cardIds = stack.cardIds;
-  console.log('Stack',stack);
+  console.log('rendering stack ',stackIndex);
   // Calculate size of stack for proper spacing. Changes base on group type and number of stack in group.
   const numStacksNonZero = numStacks > 0 ? numStacks : 1;
   var handSpacing = 100*0.8*0.8*0.8/(numStacksNonZero);

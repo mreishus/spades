@@ -102,7 +102,7 @@ export const Card = React.memo(({
     //     if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
     // }, [inputCard]);
 
-    console.log('rendering card ',card);
+    console.log('rendering card ',card.name);
     // const [, updateState] = React.useState();
     // const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
@@ -161,13 +161,13 @@ export const Card = React.memo(({
         else if (data.action === "move_card") {
             const destGroupTitle = GROUPSINFO[data.destGroupId].name;
             if (data.position === "t") {
-                gameBroadcast("card_action", {action: "move_card", options: [data.destGroupId, 0, 0, true, false]})
+                gameBroadcast("card_action", {action: "move_card", card_id: card.id, options: [data.destGroupId, 0, 0, false, false]})
                 chatBroadcast("game_update",{message: "moved "+displayName+" to top of "+destGroupTitle+"."})
             } else if (data.position === "b") {
-                gameBroadcast("card_action", {action: "move_card", options: [data.destGroupId, -1, 0, true, false]})
+                gameBroadcast("card_action", {action: "move_card", card_id: card.id, options: [data.destGroupId, -1, 0, false, false]})
                 chatBroadcast("game_update",{message: "moved "+displayName+" to bottom of "+destGroupTitle+"."})
             } else if (data.position === "s") {
-                gameBroadcast("card_action", {action: "move_card", options: [data.destGroupId, 0, 0, true, false]})
+                gameBroadcast("card_action", {action: "move_card", card_id: card.id, options: [data.destGroupId, 0, 0, false, false]})
                 gameBroadcast("shuffle_group", {group_id: data.destGroupId})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" into "+destGroupTitle+"."})
             }
@@ -251,9 +251,9 @@ export const Card = React.memo(({
                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
                     <SubMenu title="Owner's Deck">
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "g"+card.owner+"Deck", position: "t"}}>Top</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "g"+card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "g"+card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "t"}}>Top</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
                     </SubMenu>
                     <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', destGroupId: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
                 </SubMenu>

@@ -19,6 +19,7 @@ import Dropdown from 'react-dropdown';
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { PlayerBar } from "./PlayerBar";
 import { PhaseBar } from "./PhaseBar";
+import { setStackIds, setCardIds } from "./gameUiSlice";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -40,7 +41,7 @@ export const Table = ({
   const dispatch = useDispatch();
   const gameUi = useSelector(gameUiStore);
   //const { gameUi, setGameUi } = useContext(GameUiContext);
-  const [groupById, setGroups] = useState(gameUi.game["groupById"]);
+  //const [groupById, setGroups] = useState(gameUi.game["groupById"]);
   const [showScratch, setShowScratch] = useState(false);
   const [showSpawn, setShowSpawn] = useState(false);
   const [chatHover, setChatHover] = useState(false);
@@ -91,65 +92,71 @@ export const Table = ({
   //   if (num!==phase) setPhase(num);
   // }
 
-  useEffect(() => {
-     setGroups(gameUi.game["groupById"]);
-  }, [gameUi.game["groupById"]]);
+  // useEffect(() => {
+  //    setGroups(gameUi.game["groupById"]);
+  // }, [gameUi.game["groupById"]]);
 
   const onDragEnd = (result) => {
-    const source = result.source;
-    const sourceStacks = groupById[source.droppableId].stacks;
-    const sourceStack = sourceStacks[source.index];    
-    const topOfSourceStack = sourceStack.cards[0];
-    const topCardNameSource = topOfSourceStack["sides"][topOfSourceStack["currentSide"]].printName;
+    console.log("drag end ",result);
+    const groupById = gameUi.game.groupById;
+    const orig = result.source;
+    const origGroupId = orig.droppableId;
+    const origGroup = groupById[origGroupId];
+    const origGroupStackIds = origGroup.stackIds;
+    const origStackId = origGroupStackIds[orig.index];    
+    const origStack = gameUi.game.stackById[origStackId];
+    const origStackCardIds = origStack.cardIds;
+    const topOfOrigStackCardId = origStackCardIds[0];
+    const topOfOrigStackCard = gameUi.game.cardById[topOfOrigStackCardId];
 
     if (result.combine) {
+      console.log("combine");
       const destination = result.combine;
-      const destStacks = groupById[destination.droppableId].stacks;
+      const destGroupId = destination.droppableId;
+      const destGroupStackIds = groupById[destGroupId].stackIds;
+      console.log(destGroupStackIds)
 
-      for(var i in destStacks) {
-        if(destStacks[i].id == destination.draggableId){
+      destination.index = -1;
+      for(var i=0; i<=destGroupStackIds.length; i++) {
+        if(destGroupStackIds[i] == destination.draggableId){
           destination.index = i;
-          destStack = destStacks[i];
         }
       }
-      if (!destination.index) return;
-      var destStack = destStacks[destination.index];
-      const topOfDestStack = destStack.cards[0];
-      const topCardNameDest = topOfDestStack["sides"][topOfDestStack["currentSide"]].printName;
-      // remove from original
-      const newDestStackCards = destStack.cards.concat(sourceStack.cards);
+      if (!destination.index < 0) return;
+      const destStackId = destGroupStackIds[destination.index];
+      console.log(destStackId)
+      const destStack = gameUi.game.stackById[destStackId];
+      console.log(destStack)
+      const destStackCardIds = destStack.cardIds;
+      console.log(destStackCardIds)
+      const topOfDestStackCardId = destStackCardIds[0];
+      console.log(topOfDestStackCardId)
+      const topOfDestStackCard = gameUi.game.cardById[topOfDestStackCardId];
+      console.log(topOfDestStackCard)
+      const newDestStackCardIds = destStackCardIds.concat(origStackCardIds);
+      console.log(newDestStackCardIds)
+
+      console.log(origGroupId, orig.index, destGroupId, destination.index);
+      //dispatch()
+
       const newDestStack = {
         ...destStack,
-        cards: newDestStackCards,
+        cardIds: newDestStackCardIds,
       }
-      const newDestStacks = Array.from(destStacks);
-      newDestStacks[destination.index] = newDestStack;
 
-      const newSourceStacks = Array.from(source.droppableId === destination.droppableId ? newDestStacks : sourceStacks);
-      newSourceStacks.splice(source.index, 1);
+      const newOrigGroupStackIds = Array.from(origGroupStackIds);
+      newOrigGroupStackIds.splice(orig.index, 1);
 
-      const newGroups = {
-        ...groupById,
-        [destination.droppableId]: {
-          ...groupById[destination.droppableId],
-          stacks: newDestStacks,
-        },
-        [source.droppableId]: {
-          ...groupById[source.droppableId],
-          stacks: newSourceStacks,
-        },
-      };
-      const newGameUi = {
-        ...gameUi,
-        game: {
-          ...gameUi.game,
-          groups: newGroups
-        }
+      const newOrigGroup = {
+        ...origGroup,
+        stackIds: newOrigGroupStackIds
       }   
-      
-      dispatch(setGroups(newGroups));
-      gameBroadcast("update_gameui",{gameui: newGameUi});    
-      chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfSourceStack)+" from "+GROUPSINFO[source.droppableId].name+" to "+getDisplayName(topOfDestStack)+" in "+GROUPSINFO[destination.droppableId].name+"."})
+      dispatch(setStackIds(newOrigGroup))
+      dispatch(setCardIds(newDestStack))
+
+      //dispatch(setGroups(newGroups));
+      //gameBroadcast("update_gameui",{gameui: newGameUi});    
+      //chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[orig.droppableId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destination.droppableId].name+"."})
  
 
       // const column = state.columns[result.source.droppableId];
@@ -171,15 +178,15 @@ export const Table = ({
 
     // did not move anywhere - can bail early
     if (
-      source.droppableId === destination.droppableId &&
-      source.index === destination.index
+      orig.droppableId === destination.droppableId &&
+      orig.index === destination.index
     ) {
       return;
     }
 
     const data = reorderGroups({
       groups: groupById,
-      source,
+      source: orig,
       destination
     });
 
@@ -190,19 +197,19 @@ export const Table = ({
         "groupById": data["groupById"]
       }
     }   
-    dispatch(setGroups(data["groupById"]))
+    //dispatch(setGroups(data["groupById"]))
     //setGroups(newGroups);
-    gameBroadcast("move_stack",{
-      orig_group_id: source.droppableId, 
-      orig_stack_index: source.index, 
-      dest_group_id: destination.droppableId, 
-      dest_stack_index: destination.index,
-      preserve_state: false,
-    });
-    const sourceGroupTitle = GROUPSINFO[source.droppableId].name;
-    const destGroupTitle = GROUPSINFO[destination.droppableId].name;
-    if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfSourceStack)+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
-    //gameBroadcast("update_gameui",{gameui: newGameUi});
+    // gameBroadcast("move_stack",{
+    //   orig_group_id: orig.droppableId, 
+    //   orig_stack_index: orig.index, 
+    //   dest_group_id: destination.droppableId, 
+    //   dest_stack_index: destination.index,
+    //   preserve_state: false,
+    // });
+    // const sourceGroupTitle = GROUPSINFO[orig.droppableId].name;
+    // const destGroupTitle = GROUPSINFO[destination.droppableId].name;
+    // if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCardId)+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
+    // //gameBroadcast("update_gameui",{gameui: newGameUi});
 
 
     // setGroups(data["groupById"]);
@@ -393,7 +400,7 @@ export const Table = ({
                   boxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
                 }}>
                 <PlayerBar
-                  groups={groupById}
+                  groups={gameUi.game.groupById}
                   observingPlayerN={observingPlayerN}
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
