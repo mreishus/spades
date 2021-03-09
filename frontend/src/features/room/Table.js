@@ -20,6 +20,7 @@ import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { PlayerBar } from "./PlayerBar";
 import { PhaseBar } from "./PhaseBar";
 import { setStackIds, setCardIds } from "./gameUiSlice";
+import { HandleDragStack } from "./HandleDragStack";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -97,135 +98,140 @@ export const Table = ({
   // }, [gameUi.game["groupById"]]);
 
   const onDragEnd = (result) => {
-    console.log("drag end ",result);
-    const groupById = gameUi.game.groupById;
-    const orig = result.source;
-    const origGroupId = orig.droppableId;
-    const origGroup = groupById[origGroupId];
-    const origGroupStackIds = origGroup.stackIds;
-    const origStackId = origGroupStackIds[orig.index];    
-    const origStack = gameUi.game.stackById[origStackId];
-    const origStackCardIds = origStack.cardIds;
-    const topOfOrigStackCardId = origStackCardIds[0];
-    const topOfOrigStackCard = gameUi.game.cardById[topOfOrigStackCardId];
+    return(<HandleDragStack result={result}/>);
+  }
 
-    if (result.combine) {
-      console.log("combine");
-      const destination = result.combine;
-      const destGroupId = destination.droppableId;
-      const destGroupStackIds = groupById[destGroupId].stackIds;
-      console.log(destGroupStackIds)
 
-      destination.index = -1;
-      for(var i=0; i<=destGroupStackIds.length; i++) {
-        if(destGroupStackIds[i] == destination.draggableId){
-          destination.index = i;
-        }
-      }
-      if (!destination.index < 0) return;
-      const destStackId = destGroupStackIds[destination.index];
-      console.log(destStackId)
-      const destStack = gameUi.game.stackById[destStackId];
-      console.log(destStack)
-      const destStackCardIds = destStack.cardIds;
-      console.log(destStackCardIds)
-      const topOfDestStackCardId = destStackCardIds[0];
-      console.log(topOfDestStackCardId)
-      const topOfDestStackCard = gameUi.game.cardById[topOfDestStackCardId];
-      console.log(topOfDestStackCard)
-      const newDestStackCardIds = destStackCardIds.concat(origStackCardIds);
-      console.log(newDestStackCardIds)
+  // const onDragEnd = (result) => {
+  //   console.log("drag end ",result);
+  //   const groupById = gameUi.game.groupById;
+  //   const orig = result.source;
+  //   const origGroupId = orig.droppableId;
+  //   const origGroup = groupById[origGroupId];
+  //   const origGroupStackIds = origGroup.stackIds;
+  //   const origStackId = origGroupStackIds[orig.index];    
+  //   const origStack = gameUi.game.stackById[origStackId];
+  //   const origStackCardIds = origStack.cardIds;
+  //   const topOfOrigStackCardId = origStackCardIds[0];
+  //   const topOfOrigStackCard = gameUi.game.cardById[topOfOrigStackCardId];
 
-      console.log(origGroupId, orig.index, destGroupId, destination.index);
-      //dispatch()
+  //   if (result.combine) {
+  //     console.log("combine");
+  //     const destination = result.combine;
+  //     const destGroupId = destination.droppableId;
+  //     const destGroupStackIds = groupById[destGroupId].stackIds;
+  //     console.log(destGroupStackIds)
 
-      const newDestStack = {
-        ...destStack,
-        cardIds: newDestStackCardIds,
-      }
+  //     destination.index = -1;
+  //     for(var i=0; i<=destGroupStackIds.length; i++) {
+  //       if(destGroupStackIds[i] == destination.draggableId){
+  //         destination.index = i;
+  //       }
+  //     }
+  //     if (!destination.index < 0) return;
+  //     const destStackId = destGroupStackIds[destination.index];
+  //     console.log(destStackId)
+  //     const destStack = gameUi.game.stackById[destStackId];
+  //     console.log(destStack)
+  //     const destStackCardIds = destStack.cardIds;
+  //     console.log(destStackCardIds)
+  //     const topOfDestStackCardId = destStackCardIds[0];
+  //     console.log(topOfDestStackCardId)
+  //     const topOfDestStackCard = gameUi.game.cardById[topOfDestStackCardId];
+  //     console.log(topOfDestStackCard)
+  //     const newDestStackCardIds = destStackCardIds.concat(origStackCardIds);
+  //     console.log(newDestStackCardIds)
 
-      const newOrigGroupStackIds = Array.from(origGroupStackIds);
-      newOrigGroupStackIds.splice(orig.index, 1);
+  //     console.log(origGroupId, orig.index, destGroupId, destination.index);
+  //     //dispatch()
 
-      const newOrigGroup = {
-        ...origGroup,
-        stackIds: newOrigGroupStackIds
-      }   
-      dispatch(setStackIds(newOrigGroup))
-      dispatch(setCardIds(newDestStack))
+  //     const newDestStack = {
+  //       ...destStack,
+  //       cardIds: newDestStackCardIds,
+  //     }
 
-      //dispatch(setGroups(newGroups));
-      //gameBroadcast("update_gameui",{gameui: newGameUi});    
-      //chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[orig.droppableId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destination.droppableId].name+"."})
+  //     const newOrigGroupStackIds = Array.from(origGroupStackIds);
+  //     newOrigGroupStackIds.splice(orig.index, 1);
+
+  //     const newOrigGroup = {
+  //       ...origGroup,
+  //       stackIds: newOrigGroupStackIds
+  //     }   
+  //     dispatch(setStackIds(newOrigGroup))
+  //     dispatch(setCardIds(newDestStack))
+
+  //     //dispatch(setGroups(newGroups));
+  //     //gameBroadcast("update_gameui",{gameui: newGameUi});    
+  //     //chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[orig.droppableId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destination.droppableId].name+"."})
  
 
-      // const column = state.columns[result.source.droppableId];
-      // const withQuoteRemoved = [...column];
-      // withQuoteRemoved.splice(result.source.index, 1);
-      // const columns = {
-      //   ...state.columns,
-      //   [result.source.droppableId]: withQuoteRemoved
-      // };
-      // setState({ columns, ordered: state.ordered });
-      // return;
-    }
+  //     // const column = state.columns[result.source.droppableId];
+  //     // const withQuoteRemoved = [...column];
+  //     // withQuoteRemoved.splice(result.source.index, 1);
+  //     // const columns = {
+  //     //   ...state.columns,
+  //     //   [result.source.droppableId]: withQuoteRemoved
+  //     // };
+  //     // setState({ columns, ordered: state.ordered });
+  //     // return;
+  //   }
 
-    // dropped nowhere
-    if (!result.destination) {
-      return;
-    }
-    const destination = result.destination;
+  //   // dropped nowhere
+  //   if (!result.destination) {
+  //     return;
+  //   }
+  //   const destination = result.destination;
 
-    // did not move anywhere - can bail early
-    if (
-      orig.droppableId === destination.droppableId &&
-      orig.index === destination.index
-    ) {
-      return;
-    }
+  //   // did not move anywhere - can bail early
+  //   if (
+  //     orig.droppableId === destination.droppableId &&
+  //     orig.index === destination.index
+  //   ) {
+  //     return;
+  //   }
 
-    const data = reorderGroups({
-      groups: groupById,
-      source: orig,
-      destination
-    });
+  //   const data = reorderGroups({
+  //     groups: groupById,
+  //     source: orig,
+  //     destination
+  //   });
 
-    const newGameUi = {
-      ...gameUi,
-      "game": {
-        ...gameUi.game,
-        "groupById": data["groupById"]
-      }
-    }   
-    //dispatch(setGroups(data["groupById"]))
-    //setGroups(newGroups);
-    // gameBroadcast("move_stack",{
-    //   orig_group_id: orig.droppableId, 
-    //   orig_stack_index: orig.index, 
-    //   dest_group_id: destination.droppableId, 
-    //   dest_stack_index: destination.index,
-    //   preserve_state: false,
-    // });
-    // const sourceGroupTitle = GROUPSINFO[orig.droppableId].name;
-    // const destGroupTitle = GROUPSINFO[destination.droppableId].name;
-    // if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCardId)+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
-    // //gameBroadcast("update_gameui",{gameui: newGameUi});
+  //   const newGameUi = {
+  //     ...gameUi,
+  //     "game": {
+  //       ...gameUi.game,
+  //       "groupById": data["groupById"]
+  //     }
+  //   }   
+  //   //dispatch(setGroups(data["groupById"]))
+  //   //setGroups(newGroups);
+  //   // gameBroadcast("move_stack",{
+  //   //   orig_group_id: orig.droppableId, 
+  //   //   orig_stack_index: orig.index, 
+  //   //   dest_group_id: destination.droppableId, 
+  //   //   dest_stack_index: destination.index,
+  //   //   preserve_state: false,
+  //   // });
+  //   // const sourceGroupTitle = GROUPSINFO[orig.droppableId].name;
+  //   // const destGroupTitle = GROUPSINFO[destination.droppableId].name;
+  //   // if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCardId)+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
+  //   // //gameBroadcast("update_gameui",{gameui: newGameUi});
 
 
-    // setGroups(data["groupById"]);
-    // // gameBroadcast(
-    // //   "update_2_groups",
-    // //   {
-    // //     groupId1: source.droppableId,
-    // //     groupIndex1: data["groupById"][source.droppableId],
-    // //     groupId2: destination.droppableId,
-    // //     groupIndex2: data["groupById"][destination.droppableId],
-    // // })
-    // setState({
-    //   columns: data.quoteMap,
-    //   ordered: state.ordered
-    // });
-  };
+  //   // setGroups(data["groupById"]);
+  //   // // gameBroadcast(
+  //   // //   "update_2_groups",
+  //   // //   {
+  //   // //     groupId1: source.droppableId,
+  //   // //     groupIndex1: data["groupById"][source.droppableId],
+  //   // //     groupId2: destination.droppableId,
+  //   // //     groupIndex2: data["groupById"][destination.droppableId],
+  //   // // })
+  //   // setState({
+  //   //   columns: data.quoteMap,
+  //   //   ordered: state.ordered
+  //   // });
+  // };
 
   return (
     <DragDropContext

@@ -2,6 +2,7 @@ import React, { useEffect} from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
+import { setGame } from "./gameUiSlice";
 import { 
     getDisplayName, 
     getDisplayNameFlipped, 
@@ -34,6 +35,7 @@ export const HandleKeyDown = ({
 }) => {
     const gameUiStore = state => state?.gameUi;
     const gameUi = useSelector(gameUiStore);
+    const dispatch = useDispatch();
 
     const activeCardAndLoc = useActiveCard();
     const setActiveCardAndLoc = useSetActiveCard();
@@ -308,6 +310,7 @@ export const HandleKeyDown = ({
                         create_new_stack: true
                     })
                 }
+                //dispatch(setGame(gameUi.game));
             }
             // Shufle card into owner's deck
             else if (k === "h") {
