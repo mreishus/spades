@@ -36,7 +36,7 @@ const Container = styled.div`
 `;
 /* stylelint-enable */
 
-const StacksList = ({
+const StacksList = React.memo(({
   isDraggingOver,
   isDraggingFrom,
   gameBroadcast,
@@ -70,9 +70,9 @@ const StacksList = ({
       ) : null 
     ))
   ) 
-};
+});
 
-export const Stacks = ({
+export const Stacks = React.memo(({
   gameBroadcast,
   chatBroadcast,
   playerN,
@@ -124,6 +124,6 @@ export const Stacks = ({
       )}
     </Droppable>
   )
-} 
+})
 
 

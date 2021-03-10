@@ -102,7 +102,6 @@ export const Card = React.memo(({
     //     if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
     // }, [inputCard]);
 
-    console.log('rendering card ',card.name);
     // const [, updateState] = React.useState();
     // const forceUpdate = React.useCallback(() => updateState({}), []);
     const setActiveCard = useSetActiveCard();
@@ -175,6 +174,7 @@ export const Card = React.memo(({
     }
     
     const currentFace = getCurrentFace(card);
+    console.log('rendering card ',currentFace.name);
     return (
         <div>
             <ContextMenuTrigger id={card.id} holdToDisplay={500}> 

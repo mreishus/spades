@@ -38,7 +38,7 @@ function getStyle(provided, style) {
 // things we should be doing in the selector as we do not know if consumers
 // will be using PureComponent
 
-export const Stack = ({
+export const Stack = React.memo(({
   gameBroadcast,
   chatBroadcast,
   playerN,
@@ -88,4 +88,4 @@ export const Stack = ({
       )}
     </Draggable>
   );
-}
+})

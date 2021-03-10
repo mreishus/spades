@@ -15,7 +15,7 @@ const gameUiSlice = createSlice({
       state.game.groupById[payload.id] = payload;
     },
     setStackIds: (state, { payload }) => {
-      console.log("setting stack", payload)
+      console.log("setting stackIds", payload)
       state.game.groupById[payload.id].stackIds = payload.stackIds;
     },
     setStack: (state, { payload }) => {
@@ -23,7 +23,7 @@ const gameUiSlice = createSlice({
       state.game.stackById[payload.id] = payload;
     },
     setCardIds: (state, { payload }) => {
-      console.log("setting stack", payload)
+      console.log("setting cardId", payload)
       state.game.stackById[payload.id].cardIds = payload.cardIds;
     },
     setPlayerIds: (state, { payload }) => {

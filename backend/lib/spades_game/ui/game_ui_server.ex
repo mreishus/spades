@@ -101,10 +101,10 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   move_stack/7: A player just moved a stack.
   """
-  @spec move_stack(String.t(), integer, String.t(), number, String.t(), number, String.t()) :: GameUI.t()
-  def move_stack(game_name, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index, preserve_state) do
+  @spec move_stack(String.t(), integer, String.t(), String.t(), number, boolean, boolean) :: GameUI.t()
+  def move_stack(game_name, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state) do
     IO.puts("game_ui_server: move_stack")
-    GenServer.call(via_tuple(game_name), {:move_stack, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index, preserve_state})
+    GenServer.call(via_tuple(game_name), {:move_stack, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state})
   end
 
   @doc """
@@ -186,6 +186,15 @@ defmodule SpadesGame.GameUIServer do
   def card_action(game_name, user_id, action, card_id, options) do
     IO.puts("game_ui_server: card_action")
     GenServer.call(via_tuple(game_name), {:card_action, user_id, action, card_id, options})
+  end
+
+  @doc """
+  update_value/5: A player just updated a value.
+  """
+  @spec update_value(String.t(), integer, List.t(), any) :: GameUI.t()
+  def update_value(game_name, user_id, path, value) do
+    IO.puts("game_ui_server: update_value")
+    GenServer.call(via_tuple(game_name), {:update_value, user_id, path, value})
   end
 
   @doc """
@@ -353,8 +362,8 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
-  def handle_call({:move_stack, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index, preserve_state}, _from, gameui) do
-    GameUI.move_stack(gameui, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index, preserve_state)
+  def handle_call({:move_stack, game_name, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state}, _from, gameui) do
+    GameUI.move_stack(gameui, stack_id, dest_group_id, dest_stack_index, combine, preserve_state)
     |> save_and_reply()
   end
 
@@ -404,6 +413,12 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:card_action, user_id, action, card_id, options}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: card_action a")
     GameUI.card_action(gameui, action, card_id, options)
+    |> save_and_reply()
+  end
+
+  def handle_call({:update_value, user_id, path, value}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: update_value a")
+    GameUI.update_value(gameui, path, value)
     |> save_and_reply()
   end
 

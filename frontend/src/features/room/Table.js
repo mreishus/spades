@@ -27,7 +27,7 @@ const WidthContainer = styled.div`
   height: 100%;
 `;
 
-export const Table = ({
+export const Table = React.memo(({
   playerN,
   gameBroadcast,
   chatBroadcast,
@@ -524,9 +524,7 @@ export const Table = ({
     </div>
 
   );
-}
-
-export default Table;
+})
 
 
 

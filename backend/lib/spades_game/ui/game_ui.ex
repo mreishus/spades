@@ -165,8 +165,25 @@ defmodule SpadesGame.GameUI do
       _ ->
         gameui
     end
-    IO.puts("new gameui")
-    IO.inspect(gameui)
+  end
+
+  def update_value(gameui, path, value) do
+    case Enum.count(path) do
+      1 ->
+        put_in(gameui[Enum.at(path,0)], value)
+      2 ->
+        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)], value)
+      3 ->
+        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)], value)
+      4 ->
+        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)], value)
+      5 ->
+        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)][Enum.at(path,4)], value)
+      6 ->
+        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)][Enum.at(path,4)][Enum.at(path,5)], value)
+      _ ->
+        gameui
+    end
   end
 
   def increment_token(gameui, card, options) do
@@ -395,7 +412,7 @@ defmodule SpadesGame.GameUI do
   #   end)
   # end
 
-  def move_stack(gameui, stack_id, dest_group_id, dest_stack_index, combine \\ false, preserve_state \\ true) do
+  def move_stack(gameui, stack_id, dest_group_id, dest_stack_index, combine \\ false, preserve_state \\ false) do
     orig_group_id = get_group_by_stack_id(gameui, stack_id)["id"]
     orig_stack_index = get_stack_index_by_stack_id(gameui, stack_id)
     # If destination is negative, count backward from the end

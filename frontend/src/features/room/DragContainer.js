@@ -4,7 +4,9 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from 'react-redux';
 import { setStackIds, setCardIds } from "./gameUiSlice";
 import { reorderGroupStackIds } from "./Reorder";
-import Table from "./Table";
+import { Table } from "./Table";
+import { GROUPSINFO } from "./Constants"
+import { getDisplayName, getCurrentFace } from "./Helpers"
 
 export const DragContainer = ({
   playerN,
@@ -74,20 +76,11 @@ export const DragContainer = ({
       }   
       dispatch(setStackIds(newOrigGroup))
       dispatch(setCardIds(newDestStack))
-
+      gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newOrigGroupStackIds})
+      gameBroadcast("update_value", {path: ["game", "stackById", destStackId, "cardIds"], value: newDestStackCardIds})
+      chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."})
       //gameBroadcast("update_gameui",{gameui: newGameUi});    
-      //chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[orig.droppableId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destination.droppableId].name+"."})
-
-
-      // const column = state.columns[result.source.droppableId];
-      // const withQuoteRemoved = [...column];
-      // withQuoteRemoved.splice(result.source.index, 1);
-      // const columns = {
-      //   ...state.columns,
-      //   [result.source.droppableId]: withQuoteRemoved
-      // };
-      // setState({ columns, ordered: state.ordered });
-      // return;
+      
     }
 
     // Dropped nowhere
@@ -95,6 +88,7 @@ export const DragContainer = ({
       return;
     }
     const dest = result.destination;
+    const destGroupId = dest.droppableId;
 
     // Did not move anywhere - can bail early
     if (
@@ -104,52 +98,32 @@ export const DragContainer = ({
       return;
     }
 
-    // Moved to a different group
+    // Moved to a different spot
     const newGroupById = reorderGroupStackIds(groupById, orig, dest);
 
-    dispatch(setStackIds(newGroupById[orig.droppableId]))
-    dispatch(setStackIds(newGroupById[dest.droppableId]))
-    // const data = reorderGroups({
-    //   groups: groupById,
-    //   source: orig,
-    //   destination
-    // });
+    dispatch(setStackIds(newGroupById[origGroupId]))
+    gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newGroupById[origGroupId].stackIds})
+    if (origGroupId != destGroupId) {
+      dispatch(setStackIds(newGroupById[destGroupId]))
+      gameBroadcast("update_value", {path: ["game", "groupById", destGroupId, "stackIds"], value: newGroupById[destGroupId].stackIds})
+      const origGroupTitle = GROUPSINFO[origGroupId].name;
+      const destGroupTitle = GROUPSINFO[destGroupId].name;
+      chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."})
+    }
 
-    // const newGameUi = {
-    //   ...gameUi,
-    //   "game": {
-    //     ...game,
-    //     "groupById": data["groupById"]
-    //   }
-    // }   
-    //dispatch(setGroups(data["groupById"]))
-    //setGroups(newGroups);
-    // gameBroadcast("move_stack",{
-    //   orig_group_id: orig.droppableId, 
-    //   orig_stack_index: orig.index, 
-    //   dest_group_id: destination.droppableId, 
-    //   dest_stack_index: destination.index,
-    //   preserve_state: false,
-    // });
+/*     gameBroadcast("move_stack",{
+      orig_group_id: orig.droppableId, 
+      orig_stack_index: orig.index, 
+      dest_group_id: destination.droppableId, 
+      dest_stack_index: destination.index,
+      preserve_state: false,
+    }); */
     // const sourceGroupTitle = GROUPSINFO[orig.droppableId].name;
     // const destGroupTitle = GROUPSINFO[destination.droppableId].name;
-    // if (sourceGroupTitle != destGroupTitle) chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCardId)+" from "+sourceGroupTitle+" to "+destGroupTitle+"."})
+    // if (sourceGroupTitle != destGroupTitle) 
     // //gameBroadcast("update_gameui",{gameui: newGameUi});
 
 
-    // setGroups(data["groupById"]);
-    // // gameBroadcast(
-    // //   "update_2_groups",
-    // //   {
-    // //     groupId1: source.droppableId,
-    // //     groupIndex1: data["groupById"][source.droppableId],
-    // //     groupId2: destination.droppableId,
-    // //     groupIndex2: data["groupById"][destination.droppableId],
-    // // })
-    // setState({
-    //   columns: data.quoteMap,
-    //   ordered: state.ordered
-    // });
   }
 
   return(
