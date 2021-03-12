@@ -86,7 +86,6 @@ export const Table = React.memo(({
 
     <div className="h-full flex">
       <PhaseBar
-        gameUi={gameUi}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
       ></PhaseBar>

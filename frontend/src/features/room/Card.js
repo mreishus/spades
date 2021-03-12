@@ -95,8 +95,8 @@ export const Card = React.memo(({
     playerN,
     cardIndex,
 }) => {
-    const storeCard = state => state?.gameUi?.game?.cardById[cardId];
-    const card = useSelector(storeCard);
+    const cardStore = state => state?.gameUi?.game?.cardById[cardId];
+    const card = useSelector(cardStore);
     if (!card) return null;
     // useEffect(() => {    
     //     if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
@@ -154,7 +154,7 @@ export const Card = React.memo(({
 
     function handleMenuClick(e, data) {
         if (data.action === "detach") {
-            gameBroadcast("card_action", {action: "detach", options: [cardId]})
+            gameBroadcast("card_action", {action: "detach", card_id: card.id, options: [cardId]})
             chatBroadcast("game_update", {message: "detached "+displayName+"."})
         }
         else if (data.action === "move_card") {
@@ -216,14 +216,14 @@ export const Card = React.memo(({
                 <CardMouseRegion 
                     position={"top"}
                     top={"0%"}
-                    cardId={card.id}
+                    card={card}
                     setIsActive={setIsActive}
                 />
                 
                 <CardMouseRegion 
                     position={"bottom"}
                     top={"50%"}
-                    cardId={card.id}
+                    card={card}
                     setIsActive={setIsActive}
                 />
                 { isActive && (

@@ -5,7 +5,7 @@ import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContex
 export const CardMouseRegion = React.memo(({
     position,
     top,
-    cardId,
+    card,
     setIsActive
 }) => {
     //const activeCard = useActiveCard();
@@ -14,7 +14,7 @@ export const CardMouseRegion = React.memo(({
     const handleMouseOver = (event, mousePosition) => {
         const screenPosition = event.clientX > (window.innerWidth/2) ? "right" : "left";
         setActiveCard({
-            cardId: cardId,
+            card: card,
             mousePosition: mousePosition, 
             screenPosition: screenPosition,
         });

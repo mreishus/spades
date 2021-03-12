@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 var delayBroadcast;
 
-export const Token = ({
+export const Token = React.memo(({
     tokensId,
     cardName,
     type,
@@ -167,6 +167,4 @@ export const Token = ({
             </div>
         </div>
     )
-  }
-  
-  export default Token;
+})

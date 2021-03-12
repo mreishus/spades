@@ -17,6 +17,8 @@ const arraysEqual = (a, b) => {
 }
 
 const deepUpdate = (obj1, obj2) => {
+  // If obj is undefined, don't update
+  //if (!obj2) return;
   // If they are already equal, we are done
   if (obj1 === obj2) return;
   // First we delete properties from obj1 that no longer exist
@@ -65,6 +67,39 @@ const deepUpdate = (obj1, obj2) => {
   }
 } 
 
+const updateValue = (obj, path, value) => {
+  const pathLength = path.length;
+  switch(pathLength) {
+    case 0:
+      break;
+    case 1:
+      obj[path[0]] = value;
+      break;
+    case 2:
+      obj[path[0]][path[1]] = value;
+      break;
+    case 3:
+      obj[path[0]][path[1]][path[2]] = value;
+      break;
+    case 4:
+      obj[path[0]][path[1]][path[2]][path[3]] = value;
+      break;
+    case 5:
+      obj[path[0]][path[1]][path[2]][path[3]][path[4]] = value;
+      break;
+    case 6:
+      obj[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]] = value;
+      break;
+  }
+}
+
+const updateValues = (obj, paths, values) => {
+  const numValues = values.length;
+  for (var i = 0; i < numValues; i++) {
+    updateValue(obj, paths[i], values[i])
+  }
+}
+
 const initialState = {"count": 1};
 
 const gameUiSlice = createSlice({
@@ -72,50 +107,52 @@ const gameUiSlice = createSlice({
   initialState,
   reducers: {
     setGame: (state, { payload }) => {
-      console.log("setting game", payload);
+      console.log("setting game");
+      console.log(state.game);
+      console.log(payload);
       if (!state.game) {
         state.game = payload;
       } else {
-        deepUpdate(state.game, payload);
+        deepUpdate(state.game);
       }
       console.log(state.game);
     },
     setGroupById: (state, { payload }) => {
-      console.log("setting groupById", payload)
+      console.log("setting groupById")
       state.game.groupById = payload;
     },
     setGroup: (state, { payload }) => {
-      console.log("setting group", payload)
+      console.log("setting group")
       state.game.groupById[payload.id] = payload;
     },
     setStackIds: (state, { payload }) => {
-      console.log("setting stackIds", payload)
+      console.log("setting stackIds")
       state.game.groupById[payload.id].stackIds = payload.stackIds;
     },
     setStack: (state, { payload }) => {
-      console.log("setting stack", payload)
+      console.log("setting stack")
       state.game.stackById[payload.id] = payload;
     },
     setCardIds: (state, { payload }) => {
-      console.log("setting cardId", payload)
+      console.log("setting cardId")
       state.game.stackById[payload.id].cardIds = payload.cardIds;
     },
     setPlayerIds: (state, { payload }) => {
-      console.log("setting playerIds", payload)
+      console.log("setting playerIds")
       if (!state.playerIds) {
         state.playerIds = payload;
       } else {
-        deepUpdate(state.playerIds, payload);
+        deepUpdate(state.playerIds);
       }
     },
     setThreat: (state, { payload }) => {
       state.game.playerData[payload.playerN].threat = payload.value;
     },
-    increment: state => {
-      state.count += 1;
+    setValues: (state, { payload }) => {
+      updateValues(state, payload.paths, payload.values);
     },
   },
 });
 
-export const { setGame, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setThreat, increment } = gameUiSlice.actions;
+export const { setGame, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setThreat, setValues } = gameUiSlice.actions;
 export default gameUiSlice.reducer;

@@ -75,17 +75,17 @@ export const MenuBar = React.memo(({
     return(
       <div className="h-full">
         <ul className="top-level-menu float-left">
-        <li><div className="h-full flex text-xl items-center justify-center" href="#">Menu</div>
+        <li key={"Menu"}><div className="h-full flex text-xl items-center justify-center" href="#">Menu</div>
             <ul className="second-level-menu">
-              <li>
+              <li key={"Load"}>
                 <a  onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load Deck</a>
                 <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
               </li>
-              <li><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn Card</a></li>
-              <li>
+              <li key={"Spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn Card</a></li>
+              <li key={"Reset"}>
                   <a href="#">Reset Game</a>
                   <ul className="third-level-menu">
-                      <li><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
+                      <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
                   </ul>
               </li>
             </ul>
@@ -93,7 +93,7 @@ export const MenuBar = React.memo(({
         <li>
         <div className="h-full flex text-xl items-center justify-center" href="#">View</div>
           <ul className="second-level-menu">
-              <li>
+              <li key={"Shared"}>
                 <a href="#">Shared</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
@@ -103,7 +103,7 @@ export const MenuBar = React.memo(({
                     })}
                 </ul>
               </li>
-              <li>
+              <li key={"Player1"}>
                 <a href="#">Player 1</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
@@ -113,7 +113,7 @@ export const MenuBar = React.memo(({
                     })}
                 </ul>
               </li>
-              <li>
+              <li key={"Player2"}>
                 <a href="#">Player 2</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
@@ -123,7 +123,7 @@ export const MenuBar = React.memo(({
                     })}
                 </ul>
               </li>
-              <li>
+              <li key={"Player3"}>
                 <a href="#">Player 3</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
@@ -133,7 +133,7 @@ export const MenuBar = React.memo(({
                     })}
                 </ul>
               </li>
-              <li>
+              <li key={"Player4"}>
                   <a href="#">Player 4</a>
                     <ul className="third-level-menu">
                       {Object.keys(GROUPSINFO).map((groupId, index) => {

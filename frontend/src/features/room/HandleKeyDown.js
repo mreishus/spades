@@ -2,7 +2,7 @@ import React, { useEffect} from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
-import { setGame } from "./gameUiSlice";
+import { setValues } from "./gameUiSlice";
 import { 
     getDisplayName, 
     getDisplayNameFlipped, 
@@ -97,8 +97,8 @@ export const HandleKeyDown = ({
                 // If quest phase, shuffle encounter discard pile into deck
                 if (gameUi.game.phase === "Quest") {
                     gameBroadcast("move_stacks",{
-                        orig_group_id: "sharedEncounterDeck",
-                        dest_group_id: "sharedStaging", 
+                        orig_group_id: "sharedEncounterDiscard",
+                        dest_group_id: "sharedEncounterDeck", 
                         position: "s",
                     });
                     chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["sharedEncounterDiscard"].name+" into "+GROUPSINFO["sharedEncounterDeck"].name+"."});
@@ -197,8 +197,8 @@ export const HandleKeyDown = ({
 
         // Card specific hotkeys
         if (activeCardAndLoc != null) {   
-            const activeCardId = activeCardAndLoc.cardId;
-            const activeCard = gameUi.game.cardById[activeCardId];
+            const activeCard = activeCardAndLoc.card;
+            const activeCardId = activeCard.id;
             var newCard = activeCard;
             var updateActiveCard = false;
             const displayName = getDisplayName(activeCard);
@@ -207,15 +207,12 @@ export const HandleKeyDown = ({
             const groupId = gsc.groupId;
             const stackIndex = gsc.stackIndex;
             const cardIndex = gsc.cardIndex;
-            console.log("card hotkey")
-            console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM")
-            console.log(gsc);
-            console.log(groupId);
-            console.log(gameUi.game.groupById);
             const groupType = gameUi.game.groupById[groupId].type;
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 const tokenType = keyTokenMap[k][0];
+                // Check if mouse is hoving over top half or bottom half of card
+                // Top half will increase tokens, bottom half will decrease
                 const mousePosition = activeCardAndLoc.mousePosition;
                 var delta;
                 if (mousePosition === "top") delta = keyTokenMap[k][1];
@@ -265,11 +262,19 @@ export const HandleKeyDown = ({
             // Exhaust card
             else if (k === "a" && groupType === "play") {
                 if (activeCard.exhausted) {
-                    chatBroadcast("game_update", {message: "readied "+displayName+"."});
-                    newCard = {...newCard, exhausted: false, rotation: 0};
+                    setValues(
+                        ["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"],
+                        [false, 0]
+                    )
+                    //chatBroadcast("game_update", {message: "readied "+displayName+"."});
+                    //newCard = {...newCard, exhausted: false, rotation: 0};
                 } else {
-                    chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
-                    newCard = {...newCard, exhausted: true, rotation: 90};
+                    setValues(
+                        ["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"],
+                        [true, 90]
+                    )
+                    //chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+                    //newCard = {...newCard, exhausted: true, rotation: 90};
                 }
                 gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
                 updateActiveCard = true;

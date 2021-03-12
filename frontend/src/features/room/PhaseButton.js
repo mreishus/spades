@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { faStepBackward, faStepForward, faEquals } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector } from 'react-redux';
 
-export const PhaseButton = ({
+export const PhaseButton = React.memo(({
   phase, 
   text,
   height,
@@ -12,12 +10,20 @@ export const PhaseButton = ({
   phaseInfo,
 }) => {
   const gameRoundStepStore = state => state?.gameUi?.game?.roundStep;
-  const dispatch = useDispatch();
   const gameRoundStep = useSelector(gameRoundStepStore);
   const [hovering, setHovering] = useState(null);
   const isPhase = Object.keys(phaseInfo).includes(gameRoundStep);
-  const handleButtonClick = (roundStep, roundStepText) => {
-    gameBroadcast("set_round_step", {phase: phase, round_step: roundStep})
+  const handleButtonClick = (roundStep, roundStepText) => {      
+    gameBroadcast("update_values", {
+      paths: [
+        ["game", "roundStep"],
+        ["game", "phase"]
+      ],
+      values: [
+        roundStep,
+        phase
+      ]
+    })
     chatBroadcast("game_update", {message: "set the round step to "+roundStepText+"."})
   }
   return (
@@ -68,4 +74,4 @@ export const PhaseButton = ({
       </div>
     </div>
   )
-}
+})

@@ -2,15 +2,13 @@ import React, { Component, useState, useRef } from "react";
 import { PhaseButton } from "./PhaseButton";
 
 export const PhaseBar = React.memo(({
-  gameUI,
   gameBroadcast,
   chatBroadcast,
-  playerN,
 }) => {
   return(
     <div className="bg-gray-500" style={{width:"48px"}}>
       <PhaseButton
-        phase={"PStart"}
+        phase={"Start"}
         text={"α"}
         height={"4%"}
         gameBroadcast={gameBroadcast}
@@ -20,7 +18,7 @@ export const PhaseBar = React.memo(({
         }}
       ></PhaseButton>
       <PhaseButton
-        phase={"pResource"}
+        phase={"Resource"}
         text={"Resource"}
         height={"11%"}
         gameBroadcast={gameBroadcast}
@@ -32,7 +30,7 @@ export const PhaseBar = React.memo(({
         }}
       ></PhaseButton>
       <PhaseButton
-        phase={"pPlanning"}
+        phase={"Planning"}
         text={"Planning"}
         height={"11%"}
         gameBroadcast={gameBroadcast}
@@ -44,7 +42,7 @@ export const PhaseBar = React.memo(({
         }}
       ></PhaseButton>
       <PhaseButton
-        phase={"pQuest"}
+        phase={"Quest"}
         text={"Quest"}
         height={"17%"}
         gameBroadcast={gameBroadcast}
@@ -58,7 +56,7 @@ export const PhaseBar = React.memo(({
         }}
       ></PhaseButton>
       <PhaseButton
-        phase={"pTravel"}
+        phase={"Travel"}
         text={"Travel"}
         height={"11%"}
         gameBroadcast={gameBroadcast}
@@ -70,7 +68,7 @@ export const PhaseBar = React.memo(({
         }}
       ></PhaseButton>
       <PhaseButton
-        phase={"pEncounter"}
+        phase={"Encounter"}
         text={"Encounter"}
         height={"14%"}
         gameBroadcast={gameBroadcast}
@@ -83,7 +81,7 @@ export const PhaseBar = React.memo(({
         }}
       ></PhaseButton>
       <PhaseButton
-        phase={"pCombat"}
+        phase={"Combat"}
         text={"Combat"}
         height={"17%"}
         gameBroadcast={gameBroadcast}
@@ -97,7 +95,7 @@ export const PhaseBar = React.memo(({
         }}
       ></PhaseButton>
       <PhaseButton
-        phase={"pRefresh"}
+        phase={"Refresh"}
         text={"Refresh"}
         height={"11%"}
         gameBroadcast={gameBroadcast}
@@ -109,7 +107,7 @@ export const PhaseBar = React.memo(({
         }}
       ></PhaseButton>
       <PhaseButton
-        phase={"pEnd"}
+        phase={"End"}
         text={"Ω"}
         height={"4%"}
         gameBroadcast={gameBroadcast}
