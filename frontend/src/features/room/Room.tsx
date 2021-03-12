@@ -6,7 +6,7 @@ import {KeypressProvider} from '../../contexts/KeypressContext'
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
 import useChannel from "../../hooks/useChannel";
 import { GameUI, ChatMessage } from "elixir-backend";
-import { setGame, setPlayerIds } from "./gameUiSlice";
+import { setGame, setGameName, setPlayerIds } from "./gameUiSlice";
 
 interface Props {
   slug: string;
@@ -27,10 +27,11 @@ export const Room: React.FC<Props> = ({ slug }) => {
       payload.response.game_ui != null
     ) {
       const { game_ui } = payload.response;
-      console.log("dispatching to game", game_ui.game)
+      console.log("dispatching to game", game_ui)
       if (game_ui) {
         dispatch(setGame(game_ui.game));
         dispatch(setPlayerIds(game_ui.playerIds));
+        dispatch(setGameName(game_ui.game_name));
       }
     }
   }, []);
@@ -49,23 +50,23 @@ export const Room: React.FC<Props> = ({ slug }) => {
   const chatBroadcast = useChannel(`chat:${slug}`, onChatMessage);
 
   console.log('rendering room');
-  return (
-    // <Container>
-      <div className="gamebackground"
-        style={{height: "97vh"}}
-      >
 
-      <KeypressProvider value={[""]}>
-        {gameUi != null && (
-          //<GameUIContext.Provider value={{gameUI, setGameUI}}>
+  if (!gameUi || gameUi.gameName !== slug) return (<div></div>);
+  else {
+    return (
+      // <Container>
+        <div className="gamebackground"
+          style={{height: "97vh"}}
+        >
+
+          <KeypressProvider value={[""]}>
             <ActiveCardProvider value={null}>
               <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} messages={messages}/>
             </ActiveCardProvider>
-         //</GameUIContext.Provider>
-        )}
-        </KeypressProvider>
-      </div>
-    // </Container>
-  );
+          </KeypressProvider>
+        </div>
+      // </Container>
+    );
+  }
 };
 export default Room;

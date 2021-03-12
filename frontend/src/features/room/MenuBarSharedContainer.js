@@ -6,16 +6,18 @@ import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Con
 
 export const MenuBarSharedContainer = React.memo(() => {
   
-    const stagingStore = state => state?.gameUi?.game.groupById.sharedStaging.stackIds;
+    const stagingStore = state => state?.gameUi?.game?.groupById?.sharedStaging.stackIds;
     const stagingStackIds = useSelector(stagingStore);
-    const cardStore = state => state?.gameUi?.game.cardById;
+    const cardStore = state => state?.gameUi?.game?.cardById;
     const cardById = useSelector(cardStore); 
-    const stackStore = state => state?.gameUi?.game.stackById;
+    const stackStore = state => state?.gameUi?.game?.stackById;
     const stackById = useSelector(stackStore);  
-    const playerDataStore = state => state?.gameUi?.game.playerData;
+    const playerDataStore = state => state?.gameUi?.game?.playerData;
     const playerData = useSelector(playerDataStore);  
-    const roundStore = state => state?.gameUi?.game.roundNumber;
-    const round = useSelector(roundStore);    
+    const roundStore = state => state?.gameUi?.game?.roundNumber;
+    const round = useSelector(roundStore);  
+    
+    if (!stagingStackIds) return;
 
     var stagingThreat = 0;
     stagingStackIds.forEach(stackId => {

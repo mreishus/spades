@@ -41,7 +41,7 @@ export const Group = React.memo(({
   setBrowseGroupTopN,
 }) => {
   console.log("rendering group ",groupId);
-  const storeGroup = state => state?.gameUi?.game?.groupById[groupId];
+  const storeGroup = state => state?.gameUi?.game?.groupById?.[groupId];
   const group = useSelector(storeGroup);
   if (!group) return null;
   const numStacks = group.stackIds.length;

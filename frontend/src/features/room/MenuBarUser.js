@@ -18,7 +18,7 @@ export const MenuBarUser = React.memo(({
   const dispatch = useDispatch();
   const playerIdsStore = state => state?.gameUi?.playerIds;
   const playerIds = useSelector(playerIdsStore);
-  const playerDataPlayerNStore = state => state?.gameUi?.game?.playerData[playerN];
+  const playerDataPlayerNStore = state => state?.gameUi?.game?.playerData?.[playerN];
   const playerDataPlayerN = useSelector(playerDataPlayerNStore);  
   const firstPlayerStore = state => state?.gameUi?.game?.firstPlayer;
   const firstPlayer = useSelector(firstPlayerStore);  

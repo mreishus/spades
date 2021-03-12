@@ -17,10 +17,18 @@ const arraysEqual = (a, b) => {
 }
 
 const deepUpdate = (obj1, obj2) => {
-  // If obj is undefined, don't update
-  //if (!obj2) return;
   // If they are already equal, we are done
   if (obj1 === obj2) return;
+  // If obj1 does not exist, set it to obj2
+  if (!obj1) {
+    obj1 = obj2;
+    return;
+  }
+  // If obj2 does not exist, update obj1
+  if (!obj2) {
+    obj1 = obj2;
+    return;
+  }
   // First we delete properties from obj1 that no longer exist
   for (var p in obj1) {
     //// Ignore prototypes
@@ -30,11 +38,6 @@ const deepUpdate = (obj1, obj2) => {
       delete obj1[p]
       continue;
     }
-  }
-  // If obj1 does not exist, set it to obj2
-  if (!obj1) {
-    obj1 = obj2;
-    return;
   }
   // The we loop through obj2 properties and update obj1
   for (var p in obj2) {
@@ -116,6 +119,10 @@ const gameUiSlice = createSlice({
         deepUpdate(state.game, payload);
       }
     },
+    setGameName: (state, { payload }) => {
+      console.log("setting game name");
+      state.gameName = payload;
+    },
     setGroupById: (state, { payload }) => {
       console.log("setting groupById")
       state.game.groupById = payload;
@@ -154,5 +161,5 @@ const gameUiSlice = createSlice({
   },
 });
 
-export const { setGame, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setThreat, setValues } = gameUiSlice.actions;
+export const { setGame, setGameName, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setThreat, setValues } = gameUiSlice.actions;
 export default gameUiSlice.reducer;

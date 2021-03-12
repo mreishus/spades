@@ -131,44 +131,50 @@ export const HandleKeyDown = ({
         } else if (k === "d") {
             // Check remaining cards in deck
             const player1Deck = gameUi.game.groupById.player1Deck;
-            const stacks = player1Deck["stacks"];
-            const stacksLeft = stacks.length;
+            const deckStackIds = player1Deck["stackIds"];
+            const stacksLeft = deckStackIds.length;
             // If no cards, give error message and break
             if (stacksLeft === 0) {
                 chatBroadcast("game_update",{message: " tried to draw a card, but their deck is empty."});
                 return;
             }
             // Draw card
-            const topStack = stacks[0];
-            const topCard = topStack["cards"][0];
+            const topStackId = deckStackIds[0];
+            const topStack = gameUi.game.stackById[topStackId];
+            const topCardId = topStack["cardIds"][0];
+            const topCard = gameUi.game.cardById[topCardId];
             chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+"."});
             gameBroadcast("move_stack",{
-                orig_group_id: "player1Deck", 
-                orig_stack_index: 0, 
+                stack_id: topStackId, 
                 dest_group_id: "player1Hand", 
                 dest_stack_index: -1,
+                combine: false,
                 preserve_state: false,
             });
         } else if (k === "R") {
-            if (gameUi["game"]["roundStep"] !== "7.R") {
-                gameBroadcast("set_round_step", {phase: "Refresh", round_step: "7.R"}) 
+            if (gameUi.game.roundStep !== "7.R") {
+                //gameBroadcast("set_round_step", {phase: "Refresh", round_step: "7.R"}) 
+                gameBroadcast("update_values", {
+                    paths: [["game","roundStep"], ["game", "phase"]],
+                    values: ["7.R", "Refresh"] 
+                })
                 chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
             }
             // Refresh all cards you control
             chatBroadcast("game_update",{message: "refreshes."});
             gameBroadcast("refresh",{player_n: playerN});
             // Raise your threat
-            const newThreat = gameUi["game"]["playerData"][playerN]["threat"]+1;
+            const newThreat = gameUi.game.playerData[playerN].threat+1;
             chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
-            gameBroadcast("increment_threat",{player_n: playerN, increment: 1});
+            gameBroadcast("update_value",{path: ["game", "playerData", playerN, "threat"], value: newThreat});
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
             if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
-                const firstPlayerN = gameUi["game"]["first_player"];
+                const firstPlayerN = gameUi.game.first_player;
                 const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
                 // If nextPlayerN is null then it's a solo game, so don't pass the token
                 if (nextPlayerN) {
-                    gameBroadcast("set_first_player",{player_n: nextPlayerN});    
+                    gameBroadcast("update_value",{path: ["game","firstPlayer"], value: nextPlayerN});    
                     chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."})
                 }
             }
@@ -262,24 +268,16 @@ export const HandleKeyDown = ({
             // Exhaust card
             else if (k === "a" && groupType === "play") {
                 console.log("toggle exhaust")
+                const paths = [["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]];
+                var values = [true, 90];
                 if (activeCard.exhausted) {
-                    newCard = {...newCard, exhausted: false, rotation: 0};
-                    dispatch(setValues({
-                        paths: [["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]],
-                        values: [false, 0]
-                    }))
+                    values = [false, 0];
                     chatBroadcast("game_update", {message: "readied "+displayName+"."});
-                    //
                 } else {
-                    dispatch(setValues({
-                        paths: [["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]],
-                        values: [true, 90]
-                    }))
                     chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
-                    //newCard = {...newCard, exhausted: true, rotation: 90};
                 }
-                //gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-                //updateActiveCard = true;
+                dispatch(setValues({paths: paths, values: values}))
+                gameBroadcast("update_values", {paths: paths, values: values})
             }
             // Deal shadow card
             else if (k === "s" && groupType == "play") {
