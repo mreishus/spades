@@ -191,14 +191,11 @@ export const HandleKeyDown = ({
                 gameBroadcast("increment_round",{increment: 1});    
                 chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
             }
-            functionOnMatchingCards(
-                gameUi, 
-                gameBroadcast, 
-                chatBroadcast, 
-                [["sideUp","type","Hero"],["card","controller",playerN]],
-                "increment_token",
-                ["resource", 1],
-            )
+            gameBroadcast("action_on_matching_cards",{
+                criteria: [["sideUp","type","Hero"],["card","controller",playerN]], 
+                action: "increment_token", 
+                options: ["resource", 1]
+            })
         }
 
         // Card specific hotkeys

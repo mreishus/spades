@@ -632,8 +632,11 @@ defmodule SpadesGame.GameUI do
     card_by_id = gameui["game"]["cardById"]
     all_cards = Enum.reduce(card_by_id, [], fn({card_id, card}, acc) ->
       #IO.puts("flattening #{group_id}")
-      {group_id, stack_index, card_index} = gsc(gameui, card)
-      card = %{card | "group_id" => group_id, "stack_index" => stack_index, "card_index" => card_index}
+      my_gsc = gsc(gameui, card)
+      IO.puts("my_gsc")
+      IO.inspect(my_gsc)
+      {group_id, stack_index, card_index} = my_gsc
+      card = Map.merge(card, %{"groupId" => group_id, "stackIndex" => stack_index, "cardIndex" => card_index})
       acc ++ [card]
     end)
     #IO.inspect(all_cards)
@@ -669,15 +672,14 @@ defmodule SpadesGame.GameUI do
     end)
   end
 
-  def action_on_matching_cards(gameui, criteria, action, arguments \\ nil) do
+  def action_on_matching_cards(gameui, criteria, action, options \\ nil) do
     flat_list = flat_list_of_cards(gameui)
     #IO.inspect(gameui)
     Enum.reduce(flat_list, gameui, fn(card, acc) ->
       IO.puts("checking #{card["sides"]["A"]["name"]}")
       IO.inspect(card["controller"])
       acc = if passes_criteria(gameui, card, criteria) do
-        #toggle_exhaust(acc, [card["group_id"], card["stack_index"], card["card_index"]])
-        card_action(action, acc, [card["group_id"], card["stack_index"], card["card_index"]], arguments)
+        card_action(acc, action, card["id"], options)
       else
         acc
       end

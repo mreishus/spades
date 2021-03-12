@@ -230,11 +230,11 @@ export const Card = React.memo(({
                     card={card}
                     setIsActive={setIsActive}
                 />
-                { isActive && (
+                { true && (
                     <Tokens
                         cardName={currentFace.name}
                         cardType={currentFace.cardType}
-                        tokensId={card.tokensId}
+                        cardId={card.id}
                         isActive={isActive}
                         gameBroadcast={gameBroadcast}
                         chatBroadcast={chatBroadcast}

@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 var delayBroadcast;
 
 export const Token = React.memo(({
-    tokensId,
+    cardId,
     cardName,
     type,
     left,
@@ -17,9 +17,9 @@ export const Token = React.memo(({
     gameBroadcast,
     chatBroadcast,
 }) => {
-    const tokenStore = state => state?.gameUi?.game?.tokensById[tokensId]?.type;
+    const tokenStore = state => state?.gameUi?.game?.cardById?.[cardId]?.tokens?.[type];
     const tokenValue = useSelector(tokenStore);
-    console.log('rendering tokens on ',tokensId);
+    console.log('rendering token on ',cardId, tokenValue);
     //console.log(gameUI.game.groups[groupId].stacks)
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
@@ -28,7 +28,6 @@ export const Token = React.memo(({
     useEffect(() => {    
         if (tokenValue !== amount) setAmount(tokenValue);
     }, [tokenValue]);
-
 
     if (!tokenValue) return null;
 
@@ -46,7 +45,8 @@ export const Token = React.memo(({
         // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
-            gameBroadcast("increment_token",{tokens_id: tokensId, type: type, increment: totalDelta})
+            gameBroadcast("update_value",{path: ["game", "cardById", cardId, "tokens", type], value: newAmount});
+            //gameBroadcast("increment_token",{tokens_id: tokensId, type: type, increment: totalDelta})
             //gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index:cardIndex});
             if (totalDelta > 0) {
                 if (totalDelta === 1) {

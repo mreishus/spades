@@ -180,12 +180,21 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  card_action/5: A player just exhausted/unexhausted a card.
+  card_action/5: Perform given action on a card.
   """
   @spec card_action(String.t(), integer, String.t(), integer, integer) :: GameUI.t()
   def card_action(game_name, user_id, action, card_id, options) do
     IO.puts("game_ui_server: card_action")
     GenServer.call(via_tuple(game_name), {:card_action, user_id, action, card_id, options})
+  end
+
+  @doc """
+  action_on_matching_cards/5: Perform given action on matching cards.
+  """
+  @spec action_on_matching_cards(String.t(), integer, List.t(), String.t(), List.t()) :: GameUI.t()
+  def action_on_matching_cards(game_name, user_id, criteria, action, options) do
+    IO.puts("game_ui_server: action_on_matching_cards")
+    GenServer.call(via_tuple(game_name), {:action_on_matching_cards, user_id, criteria, action, options})
   end
 
   @doc """
@@ -425,6 +434,12 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
+  def handle_call({:action_on_matching_cards, user_id, criteria, action, options}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: action_on_matching_cards a")
+    GameUI.action_on_matching_cards(gameui, criteria, action, options)
+    |> save_and_reply()
+  end
+
   def handle_call({:update_value, user_id, path, value}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_value a")
     GameUI.update_value(gameui, path, value)
@@ -450,7 +465,7 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:set_first_player, player_n}, _from, gameui) do
-    put_in(gameui["game"]["first_player"], player_n)
+    put_in(gameui["game"]["firstPlayer"], player_n)
     |> save_and_reply()
   end
 
@@ -460,8 +475,8 @@ defmodule SpadesGame.GameUIServer do
   end
 
   def handle_call({:increment_round, increment}, _from, gameui) do
-    old_round_number = gameui["game"]["round_number"]
-    put_in(gameui["game"]["round_number"], old_round_number + increment)
+    old_round_number = gameui["game"]["roundNumber"]
+    put_in(gameui["game"]["roundNumber"], old_round_number + increment)
     |> save_and_reply()
   end
 
