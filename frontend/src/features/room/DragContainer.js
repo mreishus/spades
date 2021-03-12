@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from 'react-redux';
-import { setStackIds, setCardIds } from "./gameUiSlice";
+import { setStackIds, setCardIds, setGroupById } from "./gameUiSlice";
 import { reorderGroupStackIds } from "./Reorder";
 import { Table } from "./Table";
 import { GROUPSINFO } from "./Constants"
@@ -76,8 +76,18 @@ export const DragContainer = ({
       }   
       dispatch(setStackIds(newOrigGroup))
       dispatch(setCardIds(newDestStack))
-      gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newOrigGroupStackIds})
-      gameBroadcast("update_value", {path: ["game", "stackById", destStackId, "cardIds"], value: newDestStackCardIds})
+      gameBroadcast("update_values", {
+        paths: [
+          ["game", "groupById", origGroupId, "stackIds"],
+          ["game", "stackById", destStackId, "cardIds"]
+        ],
+        values: [
+          newOrigGroupStackIds,
+          newDestStackCardIds
+        ]
+      })
+      //gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newOrigGroupStackIds})
+      //gameBroadcast("update_value", {path: ["game", "stackById", destStackId, "cardIds"], value: newDestStackCardIds})
       chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."})
       //gameBroadcast("update_gameui",{gameui: newGameUi});    
       
@@ -101,11 +111,23 @@ export const DragContainer = ({
     // Moved to a different spot
     const newGroupById = reorderGroupStackIds(groupById, orig, dest);
 
-    dispatch(setStackIds(newGroupById[origGroupId]))
-    gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newGroupById[origGroupId].stackIds})
+    dispatch(setGroupById(newGroupById));
+    //dispatch(setStackIds(newGroupById[origGroupId]))
+    //dispatch(setStackIds(newGroupById[destGroupId]))
+    //gameBroadcast("update_value", {path: ["game", "groupById"], value: newGroupById})
+    gameBroadcast("update_values", {
+      paths: [
+        ["game", "groupById", origGroupId, "stackIds"],
+        ["game", "groupById", destGroupId, "stackIds"]
+      ],
+      values: [
+        newGroupById[origGroupId].stackIds,
+        newGroupById[destGroupId].stackIds
+      ]
+    })
+//    gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newGroupById[origGroupId].stackIds})
     if (origGroupId != destGroupId) {
-      dispatch(setStackIds(newGroupById[destGroupId]))
-      gameBroadcast("update_value", {path: ["game", "groupById", destGroupId, "stackIds"], value: newGroupById[destGroupId].stackIds})
+      //gameBroadcast("update_value", {path: ["game", "groupById", destGroupId, "stackIds"], value: newGroupById[destGroupId].stackIds})
       const origGroupTitle = GROUPSINFO[origGroupId].name;
       const destGroupTitle = GROUPSINFO[destGroupId].name;
       chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."})

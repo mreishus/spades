@@ -52,6 +52,7 @@ export const MenuBar = React.memo(({
         const xmltext = (event.target.result)
         var parseString = require('xml2js').parseString;
         parseString(xmltext, function (err, deckJSON) {
+          if (!deckJSON) return;
           const sections = deckJSON.deck.section;
           var loadList = [];
           sections.forEach(section => {

@@ -168,6 +168,10 @@ defmodule SpadesGame.GameUI do
   end
 
   def update_value(gameui, path, value) do
+    IO.puts("setting")
+    IO.inspect(path)
+    IO.puts("to")
+    IO.inspect(value)
     case Enum.count(path) do
       1 ->
         put_in(gameui[Enum.at(path,0)], value)
@@ -184,6 +188,12 @@ defmodule SpadesGame.GameUI do
       _ ->
         gameui
     end
+  end
+
+  def update_values(gameui, paths, values) do
+    Enum.reduce(Enum.with_index(paths), gameui, fn({path, index}, acc) ->
+      acc = update_value(acc, path, Enum.at(values, index))
+    end)
   end
 
   def increment_token(gameui, card, options) do

@@ -4,6 +4,7 @@ import UserName from "../user/UserName";
 import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { Link } from "react-router-dom";
+import { setThreat } from "./gameUiSlice";
 
 var delayBroadcast;
 
@@ -14,23 +15,24 @@ export const MenuBarUser = React.memo(({
   observingPlayerN,
   setObservingPlayerN,
 }) => {
+  const dispatch = useDispatch();
   const playerIdsStore = state => state?.gameUi?.playerIds;
   const playerIds = useSelector(playerIdsStore);
-  const playerDataStore = state => state?.gameUi?.game?.playerData;
-  const playerData = useSelector(playerDataStore);  
+  const playerDataPlayerNStore = state => state?.gameUi?.game?.playerData[playerN];
+  const playerDataPlayerN = useSelector(playerDataPlayerNStore);  
   const firstPlayerStore = state => state?.gameUi?.game?.firstPlayer;
   const firstPlayer = useSelector(firstPlayerStore);  
   const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
   const myUserID = myUser?.id;  
-  const gameUIThreat = playerData ? playerData[playerN]["threat"] : 0;
-  const [threatValue, setThreatValue] = useState(gameUIThreat);
+  const gameUiThreat = playerDataPlayerN ? playerDataPlayerN["threat"] : 0;
+  const [threatValue, setThreatValue] = useState(gameUiThreat);
   useEffect(() => {    
-    if (gameUIThreat !== threatValue) setThreatValue(gameUIThreat);
-  }, [gameUIThreat]);
+    if (gameUiThreat !== threatValue) setThreatValue(gameUiThreat);
+  }, [gameUiThreat]);
 
   if (!playerIds) return null;
-  if (!playerData) return null;
+  if (!playerDataPlayerN) return null;
 
   console.log("menubaruser ", playerN);
 
@@ -39,11 +41,12 @@ export const MenuBarUser = React.memo(({
   const handleThreatChange = (event) => {
     const newValue = event.target.value;
     setThreatValue(newValue);
-    const increment = newValue - gameUIThreat;
+    const increment = newValue - gameUiThreat;
     // Set up a delayed broadcast to update the game state that interrupts itself if the button is clicked again shortly after.
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
-      gameBroadcast("increment_threat",{player_n: playerN, increment: increment});
+      dispatch(setThreat({playerN: playerN, value: newValue}));
+      gameBroadcast("update_value",{path:["game", "playerData", playerN, "threat"], value: parseInt(newValue)})
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
     }, 800);
@@ -137,7 +140,7 @@ export const MenuBarUser = React.memo(({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            defaultValue={playerData[playerN]["willpower"]}
+            defaultValue={playerDataPlayerN["willpower"]}
             type="number" min="0" step="1"
           ></input>
         </div>

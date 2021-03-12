@@ -53,7 +53,7 @@ export const Table = React.memo(({
   //const [selectedFile, setSelectedFile] = useState(null);
   //const activeCard = useActiveCard();
 
-  console.log('Rendering groups');
+  console.log('rendering table');
 
   const toggleScratch = () => {
     if (showScratch) setShowScratch(false);
