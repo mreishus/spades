@@ -28,9 +28,10 @@ export const Room: React.FC<Props> = ({ slug }) => {
     ) {
       const { game_ui } = payload.response;
       console.log("dispatching to game", game_ui.game)
-      dispatch(setGame(game_ui.game));
-      dispatch(setPlayerIds(game_ui.playerIds));
-      //dispatch(setGame(game_ui.game));
+      if (game_ui) {
+        dispatch(setGame(game_ui.game));
+        dispatch(setPlayerIds(game_ui.playerIds));
+      }
     }
   }, []);
   

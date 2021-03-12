@@ -2,12 +2,12 @@ import React, { Component, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentFace } from "./Helpers"
 import { MenuBarUser } from "./MenuBarUser"
+import { MenuBarSharedContainer } from "./MenuBarSharedContainer"
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
 export const MenuBar = React.memo(({
-    gameUI,
     setShowSpawn,
     handleBrowseSelect,
     gameBroadcast,
@@ -18,10 +18,6 @@ export const MenuBar = React.memo(({
   }) => {
     
     const inputFile = useRef(null);
-    const gameGroup = state => state?.gameUi?.game;
-    const game = useSelector(gameGroup);
-    if (!game) return null;
-    const groupById = game.groupById;
     console.log("rendering menubar")
 
     const handleMenuClick = (data) => {
@@ -74,33 +70,6 @@ export const MenuBar = React.memo(({
         })
       }
       reader.readAsText(event.target.files[0]);
-    }
-    
-    const sumStagingThreat = () => {
-      const stagingStackIds = groupById.sharedStaging.stackIds;
-      var stagingThreat = 0;
-      stagingStackIds.forEach(stackId => {
-        const stack = game.stackById[stackId];
-        const topCard = stack["cards"][0];
-        const currentFace = getCurrentFace(topCard);
-        stagingThreat = stagingThreat + currentFace["threat"] + topCard["tokens"]["threat"];
-      })
-      return stagingThreat;
-    }
-
-    const sumPlayerWillpower = () => {
-      const playerData = game.playerData;
-      var totalWillpower = 0;
-      for (const playerI in playerData) {
-        if (playerData.hasOwnProperty(playerI)) {
-            totalWillpower = totalWillpower + playerData[playerI]["willpower"]
-        }
-      }
-      return totalWillpower;
-    }
-
-    const totalProgress = () => {
-      return sumPlayerWillpower() - sumStagingThreat();
     }
 
     return(
@@ -177,35 +146,7 @@ export const MenuBar = React.memo(({
           </ul>
         </li>
       </ul>
-      <div className="float-left h-full bg-gray-600" style={{width: "15%", marginLeft: "5%", marginRight: "5%"}}>
-        <div className="float-left h-full w-1/3">
-          <div className="h-1/2 w-full flex justify-center">
-            Round
-          </div>
-          <div className="h-1/2 w-full flex justify-center">
-            <div className="text-xl">{game["round_number"]}</div>
-            <img className="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/time.png'}></img>
-          </div>
-        </div>
-        <div className="float-left h-full w-1/3">
-          <div className="h-1/2 w-full flex justify-center">
-            Staging
-          </div>
-          <div className="h-1/2 w-full flex justify-center">
-            <div className="text-xl">{sumStagingThreat()}</div>
-            <img className="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/threat.png'}></img>
-          </div>
-        </div>
-        <div className="float-left h-full w-1/3">
-          <div className="h-1/2 w-full flex justify-center">
-            Progress
-          </div>
-          <div className="h-1/2 w-full flex justify-center">
-            <div className="text-xl">{totalProgress()}</div>
-            <img className="h-full ml-1" src={process.env.PUBLIC_URL + '/images/tokens/progress.png'}></img>
-          </div>
-        </div>
-      </div>
+      <MenuBarSharedContainer/>
 
       <MenuBarUser
         playerN={"player1"}
@@ -213,28 +154,28 @@ export const MenuBar = React.memo(({
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
         setObservingPlayerN={setObservingPlayerN}
-      ></MenuBarUser>
+      />
       <MenuBarUser
         playerN={"player2"}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
         setObservingPlayerN={setObservingPlayerN}
-      ></MenuBarUser>
+      />
       <MenuBarUser
         playerN={"player3"}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
         setObservingPlayerN={setObservingPlayerN}
-      ></MenuBarUser>
+      />
       <MenuBarUser
         playerN={"player4"}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
         setObservingPlayerN={setObservingPlayerN}
-      ></MenuBarUser>
+      />
     </div>
   )
 })

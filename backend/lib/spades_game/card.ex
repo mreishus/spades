@@ -2,12 +2,12 @@ defmodule SpadesGame.Card do
   @moduledoc """
   Represents a playing card.
   """
-  alias SpadesGame.{CardFace}
+  alias SpadesGame.{CardFace,Tokens}
 
   @type t :: Map.t()
 
-  @spec card_from_cardrow(Map.t(), String.t(), String.t()) :: Map.t()
-  def card_from_cardrow(card_row, controller, tokens_id) do
+  @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
+  def card_from_cardrow(card_row, controller) do
     IO.puts("creating card controlled by #{controller}")
     %{
       "id" => Ecto.UUID.generate,
@@ -23,7 +23,7 @@ defmodule SpadesGame.Card do
         "player3" => false,
         "player4" => false
       },
-      "tokensId" => tokens_id,
+      "tokens" => Tokens.new(),
 
       "cardBackOverride" => card_row["cardbackoverride"],
       "cardEncounterSet" => card_row["cardencounterset"],
