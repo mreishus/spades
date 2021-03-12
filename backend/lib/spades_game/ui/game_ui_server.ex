@@ -371,7 +371,7 @@ defmodule SpadesGame.GameUIServer do
     |> save_and_reply()
   end
 
-  def handle_call({:move_stack, game_name, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state}, _from, gameui) do
+  def handle_call({:move_stack, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state}, _from, gameui) do
     GameUI.move_stack(gameui, stack_id, dest_group_id, dest_stack_index, combine, preserve_state)
     |> save_and_reply()
   end

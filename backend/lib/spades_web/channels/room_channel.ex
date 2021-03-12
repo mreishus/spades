@@ -160,15 +160,15 @@ defmodule SpadesWeb.RoomChannel do
   def handle_in(
     "move_stack",
     %{
-      "orig_group_id" => orig_group_id,
-      "orig_stack_index" => orig_stack_index,
+      "stack_id" => stack_id,
       "dest_group_id" => dest_group_id,
       "dest_stack_index" => dest_stack_index,
+      "combine" => combine,
       "preserve_state" => preserve_state,
     },
     %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
   ) do
-    GameUIServer.move_stack(room_slug, user_id, orig_group_id, orig_stack_index, dest_group_id, dest_stack_index, preserve_state)
+    GameUIServer.move_stack(room_slug, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)

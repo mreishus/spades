@@ -90,9 +90,8 @@ export const HandleKeyDown = ({
         // General hotkeys
         if (k === "e" || k === "E") {
             // Check remaining cards in encounter deck
-            const sharedEncounterDeck = gameUi["game"]["groupById"]["sharedEncounterDeck"];
-            const stacks = sharedEncounterDeck["stacks"];
-            const stacksLeft = stacks.length;
+            const encounterStackIds = gameUi.game.groupById.sharedEncounterDeck.stackIds;
+            const stacksLeft = encounterStackIds.length;
             // If no cards, check phase of game
             if (stacksLeft === 0) {
                 // If quest phase, shuffle encounter discard pile into deck
@@ -110,21 +109,23 @@ export const HandleKeyDown = ({
                 }
             }
             // Reveal card
-            const topStack = stacks[0];
-            if (!topStack) {
+            const topStackId = encounterStackIds[0];
+            if (!topStackId) {
                 chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty."});
                 return;
             }
-            const topCard = topStack["cards"][0];
+            const topStack = gameUi.game.stackById[topStackId];
+            const topCardId = topStack["cardIds"][0];
+            const topCard = gameUi.game.cardById[topCardId];
             // Was shift held down? (Deal card facedown)
             const shiftHeld = (k === "E"); // keypress[0] === "Shift";
             const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
             chatBroadcast("game_update",{message: message});
             gameBroadcast("move_stack",{
-                orig_group_id: "sharedEncounterDeck", 
-                orig_stack_index: 0, 
+                stack_id: topStackId, 
                 dest_group_id: "sharedStaging", 
                 dest_stack_index: -1,
+                combine: false,
                 preserve_state: shiftHeld,
             });
         } else if (k === "d") {
