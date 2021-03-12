@@ -97,6 +97,10 @@ export const Card = React.memo(({
 }) => {
     const cardStore = state => state?.gameUi?.game?.cardById[cardId];
     const card = useSelector(cardStore);
+    const exhaustedStore = state => state?.gameUi?.game?.cardById[cardId].exhausted;
+    const exhausted = useSelector(exhaustedStore);
+    const rotationStore = state => state?.gameUi?.game?.cardById[cardId].rotation;
+    const rotation = useSelector(rotationStore);
     if (!card) return null;
     // useEffect(() => {    
     //     if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);

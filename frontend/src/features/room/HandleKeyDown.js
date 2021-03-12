@@ -199,11 +199,11 @@ export const HandleKeyDown = ({
         if (activeCardAndLoc != null) {   
             const activeCard = activeCardAndLoc.card;
             const activeCardId = activeCard.id;
-            var newCard = activeCard;
+            var newCard = JSON.parse(JSON.stringify(activeCard));
             var updateActiveCard = false;
             const displayName = getDisplayName(activeCard);
             const tokens = activeCard.tokens;
-            const gsc = getGroupIdStackIndexCardIndex(gameUi.game, activeCardAndLoc.cardId)
+            const gsc = getGroupIdStackIndexCardIndex(gameUi.game, activeCardAndLoc.card.id)
             const groupId = gsc.groupId;
             const stackIndex = gsc.stackIndex;
             const cardIndex = gsc.cardIndex;
@@ -261,23 +261,25 @@ export const HandleKeyDown = ({
             }
             // Exhaust card
             else if (k === "a" && groupType === "play") {
+                console.log("toggle exhaust")
                 if (activeCard.exhausted) {
-                    setValues(
-                        ["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"],
-                        [false, 0]
-                    )
-                    //chatBroadcast("game_update", {message: "readied "+displayName+"."});
-                    //newCard = {...newCard, exhausted: false, rotation: 0};
+                    newCard = {...newCard, exhausted: false, rotation: 0};
+                    dispatch(setValues({
+                        paths: [["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]],
+                        values: [false, 0]
+                    }))
+                    chatBroadcast("game_update", {message: "readied "+displayName+"."});
+                    //
                 } else {
-                    setValues(
-                        ["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"],
-                        [true, 90]
-                    )
-                    //chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+                    dispatch(setValues({
+                        paths: [["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]],
+                        values: [true, 90]
+                    }))
+                    chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
                     //newCard = {...newCard, exhausted: true, rotation: 90};
                 }
-                gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
-                updateActiveCard = true;
+                //gameBroadcast("toggle_exhaust", {group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex});
+                //updateActiveCard = true;
             }
             // Deal shadow card
             else if (k === "s" && groupType == "play") {
@@ -331,18 +333,18 @@ export const HandleKeyDown = ({
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupId].name+"."})
             }
 
-            if (updateActiveCard) {
-                activeCardAndLoc.setCard(newCard);
-                setActiveCardAndLoc({
-                    card: newCard, 
-                    groupId: activeCardAndLoc.groupId, 
-                    stackIndex: activeCardAndLoc.stackIndex, 
-                    cardIndex: activeCardAndLoc.cardIndex, 
-                    mousePosition: activeCardAndLoc.mousePosition,
-                    screenPosition: activeCardAndLoc.screenPosition,
-                    setCard: activeCardAndLoc.setCard,
-                });
-            }
+            // if (updateActiveCard) {
+            //     activeCardAndLoc.setCard(newCard);
+            //     setActiveCardAndLoc({
+            //         card: newCard, 
+            //         groupId: activeCardAndLoc.groupId, 
+            //         stackIndex: activeCardAndLoc.stackIndex, 
+            //         cardIndex: activeCardAndLoc.cardIndex, 
+            //         mousePosition: activeCardAndLoc.mousePosition,
+            //         screenPosition: activeCardAndLoc.screenPosition,
+            //         setCard: activeCardAndLoc.setCard,
+            //     });
+            // }
         }
     }
     return (null);

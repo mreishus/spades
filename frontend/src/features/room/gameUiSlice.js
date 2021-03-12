@@ -69,6 +69,7 @@ const deepUpdate = (obj1, obj2) => {
 
 const updateValue = (obj, path, value) => {
   const pathLength = path.length;
+  console.log("updating", path, value)
   switch(pathLength) {
     case 0:
       break;
@@ -95,6 +96,7 @@ const updateValue = (obj, path, value) => {
 
 const updateValues = (obj, paths, values) => {
   const numValues = values.length;
+  console.log("updating values", paths, values);
   for (var i = 0; i < numValues; i++) {
     updateValue(obj, paths[i], values[i])
   }
@@ -108,14 +110,11 @@ const gameUiSlice = createSlice({
   reducers: {
     setGame: (state, { payload }) => {
       console.log("setting game");
-      console.log(state.game);
-      console.log(payload);
       if (!state.game) {
         state.game = payload;
       } else {
-        deepUpdate(state.game);
+        deepUpdate(state.game, payload);
       }
-      console.log(state.game);
     },
     setGroupById: (state, { payload }) => {
       console.log("setting groupById")
@@ -142,13 +141,14 @@ const gameUiSlice = createSlice({
       if (!state.playerIds) {
         state.playerIds = payload;
       } else {
-        deepUpdate(state.playerIds);
+        deepUpdate(state.playerIds, payload);
       }
     },
     setThreat: (state, { payload }) => {
       state.game.playerData[payload.playerN].threat = payload.value;
     },
     setValues: (state, { payload }) => {
+      console.log("setting values")
       updateValues(state, payload.paths, payload.values);
     },
   },

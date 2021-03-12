@@ -80,8 +80,6 @@ export const Group = React.memo(({
             ></Stacks>
           </Container>
         </div>
-      }
-    )
     </WidthContainer>
   )
 })

@@ -98,7 +98,7 @@ export const MenuBar = React.memo(({
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
                       if (groupId.startsWith("shared"))
-                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                        return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
                       else return null;
                     })}
                 </ul>
@@ -108,7 +108,7 @@ export const MenuBar = React.memo(({
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
                       if (groupId.startsWith("player1"))
-                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                        return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
                       else return null;
                     })}
                 </ul>
@@ -118,7 +118,7 @@ export const MenuBar = React.memo(({
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
                       if (groupId.startsWith("player2"))
-                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                        return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
                       else return null;
                     })}
                 </ul>
@@ -128,7 +128,7 @@ export const MenuBar = React.memo(({
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
                       if (groupId.startsWith("player3"))
-                        return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                        return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
                       else return null;
                     })}
                 </ul>
@@ -138,7 +138,7 @@ export const MenuBar = React.memo(({
                     <ul className="third-level-menu">
                       {Object.keys(GROUPSINFO).map((groupId, index) => {
                         if (groupId.startsWith("player4"))
-                          return(<li><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                          return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
                         else return null;
                       })}
                   </ul>
