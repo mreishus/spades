@@ -199,14 +199,13 @@ export const HandleKeyDown = ({
         }
 
         // Card specific hotkeys
-        if (activeCardAndLoc != null) {   
-            const activeCard = activeCardAndLoc.card;
-            const activeCardId = activeCard.id;
-            var newCard = JSON.parse(JSON.stringify(activeCard));
+        if (activeCardAndLoc != null) {  
+            const activeCardId = activeCardAndLoc.card.id; 
+            const activeCard = gameUi.game.cardById[activeCardId]
             var updateActiveCard = false;
             const displayName = getDisplayName(activeCard);
             const tokens = activeCard.tokens;
-            const gsc = getGroupIdStackIndexCardIndex(gameUi.game, activeCardAndLoc.card.id)
+            const gsc = getGroupIdStackIndexCardIndex(gameUi.game, activeCardId);
             const groupId = gsc.groupId;
             const stackIndex = gsc.stackIndex;
             const cardIndex = gsc.cardIndex;
@@ -223,7 +222,7 @@ export const HandleKeyDown = ({
                 else delta = 0;
                 const newVal = tokens[tokenType]+delta;
                 if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
-                gameBroadcast("increment_token",{group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex, card_index: activeCardAndLoc.cardIndex, token_type: tokenType, increment: delta})
+                gameBroadcast("update_value",{path: ["game","cardById",activeCard.id,"tokens",tokenType], value: newVal})
                 if (delta > 0) {
                     if (delta === 1) {
                         chatBroadcast("game_update",{message: "added "+delta+" "+tokenType+" token to "+displayName+"."});
@@ -240,27 +239,34 @@ export const HandleKeyDown = ({
             }
             // Set tokens to 0
             else if (k === "0" && groupType === "play") {
-                for (var tokenType in tokens) {
-                    if (tokens.hasOwnProperty(tokenType)) {
-                        gameBroadcast("increment_token",{group_id: groupId, stack_index: stackIndex, card_index: cardIndex, token_type: tokenType, increment: -tokens[tokenType]})
+                var newTokens = tokens;
+                for (var tokenType in newTokens) {
+                    if (newTokens.hasOwnProperty(tokenType)) {
+                        newTokens = {...newTokens, [tokenType]: 0};
+                        //newTokens[tokenType] = 0; 
                     }
                 }
+                const paths = [["game","cardById",activeCardId,"tokens"]];
+                const values = [newTokens];
+                const update = {paths: paths, values: values}
+                dispatch(setValues(update))
+                gameBroadcast("update_values", update);
                 chatBroadcast("game_update", {message: "cleared all tokens from "+displayName+"."});
             }
             // Flip card
             else if (k === "f") {
-                if (newCard["currentSide"] === "A") {
-                    newCard = {...newCard, current_side: "B"}
-                } else {
-                    newCard = {...newCard, current_side: "A"}
-                }
-                gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index: cardIndex});
+                const paths = [["game","cardById",activeCardId,"currentSide"]]
+                var values;
+                if (activeCard["currentSide"] === "A") values = ["B"];
+                else values = ["A"];
+                const update = {paths: paths, values: values};
+                dispatch(setValues(update))
+                gameBroadcast("update_values", update);
                 if (displayName==="player card" || displayName==="encounter card") {
-                    chatBroadcast("game_update", {message: "flipped "+getDisplayName(newCard)+" faceup."});
+                    chatBroadcast("game_update", {message: "flipped "+getDisplayName(activeCard)+" faceup."});
                 } else {
                     chatBroadcast("game_update", {message: "flipped "+displayName+" over."});
                 }
-                updateActiveCard = true;
             }
             // Exhaust card
             else if (k === "a" && groupType === "play") {
@@ -273,12 +279,13 @@ export const HandleKeyDown = ({
                 } else {
                     chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
                 }
-                dispatch(setValues({paths: paths, values: values}))
-                gameBroadcast("update_values", {paths: paths, values: values})
+                const update = {paths: paths, values: values};
+                dispatch(setValues());
+                gameBroadcast("update_values", update);
             }
             // Deal shadow card
             else if (k === "s" && groupType == "play") {
-                gameBroadcast("deal_shadow", {group_id: activeCardAndLoc.groupId, stack_index: activeCardAndLoc.stackIndex});
+                gameBroadcast("card_action", {action: "deal_shadow", card_id: activeCardId, options: []});
                 chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
             }        
             // Send to appropriate discard pile
@@ -327,19 +334,6 @@ export const HandleKeyDown = ({
                 gameBroadcast("shuffle_group", {group_id: destGroupId})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupId].name+"."})
             }
-
-            // if (updateActiveCard) {
-            //     activeCardAndLoc.setCard(newCard);
-            //     setActiveCardAndLoc({
-            //         card: newCard, 
-            //         groupId: activeCardAndLoc.groupId, 
-            //         stackIndex: activeCardAndLoc.stackIndex, 
-            //         cardIndex: activeCardAndLoc.cardIndex, 
-            //         mousePosition: activeCardAndLoc.mousePosition,
-            //         screenPosition: activeCardAndLoc.screenPosition,
-            //         setCard: activeCardAndLoc.setCard,
-            //     });
-            // }
         }
     }
     return (null);

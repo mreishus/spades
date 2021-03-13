@@ -62,9 +62,6 @@ export const Token = React.memo(({
                 }                
             }
         }, 500);
-        
-
-
     }
     function handleDoubleClick(event) {
         event.stopPropagation();

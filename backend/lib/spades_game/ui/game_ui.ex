@@ -138,7 +138,7 @@ defmodule SpadesGame.GameUI do
   end
 
   def get_card_by_gsc(gameui, gsc) do
-    group = get_group(gameui, Enum.at(gsc,1))
+    group = get_group(gameui, Enum.at(gsc,0))
     stack_ids = group["stackIds"]
     stack = get_stack(gameui, Enum.at(stack_ids, Enum.at(gsc,1)))
     card_ids = stack["cardIds"]
@@ -147,7 +147,9 @@ defmodule SpadesGame.GameUI do
 
   # Card action: must be in the form fn(gameui, card, args)
   def card_action(gameui, action, card_id, options) do
-    IO.puts("card_action #{action} #{card_id}")
+    IO.puts("card_action")
+    IO.inspect(action)
+    IO.inspect(card_id)
     card = get_card(gameui, card_id)
     gameui = case action do
       "move_card" ->
@@ -231,17 +233,18 @@ defmodule SpadesGame.GameUI do
 
   def deal_shadow(gameui, card, options \\ nil) do
     {group_id, stack_index, card_index} = gsc(gameui, card)
-    gameui
-    # shadow_card = get_card(gameui, ["sharedEncounterDeck", 0, 0])
-    # IO.puts("shadow_card")
-    # if shadow_card do
-    #   cards_size = Enum.count(GameUI.get_card_ids(gameui, stack_id, stack_index))
-    #   gameui = move_card(gameui, "sharedEncounterDeck", 0, 0, group_id, stack_index, cards_size, false, true)
-    #   rotated_shadow_card = put_in(shadow_card["rotation"], -30)
-    #   update_card(gameui, rotated_shadow_card)
-    # else
-    #   gameui
-    # end
+    stack = get_stack_by_card_id(gameui, card["id"])
+    shadow_card = get_card_by_gsc(gameui, ["sharedEncounterDeck", 0, 0])
+    IO.puts("shadow_card")
+    IO.inspect(shadow_card)
+    if shadow_card do
+      cards_size = Enum.count(stack["cardIds"])
+      gameui = move_card(gameui, shadow_card, [group_id, stack_index, cards_size, true, true])
+      rotated_shadow_card = put_in(shadow_card["rotation"], -30)
+      update_card(gameui, rotated_shadow_card)
+    else
+      gameui
+    end
   end
 
   def insert_new_stack(gameui, group_id, stack_index, stack) do

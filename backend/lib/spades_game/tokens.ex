@@ -8,7 +8,6 @@ defmodule SpadesGame.Tokens do
   @spec new() :: Map.t()
   def new() do
     %{
-      "id"=> Ecto.UUID.generate,
       "resource"=> 0,
       "progress"=> 0,
       "damage"=> 0,
