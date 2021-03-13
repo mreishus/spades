@@ -255,6 +255,25 @@ defmodule SpadesGame.GameUI do
     |> update_stack_ids(group_id, new_stack_ids)
   end
 
+  def delete_stack(gameui, stack) do
+    # Delete stack from stackById object
+    old_stack_by_id = gameui["game"]["stackById"]
+    new_stack_by_id = Map.delete(old_stack_by_id, stack["id"])
+    gameui = put_in(gameui["game"]["stackById"], new_stack_by_id)
+    # Delete stack index from group
+    old_group = get_group_by_stack_id(gameui, stack["id"])
+    old_stack_ids = old_group["stackIds"]
+    stack_index = get_stack_index_by_stack_id(gameui, stack["id"])
+    IO.puts("stack_index")
+    IO.inspect(stack_index)
+    new_stack_ids = List.delete_at(old_stack_ids, stack_index)
+    IO.puts("new_stack_ids")
+    IO.inspect(new_stack_ids)
+    IO.puts("old_group")
+    IO.inspect(old_group)
+    update_stack_ids(gameui, old_group["id"], new_stack_ids)
+  end
+
   def remove_from_stack(gameui, stack, card) do
     IO.puts("removing from stack")
     IO.inspect(stack)
@@ -267,7 +286,11 @@ defmodule SpadesGame.GameUI do
     new_card_ids = List.delete_at(old_card_ids, card_index)
     IO.puts("new_card_ids")
     IO.inspect(new_card_ids)
-    update_card_ids(gameui, stack["id"], new_card_ids)
+    if Enum.count(new_card_ids) == 0 do
+      delete_stack(gameui, stack)
+    else
+      update_card_ids(gameui, stack["id"], new_card_ids)
+    end
   end
 
   def add_to_stack(gameui, stack, card, card_index) do
