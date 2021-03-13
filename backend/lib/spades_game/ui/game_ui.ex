@@ -593,50 +593,68 @@ defmodule SpadesGame.GameUI do
   def load_cards(gameui, user_id, load_list) do
     # Get player doing the loading
     player_n = get_player_n(gameui, user_id)
-    # Get deck sie before load
-    deck_size_before = Enum.count(get_stack_ids(gameui, player_n<>"Deck"))
+    # Get deck size before load
+    player_n_deck_id = player_n<>"Deck"
+    deck_size_before = Enum.count(get_stack_ids(gameui, player_n_deck_id))
 
     gameui = Enum.reduce(load_list, gameui, fn r, acc ->
       load_card(acc, r["cardRow"], r["groupId"], r["quantity"])
     end)
 
-    # # Check if we should load the first quest card
-    # IO.puts("checking quest")
-    # IO.inspect(Enum.count(get_stack_ids(gameui,"sharedQuestDeck")))
-    # IO.inspect(Enum.count(get_stack_ids(gameui,"sharedMainQuest")))
-    # gameui = if Enum.count(get_stack_ids(gameui,"sharedQuestDeck"))>0 && Enum.count(get_stack_ids(gameui,"sharedMainQuest"))==0 do
-    #   move_stack(gameui, "sharedQuestDeck", 0, "sharedMainQuest", 0)
-    # else
-    #   gameui
-    # end
+    # Check if we should load the first quest card
+    IO.puts("checking quest")
+    IO.inspect(Enum.count(get_stack_ids(gameui,"sharedQuestDeck")))
+    IO.inspect(Enum.count(get_stack_ids(gameui,"sharedMainQuest")))
+    quest_deck_stack_ids = get_stack_ids(gameui,"sharedQuestDeck")
+    main_quest_stack_ids = get_stack_ids(gameui,"sharedMainQuest")
+    gameui = if Enum.count(quest_deck_stack_ids)>0 && Enum.count(main_quest_stack_ids)==0 do
+      move_stack(gameui, Enum.at(quest_deck_stack_ids, 0), "sharedMainQuest", 0)
+    else
+      gameui
+    end
 
-    # # Add to starting threat
-    # threat = Enum.reduce load_list, 0, fn r, acc ->
-    #   sideA = r["cardRow"]["sides"]["A"]
-    #   if sideA["type"] == "Hero" do
-    #     acc + CardFace.convert_to_integer(sideA["cost"])*r["quantity"]
-    #   else
-    #     acc
-    #   end
-    # end
-    # gameui = if player_n do
-    #   put_in(gameui["game"]["playerData"][player_n]["threat"], threat)
-    # else
-    #   gameui
-    # end
+    # Add to starting threat
+    threat = Enum.reduce(load_list, 0, fn(r, acc) ->
+      sideA = r["cardRow"]["sides"]["A"]
+      if sideA["type"] == "Hero" do
+        acc + CardFace.convert_to_integer(sideA["cost"])*r["quantity"]
+      else
+        acc
+      end
+    end)
+    gameui = if player_n do
+      put_in(gameui["game"]["playerData"][player_n]["threat"], threat)
+    else
+      gameui
+    end
 
-    # # If deck size has increased from 0, assume it is at start of game and a mulligan is needed
-    # round_number = gameui["game"]["round_number"]
-    # round_step = gameui["game"]["round_step"]
-    # deck_size_after = Enum.count(get_stack_ids(gameui,"g"<>player_n<>"Deck"))
-    # gameui = if round_number == 0 && round_step == "0.0" && deck_size_before == 0 && deck_size_after > 6 do
-    #   gameui = shuffle_group(gameui, "g"<>player_n<>"Deck")
-    #   Enum.reduce 1..6, gameui, fn i, acc ->
-    #     move_stack(acc, "g"<>player_n<>"Deck", 0, "g"<>player_n<>"Hand", -1, false)
-    #   end
-    # else
-    #   gameui
-    # end
+    # If deck size has increased from 0, assume it is at start of game and a mulligan is needed
+    round_number = gameui["game"]["roundNumber"]
+    round_step = gameui["game"]["roundStep"]
+    deck_size_after = Enum.count(get_stack_ids(gameui, player_n_deck_id))
+    IO.puts("checking for mulligan #{round_number} #{round_step} #{deck_size_before} #{deck_size_after}")
+    if round_number == 0 do
+      IO.puts("round_number")
+    end
+    if round_step == "0.0" do
+      IO.puts("round_step")
+    end
+    if deck_size_before == 0 do
+      IO.puts("deck_size_before")
+    end
+    if deck_size_after > 6 do
+      IO.puts("deck_size_after")
+    end
+    gameui = if round_number == 0 && round_step == "0.0" && deck_size_before == 0 && deck_size_after > 6 do
+      IO.puts("shuffling deck")
+      gameui = shuffle_group(gameui, player_n_deck_id)
+      Enum.reduce(1..6, gameui, fn(i, acc) ->
+        stack_ids = get_stack_ids(acc, player_n_deck_id)
+        acc = move_stack(acc, Enum.at(stack_ids, 0), player_n<>"Hand", -1)
+      end)
+    else
+      gameui
+    end
   end
 
   # # Take a list of maps and add the index to each one with a key given by label
