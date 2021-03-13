@@ -76,16 +76,18 @@ export const DragContainer = ({
       }   
       dispatch(setStackIds(newOrigGroup))
       dispatch(setCardIds(newDestStack))
-      gameBroadcast("update_values", {
-        paths: [
-          ["game", "groupById", origGroupId, "stackIds"],
-          ["game", "stackById", destStackId, "cardIds"]
-        ],
-        values: [
-          newOrigGroupStackIds,
-          newDestStackCardIds
-        ]
-      })
+      gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: true, preserve_state: false})
+
+      // gameBroadcast("update_values", {
+      //   paths: [
+      //     ["game", "groupById", origGroupId, "stackIds"],
+      //     ["game", "stackById", destStackId, "cardIds"]
+      //   ],
+      //   values: [
+      //     newOrigGroupStackIds,
+      //     newDestStackCardIds
+      //   ]
+      // })
       //gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newOrigGroupStackIds})
       //gameBroadcast("update_value", {path: ["game", "stackById", destStackId, "cardIds"], value: newDestStackCardIds})
       chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."})
@@ -115,16 +117,17 @@ export const DragContainer = ({
     //dispatch(setStackIds(newGroupById[origGroupId]))
     //dispatch(setStackIds(newGroupById[destGroupId]))
     //gameBroadcast("update_value", {path: ["game", "groupById"], value: newGroupById})
-    gameBroadcast("update_values", {
-      paths: [
-        ["game", "groupById", origGroupId, "stackIds"],
-        ["game", "groupById", destGroupId, "stackIds"]
-      ],
-      values: [
-        newGroupById[origGroupId].stackIds,
-        newGroupById[destGroupId].stackIds
-      ]
-    })
+    gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: false})
+    // gameBroadcast("update_values", {
+    //   paths: [
+    //     ["game", "groupById", origGroupId, "stackIds"],
+    //     ["game", "groupById", destGroupId, "stackIds"]
+    //   ],
+    //   values: [
+    //     newGroupById[origGroupId].stackIds,
+    //     newGroupById[destGroupId].stackIds
+    //   ]
+    // })
 //    gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newGroupById[origGroupId].stackIds})
     if (origGroupId != destGroupId) {
       //gameBroadcast("update_value", {path: ["game", "groupById", destGroupId, "stackIds"], value: newGroupById[destGroupId].stackIds})
