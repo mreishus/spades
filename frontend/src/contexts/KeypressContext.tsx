@@ -1,13 +1,15 @@
 import React, { useState } from 'react'
-import { Card } from "elixir-backend";
 
+interface KeypressType {
+  [name: string]: boolean,
+}
 
-const KeypressContext = React.createContext<Array<string>>([""])
+const KeypressContext = React.createContext<KeypressType>({})
 const SetKeyPressContext = React.createContext<any | null>(null)
 
 
 function KeypressProvider({children} : any) {
-  const [keypress, setKeypress] = useState<Array<string>>([""]);
+  const [keypress, setKeypress] = useState<KeypressType>({"Shift": false});
   return (
     <KeypressContext.Provider value={keypress}>
       <SetKeyPressContext.Provider value={setKeypress}>

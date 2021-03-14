@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 
-
-
 const ActiveCardContext = React.createContext<any | null>(null)
 const SetActiveCardContext = React.createContext<any | null>(null)
 

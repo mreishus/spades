@@ -8,7 +8,9 @@ import { Table } from "./Table";
 import { GROUPSINFO } from "./Constants"
 import { getDisplayName, getCurrentFace } from "./Helpers"
 
-export const DragContainer = ({
+
+
+export const DragContainer = React.memo(({
   playerN,
   gameBroadcast,
   chatBroadcast,
@@ -18,6 +20,7 @@ export const DragContainer = ({
   const gameStore = state => state?.gameUi?.game;
   const dispatch = useDispatch();
   const game = useSelector(gameStore);
+  console.log("rendering dragcontainer");
 
   const onDragEnd = (result) => {
     console.log("drag end ",result);
@@ -162,4 +165,4 @@ export const DragContainer = ({
       />
     </DragDropContext>
   )
-};
+});

@@ -151,15 +151,16 @@ const gameUiSlice = createSlice({
         deepUpdate(state.playerIds, payload);
       }
     },
-    setThreat: (state, { payload }) => {
-      state.game.playerData[payload.playerN].threat = payload.value;
-    },
     setValues: (state, { payload }) => {
       console.log("setting values")
       updateValues(state, payload.paths, payload.values);
     },
+    incrementRound: (state, { payload }) => {
+      console.log("increment round")
+      state.game.roundNumber = state.game.roundNumber+1;
+    },
   },
 });
 
-export const { setGame, setGameName, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setThreat, setValues } = gameUiSlice.actions;
+export const { setGame, setGameName, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setValues, incrementRound } = gameUiSlice.actions;
 export default gameUiSlice.reducer;

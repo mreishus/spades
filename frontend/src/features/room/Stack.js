@@ -76,6 +76,7 @@ export const Stack = React.memo(({
           {cardIds.map((cardId, cardIndex) => {
             return(
               <Card
+                key={cardId}
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast} 
                 playerN={playerN}

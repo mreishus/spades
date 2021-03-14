@@ -35,9 +35,9 @@ export const Table = React.memo(({
   setTyping
 }) => {
 
-  const gameUiStore = state => state.gameUi;
-  const dispatch = useDispatch();
-  const gameUi = useSelector(gameUiStore);
+  //const gameUiStore = state => state.gameUi;
+  //const dispatch = useDispatch();
+  //const gameUi = useSelector(gameUiStore);
   const [showScratch, setShowScratch] = useState(false);
   const [showSpawn, setShowSpawn] = useState(false);
   const [chatHover, setChatHover] = useState(false);
@@ -198,18 +198,17 @@ export const Table = React.memo(({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               ></Group>
             </div>
-
             {browseGroupId ? 
               <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
                 <BrowseContainer
                   groupId={browseGroupId}
+                  width="100%"
                   gameBroadcast={gameBroadcast}
                   chatBroadcast={chatBroadcast}
                   playerN={playerN}
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                  playerIDs={gameUi["playerIds"]}
                 ></BrowseContainer>
               </div>
               :
@@ -251,7 +250,6 @@ export const Table = React.memo(({
                   boxShadow: '0 0 10px 5px rgba(0,0,0,0.3)',
                 }}>
                 <PlayerBar
-                  groups={gameUi.game.groupById}
                   observingPlayerN={observingPlayerN}
                   gameBroadcast={gameBroadcast} 
                   chatBroadcast={chatBroadcast}
@@ -272,9 +270,7 @@ export const Table = React.memo(({
         onMouseEnter={() => setChatHover(true)}
         onMouseLeave={() => setChatHover(false)}
       >
-        {gameUi != null && (
-          <Chat roomName={gameUi.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
-        )}
+        <Chat chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
       </div>
       {/* Right panel
       <div className="flex w-1/5" >

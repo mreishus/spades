@@ -46,6 +46,7 @@ export const PhaseButton = React.memo(({
           const roundStepText = phaseInfo[roundStep];
           return(
             <div 
+              key={roundStep}
               className={`flex flex-1 items-center`} 
               style={{
                 zIndex:1e6, 

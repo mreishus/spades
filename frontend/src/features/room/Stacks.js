@@ -59,6 +59,7 @@ const StacksList = React.memo(({
     stackIdsToShow?.map((stackId, stackIndex) => (
       (selectedStackIndices.includes(stackIndex)) ? (
         <Stack
+          key={stackId}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
           playerN={playerN}

@@ -2,7 +2,6 @@ import React from "react";
 import { Group } from "./Group";
 
 export const PlayerBar = React.memo(({
-  groups,
   observingPlayerN,
   gameBroadcast,
   chatBroadcast,

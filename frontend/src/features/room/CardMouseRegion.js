@@ -8,6 +8,7 @@ export const CardMouseRegion = React.memo(({
     card,
     setIsActive
 }) => {
+    console.log("rendering cardmouseregion")
     //const activeCard = useActiveCard();
     const setActiveCard = useSetActiveCard();
 

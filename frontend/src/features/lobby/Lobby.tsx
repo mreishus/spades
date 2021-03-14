@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import { useSelector, useDispatch } from 'react-redux';
 import { Link } from "react-router-dom";
 import CreateRoomModal from "./CreateRoomModal";
 import LobbyTable from "./LobbyTable";
@@ -8,7 +7,6 @@ import Container from "../../components/basic/Container";
 import AdminContact from "../../components/AdminContact";
 import Chat from "../chat/Chat";
 import { ChatMessage } from "elixir-backend";
-import { setGame, setPlayerIds } from "../room/gameUiSlice";
 
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
@@ -25,9 +23,6 @@ export const Lobby: React.FC = () => {
     null
   );
 
-  const dispatch = useDispatch();
-  dispatch(setGame(null));
-  dispatch(setPlayerIds(null));
 
   const onChannelMessage = useCallback(
     (event, payload) => {

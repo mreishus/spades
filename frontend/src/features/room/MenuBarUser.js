@@ -4,7 +4,7 @@ import UserName from "../user/UserName";
 import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { Link } from "react-router-dom";
-import { setThreat } from "./gameUiSlice";
+import { setValues } from "./gameUiSlice";
 
 var delayBroadcast;
 
@@ -45,8 +45,11 @@ export const MenuBarUser = React.memo(({
     // Set up a delayed broadcast to update the game state that interrupts itself if the button is clicked again shortly after.
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
-      dispatch(setThreat({playerN: playerN, value: newValue}));
-      gameBroadcast("update_value",{path:["game", "playerData", playerN, "threat"], value: parseInt(newValue)})
+      const paths = [["game", "playerData", playerN, "threat"]];
+      const values = [parseInt(newValue)];
+      const update = {paths: paths, values: values};
+      dispatch(setValues(update));
+      gameBroadcast("update_value",update);
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
     }, 800);

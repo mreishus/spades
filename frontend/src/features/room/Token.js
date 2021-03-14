@@ -10,16 +10,16 @@ var delayBroadcast;
 export const Token = React.memo(({
     cardId,
     cardName,
-    type,
+    tokenType,
     left,
     top,
     showButtons,
     gameBroadcast,
     chatBroadcast,
 }) => {
-    const tokenStore = state => state?.gameUi?.game?.cardById?.[cardId]?.tokens?.[type];
+    const tokenStore = state => state?.gameUi?.game?.cardById?.[cardId]?.tokens?.[tokenType];
     const tokenValue = useSelector(tokenStore);
-    console.log('rendering token on ',cardId, tokenValue);
+    console.log('rendering token on ',cardId, tokenType);
     //console.log(gameUI.game.groups[groupId].stacks)
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
@@ -29,12 +29,12 @@ export const Token = React.memo(({
         if (tokenValue !== amount) setAmount(tokenValue);
     }, [tokenValue]);
 
-    if (!tokenValue) return null;
+    if (tokenValue == null) return null;
 
     function clickArrow(event,delta) {
         event.stopPropagation();
         var newAmount = 0;
-        if ((type==="resource" || type==="progress" || type==="damage" || type==="time") && (amount+delta < 0)) {
+        if ((tokenType==="resource" || tokenType==="progress" || tokenType==="damage" || tokenType==="time") && (amount+delta < 0)) {
             newAmount = 0;
         } else {
             newAmount = amount+delta;
@@ -45,20 +45,20 @@ export const Token = React.memo(({
         // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
-            gameBroadcast("update_value",{path: ["game", "cardById", cardId, "tokens", type], value: newAmount});
+            gameBroadcast("update_value",{path: ["game", "cardById", cardId, "tokens", tokenType], value: newAmount});
             //gameBroadcast("increment_token",{tokens_id: tokensId, type: type, increment: totalDelta})
             //gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index:cardIndex});
             if (totalDelta > 0) {
                 if (totalDelta === 1) {
-                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" token to "+cardName+"."});
+                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+tokenType+" token to "+cardName+"."});
                 } else {
-                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+type+" tokens to "+cardName+"."});
+                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+tokenType+" tokens to "+cardName+"."});
                 }
             } else if (totalDelta < 0) {
                 if (totalDelta === -1) {
-                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+type+" token from "+cardName+"."});
+                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+tokenType+" token from "+cardName+"."});
                 } else {
-                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+type+" tokens from "+cardName+"."});
+                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+tokenType+" tokens from "+cardName+"."});
                 }                
             }
         }, 500);
@@ -90,24 +90,22 @@ export const Token = React.memo(({
                 top: `${top}`,
                 height: `${CARDSCALE/0.72/4}vw`,
                 width: `${CARDSCALE/0.72/4}vw`,
-                backgroundImage: `url(${process.env.PUBLIC_URL + '/images/tokens/'+type+'.png'})`,
+                backgroundImage: `url(${process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'})`,
                 backgroundSize: "contain",
                 //zIndex: 1e6,
                 display: showButtons || amount!==0 ? "block" : "none",
             }}
         >
-
             <p 
                 className="text-center text-sm"
                 style={{
                     position: "absolute",
                     color: "white", 
-//                    textShadow: "2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, -2px 0 0 #000", 
                     textShadow: "rgb(0, 0, 0) 2px 0px 0px, rgb(0, 0, 0) 1.75517px 0.958851px 0px, rgb(0, 0, 0) 1.0806px 1.68294px 0px, rgb(0, 0, 0) 0.141474px 1.99499px 0px, rgb(0, 0, 0) -0.832294px 1.81859px 0px, rgb(0, 0, 0) -1.60229px 1.19694px 0px, rgb(0, 0, 0) -1.97999px 0.28224px 0px, rgb(0, 0, 0) -1.87291px -0.701566px 0px, rgb(0, 0, 0) -1.30729px -1.51361px 0px, rgb(0, 0, 0) -0.421592px -1.95506px 0px, rgb(0, 0, 0) 0.567324px -1.91785px 0px, rgb(0, 0, 0) 1.41734px -1.41108px 0px, rgb(0, 0, 0) 1.92034px -0.558831px 0px",
                     top: "17%",
                     width: "100%",
-            }}>
-                {(type==="threat" || type==="willpower" || type==="attack" || type==="defense") && amount>0 ? "+"+amount : amount}
+                }}>
+                {(tokenType==="threat" || tokenType==="willpower" || tokenType==="attack" || tokenType==="defense") && amount>0 ? "+"+amount : amount}
             </p>
 
             <div
@@ -133,7 +131,8 @@ export const Token = React.memo(({
                         top:"25%", 
                         left:"20%",
                     }}  
-                    icon={faChevronLeft}/>
+                    icon={faChevronLeft}
+                />
             </div>
 
             <div
@@ -160,7 +159,8 @@ export const Token = React.memo(({
                         top:"25%", 
                         left:"30%",
                     }} 
-                    icon={faChevronRight}/>
+                    icon={faChevronRight}
+                />
             </div>
         </div>
     )

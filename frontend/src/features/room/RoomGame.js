@@ -4,19 +4,10 @@ import ReactDOM from "react-dom";
 import { Table } from "./Table";
 import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import GameUIContext from "../../contexts/GameUIContext";
-import { ChatMessage } from "elixir-backend";
 import { HandleKeyDown } from "./HandleKeyDown";
 import { GetPlayerN } from "./Helpers";
 import { DragContainer } from "./DragContainer";
 import useProfile from "../../hooks/useProfile";
-
-
-
-interface Props {
-  gameBroadcast: (eventName: string, payload: object) => void;
-  chatBroadcast: (eventName: string, payload: object) => void;
-  messages: Array<ChatMessage>;
-}
 
 // class RoomGame extends React.Component<Props> {
 
@@ -43,11 +34,11 @@ interface Props {
 
 // 
 
-const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) => {
+const RoomGame = React.memo(({ gameBroadcast, chatBroadcast, messages }) => {
   console.log('rendering roomgame');
-  const storePlayerIds = (state : any) => state?.gameUi?.playerIds;
+  const storePlayerIds = state => state?.gameUi?.playerIds;
   const playerIds = useSelector(storePlayerIds);
-  const [typing, setTyping] = useState<Boolean>(false);
+  const [typing, setTyping] = useState(false);
   const keypress = useKeypress();
   const setKeypress = useSetKeypress();
   const myUser = useProfile();
@@ -97,6 +88,6 @@ const RoomGame: React.FC<Props> = ({ gameBroadcast, chatBroadcast, messages }) =
       />
     </div>
   )
-}   
+})
 
 export default RoomGame;

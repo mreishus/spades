@@ -2,7 +2,7 @@ import React, { useEffect} from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
-import { setValues } from "./gameUiSlice";
+import { setValues, incrementRound } from "./gameUiSlice";
 import { 
     getDisplayName, 
     getDisplayNameFlipped, 
@@ -54,7 +54,7 @@ export const HandleKeyDown = ({
         }
 
         const onKeyUp = (event) => {
-        if (event.key === "Shift") setKeypress([""]);
+            if (event.key === "Shift") setKeypress({"Shift": false});
         }
 
         document.addEventListener('keydown', onKeyDown);
@@ -85,7 +85,7 @@ export const HandleKeyDown = ({
         const k = event.key;
         console.log(k);
         // Keep track of last pressed key
-        if (k === "Shift") setKeypress([k]);
+        if (k === "Shift") setKeypress({"Shift": true});
         
         // General hotkeys
         if (k === "e" || k === "E") {
@@ -128,6 +128,8 @@ export const HandleKeyDown = ({
                 combine: false,
                 preserve_state: shiftHeld,
             });
+        } else if (k === "y") {
+            dispatch(incrementRound());
         } else if (k === "d") {
             // Check remaining cards in deck
             const player1Deck = gameUi.game.groupById.player1Deck;
@@ -281,15 +283,15 @@ export const HandleKeyDown = ({
                 console.log("toggle exhaust")
                 const paths = [["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]];
                 var values = [true, 90];
-                if (activeCard.exhausted) {
+                if (activeCard.exhausted) //{
                     values = [false, 0];
-                    chatBroadcast("game_update", {message: "readied "+displayName+"."});
-                } else {
-                    chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
-                }
+                    //chatBroadcast("game_update", {message: "readied "+displayName+"."});
+                //} else {
+                    //chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+                //}
                 const update = {paths: paths, values: values};
-                dispatch(setValues());
-                gameBroadcast("update_values", update);
+                dispatch(setValues(update));
+                //gameBroadcast("update_values", update);
             }
             // Deal shadow card
             else if (k === "s" && groupType == "play") {

@@ -80,7 +80,7 @@ const App: React.FC = () => {
   );
 
   return (
-    <React.StrictMode>
+    //<React.StrictMode>
       <AuthContext.Provider value={authValue}>
         <SocketProvider
           wsUrl={process.env.REACT_APP_WS_URL || "/be/socket"}
@@ -93,7 +93,7 @@ const App: React.FC = () => {
           </ProfileProvider>
         </SocketProvider>
       </AuthContext.Provider>
-    </React.StrictMode>
+    //</React.StrictMode>
   );
 };
 
