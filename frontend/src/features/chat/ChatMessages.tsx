@@ -1,21 +1,35 @@
-import React from "react";
-import ScrollToBottom from "react-scroll-to-bottom";
-import ChatMessagesInner from "./ChatMessagesInner";
-import { ChatMessage } from "elixir-backend";
+import React, { useRef } from "react";
+import ChatLine from "./ChatLine";
+import { useMessages } from "../../contexts/MessagesContext";
 
 interface Props {
-  messages: Array<ChatMessage>;
   className?: string;
 }
 
-export const ChatMessages: React.FC<Props> = ({ messages, className }) => {
+export const ChatMessages: React.FC<Props> = ({ className }) => {
+  console.log("rendering chatmessages")
+  const messages = useMessages();
+
+  const bottomRef = useRef<any>();
+
+  const scrollToBottom = () => {
+      bottomRef?.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+  };
+
+  scrollToBottom();
+
   return (
-    <ScrollToBottom
-      className="bg-grey-700 max-w-full p-2 overflow-y-auto h-full"
-    >
-      <ChatMessagesInner messages={messages} />
-    </ScrollToBottom>
+    <div>
+      {messages?.map((m, i) => (
+        <ChatLine key={m.shortcode} message={m} />
+      ))}
+      <div ref={bottomRef} className="list-bottom"></div>
+    </div>
   );
+
 };
 export default ChatMessages;
 

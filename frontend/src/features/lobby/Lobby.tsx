@@ -99,11 +99,11 @@ export const Lobby: React.FC = () => {
             />
           </div>
         </div>
-        <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">
+        {/* <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">
           <div className="flex items-end h-full">
             <Chat chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping} />
           </div>
-        </div>
+        </div> */}
       </div>
   );
 };

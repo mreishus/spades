@@ -2,9 +2,9 @@ import React, { useState, useCallback } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import RoomGame from "./RoomGame";
 import GameUIContext from "../../contexts/GameUIContext";
-import {KeypressProvider} from '../../contexts/KeypressContext'
-import {ActiveCardProvider} from '../../contexts/ActiveCardContext'
-import {MessagesProvider} from '../../contexts/ActiveCardContext'
+import {useSetMessages} from '../../contexts/MessagesContext';
+import {KeypressProvider} from '../../contexts/KeypressContext';
+import {ActiveCardProvider} from '../../contexts/ActiveCardContext';
 import useChannel from "../../hooks/useChannel";
 import { setGame, setGameName, setPlayerIds } from "./gameUiSlice";
 
@@ -12,6 +12,7 @@ export const Room = ({ slug }) => {
   const gameNameStore = state => state.gameUi.gameName;
   const dispatch = useDispatch();
   const gameName = useSelector(gameNameStore);
+  const setMessages = useSetMessages();
 
   //const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
@@ -32,7 +33,8 @@ export const Room = ({ slug }) => {
     }
   }, []);
   
-  const [messages, setMessages] = useState([]);
+  //const [messages, setMessages] = useState([]);
+
   const onChatMessage = useCallback((event, payload) => {
     if (
       event === "phx_reply" &&
@@ -54,11 +56,11 @@ export const Room = ({ slug }) => {
         <div className="gamebackground"
           style={{height: "97vh"}}
         >
-          <KeypressProvider value={{Shift: false}}>
-            <ActiveCardProvider value={null}>
-              <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast} messages={messages}/>
-            </ActiveCardProvider>
-          </KeypressProvider>
+            <KeypressProvider value={{Shift: false}}>
+              <ActiveCardProvider value={null}>
+                <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
+              </ActiveCardProvider>
+            </KeypressProvider>
         </div>
       // </Container>
     );

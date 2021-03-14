@@ -34,7 +34,7 @@ import useProfile from "../../hooks/useProfile";
 
 // 
 
-const RoomGame = React.memo(({ gameBroadcast, chatBroadcast, messages }) => {
+const RoomGame = React.memo(({ gameBroadcast, chatBroadcast }) => {
   console.log('rendering roomgame');
   const storePlayerIds = state => state?.gameUi?.playerIds;
   const playerIds = useSelector(storePlayerIds);
@@ -83,7 +83,6 @@ const RoomGame = React.memo(({ gameBroadcast, chatBroadcast, messages }) => {
         playerN={playerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
-        messages={messages}
         setTyping={setTyping}
       />
     </div>

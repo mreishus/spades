@@ -18,6 +18,7 @@ import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { PlayerBar } from "./PlayerBar";
 import { PhaseBar } from "./PhaseBar";
 import { setStackIds, setCardIds } from "./gameUiSlice";
+import { useMessages } from "../../contexts/MessagesContext";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -31,7 +32,6 @@ export const Table = React.memo(({
   playerN,
   gameBroadcast,
   chatBroadcast,
-  messages,
   setTyping
 }) => {
 
@@ -48,6 +48,8 @@ export const Table = React.memo(({
   // Indices of stacks in group being browsed
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
+
+  const messages = useMessages();
 
   console.log('rendering table');
 
@@ -270,7 +272,7 @@ export const Table = React.memo(({
         onMouseEnter={() => setChatHover(true)}
         onMouseLeave={() => setChatHover(false)}
       >
-        <Chat chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
+        <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
       </div>
       {/* Right panel
       <div className="flex w-1/5" >

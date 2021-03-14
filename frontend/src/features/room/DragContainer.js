@@ -14,7 +14,6 @@ export const DragContainer = React.memo(({
   playerN,
   gameBroadcast,
   chatBroadcast,
-  messages,
   setTyping
 }) => {
   const gameStore = state => state?.gameUi?.game;
@@ -160,7 +159,6 @@ export const DragContainer = React.memo(({
         playerN={playerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
-        messages={messages}
         setTyping={setTyping}
       />
     </DragDropContext>

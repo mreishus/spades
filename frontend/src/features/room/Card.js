@@ -216,6 +216,14 @@ export const Card = React.memo(({
                 //onDoubleClick={handleDoubleClick}
                 onMouseLeave={event => handleMouseLeave(event)}
             >
+                <Tokens
+                    cardName={currentFace.name}
+                    cardType={currentFace.cardType}
+                    cardId={card.id}
+                    isActive={isActive}
+                    gameBroadcast={gameBroadcast}
+                    chatBroadcast={chatBroadcast}
+                />
 
                 <CardMouseRegion 
                     position={"top"}
@@ -230,16 +238,9 @@ export const Card = React.memo(({
                     card={card}
                     setIsActive={setIsActive}
                 />
-                { true && (
-                    <Tokens
-                        cardName={currentFace.name}
-                        cardType={currentFace.cardType}
-                        cardId={card.id}
-                        isActive={isActive}
-                        gameBroadcast={gameBroadcast}
-                        chatBroadcast={chatBroadcast}
-                    />
-                )}
+
+
+
                 {card["peeking"][playerN]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
             </div>
 

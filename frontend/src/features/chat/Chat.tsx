@@ -7,18 +7,17 @@ import { ChatMessage } from "elixir-backend";
 
 interface Props {
   chatBroadcast: (eventName: string, payload: object) => void;
-  messages: Array<ChatMessage>;
   setTyping: React.Dispatch<React.SetStateAction<Boolean>>
 }
 
-export const Chat: React.FC<Props> = ({ chatBroadcast, messages, setTyping }) => {
+export const Chat: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
   const isLoggedIn = useIsLoggedIn();
-
+  console.log("rendering chat")
   return (
 
     <div className="overflow-hidden h-full">
       <div className="bg-gray-800 overflow-y-auto rounded-lg" style={{height: "calc(100% - 32px)"}}>
-        <ChatMessages messages={messages}/>
+        <ChatMessages/>
       </div>
       <div className="text-center" >
         {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping} />}

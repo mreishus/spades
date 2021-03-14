@@ -283,14 +283,14 @@ export const HandleKeyDown = ({
                 console.log("toggle exhaust")
                 const paths = [["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]];
                 var values = [true, 90];
-                if (activeCard.exhausted) //{
+                if (activeCard.exhausted) {
                     values = [false, 0];
-                    //chatBroadcast("game_update", {message: "readied "+displayName+"."});
-                //} else {
-                    //chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
-                //}
+                    chatBroadcast("game_update", {message: "readied "+displayName+"."});
+                } else {
+                    chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+                }
                 const update = {paths: paths, values: values};
-                dispatch(setValues(update));
+                //dispatch(setValues(update));
                 //gameBroadcast("update_values", update);
             }
             // Deal shadow card
