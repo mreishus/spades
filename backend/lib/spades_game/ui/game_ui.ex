@@ -79,8 +79,8 @@ defmodule SpadesGame.GameUI do
     put_in(gameui["game"]["stackById"][new_stack["id"]], new_stack)
   end
 
-  def update_card_ids(gameui, stack_id, new_stack_ids) do
-    put_in(gameui["game"]["stackById"][stack_id]["cardIds"], new_stack_ids)
+  def update_card_ids(gameui, stack_id, new_card_ids) do
+    put_in(gameui["game"]["stackById"][stack_id]["cardIds"], new_card_ids)
   end
 
   def update_card(gameui, new_card) do
@@ -481,20 +481,27 @@ defmodule SpadesGame.GameUI do
     orig_stack_index = get_stack_index_by_stack_id(gameui, stack_id)
     # If destination is negative, count backward from the end
     dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stack_ids(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
+    dest_stack = get_stack_by_index(gameui, dest_group_id, dest_stack_index)
+    dest_stack_id = dest_stack["id"]
     # Delete from old position
     old_orig_stack_ids = get_stack_ids(gameui, orig_group_id)
-    stack_id = Enum.at(old_orig_stack_ids, orig_stack_index)
+    orig_stack_id = Enum.at(old_orig_stack_ids, orig_stack_index)
     new_orig_stack_ids = List.delete_at(old_orig_stack_ids, orig_stack_index)
     gameui = update_stack_ids(gameui, orig_group_id, new_orig_stack_ids)
     # Add to new position
-    old_dest_stack_ids = get_stack_ids(gameui, dest_group_id)
-    new_dest_stack_ids = List.insert_at(old_dest_stack_ids, dest_stack_index, stack_id)
-    gameui = update_stack_ids(gameui, dest_group_id, new_dest_stack_ids)
+    gameui = if combine do
+      old_orig_card_ids = get_card_ids(gameui, orig_stack_id)
+      old_dest_card_ids = get_card_ids(gameui, dest_stack["id"])
+      new_dest_card_ids = old_dest_card_ids ++ old_orig_card_ids
+      update_card_ids(gameui, dest_stack_id, new_dest_card_ids)
+    else
+      old_dest_stack_ids = get_stack_ids(gameui, dest_group_id)
+      new_dest_stack_ids = List.insert_at(old_dest_stack_ids, dest_stack_index, orig_stack_id)
+      update_stack_ids(gameui, dest_group_id, new_dest_stack_ids)
+    end
     # Update gameui
     gameui
-    |> update_stack_ids(orig_group_id, new_orig_stack_ids)
-    |> update_stack_ids(dest_group_id, new_dest_stack_ids)
-    |> update_stack_state(stack_id, [preserve_state, orig_group_id])
+    |> update_stack_state(orig_stack_id, [preserve_state, orig_group_id])
     #|> set_viewership(stack_id)
   end
 
@@ -598,8 +605,13 @@ defmodule SpadesGame.GameUI do
   end
 
   def load_card(gameui, card_row, group_id, quantity) do
+    IO.puts("quantity #{quantity}")
     Enum.reduce(1..quantity, gameui, fn(index, acc) ->
-      acc = add_card_row_to_group(gameui, group_id, card_row)
+      IO.inspect(card_row["sides"]["A"]["name"])
+      stack_ids = get_stack_ids(gameui, group_id)
+      IO.puts("group size")
+      IO.inspect(Enum.count(stack_ids))
+      acc = add_card_row_to_group(acc, group_id, card_row)
     end)
   end
 

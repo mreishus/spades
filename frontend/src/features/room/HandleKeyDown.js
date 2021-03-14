@@ -143,7 +143,7 @@ export const HandleKeyDown = ({
             const topStack = gameUi.game.stackById[topStackId];
             const topCardId = topStack["cardIds"][0];
             const topCard = gameUi.game.cardById[topCardId];
-            chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+"."});
+            chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+". Cards remaining: "+(stacksLeft-1)});
             gameBroadcast("move_stack",{
                 stack_id: topStackId, 
                 dest_group_id: "player1Hand", 
@@ -256,9 +256,9 @@ export const HandleKeyDown = ({
             // Flip card
             else if (k === "f") {
                 const paths = [["game","cardById",activeCardId,"currentSide"]]
-                var values;
-                if (activeCard["currentSide"] === "A") values = ["B"];
-                else values = ["A"];
+                var newSide = "A";
+                if (activeCard["currentSide"] === "A") newSide = "B";
+                const values = [newSide];
                 const update = {paths: paths, values: values};
                 dispatch(setValues(update))
                 gameBroadcast("update_values", update);
@@ -267,6 +267,14 @@ export const HandleKeyDown = ({
                 } else {
                     chatBroadcast("game_update", {message: "flipped "+displayName+" over."});
                 }
+                // Force refresh of GiantCard
+                setActiveCardAndLoc({
+                    ...activeCardAndLoc,
+                    card: {
+                        ...activeCardAndLoc.card,
+                        currentSide: newSide
+                    }
+                });
             }
             // Exhaust card
             else if (k === "a" && groupType === "play") {
