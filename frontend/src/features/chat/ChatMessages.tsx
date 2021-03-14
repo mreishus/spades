@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import ChatLine from "./ChatLine";
 import { useMessages } from "../../contexts/MessagesContext";
 
@@ -19,7 +19,9 @@ export const ChatMessages: React.FC<Props> = ({ className }) => {
       });
   };
 
-  scrollToBottom();
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
 
   return (
     <div>
