@@ -338,6 +338,23 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
+    "game_action",
+    %{
+      "action" => action,
+      "player_n" => player_n,
+      "options" => options,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.game_action(room_slug, user_id, action, player_n, options)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
     "action_on_matching_cards",
     %{
       "criteria" => criteria,

@@ -145,7 +145,9 @@ defmodule SpadesGame.GameUI do
     get_card(gameui, Enum.at(card_ids,Enum.at(gsc,2)))
   end
 
-  # Card action: must be in the form fn(gameui, card, args)
+  ############################################################
+  # Card actions: must be in the form fn(gameui, card, args) #
+  ############################################################
   def card_action(gameui, action, card_id, options) do
     IO.puts("card_action")
     IO.inspect(action)
@@ -171,11 +173,156 @@ defmodule SpadesGame.GameUI do
     end
   end
 
+  # card_action: move_card
+  def move_card(gameui, card, options) do
+    dest_group_id    = Enum.at(options, 0)
+    dest_stack_index = Enum.at(options, 1)
+    dest_card_index  = Enum.at(options, 2)
+    combine          = Enum.at(options, 3)
+    preserve_state   = Enum.at(options, 4)
+    # Get position of card
+    {orig_group_id, orig_stack_index, orig_card_index} = gsc(gameui, card)
+    # Get origin stack
+    orig_stack = get_stack_by_index(gameui, orig_group_id, orig_stack_index)
+    # Perpare destination stack
+    gameui = if combine do
+      gameui
+    else
+      new_stack = Stack.empty_stack()
+      insert_new_stack(gameui, dest_group_id, dest_stack_index, new_stack)
+    end
+    # Get destination stack
+    dest_stack = get_stack_by_index(gameui, dest_group_id, dest_stack_index)
+    # Update gameui
+    gameui
+    |> remove_from_stack(orig_stack, card)
+    |> add_to_stack(dest_stack, card, dest_card_index)
+    |> update_card_state(card, [preserve_state, orig_group_id])
+  end
+
+  # card_action increment_token
+  def increment_token(gameui, card, options) do
+    token_type = Enum.at(options, 0)
+    increment = Enum.at(options, 1)
+    old_value = card["tokens"][token_type]
+    new_value = if old_value + increment < 0 && Enum.member?(["resource", "progress", "damage", "time"], token_type) do
+      0
+    else
+      old_value + increment
+    end
+    update_token(gameui, card["id"], token_type, new_value)
+  end
+
+  # card_action toggle_exhaust
+  def toggle_exhaust(gameui, card, options \\ nil) do
+    new_card = if card["exhausted"] do
+      card = put_in(card["exhausted"], false)
+      put_in(card["rotation"], 0)
+    else
+      card = put_in(card["exhausted"], true)
+      put_in(card["rotation"], 90)
+    end
+    update_card(gameui, new_card)
+  end
+
+  # card_action flip_card
+  def flip_card(gameui, card, options \\ nil) do
+    current_side = card["currentSide"]
+    new_card = if current_side == "A" do
+      put_in(card["currentSide"],"B")
+    else
+      put_in(card["currentSide"],"A")
+    end
+    update_card(gameui, new_card)
+  end
+
+  # card_action deal_shadow
+  def deal_shadow(gameui, card, options \\ nil) do
+    {group_id, stack_index, card_index} = gsc(gameui, card)
+    stack = get_stack_by_card_id(gameui, card["id"])
+    shadow_card = get_card_by_gsc(gameui, ["sharedEncounterDeck", 0, 0])
+    IO.puts("shadow_card")
+    IO.inspect(shadow_card)
+    if shadow_card do
+      cards_size = Enum.count(stack["cardIds"])
+      gameui = move_card(gameui, shadow_card, [group_id, stack_index, cards_size, true, true])
+      rotated_shadow_card = put_in(shadow_card["rotation"], -30)
+      update_card(gameui, rotated_shadow_card)
+    else
+      gameui
+    end
+  end
+
+  # card_action detach
+  def detach(gameui, card, options \\ nil) do
+    {group_id, stack_index, card_index} = gsc(gameui, card)
+    move_card(gameui, card, [group_id, stack_index + 1, 0, true, true])
+  end
+
+  # card_action update_card_state
+  # Modify the card orientation/tokens based on where it is now
+  def update_card_state(gameui, card, options) do
+    preserve_state = Enum.at(options, 0)
+    orig_group_id = Enum.at(options, 1)
+    IO.puts("preserve_state #{preserve_state} orig group #{orig_group_id}")
+    if preserve_state do
+      gameui
+    else
+      dest_group_id = get_group_by_card_id(gameui, card["id"])["id"]
+      orig_group_type = get_group_type(gameui, orig_group_id)
+      dest_group_type = get_group_type(gameui, dest_group_id)
+      IO.puts("orig #{orig_group_type} dest #{dest_group_type}")
+      card = if dest_group_type != "play" do Map.put(card, "tokens", Tokens.new()) else card end
+      card = if dest_group_type != "play" do Map.put(card, "exhausted", false) else card end
+      card = if dest_group_type != "play" do Map.put(card, "rotation", 0) else card end
+      card = if dest_group_type == "deck" do Map.put(card, "currentSide", "B") else card end
+      card = if orig_group_type == "deck" and dest_group_type != "deck" do
+        flipped_card = Map.put(card, "currentSide", "A")
+        reset_peeking(flipped_card)
+      else
+        card
+      end
+      update_card(gameui, card)
+    end
+  end
+
+  ################################################################
+  # Game actions: must be in the form fn(gameui, player_n, args) #
+  ################################################################
+  def game_action(gameui, action, player_n, options) do
+    IO.puts("game_action")
+    IO.inspect(action)
+    IO.inspect(player_n)
+    gameui = case action do
+      "draw_card" ->
+        draw_card(gameui, player_n, options)
+      _ ->
+        gameui
+    end
+  end
+
+  # game_action draw_card
+  def draw_card(gameui, player_n, options) do
+    stack_ids = get_stack_ids(gameui, player_n<>"Deck")
+    if Enum.count(stack_ids) > 0 do
+      move_stack(gameui, Enum.at(stack_ids, 0), player_n<>"Hand", -1)
+    else
+      gameui
+    end
+  end
+
+  # game_action reveal_encounter
+  def reveal_encounter(gameui, player_n, options) do
+    stack_ids = get_stack_ids(gameui, "sharedEncounter")
+    if Enum.count(stack_ids) > 0 do
+      move_stack(gameui, Enum.at(stack_ids, 0), "sharedStaging", -1)
+    else
+      gameui
+    end
+  end
+
+  #
   def update_value(gameui, path, value) do
-    IO.puts("setting")
-    IO.inspect(path)
-    IO.puts("to")
-    IO.inspect(value)
     case Enum.count(path) do
       1 ->
         put_in(gameui[Enum.at(path,0)], value)
@@ -200,54 +347,13 @@ defmodule SpadesGame.GameUI do
     end)
   end
 
-  def increment_token(gameui, card, options) do
-    token_type = Enum.at(options, 0)
-    increment = Enum.at(options, 1)
-    old_value = card["tokens"][token_type]
-    new_value = if old_value + increment < 0 && Enum.member?(["resource", "progress", "damage", "time"], token_type) do
-      0
-    else
-      old_value + increment
-    end
-    update_token(gameui, card["id"], token_type, new_value)
-  end
 
-  def toggle_exhaust(gameui, card, options \\ nil) do
-    new_card = if card["exhausted"] do
-      card = put_in(card["exhausted"], false)
-      put_in(card["rotation"], 0)
-    else
-      card = put_in(card["exhausted"], true)
-      put_in(card["rotation"], 90)
-    end
-    update_card(gameui, new_card)
-  end
 
-  def flip_card(gameui, card, options \\ nil) do
-    current_side = card["currentSide"]
-    new_card = if current_side == "A" do
-      put_in(card["currentSide"],"B")
-    else
-      put_in(card["currentSide"],"A")
-    end
-    update_card(gameui, new_card)
-  end
 
-  def deal_shadow(gameui, card, options \\ nil) do
-    {group_id, stack_index, card_index} = gsc(gameui, card)
-    stack = get_stack_by_card_id(gameui, card["id"])
-    shadow_card = get_card_by_gsc(gameui, ["sharedEncounterDeck", 0, 0])
-    IO.puts("shadow_card")
-    IO.inspect(shadow_card)
-    if shadow_card do
-      cards_size = Enum.count(stack["cardIds"])
-      gameui = move_card(gameui, shadow_card, [group_id, stack_index, cards_size, true, true])
-      rotated_shadow_card = put_in(shadow_card["rotation"], -30)
-      update_card(gameui, rotated_shadow_card)
-    else
-      gameui
-    end
-  end
+
+
+
+
 
   def insert_new_stack(gameui, group_id, stack_index, stack) do
     old_stack_ids = get_stack_ids(gameui, group_id)
@@ -301,36 +407,9 @@ defmodule SpadesGame.GameUI do
     update_card_ids(gameui, stack["id"], new_card_ids)
   end
 
-  def move_card(gameui, card, options) do
-    dest_group_id    = Enum.at(options, 0)
-    dest_stack_index = Enum.at(options, 1)
-    dest_card_index  = Enum.at(options, 2)
-    combine          = Enum.at(options, 3)
-    preserve_state   = Enum.at(options, 4)
-    # Get position of card
-    {orig_group_id, orig_stack_index, orig_card_index} = gsc(gameui, card)
-    # Get origin stack
-    orig_stack = get_stack_by_index(gameui, orig_group_id, orig_stack_index)
-    # Perpare destination stack
-    gameui = if combine do
-      gameui
-    else
-      new_stack = Stack.empty_stack()
-      insert_new_stack(gameui, dest_group_id, dest_stack_index, new_stack)
-    end
-    # Get destination stack
-    dest_stack = get_stack_by_index(gameui, dest_group_id, dest_stack_index)
-    # Update gameui
-    gameui
-    |> remove_from_stack(orig_stack, card)
-    |> add_to_stack(dest_stack, card, dest_card_index)
-    |> update_card_state(card, [preserve_state, orig_group_id])
-  end
 
-  def detach(gameui, card, options \\ nil) do
-    {group_id, stack_index, card_index} = gsc(gameui, card)
-    move_card(gameui, card, [group_id, stack_index + 1, 0, true, true])
-  end
+
+
 
 
   # def detach(gameui, card, options \\ nil) do
@@ -371,31 +450,7 @@ defmodule SpadesGame.GameUI do
     })
   end
 
-  # Modify the card orientation/tokens based on where it is now
-  def update_card_state(gameui, card, options) do
-    preserve_state = Enum.at(options, 0)
-    orig_group_id = Enum.at(options, 1)
-    IO.puts("preserve_state #{preserve_state} orig group #{orig_group_id}")
-    if preserve_state do
-      gameui
-    else
-      dest_group_id = get_group_by_card_id(gameui, card["id"])["id"]
-      orig_group_type = get_group_type(gameui, orig_group_id)
-      dest_group_type = get_group_type(gameui, dest_group_id)
-      IO.puts("orig #{orig_group_type} dest #{dest_group_type}")
-      card = if dest_group_type != "play" do Map.put(card, "tokens", Tokens.new()) else card end
-      card = if dest_group_type != "play" do Map.put(card, "exhausted", false) else card end
-      card = if dest_group_type != "play" do Map.put(card, "rotation", 0) else card end
-      card = if dest_group_type == "deck" do Map.put(card, "currentSide", "B") else card end
-      card = if orig_group_type == "deck" and dest_group_type != "deck" do
-        flipped_card = Map.put(card, "currentSide", "A")
-        reset_peeking(flipped_card)
-      else
-        card
-      end
-      update_card(gameui, card)
-    end
-  end
+
 
   def peek_card(card, player_n, tf) do
     if card["currentSide"] == "B" do

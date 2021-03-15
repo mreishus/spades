@@ -146,13 +146,16 @@ export const HandleKeyDown = ({
             const topCardId = topStack["cardIds"][0];
             const topCard = gameUi.game.cardById[topCardId];
             chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+". Cards remaining: "+(stacksLeft-1)});
-            gameBroadcast("move_stack",{
-                stack_id: topStackId, 
-                dest_group_id: "player1Hand", 
-                dest_stack_index: -1,
-                combine: false,
-                preserve_state: false,
-            });
+            gameBroadcast("game_action",{action: "draw_card", player_n: playerN, options: []})
+            gameBroadcast("game_action",{action: "draw_card", player_n: playerN, options: []})
+            gameBroadcast("game_action",{action: "draw_card", player_n: playerN, options: []})
+            // gameBroadcast("move_stack",{
+            //     stack_id: topStackId, 
+            //     dest_group_id: "player1Hand", 
+            //     dest_stack_index: -1,
+            //     combine: false,
+            //     preserve_state: false,
+            // });
         } else if (k === "R") {
             if (gameUi.game.roundStep !== "7.R") {
                 //gameBroadcast("set_round_step", {phase: "Refresh", round_step: "7.R"}) 
@@ -290,8 +293,8 @@ export const HandleKeyDown = ({
                     chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
                 }
                 const update = {paths: paths, values: values};
-                //dispatch(setValues(update));
-                //gameBroadcast("update_values", update);
+                dispatch(setValues(update));
+                gameBroadcast("update_values", update);
             }
             // Deal shadow card
             else if (k === "s" && groupType == "play") {

@@ -182,10 +182,19 @@ defmodule SpadesGame.GameUIServer do
   @doc """
   card_action/5: Perform given action on a card.
   """
-  @spec card_action(String.t(), integer, String.t(), integer, integer) :: GameUI.t()
+  @spec card_action(String.t(), integer, String.t(), String.t(), List.t()) :: GameUI.t()
   def card_action(game_name, user_id, action, card_id, options) do
     IO.puts("game_ui_server: card_action")
     GenServer.call(via_tuple(game_name), {:card_action, user_id, action, card_id, options})
+  end
+
+  @doc """
+  game_action/5: Perform given action on a card.
+  """
+  @spec game_action(String.t(), integer, String.t(), String.t(), List.t()) :: GameUI.t()
+  def game_action(game_name, user_id, action, player_n, options) do
+    IO.puts("game_ui_server: game_action")
+    GenServer.call(via_tuple(game_name), {:game_action, user_id, action, player_n, options})
   end
 
   @doc """
@@ -431,6 +440,12 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:card_action, user_id, action, card_id, options}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: card_action a")
     GameUI.card_action(gameui, action, card_id, options)
+    |> save_and_reply()
+  end
+
+  def handle_call({:game_action, user_id, action, player_n, options}, _from, gameui) do
+    IO.puts("game_ui_server: handle_call: game_action a")
+    GameUI.game_action(gameui, action, player_n, options)
     |> save_and_reply()
   end
 
