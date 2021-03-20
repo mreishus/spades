@@ -147,8 +147,6 @@ export const HandleKeyDown = ({
             const topCard = gameUi.game.cardById[topCardId];
             chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+". Cards remaining: "+(stacksLeft-1)});
             gameBroadcast("game_action",{action: "draw_card", player_n: playerN, options: []})
-            gameBroadcast("game_action",{action: "draw_card", player_n: playerN, options: []})
-            gameBroadcast("game_action",{action: "draw_card", player_n: playerN, options: []})
             // gameBroadcast("move_stack",{
             //     stack_id: topStackId, 
             //     dest_group_id: "player1Hand", 

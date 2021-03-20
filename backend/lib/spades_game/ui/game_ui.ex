@@ -30,6 +30,30 @@ defmodule SpadesGame.GameUI do
     gameui
   end
 
+  def pretty_print(gameui, header \\ nil) do
+    IO.puts(header)
+    Enum.each(gameui["game"]["groupById"], fn({group_id, group}) ->
+      stack_ids = get_stack_ids(gameui, group_id)
+      stacks_size = Enum.count(stack_ids)
+      if stacks_size > 0 do
+        IO.puts(group["id"])
+        Enum.each(stack_ids, fn(stack_id) ->
+          card_ids = get_card_ids(gameui, stack_id)
+          Enum.each(Enum.with_index(card_ids), fn({card_id, index}) ->
+            card = get_card(gameui, card_id)
+            indent = if index > 0 do
+              "  "
+            else
+              ""
+            end
+            card_name = card["sides"][card["currentSide"]]["name"]
+            IO.puts("#{indent}  #{card_name}")
+          end)
+        end)
+      end
+    end)
+  end
+
   def get_group(gameui, group_id) do
     gameui["game"]["groupById"][group_id]
   end
@@ -103,6 +127,8 @@ defmodule SpadesGame.GameUI do
 
   def get_group_by_card_id(gameui, card_id) do
     stack = get_stack_by_card_id(gameui, card_id)
+    IO.puts("get_group_by_card_id stack")
+    IO.inspect(stack)
     get_group_by_stack_id(gameui, stack["id"])
   end
 
@@ -130,10 +156,21 @@ defmodule SpadesGame.GameUI do
   end
 
   def gsc(gameui, card) do
-    stack_id = get_stack_by_card_id(gameui, card["id"])["id"]
+    card_id = card["id"]
+    card_name = card["sides"]["A"]["name"]
+    IO.puts("gsc card #{card_name}")
+    IO.puts("gsc")
+    stack = get_stack_by_card_id(gameui, card["id"])
+    IO.puts("gsc stack")
+    IO.inspect(stack)
+    stack_id = stack["id"]
+    IO.puts("gsc stack_id #{stack_id}")
     card_index = get_card_index_by_card_id(gameui, card["id"])
+    IO.puts("gsc card_index #{card_index}")
     stack_index = get_stack_index_by_stack_id(gameui, stack_id)
+    IO.puts("gsc stack_index #{stack_index}")
     group_id = get_group_by_stack_id(gameui, stack_id)["id"]
+    IO.puts("gsc group_id #{group_id}")
     {group_id, stack_index, card_index}
   end
 
@@ -185,6 +222,7 @@ defmodule SpadesGame.GameUI do
     # Get origin stack
     orig_stack = get_stack_by_index(gameui, orig_group_id, orig_stack_index)
     # Perpare destination stack
+    IO.puts("dest_group 1")
     gameui = if combine do
       gameui
     else
@@ -192,6 +230,7 @@ defmodule SpadesGame.GameUI do
       insert_new_stack(gameui, dest_group_id, dest_stack_index, new_stack)
     end
     # Get destination stack
+    IO.puts("dest_group 2")
     dest_stack = get_stack_by_index(gameui, dest_group_id, dest_stack_index)
     # Update gameui
     gameui
@@ -256,7 +295,7 @@ defmodule SpadesGame.GameUI do
   # card_action detach
   def detach(gameui, card, options \\ nil) do
     {group_id, stack_index, card_index} = gsc(gameui, card)
-    move_card(gameui, card, [group_id, stack_index + 1, 0, true, true])
+    move_card(gameui, card, [group_id, stack_index + 1, 0, false, true])
   end
 
   # card_action update_card_state
@@ -268,7 +307,12 @@ defmodule SpadesGame.GameUI do
     if preserve_state do
       gameui
     else
-      dest_group_id = get_group_by_card_id(gameui, card["id"])["id"]
+      card_name = card["sides"]["A"]["name"]
+      card_id = card["id"]
+      IO.puts("getting group_id for #{card_name} #{card_id}")
+      dest_group = get_group_by_card_id(gameui, card["id"])
+      dest_group_id = dest_group["id"]
+      IO.puts("update_card_state dest_group_id #{dest_group_id}")
       orig_group_type = get_group_type(gameui, orig_group_id)
       dest_group_type = get_group_type(gameui, dest_group_id)
       IO.puts("orig #{orig_group_type} dest #{dest_group_type}")
@@ -364,13 +408,29 @@ defmodule SpadesGame.GameUI do
   end
 
   def delete_stack(gameui, stack) do
+    gameui
+    |> delete_stack_from_stack_by_id(stack)
+    |> delete_stack_id_from_group_by_id(stack)
+  end
+
+  def delete_stack_from_stack_by_id(gameui, stack) do
     # Delete stack from stackById object
     old_stack_by_id = gameui["game"]["stackById"]
+    IO.puts("deleting stack")
+    IO.inspect(stack)
+    IO.puts("stackById")
+    IO.inspect(old_stack_by_id)
     new_stack_by_id = Map.delete(old_stack_by_id, stack["id"])
-    gameui = put_in(gameui["game"]["stackById"], new_stack_by_id)
-    # Delete stack index from group
+    IO.puts("delete a")
+    put_in(gameui["game"]["stackById"], new_stack_by_id)
+  end
+
+  def delete_stack_id_from_group_by_id(gameui, stack) do
     old_group = get_group_by_stack_id(gameui, stack["id"])
+    IO.puts("delete c")
     old_stack_ids = old_group["stackIds"]
+    IO.puts("delete d")
+    IO.inspect(gameui["game"]["groupById"])
     stack_index = get_stack_index_by_stack_id(gameui, stack["id"])
     IO.puts("stack_index")
     IO.inspect(stack_index)
@@ -402,6 +462,10 @@ defmodule SpadesGame.GameUI do
   end
 
   def add_to_stack(gameui, stack, card, card_index) do
+    IO.puts("add_to_stack")
+    IO.inspect(stack)
+    IO.inspect(card)
+    IO.inspect(card_index)
     old_card_ids = get_card_ids(gameui, stack["id"])
     new_card_ids = List.insert_at(old_card_ids, card_index, card["id"])
     update_card_ids(gameui, stack["id"], new_card_ids)
@@ -511,52 +575,76 @@ defmodule SpadesGame.GameUI do
   def update_stack_state(gameui, stack_id, options) do
     preserve_state = Enum.at(options, 0)
     orig_group_id = Enum.at(options, 1)
-    IO.puts("update_stack_state moved from #{orig_group_id}")
-    stack = get_stack(gameui, stack_id)
-    dest_group_id = get_group_by_stack_id(gameui, stack_id)
-    card_ids = get_card_ids(gameui, stack_id)
-    gameui = Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
-      IO.puts("updating card state #{card_id}")
-      acc = card_action(gameui, "update_card_state", card_id, options)
-    end)
-    # If a stack is out of play, we need to split it up
-    if Enum.count(card_ids)>1 && get_group_type(gameui, dest_group_id) != "play" do
-      reverse_card_ids = Enum.reverse(card_ids)
-      Enum.reduce(reverse_card_ids, [], fn(card_id, acc) ->
-        acc = card_action(gameui, "detach", card_id, [])
-      end)
-    else
+    if preserve_state do
       gameui
+    else
+      # Update cards in stack one at a time in reverse order
+      # This is so that when the stack is removed from play,
+      # order is preserved as cards are detached
+      IO.puts("update_stack_state moved #{stack_id} from #{orig_group_id}")
+      IO.inspect(gameui["game"]["stackById"])
+      stack = get_stack(gameui, stack_id)
+      IO.puts("stack")
+      IO.inspect(stack)
+      dest_group = get_group_by_stack_id(gameui, stack_id)
+      dest_group_id = dest_group["id"]
+      card_ids = get_card_ids(gameui, stack_id)
+      gameui = Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
+        IO.puts("updating card state #{card_id}")
+        acc = card_action(gameui, "update_card_state", card_id, options)
+      end)
+      # If a stack is out of play, we need to split it up
+      IO.puts("dest_group_id")
+      IO.inspect(dest_group_id)
+      IO.puts("dest_group_type")
+      IO.inspect(get_group_type(gameui, dest_group_id))
+      if Enum.count(card_ids)>1 && get_group_type(gameui, dest_group_id) != "play" do
+        reverse_card_ids = Enum.reverse(card_ids)
+        Enum.reduce(reverse_card_ids, gameui, fn(card_id, acc) ->
+          IO.puts("detaching #{card_id}")
+          pretty_print(gameui)
+          acc = card_action(acc, "detach", card_id, [])
+        end)
+      else
+        gameui
+      end
     end
   end
 
   def move_stack(gameui, stack_id, dest_group_id, dest_stack_index, combine \\ false, preserve_state \\ false) do
     IO.puts("gameui move_stack")
+    pretty_print(gameui, "A")
     orig_group_id = get_group_by_stack_id(gameui, stack_id)["id"]
     orig_stack_index = get_stack_index_by_stack_id(gameui, stack_id)
     # If destination is negative, count backward from the end
     dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stack_ids(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
-    dest_stack = get_stack_by_index(gameui, dest_group_id, dest_stack_index)
-    dest_stack_id = dest_stack["id"]
-    # Delete from old position
+    # Delete stack id from old group
     old_orig_stack_ids = get_stack_ids(gameui, orig_group_id)
-    orig_stack_id = Enum.at(old_orig_stack_ids, orig_stack_index)
     new_orig_stack_ids = List.delete_at(old_orig_stack_ids, orig_stack_index)
     gameui = update_stack_ids(gameui, orig_group_id, new_orig_stack_ids)
     # Add to new position
     gameui = if combine do
-      old_orig_card_ids = get_card_ids(gameui, orig_stack_id)
+      # Get existing destination stack
+      dest_stack = get_stack_by_index(gameui, dest_group_id, dest_stack_index)
+      dest_stack_id = dest_stack["id"]
+      # Update card ids of destination stack
+      old_orig_card_ids = get_card_ids(gameui, stack_id)
       old_dest_card_ids = get_card_ids(gameui, dest_stack["id"])
       new_dest_card_ids = old_dest_card_ids ++ old_orig_card_ids
-      update_card_ids(gameui, dest_stack_id, new_dest_card_ids)
+      gameui = update_card_ids(gameui, dest_stack_id, new_dest_card_ids)
+      # Delete original stack
+      orig_stack = get_stack(gameui, stack_id)
+      pretty_print(gameui, "B")
+      gameui = delete_stack_from_stack_by_id(gameui, orig_stack)
+      pretty_print(gameui, "C")
+      gameui = update_stack_state(gameui, dest_stack_id, [preserve_state, orig_group_id])
     else
+      # Update destination group stack ids
       old_dest_stack_ids = get_stack_ids(gameui, dest_group_id)
-      new_dest_stack_ids = List.insert_at(old_dest_stack_ids, dest_stack_index, orig_stack_id)
-      update_stack_ids(gameui, dest_group_id, new_dest_stack_ids)
+      new_dest_stack_ids = List.insert_at(old_dest_stack_ids, dest_stack_index, stack_id)
+      gameui = update_stack_ids(gameui, dest_group_id, new_dest_stack_ids)
+      |> update_stack_state(stack_id, [preserve_state, orig_group_id])
     end
-    # Update gameui
-    gameui
-    |> update_stack_state(orig_stack_id, [preserve_state, orig_group_id])
     #|> set_viewership(stack_id)
   end
 
@@ -753,6 +841,8 @@ defmodule SpadesGame.GameUI do
     else
       gameui
     end
+    IO.puts("GAMEUI")
+    IO.inspect(gameui, limit: :infinity)
   end
 
   # # Take a list of maps and add the index to each one with a key given by label
