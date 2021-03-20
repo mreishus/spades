@@ -33,13 +33,13 @@ const Container = styled.div`
 `;
 
 
-const CardBack = (
+const CardBack = ({
     groupType,
     stackIds,
     isDraggingOver,
     isDraggingFrom,
     playerN,
-) => {
+}) => {
   const storeStack0 = state => state?.gameUi?.game?.stackById[stackIds[0]];
   const stack0 = useSelector(storeStack0);
   const storeStack1 = state => state?.gameUi?.game?.stackById[stackIds[1]];
@@ -48,6 +48,8 @@ const CardBack = (
   const card0 = useSelector(storeCard0);
   const storeCard1 = state => state?.gameUi?.game?.cardById[stack1?.cardIds[0]];
   const card1 = useSelector(storeCard1);
+  console.log("rendering cardback")
+  console.log(stackIds)
 
   var currentSideSRC;
   var currentFace;
@@ -69,6 +71,7 @@ const CardBack = (
     return (
         <div 
             style={{
+                backgroundColor:"red",
                 background:`url(${currentSideSRC}) no-repeat scroll 0% 0% / contain`,
                 borderWidth: '1px',
                 borderRadius: '6px',
