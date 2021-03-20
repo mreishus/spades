@@ -42,6 +42,7 @@ const StacksList = React.memo(({
   gameBroadcast,
   chatBroadcast,
   playerN,
+  groupId,
   groupType,
   stackIds,
   selectedStackIndices,
@@ -63,6 +64,7 @@ const StacksList = React.memo(({
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
           playerN={playerN}
+          groupId={groupId}
           groupType={groupType}
           stackIndex={stackIndex}
           stackId={stackId}
@@ -114,6 +116,7 @@ export const Stacks = React.memo(({
                 gameBroadcast={gameBroadcast} 
                 chatBroadcast={chatBroadcast} 
                 playerN={playerN}
+                groupId={groupId}
                 groupType={groupType} 
                 stackIds={stackIds}
                 selectedStackIndices={selectedStackIndices}

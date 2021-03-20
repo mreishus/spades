@@ -37,6 +37,7 @@ export const Group = React.memo(({
   chatBroadcast,
   playerN,
   showTitle,
+  browseGroupId,
   setBrowseGroupId,
   setBrowseGroupTopN,
 }) => {
@@ -45,13 +46,14 @@ export const Group = React.memo(({
   const group = useSelector(storeGroup);
   if (!group) return null;
   const numStacks = group.stackIds.length;
+  const beingBrowsed = browseGroupId === groupId;
   return(
     <WidthContainer 
       style={{
         width: width, 
         // visibility: beingBrowsed ? "hidden" : "visible"
       }}>
-      {/* {beingBrowsed? <div></div> : */}
+      {!beingBrowsed &&
         <div style={{width:"100%", height:"100%"}}>
           <Container>
             <ContextMenuTrigger id={group.id} holdToDisplay={0}>
@@ -80,6 +82,7 @@ export const Group = React.memo(({
             ></Stacks>
           </Container>
         </div>
+      }
     </WidthContainer>
   )
 })

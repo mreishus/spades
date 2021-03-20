@@ -61,7 +61,8 @@ defmodule SpadesGame.GameUI do
   end
 
   def get_group_controller(gameui, group_id) do
-    gameui["game"]["groupById"][group_id]["controller"]
+    group = get_group(gameui, group_id)
+    if group do group["controller"] else nil end
   end
 
   def get_group_type(gameui, group_id) do
@@ -324,9 +325,16 @@ defmodule SpadesGame.GameUI do
       card = if dest_group_type != "play" do Map.put(card, "exhausted", false) else card end
       card = if dest_group_type != "play" do Map.put(card, "rotation", 0) else card end
       card = if dest_group_type == "deck" do Map.put(card, "currentSide", "B") else card end
-      card = if orig_group_type == "deck" and dest_group_type != "deck" do
+      card = if orig_group_type == "deck" and dest_group_type != "deck" and dest_group_type != "hand" do
         flipped_card = Map.put(card, "currentSide", "A")
         set_all_peeking(flipped_card, false)
+      else
+        card
+      end
+      card = if dest_group_type == "hand" do
+        card = set_all_peeking(card, false)
+        controller = get_group_controller(gameui, dest_group_id)
+        put_in(card["peeking"][controller], true)
       else
         card
       end
@@ -387,7 +395,7 @@ defmodule SpadesGame.GameUI do
   end
 
   #################################################################
-  # Group actions:                                                #
+  # Group actions                                                 #
   #################################################################
   def group_action(gameui, action, group_id, options) do
     IO.puts("group_action")

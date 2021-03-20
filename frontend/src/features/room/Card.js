@@ -10,7 +10,7 @@ import { CardMouseRegion } from "./CardMouseRegion"
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getDisplayName, getCurrentFace, getVisibleFaceSRC } from "./Helpers";
+import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC } from "./Helpers";
 import { setGame } from "./gameUiSlice"
 
 // PREVENT DOUBLECLICK REGISTERING 2 CLICK EVENTS
@@ -90,6 +90,7 @@ const useClickPreventionOnDoubleClick = (onClick, onDoubleClick) => {
 
 export const Card = React.memo(({
     cardId,
+    groupId,
     gameBroadcast,
     chatBroadcast,
     playerN,
@@ -97,11 +98,10 @@ export const Card = React.memo(({
 }) => {
     const cardStore = state => state?.gameUi?.game?.cardById[cardId];
     const card = useSelector(cardStore);
-    const exhaustedStore = state => state?.gameUi?.game?.cardById[cardId].exhausted;
-    const exhausted = useSelector(exhaustedStore);
-    const rotationStore = state => state?.gameUi?.game?.cardById[cardId].rotation;
-    const rotation = useSelector(rotationStore);
     if (!card) return null;
+    const currentFace = getCurrentFace(card);
+    const visibleFace = getVisibleFace(card, playerN);
+    const isInMyHand = groupId === (playerN+"Hand");
     // useEffect(() => {    
     //     if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
     // }, [inputCard]);
@@ -135,28 +135,7 @@ export const Card = React.memo(({
         setActiveCard(null);
     }
 
-    // const onDoubleClick = (event) => {
-    //     //forceUpdate();
-    //     if (group["type"] != "play") return;
-    //     if (!card.exhausted) {
-    //         card.exhausted = true;
-    //         card.rotation = 90;
-    //         chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
-    //     } else {
-    //         card.exhausted = false;
-    //         card.rotation = 0;
-    //         chatBroadcast("game_update", {message: "readied "+displayName+"."});
-    //     }
-    //     gameBroadcast("update_card",{card: card, group_id: groupId, stack_index: stackIndex, card_index:cardIndex, temp:"ondoubleclick"});
-    //     forceUpdate();
-    // }
-    // const [handleClick, handleDoubleClick] = useClickPreventionOnDoubleClick(onClick, onDoubleClick);
-
-
-    const menuID = card.id+'-menu';
-    const zIndex = 1000-cardIndex;
-
-    function handleMenuClick(e, data) {
+    const handleMenuClick = (e, data) => {
         if (data.action === "detach") {
             gameBroadcast("card_action", {action: "detach", card_id: card.id, options: [cardId]})
             chatBroadcast("game_update", {message: "detached "+displayName+"."})
@@ -177,8 +156,9 @@ export const Card = React.memo(({
         }
     }
     
-    const currentFace = getCurrentFace(card);
     console.log('rendering card ',currentFace.name);
+    console.log('rendering card ',visibleFace.name);
+
     return (
         <div>
             <ContextMenuTrigger id={card.id} holdToDisplay={500}> 
@@ -192,16 +172,16 @@ export const Card = React.memo(({
                     justifyContent: "center",
                     alignItems: "end",
                     background: `url(${getVisibleFaceSRC(card,playerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
-                    height: `${CARDSCALE*currentFace.height}vw`,
-                    width: `${CARDSCALE*currentFace.width}vw`,
-                    left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
-                    top: `${0.2 + (1.39-currentFace.height)*CARDSCALE/2}vw`,
+                    height: `${CARDSCALE*visibleFace.height}vw`,
+                    width: `${CARDSCALE*visibleFace.width}vw`,
+                    left: `${0.2 + (1.39-visibleFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
+                    top: `${0.2 + (1.39-visibleFace.height)*CARDSCALE/2}vw`,
                     borderRadius: '6px',
                     MozBoxShadow: isActive ? '0 0 7px yellow' : '',
                     WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
                     boxShadow: isActive ? '0 0 7px yellow' : '',
                     transform: `rotate(${card.rotation}deg)`,
-                    zIndex: zIndex,
+                    zIndex: 1000-cardIndex,
                     cursor: "default",
                     WebkitTransitionDuration: "0.1s",
                     MozTransitionDuration: "0.1s",
@@ -238,10 +218,7 @@ export const Card = React.memo(({
                     card={card}
                     setIsActive={setIsActive}
                 />
-
-
-
-                {card["peeking"][playerN]? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
+                {(card["peeking"][playerN] && !isInMyHand) ? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
             </div>
 
             </ContextMenuTrigger>
