@@ -11,6 +11,7 @@ import Dropdown from 'react-dropdown';
 import { GroupView } from "./Group";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { GroupContextMenu } from "./GroupContextMenu";
+import { getParentCardsInGroup } from "./Helpers";
 
 const Container = styled.div`
   padding: 1px 1px 1px 1px;
@@ -44,18 +45,19 @@ export const Browse = React.memo(({
   gameBroadcast,
   chatBroadcast,
   playerN,
-  showTitle,
   browseGroupTopN,
   setBrowseGroupId,
   setBrowseGroupTopN,
 }) => {
-  const groupStore = state => state?.gameUi?.game?.groupById?.[groupId];
-  const group = useSelector(groupStore);
+  const gameStore = state => state?.gameUi?.game;
+  const game = useSelector(gameStore);
+  const group = game["groupById"][groupId];
+  const parentCards = getParentCardsInGroup(game, groupId);
   const [selectedCardType, setSelectedCardType] = useState('All');
   const [selectedCardName, setSelectedCardName] = useState('');
   //const [faceupStackIDs, setFaceupStackIDs] = useState([]);
-  const stacks = group["stackIds"];
-  const numStacks = stacks.length;
+  const stackIds = group["stackIds"];
+  const numStacks = stackIds.length;
 
   //var faceupStackIDs = [];
   //browseGroupTopN.forEach(i => {if (stacks[i]) faceupStackIDs.push(stacks[i].id)});
@@ -114,21 +116,25 @@ export const Browse = React.memo(({
   // If browseGroupTopN not set, or equal to "All" or "None", show all stacks
   var browseGroupTopNint = isNormalInteger(browseGroupTopN) ? parseInt(browseGroupTopN) : numStacks;
   var filteredStackIndices = [...Array(browseGroupTopNint).keys()];
+  console.log("parentCards")
+  console.log(parentCards)
+  console.log(filteredStackIndices)
   // Filter by selected card type
   if (selectedCardType != "All") 
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
-      stacks[s] && 
-      stacks[s]["cards"][0]["sides"]["A"]["type"] === selectedCardType &&
-      stacks[s]["cards"][0]["peeking"][playerN]
+      stackIds[s] && 
+      parentCards[s]["sides"]["A"]["type"] === selectedCardType &&
+      parentCards[s]["peeking"][playerN]
     ));
+  console.log(filteredStackIndices)
   // Filter by card name
   if (selectedCardName != "")
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
-      stacks[s] && 
-      stacks[s]["cards"][0]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
-      stacks[s]["cards"][0]["peeking"][playerN]
+      stackIds[s] && 
+      parentCards[s]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
+      parentCards[s]["peeking"][playerN]
     ));
-
+ 
   // Flip cards faceup
   // for (var i=0; i<stacks.length; i++) {
   //   var stack = stacks[i];
@@ -143,14 +149,11 @@ export const Browse = React.memo(({
   //   stack = {...stack, cards: cards};
   //   stacks[i] = stack;
   // }
-  const fannedGroup = {
-      ...group, 
-      type: "hand",
-  } 
+
   return(
     <WidthContainer 
       style={{
-        width: width, 
+        width: width,
         // visibility: beingBrowsed ? "hidden" : "visible"
       }}>
       <Container>
@@ -178,7 +181,9 @@ export const Browse = React.memo(({
             gameBroadcast={gameBroadcast}
             chatBroadcast={chatBroadcast}
             playerN={playerN}
-            group={fannedGroup}
+            groupId={groupId}
+            stackIds={stackIds}
+            groupType={"hand"}
             isCombineEnabled={false}
             selectedStackIndices={filteredStackIndices}
           />

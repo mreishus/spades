@@ -83,7 +83,7 @@ export const Stacks = React.memo(({
   isCombineEnabled,
   selectedStackIndices,
 }) => {
-  console.log("rendering stacks ",playerN,groupId,groupType,stackIds)
+  console.log("rendering stacks ",playerN,groupId,groupType,stackIds,selectedStackIndices)
   return(
     <Droppable
       droppableId={groupId}

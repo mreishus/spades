@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Chat from "../chat/Chat";
 import { Group } from "./Group";
-import BrowseContainer from "./Browse";
+import { Browse } from "./Browse";
 import { GiantCard } from "./GiantCard";
 import { MenuBar } from "./MenuBar";
 import styled from "@emotion/styled";
@@ -202,7 +202,7 @@ export const Table = React.memo(({
             </div>
             {browseGroupId ? 
               <div className="flex flex-1 bg-gray-700 border rounded-lg outline-none ml-3 mr-3" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
-                <BrowseContainer
+                <Browse
                   groupId={browseGroupId}
                   width="100%"
                   gameBroadcast={gameBroadcast}
@@ -211,7 +211,7 @@ export const Table = React.memo(({
                   browseGroupTopN={browseGroupTopN}
                   setBrowseGroupId={setBrowseGroupId}
                   setBrowseGroupTopN={setBrowseGroupTopN}
-                ></BrowseContainer>
+                ></Browse>
               </div>
               :
               <div className="flex flex-1" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
@@ -268,7 +268,7 @@ export const Table = React.memo(({
       <GiantCard playerN={playerN}></GiantCard>
       <div 
         className="absolute overflow-hidden" 
-        style={{height: chatHover ? "90%" : "18.5%", width: "24.3%", right: "0", bottom: "0", opacity: 0.7, zIndex: 1e6}}
+        style={{height: chatHover ? "90%" : "18.3%", width: "24.3%", right: "0", bottom: "0", opacity: 0.7, zIndex: 1e6}}
         onMouseEnter={() => setChatHover(true)}
         onMouseLeave={() => setChatHover(false)}
       >

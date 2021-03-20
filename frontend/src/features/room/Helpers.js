@@ -76,6 +76,18 @@ export const GetPlayerN = (playerIDs, id) => {
   return playerN;
 }
 
+export const getParentCardsInGroup = (game, groupId) => {
+  const stackIds = game["groupById"][groupId]["stackIds"];
+  const parentCards = [];
+  for (var stackId of stackIds) {
+    const cardIds = game["stackById"][stackId]["cardIds"];
+    const parentCardId = cardIds[0];
+    const parentCard = game["cardById"][parentCardId];
+    parentCards.push(parentCard);
+  }
+  return parentCards;
+}
+
  // List of playerN strings of players that are seated and not eliminated
 export const seatedNonEliminated = (gameUI) => {
   const playerIDs = gameUI["playerIds"]

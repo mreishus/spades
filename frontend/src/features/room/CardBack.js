@@ -33,7 +33,7 @@ const Container = styled.div`
 `;
 
 
-const CardBack = ({
+const CardBack = React.memo(({
     groupType,
     stackIds,
     isDraggingOver,
@@ -88,7 +88,7 @@ const CardBack = ({
   } else {
     return (<div></div>);
   }
-}
+})
 
 //left: `${0.2 + (1.39-currentFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
 //top: `${0.2 + (1.39-currentFace.height)*CARDSCALE/2}vw`,

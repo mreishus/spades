@@ -10,9 +10,10 @@ export const handleBrowseTopN = (
     setBrowseGroupId,
     setBrowseGroupTopN,
 ) => {
-    const stacks = group["stacks"];
-    const numStacks = stacks.length;
+    const stackIds = group["stackIds"];
+    const numStacks = stackIds.length;
     const groupName = GROUPSINFO[group.id].name;
+    var peekStackIds = [];
     var peekStackIndices = [];
     var peekCardIndices = [];
     var topNint = 0;
@@ -20,21 +21,18 @@ export const handleBrowseTopN = (
     // Set peeking based on topNstr
     if (topNstr === "All") {
       topNint = numStacks;
-      peekStackIndices = [...Array(topNint).keys()];
-      peekCardIndices = new Array(topNint).fill(0);
+      peekStackIds = stackIds;
       chatBroadcast("game_update",{message: "looks at "+groupName+"."})
     } else if (topNstr === "None") {
       topNint = numStacks; 
-      peekStackIndices = [];
-      peekCardIndices = [];
+      peekStackIds = [];
       chatBroadcast("game_update",{message: "stopped looking at "+groupName+"."})
     } else {
       topNint = parseInt(topNstr);
-      peekStackIndices = [...Array(topNint).keys()];
-      peekCardIndices = new Array(topNint).fill(0);
+      peekStackIds = stackIds.slice(0, topNint);
       chatBroadcast("game_update",{message: "looks at top "+topNstr+" of "+groupName+"."})
     }
     setBrowseGroupId(group.id);
     setBrowseGroupTopN(topNstr);
-    gameBroadcast("peek_at", {group_id: group.id, stack_indices: peekStackIndices, card_indices: peekCardIndices, player_n: playerN, reset_peek: true})
+    gameBroadcast("game_action", {action: "peek_at", options: {player_n: playerN, stack_ids: peekStackIds, value: true}})
 }

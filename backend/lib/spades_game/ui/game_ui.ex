@@ -38,6 +38,7 @@ defmodule SpadesGame.GameUI do
       if stacks_size > 0 do
         IO.puts(group["id"])
         Enum.each(stack_ids, fn(stack_id) ->
+          IO.puts("  #{stack_id}")
           card_ids = get_card_ids(gameui, stack_id)
           Enum.each(Enum.with_index(card_ids), fn({card_id, index}) ->
             card = get_card(gameui, card_id)
@@ -47,7 +48,8 @@ defmodule SpadesGame.GameUI do
               ""
             end
             card_name = card["sides"][card["currentSide"]]["name"]
-            IO.puts("#{indent}  #{card_name}")
+            card_id = card["id"]
+            IO.puts("#{indent}  #{card_name} #{card_id}")
           end)
         end)
       end
@@ -183,7 +185,7 @@ defmodule SpadesGame.GameUI do
   end
 
   ############################################################
-  # Card actions: must be in the form fn(gameui, card, args) #
+  # Card actions                                             #
   ############################################################
   def card_action(gameui, action, card_id, options) do
     IO.puts("card_action")
@@ -203,6 +205,8 @@ defmodule SpadesGame.GameUI do
         deal_shadow(gameui, card, options)
       "detach" ->
         detach(gameui, card, options)
+      "peek_card" ->
+        peek_card(gameui, card, options["player_n"], options["value"])
       "update_card_state" ->
         update_card_state(gameui, card, options)
       _ ->
@@ -322,7 +326,7 @@ defmodule SpadesGame.GameUI do
       card = if dest_group_type == "deck" do Map.put(card, "currentSide", "B") else card end
       card = if orig_group_type == "deck" and dest_group_type != "deck" do
         flipped_card = Map.put(card, "currentSide", "A")
-        reset_peeking(flipped_card)
+        set_all_peeking(flipped_card, false)
       else
         card
       end
@@ -330,23 +334,100 @@ defmodule SpadesGame.GameUI do
     end
   end
 
+  def set_all_peeking(card, value) do
+    Map.put(card, "peeking", %{
+      "player1" => value,
+      "player2" => value,
+      "player3" => value,
+      "player4" => value
+    })
+  end
+
+  def peek_card(gameui, card, player_n, value) do
+    card = if card["currentSide"] == "B" do # Only peek if card is facedown
+      if player_n == "all" do
+        set_all_peeking(card, value)
+      else
+        put_in(card["peeking"][player_n], value)
+      end
+    else
+      card
+    end
+    update_card(gameui, card)
+  end
+
+  #################################################################
+  # Stack actions                                                 #
+  #################################################################
+  def stack_action(gameui, action, stack_id, options) do
+    IO.puts("stack_action")
+    IO.inspect(action)
+    IO.inspect(stack_id)
+    stack = get_stack(gameui, stack_id)
+    gameui = case action do
+      "peek_stack" ->
+        peek_stack(gameui, stack, options["player_n"], options["value"])
+      _ ->
+        gameui
+    end
+  end
+
+  def peek_stack(gameui, stack, player_n, value) do
+    card_ids = get_card_ids(gameui, stack["id"])
+    IO.puts("stack_action peek_stack")
+    pretty_print(gameui)
+    IO.inspect(stack)
+    IO.inspect(card_ids)
+    IO.inspect(player_n)
+    IO.inspect(value)
+    Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
+      card = get_card(gameui, card_id)
+      acc = peek_card(acc, card, player_n, value)
+    end)
+  end
+
+  #################################################################
+  # Group actions:                                                #
+  #################################################################
+  def group_action(gameui, action, group_id, options) do
+    IO.puts("group_action")
+    IO.inspect(action)
+    IO.inspect(group_id)
+    group = get_group(gameui, group_id)
+    gameui = case action do
+      "peek_group" ->
+        peek_group(gameui, group, options["player_n"], options["value"])
+      _ ->
+        gameui
+    end
+  end
+
+  def peek_group(gameui, group, player_n, value) do
+    stack_ids = get_stack_ids(gameui, group["id"])
+    Enum.reduce(stack_ids, gameui, fn(stack_id, acc) ->
+      stack = get_stack(gameui, stack_id)
+      acc = peek_stack(acc, stack, player_n, value)
+    end)
+  end
+
   ################################################################
-  # Game actions: must be in the form fn(gameui, player_n, args) #
+  # Game actions                                                 #
   ################################################################
-  def game_action(gameui, action, player_n, options) do
+  def game_action(gameui, user_id, action, options) do
     IO.puts("game_action")
     IO.inspect(action)
-    IO.inspect(player_n)
     gameui = case action do
       "draw_card" ->
-        draw_card(gameui, player_n, options)
+        draw_card(gameui, options["player_n"])
+      "peek_at" ->
+        peek_at(gameui, options["player_n"], options["stack_ids"], options["value"])
       _ ->
         gameui
     end
   end
 
   # game_action draw_card
-  def draw_card(gameui, player_n, options) do
+  def draw_card(gameui, player_n) do
     stack_ids = get_stack_ids(gameui, player_n<>"Deck")
     if Enum.count(stack_ids) > 0 do
       move_stack(gameui, Enum.at(stack_ids, 0), player_n<>"Hand", -1)
@@ -363,6 +444,18 @@ defmodule SpadesGame.GameUI do
     else
       gameui
     end
+  end
+
+  # game_action peek_at
+  def peek_at(gameui, player_n, stack_ids, value) do
+    IO.puts("game_action peek_at")
+    IO.inspect(player_n)
+    IO.inspect(stack_ids)
+    IO.inspect(value)
+    Enum.reduce(stack_ids, gameui, fn(stack_id, acc) ->
+      stack = get_stack(gameui, stack_id)
+      acc = peek_stack(acc, stack, player_n, value)
+    end)
   end
 
   #
@@ -500,69 +593,11 @@ defmodule SpadesGame.GameUI do
   #   update_stacks(gameui, group_id, new_stacks)
   # end
 
-  @spec sit(GameUI.t(), integer, String.t()) :: GameUI.t()
   def sit(gameui, user_id, player_n) do
     put_in(gameui["playerIds"][player_n], user_id)
   end
 
-  def reset_peeking(card) do
-    Map.put(card, "peeking", %{
-      "player1" => false,
-      "player2" => false,
-      "player3" => false,
-      "player4" => false
-    })
-  end
 
-
-
-  def peek_card(card, player_n, tf) do
-    if card["currentSide"] == "B" do
-      put_in(card["peeking"][player_n],tf)
-    else
-      card
-    end
-  end
-
-  def peek_stack(stack, player_n, tf) do
-    old_cards = stack["cards"]
-    new_cards = Enum.map(old_cards, fn card -> peek_card(card, player_n, tf) end)
-    put_in(stack["cards"], new_cards)
-  end
-
-  def peek_group(gameui, group_id, player_n, tf) do
-    gameui
-    # old_stacks = get_stack_ids(gameui, group_id)
-    # new_stacks = Enum.map(old_stacks, fn stack -> peek_stack(stack, player_n, tf) end)
-    # update_stacks(gameui, group_id, new_stacks)
-  end
-
-  def peek_group_stack_card(gameui, gsc, player_n, tf) do
-    gameui
-    # old_card = get_card(gameui, gsc)
-    # if old_card do
-    #   new_card = peek_card(old_card, player_n, tf)
-    #   update_card(gameui, gsc, new_card)
-    # else
-    #   gameui
-    # end
-  end
-
-  def peek_at(gameui, group_id, stack_indices, card_indices, player_n, reset_peek) do
-    gameui
-    # gameui = if reset_peek do peek_group(gameui, group_id, player_n, false) else gameui end
-    # if (Enum.count(stack_indices) != Enum.count(card_indices)) do
-    #   gameui
-    # else
-    #   num_indices = Enum.count(stack_indices)
-    #   range_indices = 0..num_indices |> Enum.reverse() |> tl() |> Enum.reverse() # Extra logic to drop last element so range does not inclue n
-    #   Enum.reduce range_indices, gameui, fn i, acc ->
-    #     stack_index = Enum.at(stack_indices, i)
-    #     card_index = Enum.at(card_indices, i)
-    #     peek_group_stack_card(acc, [group_id, stack_index, card_index], player_n, true)
-    #   end
-    # end
-  end
 
 
   # def flatten_group(group) do
