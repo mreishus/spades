@@ -138,19 +138,19 @@ export const Card = React.memo(({
 
     const handleMenuClick = (e, data) => {
         if (data.action === "detach") {
-            gameBroadcast("card_action", {action: "detach", card_id: card.id, options: [cardId]})
+            gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
             chatBroadcast("game_update", {message: "detached "+displayName+"."})
         }
         else if (data.action === "move_card") {
             const destGroupTitle = GROUPSINFO[data.destGroupId].name;
             if (data.position === "t") {
-                gameBroadcast("card_action", {action: "move_card", card_id: card.id, options: [data.destGroupId, 0, 0, false, false]})
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, stack_index: 0, card_index: 0, combine: false, preserve_state: false}})
                 chatBroadcast("game_update",{message: "moved "+displayName+" to top of "+destGroupTitle+"."})
             } else if (data.position === "b") {
-                gameBroadcast("card_action", {action: "move_card", card_id: card.id, options: [data.destGroupId, -1, 0, false, false]})
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, stack_index: -1, card_index: 0, combine: false, preserve_state: false}})
                 chatBroadcast("game_update",{message: "moved "+displayName+" to bottom of "+destGroupTitle+"."})
             } else if (data.position === "s") {
-                gameBroadcast("card_action", {action: "move_card", card_id: card.id, options: [data.destGroupId, 0, 0, false, false]})
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, stack_index: 0, card_index: 0, combine: false, preserve_state: false}})
                 gameBroadcast("shuffle_group", {group_id: data.destGroupId})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" into "+destGroupTitle+"."})
             }
@@ -200,7 +200,7 @@ export const Card = React.memo(({
             >
                 <Tokens
                     cardName={currentFace.name}
-                    cardType={currentFace.cardType}
+                    cardType={currentFace.type}
                     cardId={card.id}
                     isActive={isActive}
                     gameBroadcast={gameBroadcast}

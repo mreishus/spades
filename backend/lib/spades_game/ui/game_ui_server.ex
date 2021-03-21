@@ -144,15 +144,6 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  detach/5: A player just detached a card.
-  """
-  @spec detach(String.t(), integer, String.t(), number, number) :: GameUI.t()
-  def detach(game_name, user_id, group_id, stack_index, card_index) do
-    IO.puts("game_ui_server: detach")
-    GenServer.call(via_tuple(game_name), {:detach, user_id, group_id, stack_index, card_index})
-  end
-
-  @doc """
   move_card/9: A player just moved a card.
   """
   @spec move_card(String.t(), integer, String.t(), String.t(), number, number, boolean) :: GameUI.t()
@@ -423,11 +414,6 @@ defmodule SpadesGame.GameUIServer do
     # Check if dest_stack_index is negative, meaning counting from the bottom
     IO.puts("game_ui_server move_card")
     GameUI.move_card(gameui, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack)
-    |> save_and_reply()
-  end
-
-  def handle_call({:detach, user_id, group_id, stack_index, card_index}, _from, gameui) do
-    GameUI.detach(gameui, [group_id, stack_index, card_index])
     |> save_and_reply()
   end
 

@@ -433,6 +433,8 @@ defmodule SpadesGame.GameUI do
         move_card(gameui, options["card_id"], options["dest_group_id"], options["dest_stack_index"], options["dest_card_index"], options["combine"], options["preserve_state"])
       "shuffle_group" ->
         shuffle_group(gameui, options["group_id"])
+      "detach" ->
+        detach(gameui, options["card_id"])
       _ ->
         gameui
     end
