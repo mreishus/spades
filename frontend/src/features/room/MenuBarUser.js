@@ -64,7 +64,7 @@ export const MenuBarUser = React.memo(({
       const values = [parseInt(newValue)];
       const update = {paths: paths, values: values};
       dispatch(setValues(update));
-      gameBroadcast("update_value",update);
+      gameBroadcast("update_values",update);
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
     }, 800);
@@ -159,7 +159,8 @@ export const MenuBarUser = React.memo(({
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
             value={totalWillpower}
-            type="number" min="0" step="1"
+            // type="number" min="0" step="1"
+            readonly
           ></input>
         </div>
       </div>

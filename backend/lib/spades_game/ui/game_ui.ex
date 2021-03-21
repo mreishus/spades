@@ -194,8 +194,6 @@ defmodule SpadesGame.GameUI do
     IO.inspect(card_id)
     card = get_card(gameui, card_id)
     gameui = case action do
-      "move_card" ->
-        move_card(gameui, card, options)
       "increment_token" ->
         increment_token(gameui, card, options)
       "toggle_exhaust" ->
@@ -216,12 +214,8 @@ defmodule SpadesGame.GameUI do
   end
 
   # card_action: move_card
-  def move_card(gameui, card, options) do
-    dest_group_id    = Enum.at(options, 0)
-    dest_stack_index = Enum.at(options, 1)
-    dest_card_index  = Enum.at(options, 2)
-    combine          = Enum.at(options, 3)
-    preserve_state   = Enum.at(options, 4)
+  def move_card(gameui, card_id, dest_group_id, dest_stack_index, dest_card_index, combine, preserve_state) do
+    card = get_card(gameui, card_id)
     # Get position of card
     {orig_group_id, orig_stack_index, orig_card_index} = gsc(gameui, card)
     # Get origin stack
@@ -289,7 +283,7 @@ defmodule SpadesGame.GameUI do
     IO.inspect(shadow_card)
     if shadow_card do
       cards_size = Enum.count(stack["cardIds"])
-      gameui = move_card(gameui, shadow_card, [group_id, stack_index, cards_size, true, true])
+      gameui = move_card(gameui, shadow_card["id"], group_id, stack_index, cards_size, true, true)
       rotated_shadow_card = put_in(shadow_card["rotation"], -30)
       update_card(gameui, rotated_shadow_card)
     else
@@ -300,7 +294,7 @@ defmodule SpadesGame.GameUI do
   # card_action detach
   def detach(gameui, card, options \\ nil) do
     {group_id, stack_index, card_index} = gsc(gameui, card)
-    move_card(gameui, card, [group_id, stack_index + 1, 0, false, true])
+    move_card(gameui, card["id"], group_id, stack_index + 1, 0, false, true)
   end
 
   # card_action update_card_state
@@ -435,6 +429,10 @@ defmodule SpadesGame.GameUI do
         draw_card(gameui, options["player_n"])
       "peek_at" ->
         peek_at(gameui, options["player_n"], options["stack_ids"], options["value"])
+      "move_card" ->
+        move_card(gameui, options["card_id"], options["dest_group_id"], options["dest_stack_index"], options["dest_card_index"], options["combine"], options["preserve_state"])
+      "shuffle_group" ->
+        shuffle_group(gameui, options["group_id"])
       _ ->
         gameui
     end

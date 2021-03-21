@@ -16,6 +16,7 @@ export const Token = React.memo(({
     showButtons,
     gameBroadcast,
     chatBroadcast,
+    zIndex,
 }) => {
     const tokenStore = state => state?.gameUi?.game?.cardById?.[cardId]?.tokens?.[tokenType];
     const tokenValue = useSelector(tokenStore);
@@ -63,6 +64,7 @@ export const Token = React.memo(({
             }
         }, 500);
     }
+    // Prevent doubleclick from interfering with 2 clicks
     function handleDoubleClick(event) {
         event.stopPropagation();
     }
@@ -92,7 +94,7 @@ export const Token = React.memo(({
                 width: `${CARDSCALE/0.72/4}vw`,
                 backgroundImage: `url(${process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'})`,
                 backgroundSize: "contain",
-                //zIndex: 1e6,
+                zIndex: showButtons ? zIndex + 1 : zIndex,
                 display: showButtons || amount!==0 ? "block" : "none",
             }}
         >
@@ -117,7 +119,7 @@ export const Token = React.memo(({
                     backgroundColor: "black",
                     opacity: buttonLeftVisible ? "65%" : "0%",
                     display: showButtons ? "block" : "none",
-                    //zIndex: zIndex + 200,
+                    zIndex: zIndex + 2,
                 }}
                 onMouseOver={() => setButtonLeftVisible(true)}
                 onMouseLeave={() => setButtonLeftVisible(false)}
@@ -145,7 +147,7 @@ export const Token = React.memo(({
                     backgroundColor: "black",
                     opacity: buttonRightVisible ? "65%" : "0%",
                     display: showButtons ? "block" : "none",
-                    //zIndex: zIndex + 200,
+                    zIndex: zIndex + 2,
                 }}
                 onMouseOver={() => setButtonRightVisible(true)}
                 onMouseLeave={() => setButtonRightVisible(false)}

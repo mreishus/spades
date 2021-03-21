@@ -6,7 +6,8 @@ export const CardMouseRegion = React.memo(({
     position,
     top,
     card,
-    setIsActive
+    setIsActive,
+    zIndex,
 }) => {
     console.log("rendering cardmouseregion")
     //const activeCard = useActiveCard();
@@ -29,6 +30,7 @@ export const CardMouseRegion = React.memo(({
             top: top,
             width: '100%',
             height: '50%',
+            zIndex: zIndex,
         }}
             onMouseOver={event => handleMouseOver(event,position)}
         ></div>

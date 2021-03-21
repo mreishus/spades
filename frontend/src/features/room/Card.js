@@ -102,6 +102,7 @@ export const Card = React.memo(({
     const currentFace = getCurrentFace(card);
     const visibleFace = getVisibleFace(card, playerN);
     const isInMyHand = groupId === (playerN+"Hand");
+    const zIndex = 1000 - cardIndex;
     // useEffect(() => {    
     //     if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
     // }, [inputCard]);
@@ -159,6 +160,7 @@ export const Card = React.memo(({
     console.log('rendering card ',currentFace.name);
     console.log('rendering card ',visibleFace.name);
 
+
     return (
         <div>
             <ContextMenuTrigger id={card.id} holdToDisplay={500}> 
@@ -181,7 +183,7 @@ export const Card = React.memo(({
                     WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
                     boxShadow: isActive ? '0 0 7px yellow' : '',
                     transform: `rotate(${card.rotation}deg)`,
-                    zIndex: 1000-cardIndex,
+                    zIndex: zIndex,
                     cursor: "default",
                     WebkitTransitionDuration: "0.1s",
                     MozTransitionDuration: "0.1s",
@@ -203,6 +205,7 @@ export const Card = React.memo(({
                     isActive={isActive}
                     gameBroadcast={gameBroadcast}
                     chatBroadcast={chatBroadcast}
+                    zIndex={zIndex}
                 />
 
                 <CardMouseRegion 
@@ -210,6 +213,7 @@ export const Card = React.memo(({
                     top={"0%"}
                     card={card}
                     setIsActive={setIsActive}
+                    zIndex={zIndex}
                 />
                 
                 <CardMouseRegion 
@@ -217,6 +221,7 @@ export const Card = React.memo(({
                     top={"50%"}
                     card={card}
                     setIsActive={setIsActive}
+                    zIndex={zIndex}
                 />
                 {(card["peeking"][playerN] && !isInMyHand && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
             </div>

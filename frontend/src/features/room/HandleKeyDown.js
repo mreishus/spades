@@ -392,8 +392,10 @@ export const HandleKeyDown = ({
                 else if (activeCard.owner === "player2") destGroupId = "gPlayer2Deck";
                 else if (activeCard.owner === "player3") destGroupId = "gPlayer3Deck";
                 else if (activeCard.owner === "player4") destGroupId = "gPlayer4Deck";
-                gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: destGroupId, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
-                gameBroadcast("shuffle_group", {group_id: destGroupId})
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+                // gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: destGroupId, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
+                gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: destGroupId}})
+                // gameBroadcast("shuffle_group", {group_id: destGroupId})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupId].name+"."})
             }
         }

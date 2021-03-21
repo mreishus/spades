@@ -17,36 +17,36 @@ defmodule SpadesGame.Game do
     new(options)
   end
 
-  # @doc """
-  # new/1:  Create a game with specified options.
-  # """
-  # @spec new(GameOptions.t()) :: Game.t()
-  # def new(%GameOptions{} = options) do
-  #   %{
-  #     "options" => options,
-  #     "firstPlayer" => "player1",
-  #     "roundNumber" => 0,
-  #     "phase" => "Beginning",
-  #     "roundStep" => "0.0",
-
-  #     "groupById" => Groups.new(),
-  #     "stackById" => %{},
-  #     "cardById"  => %{},
-  #     "playerData" => %{
-  #       "player1" => PlayerData.new(),
-  #       "player2" => PlayerData.new(),
-  #       "player3" => PlayerData.new(),
-  #       "player4" => PlayerData.new(),
-  #     }
-  #   }
-  # end
-
-
   @doc """
   new/1:  Create a game with specified options.
   """
   @spec new(GameOptions.t()) :: Game.t()
   def new(%GameOptions{} = options) do
+    %{
+      "options" => options,
+      "firstPlayer" => "player1",
+      "roundNumber" => 0,
+      "phase" => "Beginning",
+      "roundStep" => "0.0",
+
+      "groupById" => Groups.new(),
+      "stackById" => %{},
+      "cardById"  => %{},
+      "playerData" => %{
+        "player1" => PlayerData.new(),
+        "player2" => PlayerData.new(),
+        "player3" => PlayerData.new(),
+        "player4" => PlayerData.new(),
+      }
+    }
+  end
+
+
+  @doc """
+  new1/1:  Create a game with specified options.
+  """
+  @spec new1(GameOptions.t()) :: Game.t()
+  def new1(%GameOptions{} = options) do
 
   %{
     "cardById" => %{
