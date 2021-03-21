@@ -5,6 +5,7 @@ import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { Link } from "react-router-dom";
 import { setValues } from "./gameUiSlice";
+import { getCurrentFace } from "./Helpers";
 
 var delayBroadcast;
 
@@ -22,6 +23,8 @@ export const MenuBarUser = React.memo(({
   const playerDataPlayerN = useSelector(playerDataPlayerNStore);  
   const firstPlayerStore = state => state?.gameUi?.game?.firstPlayer;
   const firstPlayer = useSelector(firstPlayerStore);  
+  const cardByIdStore = state => state?.gameUi?.game?.cardById;
+  const cardById = useSelector(cardByIdStore);
   const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
   const myUserID = myUser?.id;  
@@ -33,10 +36,22 @@ export const MenuBarUser = React.memo(({
 
   if (!playerIds) return null;
   if (!playerDataPlayerN) return null;
+  if (!cardById) return null;
 
   console.log("menubaruser ", playerN);
 
   const sittingUserID = playerIds[playerN];
+  
+  // If not observing anyone, observe yourself
+  if (!observingPlayerN && (myUserID === sittingUserID)) setObservingPlayerN(playerN);
+
+  var totalWillpower = 0;
+  Object.keys(cardById).forEach((cardId) => {
+    const card = cardById[cardId];
+    const currentFace = getCurrentFace(card);
+    const cardWillpower = currentFace.willpower || 0;
+    if (card.committed && (card.controller === playerN)) totalWillpower += cardWillpower + card.tokens.willpower;
+  })
 
   const handleThreatChange = (event) => {
     const newValue = event.target.value;
@@ -143,7 +158,7 @@ export const MenuBarUser = React.memo(({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            defaultValue={playerDataPlayerN["willpower"]}
+            value={totalWillpower}
             type="number" min="0" step="1"
           ></input>
         </div>

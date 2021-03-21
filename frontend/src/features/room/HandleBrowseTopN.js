@@ -34,5 +34,6 @@ export const handleBrowseTopN = (
     }
     setBrowseGroupId(group.id);
     setBrowseGroupTopN(topNstr);
+    gameBroadcast("game_action", {action: "peek_at", options: {player_n: playerN, stack_ids: stackIds, value: false}})
     gameBroadcast("game_action", {action: "peek_at", options: {player_n: playerN, stack_ids: peekStackIds, value: true}})
 }

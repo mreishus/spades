@@ -218,7 +218,7 @@ export const Card = React.memo(({
                     card={card}
                     setIsActive={setIsActive}
                 />
-                {(card["peeking"][playerN] && !isInMyHand) ? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
+                {(card["peeking"][playerN] && !isInMyHand && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
             </div>
 
             </ContextMenuTrigger>

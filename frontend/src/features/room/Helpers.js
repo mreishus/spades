@@ -68,6 +68,11 @@ export const getVisibleFaceSRC = (card, playerN) => {
   }
 }
 
+export const getCardWillpower = (card) => {
+  const currentFace = getCurrentFace(card);
+  return currentFace.willpower + card.tokens.willpower;
+}
+
 export const GetPlayerN = (playerIDs, id) => {
   var playerN = null;
   Object.keys(playerIDs).forEach(playerI => {

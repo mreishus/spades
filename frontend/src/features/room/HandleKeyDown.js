@@ -11,7 +11,9 @@ import {
     functionOnMatchingCards, 
     getGroupIdStackIndexCardIndex,
     getStackByCardId,
+    getCardWillpower,
 } from "./Helpers";
+import { get } from "https";
 
 // const keyTokenMap: { [id: string] : Array<string | number>; } = {
 const keyTokenMap = {
@@ -86,6 +88,7 @@ export const HandleKeyDown = ({
         console.log(k);
         // Keep track of last pressed key
         if (k === "Shift") setKeypress({"Shift": true});
+        if (k === "Control") setKeypress({"Control": true});
         
         // General hotkeys
         if (k === "e" || k === "E") {
@@ -290,6 +293,54 @@ export const HandleKeyDown = ({
                 } else {
                     chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
                 }
+                const update = {paths: paths, values: values};
+                dispatch(setValues(update));
+                gameBroadcast("update_values", update);
+            }
+            // Commit to quest and exhaust
+            else if (k === "q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
+                console.log("commit to quest")
+                // const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                // const newWillpower = currentWillpower + getCardWillpower(activeCard);
+                const paths = [
+                    ["game", "cardById", activeCardId, "committed"], 
+                    ["game", "cardById", activeCardId, "exhausted"], 
+                    ["game", "cardById", activeCardId, "rotation"],
+                    // ["game", "playerData", playerN, "willpower"]
+                ];
+                var values = [true, true, 90];
+                chatBroadcast("game_update", {message: "committed "+displayName+" to the quest."});
+                const update = {paths: paths, values: values};
+                dispatch(setValues(update));
+                gameBroadcast("update_values", update);
+            }
+            // Commit to quest without exhausting
+            else if (k === "Q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
+                console.log("commit to quest")
+                const paths = [["game", "cardById", activeCardId, "committed"]];
+                var values = [true];
+                chatBroadcast("game_update", {message: "committed "+displayName+" to the quest without exhausting."});
+                const update = {paths: paths, values: values};
+                dispatch(setValues(update));
+                gameBroadcast("update_values", update);
+            }
+            // Uncommit to quest and ready
+            else if (k === "q" && groupType === "play" && activeCard["committed"]) {
+                console.log("uncommit to quest")
+                const paths = [["game", "cardById", activeCardId, "committed"], ["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]];
+                var values = [false, false, 0];
+                chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
+                if (activeCard["exhausted"]) chatBroadcast("game_update", {message: "readied "+displayName+"."});
+                const update = {paths: paths, values: values};
+                dispatch(setValues(update));
+                gameBroadcast("update_values", update);
+            }
+            // Uncommit to quest without readying
+            else if (k === "Q" && groupType === "play" && activeCard["committed"]) {
+                console.log("uncommit to quest")
+                const paths = [["game", "cardById", activeCardId, "committed"]];
+                var values = [false];
+                chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
                 const update = {paths: paths, values: values};
                 dispatch(setValues(update));
                 gameBroadcast("update_values", update);

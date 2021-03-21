@@ -2,11 +2,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from 'react-redux';
-import { setStackIds, setCardIds, setGroupById } from "./gameUiSlice";
+import { setStackIds, setCardIds, setGroupById, setValues } from "./gameUiSlice";
 import { reorderGroupStackIds } from "./Reorder";
 import { Table } from "./Table";
 import { GROUPSINFO } from "./Constants"
-import { getDisplayName, getCurrentFace } from "./Helpers"
+import { getDisplayName, getDisplayNameFlipped, getCurrentFace } from "./Helpers"
 
 
 
@@ -36,11 +36,10 @@ export const DragContainer = React.memo(({
 
     // Combine
     if (result.combine) {
-      console.log("combine");
       const dest = result.combine;
       const destGroupId = dest.droppableId;
+      const destGroup = game["groupById"][destGroupId];
       const destGroupStackIds = groupById[destGroupId].stackIds;
-      console.log(destGroupStackIds)
 
       dest.index = -1;
       for(var i=0; i<=destGroupStackIds.length; i++) {
@@ -50,19 +49,11 @@ export const DragContainer = React.memo(({
       }
       if (!dest.index < 0) return;
       const destStackId = destGroupStackIds[dest.index];
-      console.log(destStackId)
       const destStack = game.stackById[destStackId];
-      console.log(destStack)
       const destStackCardIds = destStack.cardIds;
-      console.log(destStackCardIds)
       const topOfDestStackCardId = destStackCardIds[0];
-      console.log(topOfDestStackCardId)
       const topOfDestStackCard = game.cardById[topOfDestStackCardId];
-      console.log(topOfDestStackCard)
       const newDestStackCardIds = destStackCardIds.concat(origStackCardIds);
-      console.log(newDestStackCardIds)
-
-      console.log(origGroupId, orig.index, destGroupId, dest.index);
 
       const newDestStack = {
         ...destStack,
@@ -76,25 +67,21 @@ export const DragContainer = React.memo(({
         ...origGroup,
         stackIds: newOrigGroupStackIds
       }   
-      dispatch(setStackIds(newOrigGroup))
-      dispatch(setCardIds(newDestStack))
+      if ((origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
+        chatBroadcast("game_update",{message: "attached "+getDisplayNameFlipped(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."})
+        // Flip card faceup
+        const paths = [["game","cardById",topOfOrigStackCardId,"currentSide"]];
+        const values = ["A"];
+        const update = {paths: paths, values: values};
+        dispatch(setValues(update));
+      }
+      else {
+        chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."});
+      }
+      dispatch(setStackIds(newOrigGroup));
+      dispatch(setCardIds(newDestStack));
       gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: true, preserve_state: false})
-
-      // gameBroadcast("update_values", {
-      //   paths: [
-      //     ["game", "groupById", origGroupId, "stackIds"],
-      //     ["game", "stackById", destStackId, "cardIds"]
-      //   ],
-      //   values: [
-      //     newOrigGroupStackIds,
-      //     newDestStackCardIds
-      //   ]
-      // })
-      //gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newOrigGroupStackIds})
-      //gameBroadcast("update_value", {path: ["game", "stackById", destStackId, "cardIds"], value: newDestStackCardIds})
-      chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."})
-      //gameBroadcast("update_gameui",{gameui: newGameUi});    
-      
+      return;
     }
 
     // Dropped nowhere
@@ -103,6 +90,7 @@ export const DragContainer = React.memo(({
     }
     const dest = result.destination;
     const destGroupId = dest.droppableId;
+    const destGroup = game["groupById"][destGroupId];
 
     // Did not move anywhere - can bail early
     if (
@@ -115,41 +103,23 @@ export const DragContainer = React.memo(({
     // Moved to a different spot
     const newGroupById = reorderGroupStackIds(groupById, orig, dest);
 
-    dispatch(setGroupById(newGroupById));
-    //dispatch(setStackIds(newGroupById[origGroupId]))
-    //dispatch(setStackIds(newGroupById[destGroupId]))
-    //gameBroadcast("update_value", {path: ["game", "groupById"], value: newGroupById})
-    gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: false})
-    // gameBroadcast("update_values", {
-    //   paths: [
-    //     ["game", "groupById", origGroupId, "stackIds"],
-    //     ["game", "groupById", destGroupId, "stackIds"]
-    //   ],
-    //   values: [
-    //     newGroupById[origGroupId].stackIds,
-    //     newGroupById[destGroupId].stackIds
-    //   ]
-    // })
-//    gameBroadcast("update_value", {path: ["game", "groupById", origGroupId, "stackIds"], value: newGroupById[origGroupId].stackIds})
     if (origGroupId != destGroupId) {
-      //gameBroadcast("update_value", {path: ["game", "groupById", destGroupId, "stackIds"], value: newGroupById[destGroupId].stackIds})
       const origGroupTitle = GROUPSINFO[origGroupId].name;
       const destGroupTitle = GROUPSINFO[destGroupId].name;
-      chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."})
+      if ((origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
+        chatBroadcast("game_update",{message: "moved "+getDisplayNameFlipped(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
+        // Flip card faceup
+        const paths = [["game","cardById",topOfOrigStackCardId,"currentSide"]];
+        const values = ["A"];
+        const update = {paths: paths, values: values};
+        dispatch(setValues(update));
+      }
+      else {
+        chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
+      }
+      dispatch(setGroupById(newGroupById));
+      gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: false})
     }
-
-/*     gameBroadcast("move_stack",{
-      orig_group_id: orig.droppableId, 
-      orig_stack_index: orig.index, 
-      dest_group_id: destination.droppableId, 
-      dest_stack_index: destination.index,
-      preserve_state: false,
-    }); */
-    // const sourceGroupTitle = GROUPSINFO[orig.droppableId].name;
-    // const destGroupTitle = GROUPSINFO[destination.droppableId].name;
-    // if (sourceGroupTitle != destGroupTitle) 
-    // //gameBroadcast("update_gameui",{gameui: newGameUi});
-
 
   }
 
