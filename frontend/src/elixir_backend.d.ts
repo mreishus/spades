@@ -71,7 +71,7 @@ declare module "elixir-backend" {
   export declare class GameUI {
     createdAt: any;
     game: Game;
-    gameName: string;
+    game_name: string;
     options: any;
     playerIds: { [id: string] : number; };
   }

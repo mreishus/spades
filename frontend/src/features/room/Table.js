@@ -287,7 +287,7 @@ export const Table = React.memo(({
             style={{height: showScratch ? "12%" : "57%", opacity: 0.7}}
           >
             {gameUi != null && (
-              <Chat roomName={gameUi.game_name} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
+              <Chat roomName={gameUi.gameName} chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping}/>
             )}
           </div>
           

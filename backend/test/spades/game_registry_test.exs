@@ -17,7 +17,7 @@ defmodule Spades.GameRegistryTest do
   describe "add/0" do
     test "works", %{game_ui: game_ui} do
       game_ui = GameUI.sit(game_ui, 10, "north")
-      name = game_ui.game_name
+      name = game_ui.gameName
       GameRegistry.add(name, game_ui)
       room = Rooms.get_room_by_name(name)
       assert %Room{} = room

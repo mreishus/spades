@@ -4,8 +4,26 @@ import { getCurrentFace } from "./Helpers"
 import { MenuBarUser } from "./MenuBarUser"
 import { MenuBarSharedContainer } from "./MenuBarSharedContainer"
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
+import store from "../../store";
+import { setGame } from "./gameUiSlice";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
+
+
+export const downloadGameAsJson = () => {
+  const state = store.getState();
+  const exportObj = state.gameUi.game;
+  const exportName = state.gameUi.gameName;
+  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+  var downloadAnchorNode = document.createElement('a');
+  downloadAnchorNode.setAttribute("href",     dataStr);
+  downloadAnchorNode.setAttribute("download", exportName + ".json");
+  document.body.appendChild(downloadAnchorNode); // required for firefox
+  downloadAnchorNode.click();
+  downloadAnchorNode.remove();
+}
+
+
 
 export const MenuBar = React.memo(({
     setShowSpawn,
@@ -17,7 +35,9 @@ export const MenuBar = React.memo(({
     setObservingPlayerN,
   }) => {
     
-    const inputFile = useRef(null);
+    const dispatch = useDispatch();
+    const inputFileDeck = useRef(null);
+    const inputFileGame = useRef(null);
     console.log("rendering menubar")
 
     const handleMenuClick = (data) => {
@@ -27,20 +47,29 @@ export const MenuBar = React.memo(({
       }
       console.log(data);
       if (data.action === "reset_game") {
-          gameBroadcast("reset_game",{});
-          chatBroadcast("game_update",{message: "reset the game."});
+        gameBroadcast("reset_game",{});
+        chatBroadcast("game_update",{message: "reset the game."});
       } else if (data.action === "load_deck") {
-          loadDeckFile();
+        loadFileDeck();
       } else if (data.action === "spawn_card") {
-          setShowSpawn(true);
+        setShowSpawn(true);
       } else if (data.action === "look_at") {
-          handleBrowseSelect(data.groupId);
+        handleBrowseSelect(data.groupId);
+      } else if (data.action === "download") {
+        downloadGameAsJson();
+      } else if (data.action === "upload") {
+        loadFileGame();
       }
     }
 
-    const loadDeckFile = () => {
-      inputFile.current.click();
+    const loadFileDeck = () => {
+      inputFileDeck.current.click();
     }
+
+    const loadFileGame = () => {
+      inputFileGame.current.click();
+    }
+
     const loadDeck = async(event) => {
       event.preventDefault();
       const reader = new FileReader();
@@ -72,21 +101,38 @@ export const MenuBar = React.memo(({
       reader.readAsText(event.target.files[0]);
     }
 
+    const uploadGameAsJson = async(event) => {
+      event.preventDefault();
+      const reader = new FileReader();
+      reader.onload = async (event) => { 
+        const gameObj = JSON.parse(event.target.result);
+        dispatch(setGame(gameObj));
+        gameBroadcast("gmae_action", {action: "set_game", options:{game: gameObj}})
+        chatBroadcast("game_update", {message: "uploaded a game."});
+      }
+      reader.readAsText(event.target.files[0]);
+    }
+
     return(
       <div className="h-full">
         <ul className="top-level-menu float-left">
         <li key={"Menu"}><div className="h-full flex text-xl items-center justify-center" href="#">Menu</div>
             <ul className="second-level-menu">
               <li key={"Load"}>
-                <a href="/#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load Deck</a>
-                <input type='file' id='file' ref={inputFile} style={{display: 'none'}} onChange={loadDeck}/>
+                <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load Deck</a>
+                <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck}/>
               </li>
               <li key={"Spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn Card</a></li>
               <li key={"Reset"}>
-                  <a href="/#">Reset Game</a>
+                  <a href="#">Reset Game</a>
                   <ul className="third-level-menu">
                       <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
                   </ul>
+              </li>
+              <li key={"Download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
+              <li key={"Upload"}>
+                <a  onClick={() => handleMenuClick({action:"upload"})} href="#">Upload game</a>
+                <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson}/>
               </li>
             </ul>
         </li>
@@ -94,7 +140,7 @@ export const MenuBar = React.memo(({
         <div className="h-full flex text-xl items-center justify-center" href="#">View</div>
           <ul className="second-level-menu">
               <li key={"Shared"}>
-                <a href="/#">Shared</a>
+                <a href="#">Shared</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
                       if (groupId.startsWith("shared"))
@@ -104,7 +150,7 @@ export const MenuBar = React.memo(({
                 </ul>
               </li>
               <li key={"Player1"}>
-                <a href="/#">Player 1</a>
+                <a href="#">Player 1</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
                       if (groupId.startsWith("player1"))
@@ -114,7 +160,7 @@ export const MenuBar = React.memo(({
                 </ul>
               </li>
               <li key={"Player2"}>
-                <a href="/#">Player 2</a>
+                <a href="#">Player 2</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
                       if (groupId.startsWith("player2"))
@@ -124,7 +170,7 @@ export const MenuBar = React.memo(({
                 </ul>
               </li>
               <li key={"Player3"}>
-                <a href="/#">Player 3</a>
+                <a href="#">Player 3</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
                       if (groupId.startsWith("player3"))
@@ -134,7 +180,7 @@ export const MenuBar = React.memo(({
                 </ul>
               </li>
               <li key={"Player4"}>
-                  <a href="/#">Player 4</a>
+                  <a href="#">Player 4</a>
                     <ul className="third-level-menu">
                       {Object.keys(GROUPSINFO).map((groupId, index) => {
                         if (groupId.startsWith("player4"))

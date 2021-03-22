@@ -1,3 +1,4 @@
+//export const CARDSCALE = 3.;
 export const CARDSCALE = 4.5;
 export const GROUPSINFO = {
     "sharedEncounterDeck": {name: "Encounter Deck", tablename: "Encounter Deck"},

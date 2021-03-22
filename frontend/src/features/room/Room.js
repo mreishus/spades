@@ -28,7 +28,7 @@ export const Room = ({ slug }) => {
       if (game_ui) {
         dispatch(setGame(game_ui.game));
         dispatch(setPlayerIds(game_ui.playerIds));
-        dispatch(setGameName(game_ui.game_name));
+        dispatch(setGameName(game_ui.gameName));
       }
     }
   }, []);

@@ -21,24 +21,24 @@ defmodule SpadesGame.GameUIServer do
   start_link/3: Generates a new game server under a provided name.
   """
   @spec start_link(String.t(), User.t(), %GameOptions{}) :: {:ok, pid} | {:error, any}
-  def start_link(game_name, user, %GameOptions{} = options) do
+  def start_link(gameName, user, %GameOptions{} = options) do
     IO.puts("gameuiserver: start_link a")
-    GenServer.start_link(__MODULE__, {game_name, user, options}, name: via_tuple(game_name))
+    GenServer.start_link(__MODULE__, {gameName, user, options}, name: via_tuple(gameName))
     IO.puts("gameuiserver: start_link b")
   end
 
   @doc """
   via_tuple/1: Given a game name string, generate a via tuple for addressing the game.
   """
-  def via_tuple(game_name),
-    do: {:via, Registry, {SpadesGame.GameUIRegistry, {__MODULE__, game_name}}}
+  def via_tuple(gameName),
+    do: {:via, Registry, {SpadesGame.GameUIRegistry, {__MODULE__, gameName}}}
 
   @doc """
   gameui_pid/1: Returns the `pid` of the game server process registered
-  under the given `game_name`, or `nil` if no process is registered.
+  under the given `gameName`, or `nil` if no process is registered.
   """
-  def gameui_pid(game_name) do
-    game_name
+  def gameui_pid(gameName) do
+    gameName
     |> via_tuple()
     |> GenServer.whereis()
   end
@@ -47,54 +47,54 @@ defmodule SpadesGame.GameUIServer do
   state/1:  Retrieves the game state for the game under a provided name.
   """
   @spec state(String.t()) :: GameUI.t() | nil
-  def state(game_name) do
+  def state(gameName) do
     IO.puts("game_ui_server state")
-    # IO.inspect(GenServer.call(via_tuple(game_name), :state))
-    case gameui_pid(game_name) do
+    # IO.inspect(GenServer.call(via_tuple(gameName), :state))
+    case gameui_pid(gameName) do
       nil -> nil
-      _ -> GenServer.call(via_tuple(game_name), :state)
+      _ -> GenServer.call(via_tuple(gameName), :state)
     end
   end
 
   @spec game_exists?(String.t()) :: boolean
-  def game_exists?(game_name) do
-    gameui_pid(game_name) != nil
+  def game_exists?(gameName) do
+    gameui_pid(gameName) != nil
   end
 
   @doc """
   update_gameui/3: The game is updated.
   """
   @spec update_gameui(String.t(), integer,  GameUI.t()):: GameUI.t()
-  def update_gameui(game_name, user_id, gameui) do
+  def update_gameui(gameName, user_id, gameui) do
     IO.puts("game_ui_server: update_gameui")
-    GenServer.call(via_tuple(game_name), {:update_gameui, user_id, gameui})
+    GenServer.call(via_tuple(gameName), {:update_gameui, user_id, gameui})
   end
 
   @doc """
   load_cards/3: Cards are loaded.
   """
   @spec load_cards(String.t(), integer,  List.t()):: GameUI.t()
-  def load_cards(game_name, user_id, load_list) do
+  def load_cards(gameName, user_id, load_list) do
     IO.puts("game_ui_server: load_cards")
     IO.inspect(load_list)
-    GenServer.call(via_tuple(game_name), {:load_cards, user_id, load_list})
+    GenServer.call(via_tuple(gameName), {:load_cards, user_id, load_list})
   end
 
   @doc """
   reset_game/2: Cards are loaded.
   """
   @spec reset_game(String.t(), integer):: GameUI.t()
-  def reset_game(game_name, user_id) do
-    GenServer.call(via_tuple(game_name), {:reset_game, user_id})
+  def reset_game(gameName, user_id) do
+    GenServer.call(via_tuple(gameName), {:reset_game, user_id})
   end
 
   @doc """
   peek_at/7: A player just moved a stack.
   """
   @spec peek_at(String.t(), integer, String.t(), List.t(), List.t(), String.t(), boolean) :: GameUI.t()
-  def peek_at(game_name, user_id, group_id, stack_indices, card_indices, player_n, reset_peek) do
+  def peek_at(gameName, user_id, group_id, stack_indices, card_indices, player_n, reset_peek) do
     IO.puts("game_ui_server: peek_at")
-    GenServer.call(via_tuple(game_name), {:peek_at, user_id, group_id, stack_indices, card_indices, player_n, reset_peek})
+    GenServer.call(via_tuple(gameName), {:peek_at, user_id, group_id, stack_indices, card_indices, player_n, reset_peek})
   end
 
 
@@ -102,162 +102,162 @@ defmodule SpadesGame.GameUIServer do
   move_stack/7: A player just moved a stack.
   """
   @spec move_stack(String.t(), integer, String.t(), String.t(), number, boolean, boolean) :: GameUI.t()
-  def move_stack(game_name, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state) do
+  def move_stack(gameName, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state) do
     IO.puts("game_ui_server: move_stack")
-    GenServer.call(via_tuple(game_name), {:move_stack, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state})
+    GenServer.call(via_tuple(gameName), {:move_stack, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state})
   end
 
   @doc """
   move_stack/6: Move all stacks from one group to another group, where position = t (top), b (bottom), s (shuffle in) to new group.
   """
   @spec move_stacks(String.t(), integer, String.t(), String.t(), String.t()) :: GameUI.t()
-  def move_stacks(game_name, user_id, orig_group_id, dest_group_id, position) do
+  def move_stacks(gameName, user_id, orig_group_id, dest_group_id, position) do
     IO.puts("game_ui_server: move_stacks")
-    GenServer.call(via_tuple(game_name), {:move_stacks, user_id, orig_group_id, dest_group_id, position})
+    GenServer.call(via_tuple(gameName), {:move_stacks, user_id, orig_group_id, dest_group_id, position})
   end
 
   @doc """
   update_card/6: A player just updated a card.
   """
   @spec update_card(String.t(), integer, Card.t(), String.t(), number, number) :: GameUI.t()
-  def update_card(game_name, user_id, card, group_id, stack_index, card_index) do
+  def update_card(gameName, user_id, card, group_id, stack_index, card_index) do
     IO.puts("game_ui_server: update_card")
-    GenServer.call(via_tuple(game_name), {:update_card, user_id, card, group_id, stack_index, card_index})
+    GenServer.call(via_tuple(gameName), {:update_card, user_id, card, group_id, stack_index, card_index})
   end
 
   @doc """
   increment_token/7: A player just incremented a token.
   """
   @spec increment_token(String.t(), integer, String.t(), number, number, String.t(), number) :: GameUI.t()
-  def increment_token(game_name, user_id, group_id, stack_index, card_index, token_type, increment) do
+  def increment_token(gameName, user_id, group_id, stack_index, card_index, token_type, increment) do
     IO.puts("game_ui_server: increment_token")
-    GenServer.call(via_tuple(game_name), {:increment_token, user_id, group_id, stack_index, card_index, token_type, increment})
+    GenServer.call(via_tuple(gameName), {:increment_token, user_id, group_id, stack_index, card_index, token_type, increment})
   end
 
   @doc """
   deal_shadow/4: A player just dealt a shadow card.
   """
   @spec deal_shadow(String.t(), integer, String.t(), number) :: GameUI.t()
-  def deal_shadow(game_name, user_id, group_id, stack_index) do
+  def deal_shadow(gameName, user_id, group_id, stack_index) do
     IO.puts("game_ui_server: deal_shadow")
-    GenServer.call(via_tuple(game_name), {:deal_shadow, user_id, group_id, stack_index})
+    GenServer.call(via_tuple(gameName), {:deal_shadow, user_id, group_id, stack_index})
   end
 
   @doc """
   move_card/9: A player just moved a card.
   """
   @spec move_card(String.t(), integer, String.t(), String.t(), number, number, boolean) :: GameUI.t()
-  def move_card(game_name, user_id, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack) do
+  def move_card(gameName, user_id, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack) do
     IO.puts("game_ui_server: move_card")
-    GenServer.call(via_tuple(game_name), {:move_card, user_id, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack})
+    GenServer.call(via_tuple(gameName), {:move_card, user_id, card_id, dest_group_id, dest_stack_index, dest_card_index, create_new_stack})
   end
 
   @doc """
   shuffle/5: Shuffle a group.
   """
   @spec shuffle_group(String.t(), integer, String.t()) :: GameUI.t()
-  def shuffle_group(game_name, user_id, group_id) do
+  def shuffle_group(gameName, user_id, group_id) do
     IO.puts("game_ui_server: shuffle_group")
-    GenServer.call(via_tuple(game_name), {:shuffle_group, user_id, group_id})
+    GenServer.call(via_tuple(gameName), {:shuffle_group, user_id, group_id})
   end
 
   @doc """
   toggle_exhaust/5: A player just exhausted/unexhausted a card.
   """
   @spec toggle_exhaust(String.t(), integer, String.t(), integer, integer) :: GameUI.t()
-  def toggle_exhaust(game_name, user_id, group_id, stack_index, card_index) do
+  def toggle_exhaust(gameName, user_id, group_id, stack_index, card_index) do
     IO.puts("game_ui_server: toggle_exhaust")
-    GenServer.call(via_tuple(game_name), {:toggle_exhaust, user_id, group_id, stack_index, card_index})
+    GenServer.call(via_tuple(gameName), {:toggle_exhaust, user_id, group_id, stack_index, card_index})
   end
 
   @doc """
   card_action/5: Perform given action on a card.
   """
   @spec card_action(String.t(), integer, String.t(), String.t(), List.t()) :: GameUI.t()
-  def card_action(game_name, user_id, action, card_id, options) do
+  def card_action(gameName, user_id, action, card_id, options) do
     IO.puts("game_ui_server: card_action")
-    GenServer.call(via_tuple(game_name), {:card_action, user_id, action, card_id, options})
+    GenServer.call(via_tuple(gameName), {:card_action, user_id, action, card_id, options})
   end
 
   @doc """
   game_action/4: Perform given action on a card.
   """
   @spec game_action(String.t(), integer, String.t(), Map.t()) :: GameUI.t()
-  def game_action(game_name, user_id, action, options) do
+  def game_action(gameName, user_id, action, options) do
     IO.puts("game_ui_server: game_action")
-    GenServer.call(via_tuple(game_name), {:game_action, user_id, action, options})
+    GenServer.call(via_tuple(gameName), {:game_action, user_id, action, options})
   end
 
   @doc """
   action_on_matching_cards/5: Perform given action on matching cards.
   """
   @spec action_on_matching_cards(String.t(), integer, List.t(), String.t(), List.t()) :: GameUI.t()
-  def action_on_matching_cards(game_name, user_id, criteria, action, options) do
+  def action_on_matching_cards(gameName, user_id, criteria, action, options) do
     IO.puts("game_ui_server: action_on_matching_cards")
-    GenServer.call(via_tuple(game_name), {:action_on_matching_cards, user_id, criteria, action, options})
+    GenServer.call(via_tuple(gameName), {:action_on_matching_cards, user_id, criteria, action, options})
   end
 
   @doc """
   update_value/5: A player just updated a value.
   """
   @spec update_value(String.t(), integer, List.t(), any) :: GameUI.t()
-  def update_value(game_name, user_id, path, value) do
+  def update_value(gameName, user_id, path, value) do
     IO.puts("game_ui_server: update_value")
-    GenServer.call(via_tuple(game_name), {:update_value, user_id, path, value})
+    GenServer.call(via_tuple(gameName), {:update_value, user_id, path, value})
   end
 
   @doc """
   update_values/5: A player just updated some values.
   """
   @spec update_values(String.t(), integer, List.t(), List.t()) :: GameUI.t()
-  def update_values(game_name, user_id, paths, values) do
+  def update_values(gameName, user_id, paths, values) do
     IO.puts("game_ui_server: update_values")
-    GenServer.call(via_tuple(game_name), {:update_values, user_id, paths, values})
+    GenServer.call(via_tuple(gameName), {:update_values, user_id, paths, values})
   end
 
   @doc """
   set_round_step/4: A player changes the round step
   """
   @spec set_round_step(String.t(), integer, String.t(), String.t()) :: GameUI.t()
-  def set_round_step(game_name, user_id, phase, round_step) do
+  def set_round_step(gameName, user_id, phase, round_step) do
     IO.puts("game_ui_server: set_round_step")
-    GenServer.call(via_tuple(game_name), {:set_round_step, phase, round_step})
+    GenServer.call(via_tuple(gameName), {:set_round_step, phase, round_step})
   end
 
   @doc """
   round/3: A player changes the round step
   """
   @spec refresh(String.t(), integer, String.t()) :: GameUI.t()
-  def refresh(game_name, user_id, player_n) do
+  def refresh(gameName, user_id, player_n) do
     IO.puts("game_ui_server: refresh")
-    GenServer.call(via_tuple(game_name), {:refresh, player_n})
+    GenServer.call(via_tuple(gameName), {:refresh, player_n})
   end
 
   @doc """
   set_first_player/3: Set first player
   """
   @spec set_first_player(String.t(), integer, String.t()) :: GameUI.t()
-  def set_first_player(game_name, user_id, player_n) do
+  def set_first_player(gameName, user_id, player_n) do
     IO.puts("game_ui_server: refresh")
-    GenServer.call(via_tuple(game_name), {:set_first_player, player_n})
+    GenServer.call(via_tuple(gameName), {:set_first_player, player_n})
   end
 
   @doc """
   increment_threat/4: A player changes the round step
   """
   @spec increment_threat(String.t(), integer, String.t(), number) :: GameUI.t()
-  def increment_threat(game_name, user_id, player_n, increment) do
+  def increment_threat(gameName, user_id, player_n, increment) do
     IO.puts("game_ui_server: increment_threat")
-    GenServer.call(via_tuple(game_name), {:increment_threat, player_n, increment})
+    GenServer.call(via_tuple(gameName), {:increment_threat, player_n, increment})
   end
 
   @doc """
   increment_round/3: A player increments the round number
   """
   @spec increment_round(String.t(), integer, number) :: GameUI.t()
-  def increment_round(game_name, user_id, increment) do
+  def increment_round(gameName, user_id, increment) do
     IO.puts("game_ui_server: increment_round")
-    GenServer.call(via_tuple(game_name), {:increment_round, increment})
+    GenServer.call(via_tuple(gameName), {:increment_round, increment})
   end
 
   @doc """
@@ -266,8 +266,8 @@ defmodule SpadesGame.GameUIServer do
   Works by moving back the "everyone sat down" timestamp by 10 minutes.
   Should be used in dev+test only.
   """
-  def rewind_countdown_devtest(game_name) do
-    GenServer.call(via_tuple(game_name), :rewind_countdown_devtest)
+  def rewind_countdown_devtest(gameName) do
+    GenServer.call(via_tuple(gameName), :rewind_countdown_devtest)
   end
 
   @doc """
@@ -275,8 +275,8 @@ defmodule SpadesGame.GameUIServer do
   trick instantly.
   Should be used in dev+test only.
   """
-  def rewind_trickfull_devtest(game_name) do
-    GenServer.call(via_tuple(game_name), :rewind_trickfull_devtest)
+  def rewind_trickfull_devtest(gameName) do
+    GenServer.call(via_tuple(gameName), :rewind_trickfull_devtest)
   end
 
   @doc """
@@ -284,8 +284,8 @@ defmodule SpadesGame.GameUIServer do
   which_seat is "player1", "player2", "player3" or "player4".
   """
   @spec sit(String.t(), integer, String.t()) :: GameUI.t()
-  def sit(game_name, user_id, player_n) do
-    GenServer.call(via_tuple(game_name), {:sit, user_id, player_n})
+  def sit(gameName, user_id, player_n) do
+    GenServer.call(via_tuple(gameName), {:sit, user_id, player_n})
   end
 
   @doc """
@@ -294,37 +294,37 @@ defmodule SpadesGame.GameUIServer do
   Maybe eventually there will be some sophisticated disconnect/reconnect
   system?
   """
-  def leave(game_name, user_id) do
-    GenServer.call(via_tuple(game_name), {:leave, user_id})
+  def leave(gameName, user_id) do
+    GenServer.call(via_tuple(gameName), {:leave, user_id})
   end
 
   ## Temp function to set winner flag on a game
-  def winner(game_name, winner_val) do
-    GenServer.call(via_tuple(game_name), {:winner, winner_val})
+  def winner(gameName, winner_val) do
+    GenServer.call(via_tuple(gameName), {:winner, winner_val})
   end
 
   #####################################
   ####### IMPLEMENTATION ##############
   #####################################
 
-  def init({game_name, user, options = %GameOptions{}}) do
+  def init({gameName, user, options = %GameOptions{}}) do
     IO.puts("game_ui_server init a")
     gameui =
-      case :ets.lookup(:game_uis, game_name) do
+      case :ets.lookup(:game_uis, gameName) do
         [] ->
           IO.puts("case 1")
           IO.inspect(user)
-          gameui = GameUI.new(game_name, user, options)
-          :ets.insert(:game_uis, {game_name, gameui})
+          gameui = GameUI.new(gameName, user, options)
+          :ets.insert(:game_uis, {gameName, gameui})
           gameui
 
-        [{^game_name, gameui}] ->
+        [{^gameName, gameui}] ->
           IO.puts("case 2")
           gameui
       end
 
     IO.puts("game_ui_server init b")
-    GameRegistry.add(gameui["game_name"], gameui)
+    GameRegistry.add(gameui["gameName"], gameui)
     {:ok, gameui, timeout(gameui)}
   end
 
@@ -510,13 +510,13 @@ defmodule SpadesGame.GameUIServer do
 
     IO.puts("game_ui_server: save_and_reply a")
     #IO.inspect(new_gameui)
-    GameRegistry.update(new_gameui["game_name"], new_gameui)
+    GameRegistry.update(new_gameui["gameName"], new_gameui)
 
     IO.puts("game_ui_server: save_and_reply b")
     # end)
 
     spawn_link(fn ->
-      :ets.insert(:game_uis, {new_gameui["game_name"], new_gameui})
+      :ets.insert(:game_uis, {new_gameui["gameName"], new_gameui})
     end)
 
     IO.puts("game_ui_server: save_and_reply c")
@@ -542,7 +542,7 @@ defmodule SpadesGame.GameUIServer do
       |> Enum.each(fn _ ->
         Process.sleep(delay_ms)
         state = GenServer.call(pid, :state)
-        SpadesWeb.RoomChannel.notify_from_outside(state["game_name"])
+        SpadesWeb.RoomChannel.notify_from_outside(state["gameName"])
       end)
     end)
   end
@@ -563,9 +563,9 @@ defmodule SpadesGame.GameUIServer do
 
   def terminate({:shutdown, :timeout}, state) do
     IO.puts("gameuiserv shutdown")
-    Logger.info("Terminate (Timeout) running for #{state["game_name"]}")
-    :ets.delete(:game_uis, state["game_name"])
-    GameRegistry.remove(state["game_name"])
+    Logger.info("Terminate (Timeout) running for #{state["gameName"]}")
+    :ets.delete(:game_uis, state["gameName"])
+    GameRegistry.remove(state["gameName"])
     :ok
   end
 
@@ -573,8 +573,8 @@ defmodule SpadesGame.GameUIServer do
   def terminate(_reason, state) do
     IO.puts("terminating because")
     IO.inspect(_reason)
-    Logger.info("Terminate (Non Timeout) running for #{state["game_name"]}")
-    GameRegistry.remove(state["game_name"])
+    Logger.info("Terminate (Non Timeout) running for #{state["gameName"]}")
+    GameRegistry.remove(state["gameName"])
     :ok
   end
 end
@@ -597,22 +597,22 @@ end
 #   start_link/2: Generates a new game server under a provided name.
 #   """
 #   @spec start_link(String.t(), %GameOptions{}) :: {:ok, pid} | {:error, any}
-#   def start_link(game_name, %GameOptions{} = options) do
-#     GenServer.start_link(__MODULE__, {game_name, options}, name: via_tuple(game_name))
+#   def start_link(gameName, %GameOptions{} = options) do
+#     GenServer.start_link(__MODULE__, {gameName, options}, name: via_tuple(gameName))
 #   end
 
 #   @doc """
 #   via_tuple/1: Given a game name string, generate a via tuple for addressing the game.
 #   """
-#   def via_tuple(game_name),
-#     do: {:via, Registry, {SpadesGame.GameUIRegistry, {__MODULE__, game_name}}}
+#   def via_tuple(gameName),
+#     do: {:via, Registry, {SpadesGame.GameUIRegistry, {__MODULE__, gameName}}}
 
 #   @doc """
 #   gameui_pid/1: Returns the `pid` of the game server process registered
-#   under the given `game_name`, or `nil` if no process is registered.
+#   under the given `gameName`, or `nil` if no process is registered.
 #   """
-#   def gameui_pid(game_name) do
-#     game_name
+#   def gameui_pid(gameName) do
+#     gameName
 #     |> via_tuple()
 #     |> GenServer.whereis()
 #   end
@@ -621,32 +621,32 @@ end
 #   state/1:  Retrieves the game state for the game under a provided name.
 #   """
 #   @spec state(String.t()) :: GameUI.t() | nil
-#   def state(game_name) do
-#     case gameui_pid(game_name) do
+#   def state(gameName) do
+#     case gameui_pid(gameName) do
 #       nil -> nil
-#       _ -> GenServer.call(via_tuple(game_name), :state)
+#       _ -> GenServer.call(via_tuple(gameName), :state)
 #     end
 #   end
 
 #   @spec game_exists?(String.t()) :: boolean
-#   def game_exists?(game_name) do
-#     gameui_pid(game_name) != nil
+#   def game_exists?(gameName) do
+#     gameui_pid(gameName) != nil
 #   end
 
 #   @doc """
 #   bid/3: A player just submitted a bid.
 #   """
 #   @spec bid(String.t(), integer | :bot, integer) :: GameUI.t()
-#   def bid(game_name, user_id, bid_amount) do
-#     GenServer.call(via_tuple(game_name), {:bid, user_id, bid_amount})
+#   def bid(gameName, user_id, bid_amount) do
+#     GenServer.call(via_tuple(gameName), {:bid, user_id, bid_amount})
 #   end
 
 #   @doc """
 #   play/3: A player just played a card.
 #   """
 #   @spec play(String.t(), integer | :bot, Card.t()) :: GameUI.t()
-#   def play(game_name, user_id, card) do
-#     GenServer.call(via_tuple(game_name), {:play, user_id, card})
+#   def play(gameName, user_id, card) do
+#     GenServer.call(via_tuple(gameName), {:play, user_id, card})
 #   end
 
 #   @doc """
@@ -655,8 +655,8 @@ end
 #   Works by moving back the "everyone sat down" timestamp by 10 minutes.
 #   Should be used in dev+test only.
 #   """
-#   def rewind_countdown_devtest(game_name) do
-#     GenServer.call(via_tuple(game_name), :rewind_countdown_devtest)
+#   def rewind_countdown_devtest(gameName) do
+#     GenServer.call(via_tuple(gameName), :rewind_countdown_devtest)
 #   end
 
 #   @doc """
@@ -664,8 +664,8 @@ end
 #   trick instantly.
 #   Should be used in dev+test only.
 #   """
-#   def rewind_trickfull_devtest(game_name) do
-#     GenServer.call(via_tuple(game_name), :rewind_trickfull_devtest)
+#   def rewind_trickfull_devtest(gameName) do
+#     GenServer.call(via_tuple(gameName), :rewind_trickfull_devtest)
 #   end
 
 #   @doc """
@@ -673,8 +673,8 @@ end
 #   which_seat is "north", "west", "east" or "south".
 #   """
 #   @spec sit(String.t(), integer, String.t()) :: GameUI.t()
-#   def sit(game_name, user_id, which_seat) do
-#     GenServer.call(via_tuple(game_name), {:sit, user_id, which_seat})
+#   def sit(gameName, user_id, which_seat) do
+#     GenServer.call(via_tuple(gameName), {:sit, user_id, which_seat})
 #   end
 
 #   @doc """
@@ -683,32 +683,32 @@ end
 #   Maybe eventually there will be some sophisticated disconnect/reconnect
 #   system?
 #   """
-#   def leave(game_name, user_id) do
-#     GenServer.call(via_tuple(game_name), {:leave, user_id})
+#   def leave(gameName, user_id) do
+#     GenServer.call(via_tuple(gameName), {:leave, user_id})
 #   end
 
 #   ## Temp function to set winner flag on a game
-#   def winner(game_name, winner_val) do
-#     GenServer.call(via_tuple(game_name), {:winner, winner_val})
+#   def winner(gameName, winner_val) do
+#     GenServer.call(via_tuple(gameName), {:winner, winner_val})
 #   end
 
 #   #####################################
 #   ####### IMPLEMENTATION ##############
 #   #####################################
 
-#   def init({game_name, options = %GameOptions{}}) do
+#   def init({gameName, options = %GameOptions{}}) do
 #     gameui =
-#       case :ets.lookup(:game_uis, game_name) do
+#       case :ets.lookup(:game_uis, gameName) do
 #         [] ->
-#           gameui = GameUI.new(game_name, options)
-#           :ets.insert(:game_uis, {game_name, gameui})
+#           gameui = GameUI.new(gameName, options)
+#           :ets.insert(:game_uis, {gameName, gameui})
 #           gameui
 
-#         [{^game_name, gameui}] ->
+#         [{^gameName, gameui}] ->
 #           gameui
 #       end
 
-#     GameRegistry.add(gameui.game_name, gameui)
+#     GameRegistry.add(gameui.gameName, gameui)
 #     {:ok, gameui, timeout(gameui)}
 #   end
 
@@ -799,13 +799,13 @@ end
 
 #     IO.puts("game_ui_server: save_and_reply a")
 #     #IO.inspect(new_gameui)
-#     GameRegistry.update(new_gameui.game_name, new_gameui)
+#     GameRegistry.update(new_gameui.gameName, new_gameui)
 
 #     IO.puts("game_ui_server: save_and_reply b")
 #     # end)
 
 #     spawn_link(fn ->
-#       :ets.insert(:game_uis, {new_gameui.game_name, new_gameui})
+#       :ets.insert(:game_uis, {new_gameui.gameName, new_gameui})
 #     end)
 
 #     IO.puts("game_ui_server: save_and_reply c")
@@ -829,7 +829,7 @@ end
 #       |> Enum.each(fn _ ->
 #         Process.sleep(delay_ms)
 #         state = GenServer.call(pid, :state)
-#         SpadesWeb.RoomChannel.notify_from_outside(state.game_name)
+#         SpadesWeb.RoomChannel.notify_from_outside(state.gameName)
 #       end)
 #     end)
 #   end
@@ -847,16 +847,16 @@ end
 #   end
 
 #   def terminate({:shutdown, :timeout}, state) do
-#     Logger.info("Terminate (Timeout) running for #{state.game_name}")
-#     :ets.delete(:game_uis, state.game_name)
-#     GameRegistry.remove(state.game_name)
+#     Logger.info("Terminate (Timeout) running for #{state.gameName}")
+#     :ets.delete(:game_uis, state.gameName)
+#     GameRegistry.remove(state.gameName)
 #     :ok
 #   end
 
 #   # Do I need to trap exits here?
 #   def terminate(_reason, state) do
-#     Logger.info("Terminate (Non Timeout) running for #{state.game_name}")
-#     GameRegistry.remove(state.game_name)
+#     Logger.info("Terminate (Non Timeout) running for #{state.gameName}")
+#     GameRegistry.remove(state.gameName)
 #     :ok
 #   end
 # end

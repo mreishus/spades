@@ -7,6 +7,7 @@ import { reorderGroupStackIds } from "./Reorder";
 import { Table } from "./Table";
 import { GROUPSINFO } from "./Constants"
 import { getDisplayName, getDisplayNameFlipped, getCurrentFace } from "./Helpers"
+import { useKeypress } from "../../contexts/KeypressContext";
 
 
 
@@ -19,6 +20,7 @@ export const DragContainer = React.memo(({
   const gameStore = state => state?.gameUi?.game;
   const dispatch = useDispatch();
   const game = useSelector(gameStore);
+  const keypress = useKeypress();
   console.log("rendering dragcontainer");
 
   const onDragEnd = (result) => {
@@ -67,7 +69,7 @@ export const DragContainer = React.memo(({
         ...origGroup,
         stackIds: newOrigGroupStackIds
       }   
-      if ((origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
+      if (!keypress["Shift"] && (origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
         chatBroadcast("game_update",{message: "attached "+getDisplayNameFlipped(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."})
         // Flip card faceup
         const paths = [["game","cardById",topOfOrigStackCardId,"currentSide"]];
@@ -80,7 +82,7 @@ export const DragContainer = React.memo(({
       }
       dispatch(setStackIds(newOrigGroup));
       dispatch(setCardIds(newDestStack));
-      gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: true, preserve_state: false})
+      gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: true, preserve_state: keypress["Shift"]})
       return;
     }
 
@@ -106,7 +108,7 @@ export const DragContainer = React.memo(({
     if (origGroupId != destGroupId) {
       const origGroupTitle = GROUPSINFO[origGroupId].name;
       const destGroupTitle = GROUPSINFO[destGroupId].name;
-      if ((origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
+      if (!keypress["Shift"] && (origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
         chatBroadcast("game_update",{message: "moved "+getDisplayNameFlipped(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
         // Flip card faceup
         const paths = [["game","cardById",topOfOrigStackCardId,"currentSide"]];
@@ -118,7 +120,7 @@ export const DragContainer = React.memo(({
         chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
       }
       dispatch(setGroupById(newGroupById));
-      gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: false})
+      gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: keypress["Shift"]})
     }
 
   }

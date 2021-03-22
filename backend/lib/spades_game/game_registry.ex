@@ -50,12 +50,9 @@ defmodule SpadesGame.GameRegistry do
   # Convert a GameUI{} into a %{} that is suitable for
   # inserting or updating a Room.
   defp to_room_param(%{} = gameui) do
-    # created_at: DateTime.t()
     IO.puts("to_room_param")
-    # IO.inspect(gameui["game_name"])
-    # IO.inspect(Map.keys(gameui))
     %{
-      name: gameui["game_name"],
+      name: gameui["gameName"],
       player1: gameui["seats"]["player1"]["sitting"],
       player2: gameui["seats"]["player2"]["sitting"],
       player3: gameui["seats"]["player3"]["sitting"],

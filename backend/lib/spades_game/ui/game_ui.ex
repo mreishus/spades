@@ -15,7 +15,7 @@ defmodule SpadesGame.GameUI do
 
     gameui = %{
       "game"=> game,
-      "game_name"=> game_name,
+      "gameName"=> game_name,
       "options"=> options,
       "created_at"=> DateTime.utc_now(),
       "created_by"=> user,
@@ -203,7 +203,7 @@ defmodule SpadesGame.GameUI do
       "deal_shadow" ->
         deal_shadow(gameui, card, options)
       "detach" ->
-        detach(gameui, card, options)
+        detach(gameui, card_id)
       "peek_card" ->
         peek_card(gameui, card, options["player_n"], options["value"])
       "update_card_state" ->
@@ -292,9 +292,10 @@ defmodule SpadesGame.GameUI do
   end
 
   # card_action detach
-  def detach(gameui, card, options \\ nil) do
+  def detach(gameui, card_id) do
+    card = get_card(gameui, card_id)
     {group_id, stack_index, card_index} = gsc(gameui, card)
-    move_card(gameui, card["id"], group_id, stack_index + 1, 0, false, true)
+    move_card(gameui, card_id, group_id, stack_index + 1, 0, false, true)
   end
 
   # card_action update_card_state
@@ -435,6 +436,8 @@ defmodule SpadesGame.GameUI do
         shuffle_group(gameui, options["group_id"])
       "detach" ->
         detach(gameui, options["card_id"])
+      "set_game" ->
+        put_in(gameui["game"], options["game"])
       _ ->
         gameui
     end
@@ -653,7 +656,7 @@ defmodule SpadesGame.GameUI do
         Enum.reduce(reverse_card_ids, gameui, fn(card_id, acc) ->
           IO.puts("detaching #{card_id}")
           pretty_print(gameui)
-          acc = card_action(acc, "detach", card_id, [])
+          acc = detach(acc, card_id)
         end)
       else
         gameui
