@@ -107,7 +107,7 @@ export const MenuBar = React.memo(({
       reader.onload = async (event) => { 
         const gameObj = JSON.parse(event.target.result);
         dispatch(setGame(gameObj));
-        gameBroadcast("gmae_action", {action: "set_game", options:{game: gameObj}})
+        gameBroadcast("game_action", {action: "update_values", options:{paths: [["game"]], values: [[gameObj]]}})
         chatBroadcast("game_update", {message: "uploaded a game."});
       }
       reader.readAsText(event.target.files[0]);

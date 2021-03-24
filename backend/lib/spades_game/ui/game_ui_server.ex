@@ -216,15 +216,6 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  set_round_step/4: A player changes the round step
-  """
-  @spec set_round_step(String.t(), integer, String.t(), String.t()) :: GameUI.t()
-  def set_round_step(gameName, user_id, phase, round_step) do
-    IO.puts("game_ui_server: set_round_step")
-    GenServer.call(via_tuple(gameName), {:set_round_step, phase, round_step})
-  end
-
-  @doc """
   round/3: A player changes the round step
   """
   @spec refresh(String.t(), integer, String.t()) :: GameUI.t()
@@ -450,13 +441,6 @@ defmodule SpadesGame.GameUIServer do
   def handle_call({:update_values, user_id, paths, values}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: update_value a")
     GameUI.update_values(gameui, paths, values)
-    |> save_and_reply()
-  end
-
-  def handle_call({:set_round_step, phase, round_step}, _from, gameui) do
-    gameui = put_in(gameui["game"]["roundStep"], round_step)
-    gameui = put_in(gameui["game"]["phase"], phase)
-    gameui
     |> save_and_reply()
   end
 

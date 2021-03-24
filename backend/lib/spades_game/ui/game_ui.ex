@@ -438,6 +438,8 @@ defmodule SpadesGame.GameUI do
         detach(gameui, options["card_id"])
       "set_game" ->
         put_in(gameui["game"], options["game"])
+      "update_values" ->
+        update_values(gameui, options["paths"], options["values"])
       _ ->
         gameui
     end
@@ -477,6 +479,9 @@ defmodule SpadesGame.GameUI do
 
   #
   def update_value(gameui, path, value) do
+    IO.puts("game_ui update_value")
+    IO.inspect(path)
+    IO.inspect(value)
     case Enum.count(path) do
       1 ->
         put_in(gameui[Enum.at(path,0)], value)
@@ -496,6 +501,7 @@ defmodule SpadesGame.GameUI do
   end
 
   def update_values(gameui, paths, values) do
+    IO.puts("game_ui update_values")
     Enum.reduce(Enum.with_index(paths), gameui, fn({path, index}, acc) ->
       acc = update_value(acc, path, Enum.at(values, index))
     end)

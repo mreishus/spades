@@ -385,23 +385,6 @@ defmodule SpadesWeb.RoomChannel do
     {:reply, {:ok, client_state(socket)}, socket}
   end
 
-
-  def handle_in(
-    "set_round_step",
-    %{
-      "phase" => phase,
-      "round_step" => round_step,
-    },
-    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
-  ) do
-    GameUIServer.set_round_step(room_slug, user_id, phase, round_step)
-    state = GameUIServer.state(room_slug)
-    socket = socket |> assign(:game_ui, state)
-    notify(socket)
-
-    {:reply, {:ok, client_state(socket)}, socket}
-  end
-
   def handle_in(
     "refresh",
     %{
@@ -510,8 +493,6 @@ defmodule SpadesWeb.RoomChannel do
 
   # This is what part of the state gets sent to the client.
   # It can be used to transform or hide it before they get it.
-  #
-  # Here, we are using GameUIView to hide the other player's hands.
   defp client_state(socket) do
     user_id = Map.get(socket.assigns, :user_id) || 0
     IO.puts("client_state")

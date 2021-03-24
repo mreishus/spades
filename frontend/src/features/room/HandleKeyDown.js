@@ -144,11 +144,7 @@ export const HandleKeyDown = ({
                 return;
             }
             // Draw card
-            const topStackId = deckStackIds[0];
-            const topStack = gameUi.game.stackById[topStackId];
-            const topCardId = topStack["cardIds"][0];
-            const topCard = gameUi.game.cardById[topCardId];
-            chatBroadcast("game_update",{message: "drew "+getDisplayNameFlipped(topCard)+". Cards remaining: "+(stacksLeft-1)});
+            chatBroadcast("game_update",{message: "drew a card."});
             gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}})
             // gameBroadcast("move_stack",{
             //     stack_id: topStackId, 
@@ -186,15 +182,16 @@ export const HandleKeyDown = ({
             }
         } else if (k === "N") {
             if (gameUi["game"]["roundStep"] !== "1.R") {
-                gameBroadcast("set_round_step", {phase: "Resource", round_step: "1.R"}) 
+                gameBroadcast("game_action", {action: "update_values", options: {paths: [["game", "phase"], ["game", "roundStep"]], values: ["Resource", "1.R"]}})
+//                gameBroadcast("set_round_step", {phase: "Resource", round_step: "1.R"}) 
                 chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
             }
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the round number increasing multiple times.
             if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
-                const roundNumber = gameUi["game"]["round_number"];
-                const newRoundNumber = roundNumber + 1;
-                gameBroadcast("increment_round",{increment: 1});    
+                const roundNumber = gameUi["game"]["roundNumber"];
+                const newRoundNumber = parseInt(roundNumber) + 1;
+                gameBroadcast("game_action", {action: "update_values", options:{paths:[["game", "roundNumber"]], values: [newRoundNumber]}})
                 chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
             }
             gameBroadcast("action_on_matching_cards",{
@@ -202,6 +199,8 @@ export const HandleKeyDown = ({
                 action: "increment_token", 
                 options: ["resource", 1]
             })
+            gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
+            chatBroadcast("game_update",{message: "drew a card."});
         }
 
         // Card specific hotkeys
