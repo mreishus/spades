@@ -38,6 +38,7 @@ export const getDisplayNameFlipped = (card) => {
 
 export const getVisibleSide = (card, playerN) => {
   if (!card) return null;
+  console.log("getvisibleside", card["peeking"], playerN);
   const currentSide = card["currentSide"];
   if (currentSide == "A" || card["peeking"][playerN]) return "A";
   else return "B";
