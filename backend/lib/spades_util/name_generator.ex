@@ -2609,7 +2609,6 @@ defmodule SpadesUtil.NameGenerator do
       official
       officious
       oily
-      OK
       okay
       old
       older
@@ -4623,7 +4622,6 @@ defmodule SpadesUtil.NameGenerator do
       yawning
       yearly
       yearning
-      yellow
       yelping
       yielding
       young

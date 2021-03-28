@@ -2,7 +2,7 @@ import React, { Component, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentFace } from "./Helpers"
 import { MenuBarUser } from "./MenuBarUser"
-import { MenuBarSharedContainer } from "./MenuBarSharedContainer"
+import { MenuBarDataContainer } from "./MenuBarDataContainer"
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
@@ -107,7 +107,7 @@ export const MenuBar = React.memo(({
       reader.onload = async (event) => { 
         const gameObj = JSON.parse(event.target.result);
         dispatch(setGame(gameObj));
-        gameBroadcast("game_action", {action: "update_values", options:{paths: [["game"]], values: [[gameObj]]}})
+        gameBroadcast("game_action", {action: "update_values", options:{paths: [["game"]], values: [gameObj]}})
         chatBroadcast("game_update", {message: "uploaded a game."});
       }
       reader.readAsText(event.target.files[0]);
@@ -192,31 +192,7 @@ export const MenuBar = React.memo(({
           </ul>
         </li>
       </ul>
-      <MenuBarSharedContainer/>
-
-      <MenuBarUser
-        playerN={"player1"}
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-        observingPlayerN={observingPlayerN}
-        setObservingPlayerN={setObservingPlayerN}
-      />
-      <MenuBarUser
-        playerN={"player2"}
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-        observingPlayerN={observingPlayerN}
-        setObservingPlayerN={setObservingPlayerN}
-      />
-      <MenuBarUser
-        playerN={"player3"}
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-        observingPlayerN={observingPlayerN}
-        setObservingPlayerN={setObservingPlayerN}
-      />
-      <MenuBarUser
-        playerN={"player4"}
+      <MenuBarDataContainer
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}

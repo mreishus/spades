@@ -858,7 +858,7 @@ defmodule SpadesGame.GameUI do
       gameui
     end
 
-    # Add to starting threat
+    # Calculate threat cost
     threat = Enum.reduce(load_list, 0, fn(r, acc) ->
       sideA = r["cardRow"]["sides"]["A"]
       if sideA["type"] == "Hero" do
@@ -867,11 +867,9 @@ defmodule SpadesGame.GameUI do
         acc
       end
     end)
-    gameui = if player_n do
-      put_in(gameui["game"]["playerData"][player_n]["threat"], threat)
-    else
-      gameui
-    end
+    # Add to starting threat
+    current_threat = gameui["game"]["playerData"][player_n]["threat"]
+    gameui = put_in(gameui["game"]["playerData"][player_n]["threat"], current_threat + threat)
 
     # If deck size has increased from 0, assume it is at start of game and a mulligan is needed
     round_number = gameui["game"]["roundNumber"]

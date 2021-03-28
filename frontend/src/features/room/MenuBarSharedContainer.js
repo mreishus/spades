@@ -4,7 +4,7 @@ import { getCurrentFace } from "./Helpers"
 import { MenuBarShared } from "./MenuBarShared"
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 
-export const MenuBarSharedContainer = React.memo(() => {
+export const MenuBarSharedContainer = React.memo(({setPlayerWillpower}) => {
   
     const stagingStore = state => state?.gameUi?.game?.groupById?.sharedStaging.stackIds;
     const stagingStackIds = useSelector(stagingStore);
@@ -28,14 +28,18 @@ export const MenuBarSharedContainer = React.memo(() => {
       stagingThreat = stagingThreat + currentFace["threat"] + topCard["tokens"]["threat"];
     })
 
-    var totalWillpower = 0;
-    for (const playerI in playerData) {
-      if (playerData.hasOwnProperty(playerI)) {
-          totalWillpower = totalWillpower + playerData[playerI]["willpower"]
+    const playerWillpower = {"player1": 0, "player2": 0, "player3": 0, "player4": 0};
+    Object.keys(cardById).forEach((cardId) => {
+      const card = cardById[cardId];
+      const currentFace = getCurrentFace(card);
+      const cardWillpower = currentFace.willpower || 0;
+      if (card.committed) {
+        playerWillpower[card.controller] += cardWillpower + card.tokens.willpower;
       }
-    }
-
+    })
+    const totalWillpower = playerWillpower["player1"] + playerWillpower["player2"] + playerWillpower["player3"] + playerWillpower["player4"];
     const totalProgress = totalWillpower - stagingThreat;
+    setPlayerWillpower(playerWillpower);
 
     return(
       <MenuBarShared 
