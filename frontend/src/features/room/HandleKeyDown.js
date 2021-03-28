@@ -164,7 +164,8 @@ export const HandleKeyDown = ({
             }
             // Refresh all cards you control
             chatBroadcast("game_update",{message: "refreshes."});
-            gameBroadcast("refresh",{player_n: playerN});
+            //gameBroadcast("refresh",{player_n: playerN});
+            gameBroadcast("game_action", {action: "refresh", options: {player_n: playerN}});
             // Raise your threat
             const newThreat = gameUi.game.playerData[playerN].threat+1;
             chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
@@ -172,23 +173,26 @@ export const HandleKeyDown = ({
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
             if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
-                const firstPlayerN = gameUi.game.first_player;
+                const firstPlayerN = gameUi.game.firstPlayer;
                 const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
                 // If nextPlayerN is null then it's a solo game, so don't pass the token
+                console.log("moving token");
+                console.log(firstPlayerN);
+                console.log(nextPlayerN);
                 if (nextPlayerN) {
-                    gameBroadcast("update_value",{path: ["game","firstPlayer"], value: nextPlayerN});    
+                    gameBroadcast("update_values",{paths: [["game","firstPlayer"]], values: [nextPlayerN]});    
                     chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."})
                 }
             }
         } else if (k === "N") {
             if (gameUi["game"]["roundStep"] !== "1.R") {
                 gameBroadcast("game_action", {action: "update_values", options: {paths: [["game", "phase"], ["game", "roundStep"]], values: ["Resource", "1.R"]}})
-//                gameBroadcast("set_round_step", {phase: "Resource", round_step: "1.R"}) 
                 chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
             }
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the round number increasing multiple times.
             if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
+                // Update round number
                 const roundNumber = gameUi["game"]["roundNumber"];
                 const newRoundNumber = parseInt(roundNumber) + 1;
                 gameBroadcast("game_action", {action: "update_values", options:{paths:[["game", "roundNumber"]], values: [newRoundNumber]}})
