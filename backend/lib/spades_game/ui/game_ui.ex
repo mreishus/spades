@@ -649,8 +649,8 @@ defmodule SpadesGame.GameUI do
       card_ids = get_card_ids(gameui, stack_id)
       gameui = Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
         IO.puts("updating card state #{card_id}")
-        card = get_card(gameui, card_id)
-        acc = update_card_state(gameui, card, preserve_state, orig_group_id)
+        card = get_card(acc, card_id)
+        acc = update_card_state(acc, card, preserve_state, orig_group_id)
       end)
       # If a stack is out of play, we need to split it up
       IO.puts("dest_group_id")
