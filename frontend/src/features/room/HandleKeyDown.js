@@ -361,25 +361,13 @@ export const HandleKeyDown = ({
                         console.log("discarding ", cardi);
                         const discardGroupId = cardi["discardGroupId"];
                         chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+GROUPSINFO[discardGroupId].name+"."});
-                        gameBroadcast("card_action",{
-                            action: "move_card",
-                            card_id: cardId,
-                            options: [discardGroupId, 0, 0, false, false]
-                        })
+                        gameBroadcast("game_action", {action: "move_card", options: {card_id: cardId, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
                     }
                 // If the card is a child card in a stack, just discard that card
                 } else {
                     const discardGroupId = activeCard["discardGroupId"]
                     chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupId].name+"."});
-                    gameBroadcast("move_card", {
-                        orig_group_id: groupId, 
-                        orig_stack_index: stackIndex, 
-                        orig_card_index: cardIndex, 
-                        dest_group_id: discardGroupId, 
-                        dest_stack_index: 0, 
-                        dest_card_index: 0, 
-                        create_new_stack: true
-                    })
+                    gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
                 }
                 //dispatch(setGame(gameUi.game));
             }
