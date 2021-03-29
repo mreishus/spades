@@ -111,6 +111,11 @@ const gameUiSlice = createSlice({
   name: "gameUi",
   initialState,
   reducers: {
+    setGameUi: (state, { payload }) => {
+      Object.keys(payload).forEach((key) => {
+        if (key !== "game") state[key] = payload[key];
+      })
+    },
     setGame: (state, { payload }) => {
       console.log("setting game");
       if (!state.game) {
@@ -120,39 +125,30 @@ const gameUiSlice = createSlice({
       }
     },
     setGameName: (state, { payload }) => {
-      console.log("setting game name");
       state.gameName = payload;
     },
     setNumPlayers: (state, { payload }) => {
-      console.log("setting game name");
       state.numPlayers = payload;
     },
     setLayout: (state, { payload }) => {
-      console.log("setting game name");
       state.layout = payload;
     },
     setGroupById: (state, { payload }) => {
-      console.log("setting groupById")
       state.game.groupById = payload;
     },
     setGroup: (state, { payload }) => {
-      console.log("setting group")
       state.game.groupById[payload.id] = payload;
     },
     setStackIds: (state, { payload }) => {
-      console.log("setting stackIds")
       state.game.groupById[payload.id].stackIds = payload.stackIds;
     },
     setStack: (state, { payload }) => {
-      console.log("setting stack")
       state.game.stackById[payload.id] = payload;
     },
     setCardIds: (state, { payload }) => {
-      console.log("setting cardId")
       state.game.stackById[payload.id].cardIds = payload.cardIds;
     },
     setPlayerIds: (state, { payload }) => {
-      console.log("setting playerIds")
       if (!state.playerIds) {
         state.playerIds = payload;
       } else {
@@ -170,5 +166,5 @@ const gameUiSlice = createSlice({
   },
 });
 
-export const { setGame, setGameName, setNumPlayers, setLayout, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setValues, incrementRound } = gameUiSlice.actions;
+export const { setGameUi, setGame, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setValues, incrementRound } = gameUiSlice.actions;
 export default gameUiSlice.reducer;

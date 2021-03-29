@@ -6,7 +6,7 @@ import {useSetMessages} from '../../contexts/MessagesContext';
 import {KeypressProvider} from '../../contexts/KeypressContext';
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext';
 import useChannel from "../../hooks/useChannel";
-import { setGame, setGameName, setPlayerIds, setNumPlayers, setLayout } from "./gameUiSlice";
+import { setGameUi, setGame } from "./gameUiSlice";
 
 export const Room = ({ slug }) => {
   const gameNameStore = state => state.gameUi.gameName;
@@ -27,10 +27,7 @@ export const Room = ({ slug }) => {
       console.log("dispatching to game", game_ui)
       if (game_ui) {
         dispatch(setGame(game_ui.game));
-        dispatch(setPlayerIds(game_ui.playerIds));
-        dispatch(setGameName(game_ui.gameName));
-        dispatch(setNumPlayers(game_ui.numPlayers));
-        dispatch(setLayout(game_ui.layout));
+        dispatch(setGameUi(game_ui));
       }
     }
   }, []);

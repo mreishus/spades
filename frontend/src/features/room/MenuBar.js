@@ -1,8 +1,10 @@
 import React, { Component, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { getCurrentFace } from "./Helpers"
-import { MenuBarUser } from "./MenuBarUser"
-import { MenuBarDataContainer } from "./MenuBarDataContainer"
+import useProfile from "../../hooks/useProfile";
+import useIsLoggedIn from "../../hooks/useIsLoggedIn";
+import { getCurrentFace } from "./Helpers";
+import { MenuBarUser } from "./MenuBarUser";
+import { MenuBarDataContainer } from "./MenuBarDataContainer";
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
@@ -34,10 +36,14 @@ export const MenuBar = React.memo(({
     observingPlayerN,
     setObservingPlayerN,
   }) => {
-    // const layoutStore = state => state.gameUi.layout;
-    // const layout = useSelector(layoutStore);
-    // const numRows = layout.length;
-    const cardSize = CARDSCALE/numRows;
+    const isLoggedIn = useIsLoggedIn();
+    const myUser = useProfile();
+    const myUserID = myUser?.id;  
+
+    const createdByStore = state => state.gameUi.created_by;
+    const createdBy = useSelector(createdByStore);
+    const host = myUserID === createdBy;
+    
     const dispatch = useDispatch();
     const inputFileDeck = useRef(null);
     const inputFileGame = useRef(null);
