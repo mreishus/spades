@@ -16,7 +16,7 @@ export const Chat: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
   return (
 
     <div className="overflow-hidden h-full">
-      <div className="bg-gray-800 overflow-y-auto rounded-lg" style={{height: "calc(100% - 32px)"}}>
+      <div className="bg-gray-800 overflow-y-auto" style={{height: "calc(100% - 32px)"}}>
         <ChatMessages/>
       </div>
       <div className="text-center" >

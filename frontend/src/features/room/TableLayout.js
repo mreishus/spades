@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Group } from "./Group";
 import { Browse } from "./Browse";
 import { CARDSCALE, LAYOUTINFO } from "./Constants";
+import Chat from "../chat/Chat";
  
 
 export const TableRegion = React.memo(({
@@ -52,6 +53,7 @@ export const TableLayout = React.memo(({
   gameBroadcast,
   chatBroadcast,
   playerN,
+  setTyping,
   browseGroupId,
   setBrowseGroupId,
   browseGroupTopN,
@@ -61,11 +63,12 @@ export const TableLayout = React.memo(({
   const numPlayers = useSelector(numPlayersStore);
   const layoutStore = state => state.gameUi.layout;
   const layout = useSelector(layoutStore);
+  const [chatHover, setChatHover] = useState(false);
   if (!layout) return;
   const layoutInfo = LAYOUTINFO[layout];
   const numRows = layoutInfo.length;
-  const rowHeight = Math.floor(100/numRows);
-  const finalRowHeight = 100-((numRows-1)*rowHeight); // Is this necessay?
+  const rowHeight = 100/numRows; //Math.floor(100/numRows);
+  const finalRowHeight = 100/numRows; //100-((numRows-1)*rowHeight); // Is this necessay?
   const cardSize = CARDSCALE/numRows;
   console.log("rendering layout");
   console.log(rowHeight, finalRowHeight);
@@ -92,7 +95,7 @@ export const TableLayout = React.memo(({
           </div>
         :
           <div 
-            className="w-full" 
+            className="relative w-full" 
             style={{
               minHeight: (rowIndex === numRows - 1) ? `${finalRowHeight}%` : `${rowHeight}%`, 
               height:    (rowIndex === numRows - 1) ? `${finalRowHeight}%` : `${rowHeight}%`, 
@@ -111,7 +114,18 @@ export const TableLayout = React.memo(({
                 setBrowseGroupTopN={setBrowseGroupTopN}
               />
             ))}
+            {(rowIndex === numRows - 1) &&
+              <div 
+                className="absolute overflow-hidden" 
+                style={{height: chatHover ? `${numRows*100}%` : `100%`, width: "25%", right: "0", bottom: "0", opacity: 0.7, zIndex: 1e6}}
+                onMouseEnter={() => setChatHover(true)}
+                onMouseLeave={() => setChatHover(false)}
+              >
+                <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
+              </div>
+            }
           </div>
+
     ))
   )
 })

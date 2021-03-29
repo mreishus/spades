@@ -19,6 +19,8 @@ const Wrapper = styled.div`
   overflow-x: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "none" : "auto"};
   overflow-y: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "hidden" : "none"};
   max-height: 100%;
+  z-index: 10000;
+  position: relative;
 `;
 
 const DropZone = styled.div`

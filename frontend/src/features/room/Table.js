@@ -40,7 +40,6 @@ export const Table = React.memo(({
   //const dispatch = useDispatch();
   //const gameUi = useSelector(gameUiStore);
   const [showSpawn, setShowSpawn] = useState(false);
-  const [chatHover, setChatHover] = useState(false);
   const [sittingPlayerN, setSittingPlayerN] = useState("");
   const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDB));
   // Show/hide group that allows you to browse certain cards in a group
@@ -112,6 +111,7 @@ export const Table = React.memo(({
               gameBroadcast={gameBroadcast} 
               chatBroadcast={chatBroadcast}
               playerN={playerN}
+              setTyping={setTyping}
               browseGroupId={browseGroupId}
               setBrowseGroupId={setBrowseGroupId}
               browseGroupTopN={browseGroupTopN}
@@ -272,14 +272,14 @@ export const Table = React.memo(({
         </div>
       </div>
       <GiantCard playerN={playerN}></GiantCard>
-      <div 
+      {/* <div 
         className="absolute overflow-hidden" 
         style={{height: chatHover ? "90%" : "18.3%", width: "24.3%", right: "0", bottom: "0", opacity: 0.7, zIndex: 1e6}}
         onMouseEnter={() => setChatHover(true)}
         onMouseLeave={() => setChatHover(false)}
       >
         <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
-      </div>
+      </div> */}
       {/* Right panel
       <div className="flex w-1/5" >
         <div className="flex flex-col w-full h-full">

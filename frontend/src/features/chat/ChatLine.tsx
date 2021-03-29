@@ -9,19 +9,16 @@ interface Props {
 export const ChatLine: React.FC<Props> = ({ message }) => {
   if (message.game_update) {
     return (
-      <div>
-        <span className="text-gray-500"></span> 
+      <div className="ml-2">
         <span className="text-white font-bold"> <UserName userID={message.sent_by} /> {message.text}</span>
       </div>
     )
   } else {
     return (
-      <div>
-        <span className="text-gray-500"></span>
+      <div className="ml-2">
         <span className="text-blue-400">
           <UserName userID={message.sent_by} />
         </span>
-        <span className="text-gray-500"></span> 
         <span className="text-white"> {message.text}</span>
       </div>
     )
