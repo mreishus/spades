@@ -21,8 +21,13 @@ const Header = styled.div`
   align-items: center;
   justify-content: center;
   color: white;
-  height: 100%;
-  width: 30px;
+  width: 15px;
+  writing-mode: vertical-rl;
+  text-align: center;
+  align-items: center;
+  position: absolute;
+  justify-content: center;
+  display: flex;
 `;
 
 const WidthContainer = styled.div`
@@ -50,13 +55,23 @@ export const Group = React.memo(({
   const beingBrowsed = browseGroupId === groupId;
   return(
     <div className="h-full w-full">
-        {group.type === "play" && group.controller !== "shared" ? null :
-          <ContextMenuTrigger id={group.id} holdToDisplay={0}>
-            <Header>
-              <Title>{GROUPSINFO[group.id].tablename} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
-            </Header>
-          </ContextMenuTrigger>
-        }
+        {/* {group.type === "play" && group.controller !== "shared" ? null : */}
+          
+            {/* <Header> */}
+              {/* <Title> */}
+                <div
+                  className="relative text-center h-full text-white float-left"
+                  style={{width:"15px", writingMode:"vertical-rl"}} 
+                >
+                  <ContextMenuTrigger id={group.id} holdToDisplay={0}>
+                  {GROUPSINFO[group.id].tablename}
+                  </ContextMenuTrigger>
+                </div>
+                
+                {/* <FontAwesomeIcon className="text-white" icon={faChevronDown}/> */}
+              {/* </Title> */}
+            {/* </Header> */}
+        {/* } */}
         <GroupContextMenu
           group={group}
           gameBroadcast={gameBroadcast}
