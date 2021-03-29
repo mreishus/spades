@@ -41,7 +41,7 @@ const isNormalInteger = (str) => {
 
 export const Browse = React.memo(({
   groupId,
-  width,
+  cardSize,
   gameBroadcast,
   chatBroadcast,
   playerN,
@@ -151,11 +151,11 @@ export const Browse = React.memo(({
   // }
 
   return(
-    <WidthContainer 
-      style={{
-        width: width,
-        // visibility: beingBrowsed ? "hidden" : "visible"
-      }}>
+    // <WidthContainer 
+    //   style={{
+    //     width: width,
+    //     // visibility: beingBrowsed ? "hidden" : "visible"
+    //   }}>
       <Container>
         <div style={{width:"100%", height:"20px", float:"left"}}>
         <ContextMenuTrigger id={group.id} holdToDisplay={0}>
@@ -183,6 +183,7 @@ export const Browse = React.memo(({
             playerN={playerN}
             groupId={groupId}
             stackIds={stackIds}
+            cardSize={cardSize}
             groupType={"hand"}
             isCombineEnabled={false}
             selectedStackIndices={filteredStackIndices}
@@ -227,7 +228,7 @@ export const Browse = React.memo(({
         </div>
         {/* </div> */}
       </Container>
-    </WidthContainer>
+    // </WidthContainer>
   )
 })
 

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Tokens } from './Tokens';
 import { playerBackSRC, encounterBackSRC } from "./Constants"
 import { getCardFaceSRC } from "./CardBack"
-import { CARDSCALE, GROUPSINFO } from "./Constants"
+import { GROUPSINFO } from "./Constants"
 import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { CardMouseRegion } from "./CardMouseRegion"
@@ -95,6 +95,7 @@ export const Card = React.memo(({
     chatBroadcast,
     playerN,
     cardIndex,
+    cardSize,
 }) => {
     const cardStore = state => state?.gameUi?.game?.cardById[cardId];
     const card = useSelector(cardStore);
@@ -159,7 +160,7 @@ export const Card = React.memo(({
     
     console.log('rendering card ',currentFace.name);
     console.log('rendering card ',visibleFace.name);
-
+    console.log(cardSize);
 
     return (
         <div>
@@ -174,10 +175,10 @@ export const Card = React.memo(({
                     justifyContent: "center",
                     alignItems: "end",
                     background: `url(${getVisibleFaceSRC(card,playerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
-                    height: `${CARDSCALE*visibleFace.height}vw`,
-                    width: `${CARDSCALE*visibleFace.width}vw`,
-                    left: `${0.2 + (1.39-visibleFace.width)*CARDSCALE/2 + CARDSCALE/3*cardIndex}vw`,
-                    top: `${0.2 + (1.39-visibleFace.height)*CARDSCALE/2}vw`,
+                    height: `${cardSize*visibleFace.height}vw`,
+                    width: `${cardSize*visibleFace.width}vw`,
+                    left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize/3*cardIndex}vw`,
+                    top: `${0.2 + (1.39-visibleFace.height)*cardSize/2}vw`,
                     borderRadius: '6px',
                     MozBoxShadow: isActive ? '0 0 7px yellow' : '',
                     WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',

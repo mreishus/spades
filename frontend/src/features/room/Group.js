@@ -11,17 +11,18 @@ import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { GroupContextMenu } from "./GroupContextMenu";
 
 const Container = styled.div`
-  padding: 1px 1px 1px 1px;
   max-height: 100%;
   height: 100%;
   width: 100%;
 `;
 
 const Header = styled.div`
+  float: left;
   align-items: center;
   justify-content: center;
   color: white;
-  height: 13%;
+  height: 100%;
+  width: 30px;
 `;
 
 const WidthContainer = styled.div`
@@ -32,7 +33,7 @@ const WidthContainer = styled.div`
 
 export const Group = React.memo(({
   groupId,
-  width,
+  cardSize,
   gameBroadcast,
   chatBroadcast,
   playerN,
@@ -48,41 +49,33 @@ export const Group = React.memo(({
   const numStacks = group.stackIds.length;
   const beingBrowsed = browseGroupId === groupId;
   return(
-    <WidthContainer 
-      style={{
-        width: width, 
-        // visibility: beingBrowsed ? "hidden" : "visible"
-      }}>
-      {!beingBrowsed &&
-        <div style={{width:"100%", height:"100%"}}>
-          <Container>
-            <ContextMenuTrigger id={group.id} holdToDisplay={0}>
-              <Header>
-                <Title>{GROUPSINFO[group.id].tablename} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
-              </Header>
-            </ContextMenuTrigger>
-
-            <GroupContextMenu
-              group={group}
-              gameBroadcast={gameBroadcast}
-              chatBroadcast={chatBroadcast}
-              playerN={playerN}
-              setBrowseGroupId={setBrowseGroupId}
-              setBrowseGroupTopN={setBrowseGroupTopN}
-            ></GroupContextMenu>
-            <Stacks
-              gameBroadcast={gameBroadcast}
-              chatBroadcast={chatBroadcast}
-              playerN={playerN}
-              groupId={group.id}
-              groupType={group.type}
-              stackIds={group.stackIds}
-              isCombineEnabled={group.type === "play"}
-              selectedStackIndices={[...Array(numStacks).keys()]}
-            ></Stacks>
-          </Container>
-        </div>
-      }
-    </WidthContainer>
+    <div className="h-full w-full">
+        {group.type === "play" && group.controller !== "shared" ? null :
+          <ContextMenuTrigger id={group.id} holdToDisplay={0}>
+            <Header>
+              <Title>{GROUPSINFO[group.id].tablename} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
+            </Header>
+          </ContextMenuTrigger>
+        }
+        <GroupContextMenu
+          group={group}
+          gameBroadcast={gameBroadcast}
+          chatBroadcast={chatBroadcast}
+          playerN={playerN}
+          setBrowseGroupId={setBrowseGroupId}
+          setBrowseGroupTopN={setBrowseGroupTopN}
+        ></GroupContextMenu>
+        <Stacks
+          gameBroadcast={gameBroadcast}
+          chatBroadcast={chatBroadcast}
+          playerN={playerN}
+          groupId={group.id}
+          groupType={group.type}
+          stackIds={group.stackIds}
+          cardSize={cardSize}
+          isCombineEnabled={group.type === "play"}
+          selectedStackIndices={[...Array(numStacks).keys()]}
+        />
+    </div>
   )
 })

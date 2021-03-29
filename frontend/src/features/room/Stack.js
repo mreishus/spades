@@ -16,7 +16,7 @@ const Container = styled.div`
   width: ${props => props.stackWidth}vw;
   min-height: 100%;
   height: 100%;
-  min-height: ${CARDSCALE/0.75}vw;
+  min-height: ${props => props.cardSize/0.75}vw;
 `;
 
 function getStyle(provided, style) {
@@ -45,6 +45,7 @@ export const Stack = React.memo(({
   groupId,
   groupType,
   stackIndex,
+  cardSize,
   stackId,
   numStacks,
 }) => {
@@ -56,9 +57,9 @@ export const Stack = React.memo(({
   // Calculate size of stack for proper spacing. Changes base on group type and number of stack in group.
   const numStacksNonZero = numStacks > 0 ? numStacks : 1;
   var handSpacing = 100*0.8*0.8*0.8/(numStacksNonZero);
-  if (handSpacing > CARDSCALE) handSpacing = CARDSCALE;
-  const stackWidth = groupType == "hand" ? handSpacing : CARDSCALE/0.72 + CARDSCALE/3*(cardIds.length-1);
-  //const stackWidth = CARDSCALE/0.72 + CARDSCALE/3*(stack.cards.length-1);
+  if (handSpacing > cardSize) handSpacing = cardSize;
+  const stackWidth = groupType == "hand" ? handSpacing : cardSize/0.72 + cardSize/3*(cardIds.length-1);
+  //const stackWidth = cardSize/0.72 + cardSize/3*(stack.cards.length-1);
   return (
     <Draggable 
       key={stackId} 
@@ -70,6 +71,7 @@ export const Stack = React.memo(({
           isDragging={dragSnapshot.isDragging}
           isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
           stackWidth={stackWidth}
+          cardSize={cardSize}
           ref={dragProvided.innerRef}
           {...dragProvided.draggableProps}
           {...dragProvided.dragHandleProps}
@@ -84,6 +86,7 @@ export const Stack = React.memo(({
                 groupId={groupId}
                 cardId={cardId} 
                 cardIndex={cardIndex}
+                cardSize={cardSize}
               />
             )
         })}

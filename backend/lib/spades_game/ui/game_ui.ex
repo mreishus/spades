@@ -9,16 +9,14 @@ defmodule SpadesGame.GameUI do
 
   @spec new(String.t(), User.t(), GameOptions.t()) :: GameUI.t()
   def new(game_name, user, %GameOptions{} = options) do
-    game = Game.new(options)
     IO.puts("game_ui new")
-    #IO.inspect(game)
-
-    gameui = %{
-      "game"=> game,
-      "gameName"=> game_name,
-      "options"=> options,
-      "created_at"=> DateTime.utc_now(),
-      "created_by"=> user,
+    %{
+      "game" => Game.new(options),
+      "gameName" => game_name,
+      "options" => options,
+      "created_at" => DateTime.utc_now(),
+      "created_by" => user,
+      "numPlayers" => 1,
       "playerIds" => %{
         "player1" => user,
         "player2" => nil,
@@ -26,8 +24,6 @@ defmodule SpadesGame.GameUI do
         "player4" => nil,
       }
     }
-    #IO.inspect(gameui)
-    gameui
   end
 
   def pretty_print(gameui, header \\ nil) do

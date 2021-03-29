@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Chat from "../chat/Chat";
 import { Group } from "./Group";
+import { TableLayout } from "./TableLayout";
 import { Browse } from "./Browse";
 import { GiantCard } from "./GiantCard";
 import { MenuBar } from "./MenuBar";
@@ -38,7 +39,6 @@ export const Table = React.memo(({
   //const gameUiStore = state => state.gameUi;
   //const dispatch = useDispatch();
   //const gameUi = useSelector(gameUiStore);
-  const [showScratch, setShowScratch] = useState(false);
   const [showSpawn, setShowSpawn] = useState(false);
   const [chatHover, setChatHover] = useState(false);
   const [sittingPlayerN, setSittingPlayerN] = useState("");
@@ -52,11 +52,6 @@ export const Table = React.memo(({
   const messages = useMessages();
 
   console.log('rendering table');
-
-  const toggleScratch = () => {
-    if (showScratch) setShowScratch(false);
-    else setShowScratch(true);
-  }
 
   const handleBrowseSelect = (groupId) => {
     setBrowseGroupId(groupId);
@@ -112,7 +107,18 @@ export const Table = React.memo(({
 
           <div className=""  style={{height: "94%"}}>
 
-            <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
+            <TableLayout
+              observingPlayerN={observingPlayerN}
+              gameBroadcast={gameBroadcast} 
+              chatBroadcast={chatBroadcast}
+              playerN={playerN}
+              browseGroupId={browseGroupId}
+              setBrowseGroupId={setBrowseGroupId}
+              browseGroupTopN={browseGroupTopN}
+              setBrowseGroupTopN={setBrowseGroupTopN}
+            />
+
+            {/* <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>
               <Group
                 groupId={'sharedMainQuest'} 
                 width="8%"
@@ -261,7 +267,7 @@ export const Table = React.memo(({
                   setBrowseGroupTopN={setBrowseGroupTopN}
                 ></PlayerBar>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

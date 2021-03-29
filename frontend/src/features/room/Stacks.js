@@ -14,11 +14,11 @@ const Wrapper = styled.div`
   -o-transition: all 0.2s;
   transition: all 0.2s;
   padding: 0 0 0 0;
-  height: 87%;
+  height: 100%;
   user-select: none;
   overflow-x: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "none" : "auto"};
   overflow-y: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "hidden" : "none"};
-  max-height: 87%;
+  max-height: 100%;
 `;
 
 const DropZone = styled.div`
@@ -44,6 +44,7 @@ const StacksList = React.memo(({
   playerN,
   groupId,
   groupType,
+  cardSize,
   stackIds,
   selectedStackIndices,
 }) => {
@@ -67,6 +68,7 @@ const StacksList = React.memo(({
           groupId={groupId}
           groupType={groupType}
           stackIndex={stackIndex}
+          cardSize={cardSize}
           stackId={stackId}
           numStacks={selectedStackIndices.length}
         /> 
@@ -82,6 +84,7 @@ export const Stacks = React.memo(({
   groupId,
   stackIds,
   groupType,
+  cardSize,
   isCombineEnabled,
   selectedStackIndices,
 }) => {
@@ -118,6 +121,7 @@ export const Stacks = React.memo(({
                 playerN={playerN}
                 groupId={groupId}
                 groupType={groupType} 
+                cardSize={cardSize}
                 stackIds={stackIds}
                 selectedStackIndices={selectedStackIndices}
               />

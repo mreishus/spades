@@ -3,39 +3,13 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import styled from "@emotion/styled";
-import { CARDSCALE, playerBackSRC, encounterBackSRC} from "./Constants"
+import { playerBackSRC, encounterBackSRC} from "./Constants"
 import { getCurrentFace, getVisibleFaceSRC } from "./Helpers";
-
-// const Container = styled.div`
-//     height: ${props => (CARDSCALE * props.cardFace.height)}vw,
-//     width: ${props => (CARDSCALE * props.cardFace.width)}vw,
-//     left: ${props => (0.2 + (1.39-props.cardFace.width)*CARDSCALE/2)}vw,
-//     top: ${props => (0.2 + (1.39-props.cardFace.height)*CARDSCALE/2)}vw,
-//     border-width: 0px;
-//     border-color: black;
-//     position: absolute;
-//     margin: 0 0 0 0.75vw;
-//     background: url(${props => (props.cardFace.src)}) no-repeat; 
-//     background-size: contain;
-// `;
-
-const Container = styled.div`
-    min-height: 40.5vw,
-    min-width: 40.5vw,
-    height: 40.5vw,
-    width: 40.5vw,
-    border-width: 2px;
-    border-color: red;
-    position: absolute;
-    margin: 0 0 0 0.75vw;
-    background: url(${props => (props.src)}) no-repeat; 
-    background-size: contain;
-`;
-
 
 const CardBack = React.memo(({
     groupType,
     stackIds,
+    cardSize,
     isDraggingOver,
     isDraggingFrom,
     playerN,
@@ -77,14 +51,13 @@ const CardBack = React.memo(({
                 borderRadius: '6px',
                 borderColor: 'transparent',
                 position:"relative",
-                width:`${CARDSCALE*currentFace.width}vw`,
-                height:`${CARDSCALE*currentFace.height}vw`,
-                left:`${0.2 + (1.39-currentFace.width)*CARDSCALE/2}vw`,
-                top:`${0.2 + (1.39-currentFace.height)*CARDSCALE/2}vw`,
+                width:`${cardSize*currentFace.width}vw`,
+                height:`${cardSize*currentFace.height}vw`,
+                left:`${0.2 + (1.39-currentFace.width)*cardSize/2}vw`,
+                top:`${0.2 + (1.39-currentFace.height)*cardSize/2}vw`,
             }}
         >
         </div>)
-    //return (<Container className='text-white' src={cardFace.src}>test</Container>);
   } else {
     return (<div></div>);
   }
