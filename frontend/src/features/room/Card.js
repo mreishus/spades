@@ -163,27 +163,24 @@ export const Card = React.memo(({
     console.log(cardSize);
 
     return (
-        <div>
-            <ContextMenuTrigger id={card.id} holdToDisplay={500}> 
-
+        // <div>
+        //     <ContextMenuTrigger id={card.id} holdToDisplay={500}> 
+       // <div className="flex h-full items-center">
             <div 
                 className={isActive ? 'isActive' : ''}
                 key={card.id}
                 style={{
                     position: "absolute",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "end",
                     background: `url(${getVisibleFaceSRC(card,playerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
                     height: `${cardSize*visibleFace.height}vw`,
                     width: `${cardSize*visibleFace.width}vw`,
                     left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize/3*cardIndex}vw`,
-                    top: `${0.2 + (1.39-visibleFace.height)*cardSize/2}vw`,
+                    top: "50%", //`${0.2 + (1.39-visibleFace.height)*cardSize/2}vw`,
                     borderRadius: '6px',
                     MozBoxShadow: isActive ? '0 0 7px yellow' : '',
                     WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
                     boxShadow: isActive ? '0 0 7px yellow' : '',
-                    transform: `rotate(${card.rotation}deg)`,
+                    transform: `translate(0%,-50%) rotate(${card.rotation}deg)`,
                     zIndex: zIndex,
                     cursor: "default",
                     WebkitTransitionDuration: "0.1s",
@@ -226,27 +223,27 @@ export const Card = React.memo(({
                 />
                 {(card["peeking"][playerN] && !isInMyHand && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute flex-none text-4xl" icon={faEye}/>:null}
             </div>
+       // </div>
+            //</ContextMenuTrigger>
 
-            </ContextMenuTrigger>
-
-            <ContextMenu id={card.id} style={{zIndex:1e8}}>
-                <hr></hr>
-                {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
-                <SubMenu title='Move to'>
-                    <SubMenu title='Encounter Deck'>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "t"}}>Top</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "b"}}>Bottom</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
-                    </SubMenu>
-                    <SubMenu title="Owner's Deck">
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "t"}}>Top</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
-                    </SubMenu>
-                    <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', destGroupId: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
-                </SubMenu>
-            </ContextMenu>
-        </div>
+        //     <ContextMenu id={card.id} style={{zIndex:1e8}}>
+        //         <hr></hr>
+        //         {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
+        //         <SubMenu title='Move to'>
+        //             <SubMenu title='Encounter Deck'>
+        //                 <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "t"}}>Top</MenuItem>
+        //                 <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "b"}}>Bottom</MenuItem>
+        //                 <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
+        //             </SubMenu>
+        //             <SubMenu title="Owner's Deck">
+        //                 <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "t"}}>Top</MenuItem>
+        //                 <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
+        //                 <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
+        //             </SubMenu>
+        //             <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', destGroupId: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
+        //         </SubMenu>
+        //     </ContextMenu>
+        // </div>
     )
 })
 

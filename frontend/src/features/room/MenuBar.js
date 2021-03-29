@@ -34,7 +34,10 @@ export const MenuBar = React.memo(({
     observingPlayerN,
     setObservingPlayerN,
   }) => {
-    
+    // const layoutStore = state => state.gameUi.layout;
+    // const layout = useSelector(layoutStore);
+    // const numRows = layout.length;
+    const cardSize = CARDSCALE/numRows;
     const dispatch = useDispatch();
     const inputFileDeck = useRef(null);
     const inputFileGame = useRef(null);

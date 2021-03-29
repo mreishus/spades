@@ -42,7 +42,7 @@ export const Group = React.memo(({
   gameBroadcast,
   chatBroadcast,
   playerN,
-  showTitle,
+  hideTitle,
   browseGroupId,
   setBrowseGroupId,
   setBrowseGroupTopN,
@@ -59,15 +59,16 @@ export const Group = React.memo(({
           
             {/* <Header> */}
               {/* <Title> */}
+              {hideTitle ? null :
                 <div
-                  className="relative text-center h-full text-white float-left"
+                  className="relative text-center h-full text-white float-left select-none opacity-40"
                   style={{width:"15px", writingMode:"vertical-rl"}} 
                 >
                   <ContextMenuTrigger id={group.id} holdToDisplay={0}>
                   {GROUPSINFO[group.id].tablename}
                   </ContextMenuTrigger>
                 </div>
-                
+              }
                 {/* <FontAwesomeIcon className="text-white" icon={faChevronDown}/> */}
               {/* </Title> */}
             {/* </Header> */}

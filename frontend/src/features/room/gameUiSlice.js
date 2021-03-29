@@ -123,6 +123,14 @@ const gameUiSlice = createSlice({
       console.log("setting game name");
       state.gameName = payload;
     },
+    setNumPlayers: (state, { payload }) => {
+      console.log("setting game name");
+      state.numPlayers = payload;
+    },
+    setLayout: (state, { payload }) => {
+      console.log("setting game name");
+      state.layout = payload;
+    },
     setGroupById: (state, { payload }) => {
       console.log("setting groupById")
       state.game.groupById = payload;
@@ -162,5 +170,5 @@ const gameUiSlice = createSlice({
   },
 });
 
-export const { setGame, setGameName, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setValues, incrementRound } = gameUiSlice.actions;
+export const { setGame, setGameName, setNumPlayers, setLayout, setGroupById, setGroup, setStackIds, setStack, setCardIds, setPlayerIds, setValues, incrementRound } = gameUiSlice.actions;
 export default gameUiSlice.reducer;

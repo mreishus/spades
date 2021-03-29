@@ -3,13 +3,12 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import styled from "@emotion/styled";
-import { playerBackSRC, encounterBackSRC} from "./Constants"
+import { CARDSCALE, playerBackSRC, encounterBackSRC} from "./Constants"
 import { getCurrentFace, getVisibleFaceSRC } from "./Helpers";
 
 const CardBack = React.memo(({
     groupType,
     stackIds,
-    cardSize,
     isDraggingOver,
     isDraggingFrom,
     playerN,
@@ -21,7 +20,11 @@ const CardBack = React.memo(({
   const storeCard0 = state => state?.gameUi?.game?.cardById[stack0?.cardIds[0]];
   const card0 = useSelector(storeCard0);
   const storeCard1 = state => state?.gameUi?.game?.cardById[stack1?.cardIds[0]];
-  const card1 = useSelector(storeCard1);
+  const card1 = useSelector(storeCard1);  
+  const layoutStore = state => state.gameUi.layout;
+  const layout = useSelector(layoutStore);
+  const numRows = layout.length;
+  const cardSize = CARDSCALE/numRows;
   console.log("rendering cardback")
   console.log(stackIds)
 

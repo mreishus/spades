@@ -17,6 +17,7 @@ const Container = styled.div`
   min-height: 100%;
   height: 100%;
   min-height: ${props => props.cardSize/0.75}vw;
+  display: flex;
 `;
 
 function getStyle(provided, style) {
@@ -56,7 +57,7 @@ export const Stack = React.memo(({
   console.log('rendering stack ',stackIndex);
   // Calculate size of stack for proper spacing. Changes base on group type and number of stack in group.
   const numStacksNonZero = numStacks > 0 ? numStacks : 1;
-  var handSpacing = 100*0.8*0.8*0.8/(numStacksNonZero);
+  var handSpacing = 45/(numStacksNonZero);
   if (handSpacing > cardSize) handSpacing = cardSize;
   const stackWidth = groupType == "hand" ? handSpacing : cardSize/0.72 + cardSize/3*(cardIds.length-1);
   //const stackWidth = cardSize/0.72 + cardSize/3*(stack.cards.length-1);

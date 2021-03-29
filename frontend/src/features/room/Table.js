@@ -48,7 +48,6 @@ export const Table = React.memo(({
   // Indices of stacks in group being browsed
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
-  const [cardSize, setCardSize] = useState(26);
 
   const messages = useMessages();
 
