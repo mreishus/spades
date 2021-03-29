@@ -90,10 +90,10 @@ export const Token = React.memo(({
                 position: "absolute",
                 left: `${left}`,
                 top: `${top}`,
-                height: `${CARDSCALE/0.72/4}vw`,
-                width: `${CARDSCALE/0.72/4}vw`,
-                backgroundImage: `url(${process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'})`,
-                backgroundSize: "contain",
+                height: `25%`,//${CARDSCALE/0.72/4}vw`,
+                width: `35%`,//${CARDSCALE/0.72/4}vw`,
+                alignItems: "center",
+                //backgroundSize: "no-repeat scroll 0% 0% / contain",
                 zIndex: showButtons ? zIndex + 1 : zIndex,
                 display: showButtons || amount!==0 ? "block" : "none",
             }}
@@ -164,6 +164,10 @@ export const Token = React.memo(({
                     icon={faChevronRight}
                 />
             </div>
+            <img 
+                className="block ml-auto mr-auto max-h-8"
+                src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}
+            />
         </div>
     )
 })

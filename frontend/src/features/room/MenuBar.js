@@ -57,7 +57,7 @@ export const MenuBar = React.memo(({
       console.log(data);
       if (data.action === "reset_game") {
         gameBroadcast("reset_game",{});
-        chatBroadcast("game_update",{message: "reset the game."});
+        chatBroadcast("game_update", {message: "reset the game."});
       } else if (data.action === "load_deck") {
         loadFileDeck();
       } else if (data.action === "spawn_card") {
@@ -68,6 +68,10 @@ export const MenuBar = React.memo(({
         downloadGameAsJson();
       } else if (data.action === "upload") {
         loadFileGame();
+      } else if (data.action === "num_players") {
+        const num = data.value;
+        gameBroadcast("game_action", {action: "set_values", options: {paths: [["numPlayers", "layout"]], values: [num, "layout" + num]}});
+        chatBroadcast("game_update", {message: "set the number of players to: " + num});
       }
     }
 
@@ -127,19 +131,30 @@ export const MenuBar = React.memo(({
         <ul className="top-level-menu float-left">
         <li key={"Menu"}><div className="h-full flex text-xl items-center justify-center" href="#">Menu</div>
             <ul className="second-level-menu">
-              <li key={"Load"}>
+              {host &&
+                <li key={"numPlayers"}>
+                  <a href="#">Number of Players</a>
+                  <ul className="third-level-menu">
+                      <li key={"numPlayers1"}><a onClick={() => handleMenuClick({action:"num_players", value: 1})} href="#">1</a></li>
+                      <li key={"numPlayers2"}><a onClick={() => handleMenuClick({action:"num_players", value: 2})} href="#">2</a></li>
+                      <li key={"numPlayers3"}><a onClick={() => handleMenuClick({action:"num_players", value: 3})} href="#">3</a></li>
+                      <li key={"numPlayers4"}><a onClick={() => handleMenuClick({action:"num_players", value: 4})} href="#">4</a></li>
+                  </ul>
+                </li>
+              }
+              <li key={"load"}>
                 <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load Deck</a>
                 <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck}/>
               </li>
-              <li key={"Spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn Card</a></li>
-              <li key={"Reset"}>
+              <li key={"spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn Card</a></li>
+              <li key={"reset"}>
                   <a href="#">Reset Game</a>
                   <ul className="third-level-menu">
                       <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
                   </ul>
               </li>
-              <li key={"Download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
-              <li key={"Upload"}>
+              <li key={"download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
+              <li key={"upload"}>
                 <a  onClick={() => handleMenuClick({action:"upload"})} href="#">Upload game</a>
                 <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson}/>
               </li>
