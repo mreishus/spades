@@ -17,7 +17,8 @@ const Wrapper = styled.div`
   height: 100%;
   user-select: none;
   overflow-x: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "none" : "auto"};
-  overflow-y: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "hidden" : "none"};
+  overflow-y: hidden;
+  scrollbar-color: rgba(1,1,1,0.8) rgba(1,1,1,0);
   max-height: 100%;
   z-index: 10000;
   position: relative;

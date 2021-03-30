@@ -48,16 +48,17 @@ const CardBack = React.memo(({
     return (
         <div 
             style={{
-                backgroundColor:"red",
-                background:`url(${currentSideSRC}) no-repeat scroll 0% 0% / contain`,
-                borderWidth: '1px',
+                backgroundColor: "red",
+                background: `url(${currentSideSRC}) no-repeat scroll 0% 0% / contain`,
+                //borderWidth: '1px',
                 borderRadius: '6px',
                 borderColor: 'transparent',
-                position:"relative",
-                width:`${cardSize*currentFace.width}vw`,
-                height:`${cardSize*currentFace.height}vw`,
-                left:`${0.2 + (1.39-currentFace.width)*cardSize/2}vw`,
-                top:`${0.2 + (1.39-currentFace.height)*cardSize/2}vw`,
+                position: "relative",
+                width: `${cardSize*currentFace.width}vw`,
+                height: `${cardSize*currentFace.height}vw`,
+                left: `${0.2 + (1.39-currentFace.width)*cardSize/2}vw`,
+                top: "50%", //`${0.2 + (1.39-currentFace.height)*cardSize/2}vw`,
+                transform: "translate(0%,-50%)",
             }}
         >
         </div>)
