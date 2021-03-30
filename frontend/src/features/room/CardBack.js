@@ -3,7 +3,7 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import styled from "@emotion/styled";
-import { CARDSCALE, playerBackSRC, encounterBackSRC} from "./Constants"
+import { CARDSCALE, LAYOUTINFO, playerBackSRC, encounterBackSRC} from "./Constants"
 import { getCurrentFace, getVisibleFaceSRC } from "./Helpers";
 
 const CardBack = React.memo(({
@@ -21,42 +21,43 @@ const CardBack = React.memo(({
   const card0 = useSelector(storeCard0);
   const storeCard1 = state => state?.gameUi?.game?.cardById[stack1?.cardIds[0]];
   const card1 = useSelector(storeCard1);  
-  const layoutStore = state => state.gameUi.layout;
+  const layoutStore = state => state.gameUi?.layout;
   const layout = useSelector(layoutStore);
-  const numRows = layout.length;
+  const layoutInfo = LAYOUTINFO[layout];
+  const numRows = layoutInfo.length;
   const cardSize = CARDSCALE/numRows;
-  console.log("rendering cardback")
+  console.log("rendering cardback ", numRows, cardSize);
   console.log(stackIds)
 
-  var currentSideSRC;
-  var currentFace;
+  var visibleFaceSRC;
+  var visibleFace;
   const groupSize = stackIds.length;
   if (groupType=="deck" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
-    currentSideSRC = getVisibleFaceSRC(card0, playerN)
-    currentFace = getCurrentFace(card0)
+    visibleFaceSRC = getVisibleFaceSRC(card0, playerN)
+    visibleFace = getCurrentFace(card0)
   } else if (groupType=="deck" && groupSize>1 && isDraggingFrom) {
-    currentSideSRC = getVisibleFaceSRC(card1, playerN)
-    currentFace = getCurrentFace(card0)
+    visibleFaceSRC = getVisibleFaceSRC(card1, playerN)
+    visibleFace = getCurrentFace(card1)
   } else if (groupType=="discard" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
-    currentSideSRC = getVisibleFaceSRC(card0, playerN)
-    currentFace = getCurrentFace(card0)
+    visibleFaceSRC = getVisibleFaceSRC(card0, playerN)
+    visibleFace = getCurrentFace(card0)
   } else if (groupType=="discard" && groupSize>1 && isDraggingFrom) {
-    currentSideSRC = getVisibleFaceSRC(card1, playerN)
-    currentFace = getCurrentFace(card0)
+    visibleFaceSRC = getVisibleFaceSRC(card1, playerN)
+    visibleFace = getCurrentFace(card1)
   }
-  if (currentFace) {
+  if (visibleFace) {
     return (
         <div 
             style={{
                 backgroundColor: "red",
-                background: `url(${currentSideSRC}) no-repeat scroll 0% 0% / contain`,
+                background: `url(${visibleFaceSRC}) no-repeat scroll 0% 0% / contain`,
                 //borderWidth: '1px',
                 borderRadius: '6px',
                 borderColor: 'transparent',
-                position: "relative",
-                width: `${cardSize*currentFace.width}vw`,
-                height: `${cardSize*currentFace.height}vw`,
-                left: `${0.2 + (1.39-currentFace.width)*cardSize/2}vw`,
+                position: "absolute",
+                width: `${cardSize*visibleFace.width}vw`,
+                height: `${cardSize*visibleFace.height}vw`,
+                left: `${0.2 + (1.39-visibleFace.width)*cardSize/2}vw`,
                 top: "50%", //`${0.2 + (1.39-currentFace.height)*cardSize/2}vw`,
                 transform: "translate(0%,-50%)",
             }}

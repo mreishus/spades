@@ -67,8 +67,8 @@ export const TableLayout = React.memo(({
   if (!layout) return;
   const layoutInfo = LAYOUTINFO[layout];
   const numRows = layoutInfo.length;
-  const rowHeight = 100/numRows; //Math.floor(100/numRows);
-  const finalRowHeight = 100/numRows; //100-((numRows-1)*rowHeight); // Is this necessay?
+  const rowHeight = 100/numRows; 
+  const finalRowHeight = 100/numRows; 
   const cardSize = CARDSCALE/numRows;
   console.log("rendering layout");
   console.log(rowHeight, finalRowHeight);
