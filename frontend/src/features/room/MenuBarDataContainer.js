@@ -17,7 +17,10 @@ export const MenuBarDataContainer = React.memo(({
     const cardStore = state => state?.gameUi?.game?.cardById;
     const cardById = useSelector(cardStore); 
     const stackStore = state => state?.gameUi?.game?.stackById;
-    const stackById = useSelector(stackStore);  
+    const stackById = useSelector(stackStore);
+    const numPlayersStore = state => state.gameUi.numPlayers;
+    const numPlayers = useSelector(numPlayersStore);
+
     // const playerDataStore = state => state?.gameUi?.game?.playerData;
     // const playerData = useSelector(playerDataStore);  
     const roundStore = state => state?.gameUi?.game?.roundNumber;
@@ -61,6 +64,7 @@ export const MenuBarDataContainer = React.memo(({
           setObservingPlayerN={setObservingPlayerN}
           willpower={playerWillpower["player1"]}
         />
+        {numPlayers > 1 &&
         <MenuBarUser
           playerN={"player2"}
           gameBroadcast={gameBroadcast}
@@ -68,7 +72,8 @@ export const MenuBarDataContainer = React.memo(({
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
           willpower={playerWillpower["player2"]}
-        />
+        />}
+        {numPlayers > 2 &&
         <MenuBarUser
           playerN={"player3"}
           gameBroadcast={gameBroadcast}
@@ -76,7 +81,8 @@ export const MenuBarDataContainer = React.memo(({
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
           willpower={playerWillpower["player3"]}
-        />
+        />}
+        {numPlayers > 3 &&
         <MenuBarUser
           playerN={"player4"}
           gameBroadcast={gameBroadcast}
@@ -84,7 +90,7 @@ export const MenuBarDataContainer = React.memo(({
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
           willpower={playerWillpower["player4"]}
-        />
+        />}
       </div>
     )
 })

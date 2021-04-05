@@ -145,13 +145,13 @@ export const Card = React.memo(({
         else if (data.action === "move_card") {
             const destGroupTitle = GROUPSINFO[data.destGroupId].name;
             if (data.position === "t") {
-                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, stack_index: 0, card_index: 0, combine: false, preserve_state: false}})
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
                 chatBroadcast("game_update",{message: "moved "+displayName+" to top of "+destGroupTitle+"."})
             } else if (data.position === "b") {
-                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, stack_index: -1, card_index: 0, combine: false, preserve_state: false}})
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: -1, dest_card_index: 0, combine: false, preserve_state: false}})
                 chatBroadcast("game_update",{message: "moved "+displayName+" to bottom of "+destGroupTitle+"."})
             } else if (data.position === "s") {
-                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, stack_index: 0, card_index: 0, combine: false, preserve_state: false}})
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
                 gameBroadcast("shuffle_group", {group_id: data.destGroupId})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" into "+destGroupTitle+"."})
             }

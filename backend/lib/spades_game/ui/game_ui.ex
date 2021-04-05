@@ -175,11 +175,22 @@ defmodule SpadesGame.GameUI do
   end
 
   def get_card_by_gsc(gameui, gsc) do
-    group = get_group(gameui, Enum.at(gsc,0))
+    group_id = Enum.at(gsc,0)
+    stack_index = Enum.at(gsc,1)
+    card_index = Enum.at(gsc,2)
+    group = get_group(gameui, group_id)
     stack_ids = group["stackIds"]
-    stack = get_stack(gameui, Enum.at(stack_ids, Enum.at(gsc,1)))
-    card_ids = stack["cardIds"]
-    get_card(gameui, Enum.at(card_ids,Enum.at(gsc,2)))
+    if Enum.count(stack_ids) <= stack_index do
+      nil
+    else
+      stack = get_stack(gameui, Enum.at(stack_ids, stack_index))
+      card_ids = stack["cardIds"]
+      if Enum.count(card_ids) <= card_index do
+        nil
+      else
+        get_card(gameui, Enum.at(card_ids, card_index))
+      end
+    end
   end
 
   ############################################################
@@ -196,9 +207,9 @@ defmodule SpadesGame.GameUI do
       "toggle_exhaust" ->
         toggle_exhaust(gameui, card, options)
       "flip_card" ->
-        deal_shadow(gameui, card, options)
+        flip_card(gameui, card, options)
       "deal_shadow" ->
-        deal_shadow(gameui, card, options)
+        deal_shadow(gameui, card)
       "detach" ->
         detach(gameui, card_id)
       "peek_card" ->
@@ -272,7 +283,8 @@ defmodule SpadesGame.GameUI do
   end
 
   # card_action deal_shadow
-  def deal_shadow(gameui, card, options \\ nil) do
+  def deal_shadow(gameui, card_id) do
+    card = get_card(gameui, card_id)
     {group_id, stack_index, card_index} = gsc(gameui, card)
     stack = get_stack_by_card_id(gameui, card["id"])
     shadow_card = get_card_by_gsc(gameui, ["sharedEncounterDeck", 0, 0])
@@ -429,6 +441,8 @@ defmodule SpadesGame.GameUI do
         peek_at(gameui, options["player_n"], options["stack_ids"], options["value"])
       "move_card" ->
         move_card(gameui, options["card_id"], options["dest_group_id"], options["dest_stack_index"], options["dest_card_index"], options["combine"], options["preserve_state"])
+      "move_stacks" ->
+        move_stacks(gameui, options["orig_group_id"], options["dest_group_id"], options["top_n"], options["position"])
       "shuffle_group" ->
         shuffle_group(gameui, options["group_id"])
       "detach" ->
@@ -439,6 +453,8 @@ defmodule SpadesGame.GameUI do
         update_values(gameui, options["paths"], options["values"])
       "refresh" ->
         refresh(gameui, options["player_n"])
+      "deal_shadow" ->
+        deal_shadow(gameui, options["card_id"])
       _ ->
         gameui
     end
@@ -706,13 +722,17 @@ defmodule SpadesGame.GameUI do
     #|> set_viewership(stack_id)
   end
 
-  def move_stacks(gameui, orig_group_id, dest_group_id, position) do
+  def move_stacks(gameui, orig_group_id, dest_group_id, top_n, position) do
     orig_stack_ids = get_stack_ids(gameui, orig_group_id)
     # Moving stacks to the top or the bottom of the new group?
     dest_stack_index = if position == "b" do -1 else 0 end
     # Move stacks 1 at a time
-    gameui = Enum.reduce(orig_stack_ids, gameui, fn(stack_id, acc) ->
-      move_stack(acc, stack_id, dest_group_id, dest_stack_index)
+    gameui = Enum.reduce(Enum.with_index(orig_stack_ids), gameui, fn({stack_id, index}, acc) ->
+      if index < top_n do
+        move_stack(acc, stack_id, dest_group_id, dest_stack_index)
+      else
+        acc
+      end
     end)
     # Do we shuffle it in?
     if position == "s" do shuffle_group(gameui, dest_group_id) else gameui end

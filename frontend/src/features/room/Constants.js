@@ -179,8 +179,7 @@ export const LAYOUTINFO = {
       ]
     },
   ],
-
-  "layout2": [
+  "layout2b": [
     {
       regions: [
         {id: "sharedMainQuest", width: "9%"},
@@ -214,6 +213,53 @@ export const LAYOUTINFO = {
         {id: "player1Event", width: "8%"},
         {id: "player2Play3", width: "42%", hideTitle: true},
         {id: "player2Event", width: "8%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "Hand", width: "59%", style: "shaded"},
+        {id: "Deck", width: "8%", style: "shaded"},
+        {id: "Discard", width: "8%", style: "shaded"},
+      ]
+    },
+  ],
+  "layout2": [
+    {
+      regions: [
+        {id: "sharedMainQuest", width: "9%"},
+        {id: "sharedActive", width: "8%"},
+        {id: "sharedStaging", width: "67%", style: "shaded", boxShadow: "true"},
+        {id: "sharedEncounterDeck", width: "8%"},
+        {id: "sharedEncounterDiscard", width: "8%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Engaged", width: "37%"},
+        {id: "player2Engaged", width: "36%", hideTitle: true},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Play1", width: "37%"},
+        {id: "player2Play1", width: "36%"},
+        {id: "sharedExtra1", width: "27%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Play2", width: "37%"},
+        {id: "player2Play2", width: "36%"},
+        {id: "sharedExtra1", width: "27%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Play3", width: "29%"},
+        {id: "player1Event", width: "8%"},
+        {id: "player2Play3", width: "28%"},
+        {id: "player2Event", width: "8%"},
+        {id: "sharedExtra1", width: "27%"},
       ]
     },
     {
@@ -263,6 +309,52 @@ export const LAYOUTINFO = {
         {id: "player2Event", width: "8%"},
         {id: "player3Play3", width: "25%", hideTitle: true},
         {id: "player3Event", width: "8%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "Hand", width: "59%", style: "shaded"},
+        {id: "Deck", width: "8%", style: "shaded"},
+        {id: "Discard", width: "8%", style: "shaded"},
+      ]
+    },
+  ],
+  "layout3map": [
+    {
+      regions: [
+        {id: "sharedMainQuest", width: "9%"},
+        {id: "sharedActive", width: "8%"},
+        {id: "sharedStaging", width: "67%", style: "shaded", boxShadow: "true"},
+        {id: "sharedEncounterDeck", width: "8%"},
+        {id: "sharedEncounterDiscard", width: "8%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Engaged", width: "34%"},
+        {id: "player2Engaged", width: "33%", hideTitle: true},
+        {id: "player3Engaged", width: "33%", hideTitle: true},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Play1", width: "65%"},
+        {id: "player1Event", width: "8%"},
+        {id: "sharedExtra1", width: "27%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player2Play1", width: "65%"},
+        {id: "player2Event", width: "8%"},
+        {id: "sharedExtra2", width: "27%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player3Play1", width: "65%"},
+        {id: "player3Event", width: "8%"},
+        {id: "sharedExtra3", width: "27%"},
       ]
     },
     {

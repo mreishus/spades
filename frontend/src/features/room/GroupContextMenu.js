@@ -17,14 +17,12 @@ export const GroupContextMenu = React.memo(({
           gameBroadcast("shuffle_group", {group_id: group.id})
           chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+"."})
         } else if (data.action === "move_stacks") {
+          gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: group.id, dest_group_id: data.destGroupId, position: data.position}})
           if (data.position === "t") {
-            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupId, position: data.position})
             chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to top of "+GROUPSINFO[data.destGroupId].name+"."})
           } else if (data.position === "b") {
-            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupId, position: data.position})
             chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to bottom of "+GROUPSINFO[data.destGroupId].name+"."})
           } else if (data.position === "s") {
-            gameBroadcast("move_stacks", {orig_group_id: group.id, dest_group_id: data.destGroupId, position: data.position})
             chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[data.destGroupId].name+"."})
           }
         } else if (data.action === "look_at") {

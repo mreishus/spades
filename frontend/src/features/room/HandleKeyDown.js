@@ -88,8 +88,9 @@ export const HandleKeyDown = ({
         console.log(k);
         // Keep track of last pressed key
         if (k === "Shift") setKeypress({"Shift": true});
-        if (k === "Control") setKeypress({"Control": true});
-        
+        else if (k === "Control") setKeypress({"Control": true});
+        else setKeypress({"Shift": false, "Control": false});
+
         // General hotkeys
         if (k === "e" || k === "E") {
             // Check remaining cards in encounter deck
@@ -205,6 +206,14 @@ export const HandleKeyDown = ({
             })
             gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
             chatBroadcast("game_update",{message: "drew a card."});
+        } else if (k === "M") {
+            if (window.confirm('Shuffle hand in deck and redraw equal number?')) {
+                const hand = gameUi.game.groupById[playerN+"Hand"];
+                const handSize = hand.stackIds.length;
+                gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Hand", dest_group_id: playerN+"Deck", top_n: handSize, position: "s"}})
+                gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Deck", dest_group_id: playerN+"Hand", top_n: handSize, position: "t"}})
+                chatBroadcast("game_update", {message: "shuffled "+handSize+" cards into their deck and redrew an equal number."})
+            }
         }
 
         // Card specific hotkeys
@@ -350,8 +359,15 @@ export const HandleKeyDown = ({
             }
             // Deal shadow card
             else if (k === "s" && groupType == "play") {
-                gameBroadcast("card_action", {action: "deal_shadow", card_id: activeCardId, options: []});
-                chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
+                const encounterStackIds = gameUi.game.groupById.sharedEncounterDeck.stackIds;
+                const stacksLeft = encounterStackIds.length;
+                // If no cards, check phase of game
+                if (stacksLeft === 0) {
+                    chatBroadcast("game_update",{message: " tried to deal a shadow card, but the encounter deck is empty."});
+                } else {
+                    gameBroadcast("game_action", {action: "deal_shadow", options:{card_id: activeCardId}});
+                    chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
+                }
             }        
             // Send to appropriate discard pile
             else if (k === "x") {
