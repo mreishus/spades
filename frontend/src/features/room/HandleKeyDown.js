@@ -95,17 +95,15 @@ export const HandleKeyDown = ({
         if (k === "e" || k === "E") {
             // Check remaining cards in encounter deck
             const encounterStackIds = gameUi.game.groupById.sharedEncounterDeck.stackIds;
+            const encounterDiscardStackIds = gameUi.game.groupById.sharedEncounterDiscard.stackIds;
             const stacksLeft = encounterStackIds.length;
             // If no cards, check phase of game
             if (stacksLeft === 0) {
                 // If quest phase, shuffle encounter discard pile into deck
                 if (gameUi.game.phase === "Quest") {
-                    gameBroadcast("move_stacks",{
-                        orig_group_id: "sharedEncounterDiscard",
-                        dest_group_id: "sharedEncounterDeck", 
-                        position: "s",
-                    });
+                    gameBroadcast("game_action",{action:"move_stacks", options:{orig_group_id: "sharedEncounterDiscard", dest_group_id: "sharedEncounterDeck", top_n: encounterDiscardStackIds.length, position: "s"}});
                     chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["sharedEncounterDiscard"].name+" into "+GROUPSINFO["sharedEncounterDeck"].name+"."});
+                    return;
                 } else {
                     // If not quest phase, give error message and break
                     chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty and it's not the quest phase."});
