@@ -10,7 +10,7 @@ import { CardMouseRegion } from "./CardMouseRegion"
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC } from "./Helpers";
+import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getVisibleSide } from "./Helpers";
 import { setGame } from "./gameUiSlice"
 
 // PREVENT DOUBLECLICK REGISTERING 2 CLICK EVENTS
@@ -101,6 +101,7 @@ export const Card = React.memo(({
     const card = useSelector(cardStore);
     if (!card) return null;
     const currentFace = getCurrentFace(card);
+    const visibleSide = getVisibleSide(card, playerN);
     const visibleFace = getVisibleFace(card, playerN);
     const isInMyHand = groupId === (playerN+"Hand");
     const zIndex = 1000 - cardIndex;
@@ -141,8 +142,13 @@ export const Card = React.memo(({
         if (data.action === "detach") {
             gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
             chatBroadcast("game_update", {message: "detached "+displayName+"."})
-        }
-        else if (data.action === "move_card") {
+        } else if (data.action === "peek") {
+            gameBroadcast("game_action", {action: "peek_card", options: {card_id: card.id, value: true}})
+            chatBroadcast("game_update", {message: "peeked at "+displayName+"."})
+        } else if (data.action === "unpeek") {
+            gameBroadcast("game_action", {action: "peek_card", options: {card_id: card.id, value: false}})
+            chatBroadcast("game_update", {message: " stopped peeking at "+displayName+"."})
+        } else if (data.action === "move_card") {
             const destGroupTitle = GROUPSINFO[data.destGroupId].name;
             if (data.position === "t") {
                 gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
@@ -230,6 +236,8 @@ export const Card = React.memo(({
              <ContextMenu id={card.id} style={{zIndex:1e8}}>
                  <hr></hr>
                  {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
+                 {visibleSide == "B"? <MenuItem onClick={handleMenuClick} data={{action: 'peek'}}>Peek</MenuItem>:null}
+                 {card["peeking"][playerN] ? <MenuItem onClick={handleMenuClick} data={{action: 'unpeek'}}>Stop peeking</MenuItem>:null}
                  <SubMenu title='Move to'>
                      <SubMenu title='Encounter Deck'>
                          <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "t"}}>Top</MenuItem>

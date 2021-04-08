@@ -213,7 +213,7 @@ defmodule SpadesGame.GameUI do
       "detach" ->
         detach(gameui, card_id)
       "peek_card" ->
-        peek_card(gameui, card, options["player_n"], options["value"])
+        peek_card(gameui, options["player_n"], card_id, options["value"])
       "update_card_state" ->
         update_card_state(gameui, card, options["preseve_state"], options["orig_group_id"])
       _ ->
@@ -361,7 +361,8 @@ defmodule SpadesGame.GameUI do
     })
   end
 
-  def peek_card(gameui, card, player_n, value) do
+  def peek_card(gameui, player_n, card_id, value) do
+    card = get_card(gameui, card_id)
     card = if card["currentSide"] == "B" do # Only peek if card is facedown
       if player_n == "all" do
         set_all_peeking(card, value)
@@ -400,7 +401,7 @@ defmodule SpadesGame.GameUI do
     IO.inspect(value)
     Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
       card = get_card(gameui, card_id)
-      acc = peek_card(acc, card, player_n, value)
+      acc = peek_card(acc, player_n, card_id, value)
     end)
   end
 
@@ -434,29 +435,36 @@ defmodule SpadesGame.GameUI do
   def game_action(gameui, user_id, action, options) do
     IO.puts("game_action")
     IO.inspect(action)
-    gameui = case action do
-      "draw_card" ->
-        draw_card(gameui, options["player_n"])
-      "peek_at" ->
-        peek_at(gameui, options["player_n"], options["stack_ids"], options["value"])
-      "move_card" ->
-        move_card(gameui, options["card_id"], options["dest_group_id"], options["dest_stack_index"], options["dest_card_index"], options["combine"], options["preserve_state"])
-      "move_stacks" ->
-        move_stacks(gameui, options["orig_group_id"], options["dest_group_id"], options["top_n"], options["position"])
-      "shuffle_group" ->
-        shuffle_group(gameui, options["group_id"])
-      "detach" ->
-        detach(gameui, options["card_id"])
-      "set_game" ->
-        put_in(gameui["game"], options["game"])
-      "update_values" ->
-        update_values(gameui, options["paths"], options["values"])
-      "refresh" ->
-        refresh(gameui, options["player_n"])
-      "deal_shadow" ->
-        deal_shadow(gameui, options["card_id"])
-      _ ->
-        gameui
+    player_n = get_player_n(gameui, user_id)
+    if player_n do
+      gameui = case action do
+        "draw_card" ->
+          draw_card(gameui, options["player_n"])
+        "peek_at" ->
+          peek_at(gameui, player_n, options["stack_ids"], options["value"])
+        "peek_card" ->
+          peek_card(gameui, player_n, options["card_id"], options["value"])
+        "move_card" ->
+          move_card(gameui, options["card_id"], options["dest_group_id"], options["dest_stack_index"], options["dest_card_index"], options["combine"], options["preserve_state"])
+        "move_stacks" ->
+          move_stacks(gameui, options["orig_group_id"], options["dest_group_id"], options["top_n"], options["position"])
+        "shuffle_group" ->
+          shuffle_group(gameui, options["group_id"])
+        "detach" ->
+          detach(gameui, options["card_id"])
+        "set_game" ->
+          put_in(gameui["game"], options["game"])
+        "update_values" ->
+          update_values(gameui, options["paths"], options["values"])
+        "refresh" ->
+          refresh(gameui, options["player_n"])
+        "deal_shadow" ->
+          deal_shadow(gameui, options["card_id"])
+        _ ->
+          gameui
+      end
+    else
+      gameui
     end
   end
 

@@ -70,7 +70,7 @@ export const Browse = React.memo(({
   const handleCloseClick = (event) => {
     setBrowseGroupId("");
     setBrowseGroupTopN(0);
-    gameBroadcast("game_action", {action: "peek_at", options: {player_n: playerN, stack_ids: stackIds, value: false}})
+    gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: stackIds, value: false}})
   }
 
   const handleSelectClick = (event) => {

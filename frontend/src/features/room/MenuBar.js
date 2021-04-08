@@ -101,8 +101,8 @@ export const MenuBar = React.memo(({
               const cardDbId = card['$'].id;
               const quantity = parseInt(card['$'].qty);
               var cardRow = cardDB[cardDbId];
-              cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
               if (cardRow) {
+                cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
                 loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': sectionToLoadGroupId(sectionName,playerN)})
               }
             })
