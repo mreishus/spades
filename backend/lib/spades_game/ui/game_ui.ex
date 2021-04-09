@@ -209,9 +209,9 @@ defmodule SpadesGame.GameUI do
     card = get_card(gameui, card_id)
     gameui = case action do
       "increment_token" ->
-        increment_token(gameui, card, options)
+        increment_token(gameui, card_id, options["token_type"], options["increment"])
       "toggle_exhaust" ->
-        toggle_exhaust(gameui, card, options)
+        toggle_exhaust(gameui, card_id)
       "flip_card" ->
         flip_card(gameui, card, options)
       "deal_shadow" ->
@@ -253,9 +253,8 @@ defmodule SpadesGame.GameUI do
   end
 
   # card_action increment_token
-  def increment_token(gameui, card, options) do
-    token_type = Enum.at(options, 0)
-    increment = Enum.at(options, 1)
+  def increment_token(gameui, card_id, token_type, increment) do
+    card = get_card(gameui, card_id)
     old_value = card["tokens"][token_type]
     new_value = if old_value + increment < 0 && Enum.member?(["resource", "progress", "damage", "time"], token_type) do
       0
@@ -266,7 +265,8 @@ defmodule SpadesGame.GameUI do
   end
 
   # card_action toggle_exhaust
-  def toggle_exhaust(gameui, card, options \\ nil) do
+  def toggle_exhaust(gameui, card_id) do
+    card = get_card(gameui, card_id)
     new_card = if card["exhausted"] do
       card = put_in(card["exhausted"], false)
       put_in(card["rotation"], 0)
@@ -329,6 +329,8 @@ defmodule SpadesGame.GameUI do
       orig_group_type = get_group_type(gameui, orig_group_id)
       dest_group_type = get_group_type(gameui, dest_group_id)
       IO.puts("orig #{orig_group_type} dest #{dest_group_type}")
+      # Set new controller
+      card = put_in(card["controller"], dest_group["controller"])
       # Leaving play: clear tokens/exhaust
       card = if dest_group_type != "play" do
         card

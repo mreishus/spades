@@ -167,8 +167,8 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {action: "refresh", options: {player_n: playerN}});
             // Raise your threat
             const newThreat = gameUi.game.playerData[playerN].threat+1;
-            chatBroadcast("game_update",{message: "raises threat by 1 ("+newThreat+")."});
-            gameBroadcast("update_value",{path: ["game", "playerData", playerN, "threat"], value: newThreat});
+            chatBroadcast("game_update", {message: "raises threat by 1 ("+newThreat+")."});
+            gameBroadcast("game_action", {action: "update_values", options: {paths: [["game", "playerData", playerN, "threat"]], values: [newThreat]}});
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
             if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
@@ -366,6 +366,11 @@ export const HandleKeyDown = ({
                     gameBroadcast("game_action", {action: "deal_shadow", options:{card_id: activeCardId}});
                     chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
                 }
+            }        
+            // Send to appropriate discard pile
+            else if (k === "v") {
+                chatBroadcast("game_update", {message: "added "+displayName+" to the victory display."});
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: "sharedVictory", dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
             }        
             // Send to appropriate discard pile
             else if (k === "x") {
