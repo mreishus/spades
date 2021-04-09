@@ -454,6 +454,8 @@ defmodule SpadesGame.GameUI do
           peek_card(gameui, player_n, options["card_id"], options["value"])
         "move_card" ->
           move_card(gameui, options["card_id"], options["dest_group_id"], options["dest_stack_index"], options["dest_card_index"], options["combine"], options["preserve_state"])
+        "move_stack" ->
+          move_stack(gameui, options["stack_id"], options["dest_group_id"], options["dest_stack_index"], options["combine"], options["preserve_state"])
         "move_stacks" ->
           move_stacks(gameui, options["orig_group_id"], options["dest_group_id"], options["top_n"], options["position"])
         "shuffle_group" ->

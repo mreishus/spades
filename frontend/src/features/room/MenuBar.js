@@ -11,10 +11,6 @@ import { setGame } from "./gameUiSlice";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
-
-
-
-
 export const MenuBar = React.memo(({
     setShowSpawn,
     handleBrowseSelect,
@@ -90,8 +86,10 @@ export const MenuBar = React.memo(({
               const quantity = parseInt(card['$'].qty);
               var cardRow = cardDB[cardDbId];
               if (cardRow) {
+                const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
+                cardRow['loadgroupid'] = loadGroupId;
                 cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
-                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': sectionToLoadGroupId(sectionName,playerN)})
+                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
               }
             })
           })

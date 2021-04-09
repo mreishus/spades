@@ -33,6 +33,7 @@ defmodule SpadesGame.Card do
       "cardSetId" => card_row["cardsetid"],
       "cardPackName" => card_row["cardpackname"],
 
+      "loadGroupId" => card_row["loadgroupid"],
       "discardGroupId" => card_row["discardgroupid"],
 
       "sides"=> %{

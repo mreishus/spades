@@ -12,6 +12,7 @@ import {
     getGroupIdStackIndexCardIndex,
     getStackByCardId,
     getCardWillpower,
+    getCurrentFace,
 } from "./Helpers";
 import { get } from "https";
 
@@ -219,6 +220,7 @@ export const HandleKeyDown = ({
             const activeCardId = activeCardAndLoc.card.id; 
             const activeCard = gameUi.game.cardById[activeCardId]
             var updateActiveCard = false;
+            const activeCardFace = getCurrentFace(activeCard);
             const displayName = getDisplayName(activeCard);
             const tokens = activeCard.tokens;
             const gsc = getGroupIdStackIndexCardIndex(gameUi.game, activeCardId);
@@ -391,6 +393,14 @@ export const HandleKeyDown = ({
                     const discardGroupId = activeCard["discardGroupId"]
                     chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupId].name+"."});
                     gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+                }
+                // If the card was a quest card, load the next quest card
+                if (activeCardFace.type == "Quest") {
+                    const questDeckStackIds = gameUi.game.groupById[activeCard.loadGroupId].stackIds;
+                    if (questDeckStackIds.length > 0) {
+                        chatBroadcast("game_update", {message: "advanced the quest."});
+                        gameBroadcast("game_action", {action: "move_stack", options: {stack_id: questDeckStackIds[0], dest_group_id: groupId, dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})
+                    }
                 }
                 //dispatch(setGame(gameUi.game));
             }

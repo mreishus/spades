@@ -11,12 +11,12 @@ defmodule SpadesGame.Groups do
   @spec new() :: Map.t()
   def new() do
     %{
-      "sharedQuestDeck"=>         Group.new("sharedQuestDeck","deck","shared"),
-      "sharedQuestDiscard"=>      Group.new("sharedQuestDiscard","discard","shared"),
+      "sharedQuestDeck"=>         Group.new("sharedQuestDeck","discard","shared"),
+      "sharedQuestDiscard"=>      Group.new("sharedQuestDiscard","deck","shared"),
       "sharedEncounterDeck"=>     Group.new("sharedEncounterDeck","deck","shared"),
       "sharedEncounterDiscard"=>  Group.new("sharedEncounterDiscard","discard","shared"),
-      "sharedQuestDeck2"=>        Group.new("sharedQuestDeck2","hand","shared"),
-      "sharedQuestDiscard2"=>     Group.new("sharedQuestDiscard2","discard","shared"),
+      "sharedQuestDeck2"=>        Group.new("sharedQuestDeck2","discard","shared"),
+      "sharedQuestDiscard2"=>     Group.new("sharedQuestDiscard2","deck","shared"),
       "sharedEncounterDeck2"=>    Group.new("sharedEncounterDeck2","deck","shared"),
       "sharedEncounterDiscard2"=> Group.new("sharedEncounterDiscard2","discard","shared"),
       "sharedEncounterDeck3"=>    Group.new("sharedEncounterDeck3","deck","shared"),
