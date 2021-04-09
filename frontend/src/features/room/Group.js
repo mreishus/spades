@@ -55,43 +55,35 @@ export const Group = React.memo(({
   const beingBrowsed = browseGroupId === groupId;
   return(
     <div className="h-full w-full">
-        {/* {group.type === "play" && group.controller !== "shared" ? null : */}
-          
-            {/* <Header> */}
-              {/* <Title> */}
-              {hideTitle ? null :
-                <div
-                  className="relative text-center h-full text-white float-left select-none opacity-40"
-                  style={{width:"15px", writingMode:"vertical-rl"}} 
-                >
-                  <ContextMenuTrigger id={group.id} holdToDisplay={0}>
-                  {GROUPSINFO[group.id].tablename}
-                  </ContextMenuTrigger>
-                </div>
-              }
-                {/* <FontAwesomeIcon className="text-white" icon={faChevronDown}/> */}
-              {/* </Title> */}
-            {/* </Header> */}
-        {/* } */}
-        <GroupContextMenu
-          group={group}
-          gameBroadcast={gameBroadcast}
-          chatBroadcast={chatBroadcast}
-          playerN={playerN}
-          setBrowseGroupId={setBrowseGroupId}
-          setBrowseGroupTopN={setBrowseGroupTopN}
-        ></GroupContextMenu>
-        <Stacks
-          gameBroadcast={gameBroadcast}
-          chatBroadcast={chatBroadcast}
-          playerN={playerN}
-          groupId={group.id}
-          groupType={group.type}
-          stackIds={group.stackIds}
-          cardSize={cardSize}
-          isCombineEnabled={group.type === "play"}
-          selectedStackIndices={[...Array(numStacks).keys()]}
-        />
+      {hideTitle ? null :
+        <div
+          className="relative text-center h-full text-white float-left select-none opacity-40"
+          style={{width:"15px", writingMode:"vertical-rl"}} 
+        >
+          <ContextMenuTrigger id={group.id} holdToDisplay={0}>
+          {GROUPSINFO[group.id].tablename}
+          </ContextMenuTrigger>
+        </div>
+      }
+      <GroupContextMenu
+        group={group}
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+        playerN={playerN}
+        setBrowseGroupId={setBrowseGroupId}
+        setBrowseGroupTopN={setBrowseGroupTopN}
+      />
+      <Stacks
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+        playerN={playerN}
+        groupId={group.id}
+        groupType={group.type}
+        stackIds={group.stackIds}
+        cardSize={cardSize}
+        isCombineEnabled={group.type === "play"}
+        selectedStackIndices={[...Array(numStacks).keys()]}
+      />
     </div>
   )
 })

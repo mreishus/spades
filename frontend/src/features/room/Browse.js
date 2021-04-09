@@ -156,8 +156,19 @@ export const Browse = React.memo(({
     //     width: width,
     //     // visibility: beingBrowsed ? "hidden" : "visible"
     //   }}>
-      <Container>
-        <div style={{width:"100%", height:"20px", float:"left"}}>
+      <div className="relative h-full w-full">
+
+        <div
+          className="relative text-center h-full text-white float-left select-none opacity-40"
+          style={{width:"15px", writingMode:"vertical-rl", left: "10px"}} 
+        >
+          <ContextMenuTrigger id={groupId} holdToDisplay={0}>
+          {GROUPSINFO[groupId].tablename}
+          </ContextMenuTrigger>
+        </div>
+        
+
+        {/* <div style={{width:"100%", height:"20px", float:"left"}}>
         <ContextMenuTrigger id={group.id} holdToDisplay={0}>
           <Header className="float-left">
               <Title>Browsing: {GROUPSINFO[group.id].name} <FontAwesomeIcon className="text-white" icon={faChevronDown}/></Title>
@@ -165,7 +176,7 @@ export const Browse = React.memo(({
         </ContextMenuTrigger> 
 
         <FontAwesomeIcon className="text-white float-right mr-2 mt-1" icon={faTimes} onClick={handleCloseClick}/>
-        </div>
+  </div> */}
         <GroupContextMenu
           group={group}
           gameBroadcast={gameBroadcast}
@@ -175,59 +186,60 @@ export const Browse = React.memo(({
           setBrowseGroupTopN={setBrowseGroupTopN}
         ></GroupContextMenu>
 
-      {/* <div style={{height:"100%", width:"100%"}}> */}
-        <div style={{width:"75%", height:"100%", float:"left"}}>
-          <Stacks
-            gameBroadcast={gameBroadcast}
-            chatBroadcast={chatBroadcast}
-            playerN={playerN}
-            groupId={groupId}
-            stackIds={stackIds}
-            cardSize={cardSize}
-            groupType={"hand"}
-            isCombineEnabled={false}
-            selectedStackIndices={filteredStackIndices}
-          />
-        </div>
-        <div style={{width:"25%", height:"80%", float:"left"}}>
+        <div className="absolute" style={{height:"100%", width:"100%", paddingLeft: "25px"}}>
+          <div style={{width:"75%", height:"100%", float:"left"}}>
+            <Stacks
+              gameBroadcast={gameBroadcast}
+              chatBroadcast={chatBroadcast}
+              playerN={playerN}
+              groupId={groupId}
+              stackIds={stackIds}
+              cardSize={cardSize}
+              groupType={"hand"}
+              isCombineEnabled={false}
+              selectedStackIndices={filteredStackIndices}
+            />
+          </div>
+          <div style={{width:"25%", height:"100%", float:"left", padding: "10px"}}>
 
-          <table style={{width:"100%"}}>
-            <body>
-              <tr>
-                <td onChange={handleSelectClick}>
-                  <select name="numFaceup" id="numFaceup">
-                    <option value="" disabled selected>Look at...</option>
-                    <option value="None">None</option>
-                    <option value="All">All</option>
-                    <option value="5">Top 5</option>
-                    <option value="10">Top 10</option>
-                  </select>
-                </td>
-                <td>
-                  <input style={{width:"50%"}} type="text" id="name" name="name" className="ml-5" placeholder="Card name..." onChange={handleInputTyping}></input>
-                </td>
-              </tr>
-              <tr onChange={handleOptionClick}>
-                <td><label className="text-white"><input type="radio" name="cardtype" value="All" defaultChecked/> All</label></td>
-                <td><label className="text-white"><input type="radio" name="cardtype" value="Ally"/> Ally</label></td>
-              </tr>
-              <tr onChange={handleOptionClick}>
-                <td><label className="text-white"><input type="radio" name="cardtype" value="Enemy" /> Enemy</label></td>
-                <td><label className="text-white"><input type="radio" name="cardtype" value="Attachment" /> Attachment</label></td>
-              </tr>
-              <tr onChange={handleOptionClick}>
-                <td><label className="text-white"><input type="radio" name="cardtype" value="Location" /> Location</label></td>
-                <td><label className="text-white"><input type="radio" name="cardtype" value="Event" /> Event</label></td>
-              </tr>
-              <tr onChange={handleOptionClick}>
-                <td><label className="text-white"><input type="radio" name="cardtype" value="Location" /> Treachery</label></td>
-                <td><label className="text-white"><input type="radio" name="cardtype" value="Side Quest" /> Side Quest</label></td>
-              </tr>
-            </body>
-          </table> 
+            <table style={{width:"100%"}}>
+              <body>
+                <tr>
+                  <td onChange={handleSelectClick}>
+                    <select name="numFaceup" id="numFaceup">
+                      <option value="" disabled selected>Look at...</option>
+                      <option value="None">None</option>
+                      <option value="All">All</option>
+                      <option value="5">Top 5</option>
+                      <option value="10">Top 10</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input style={{width:"50%"}} type="text" id="name" name="name" className="ml-5" placeholder="Card name..." onChange={handleInputTyping}></input>
+                  </td>
+                </tr>
+                <tr onChange={handleOptionClick}>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="All" defaultChecked/> All</label></td>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="Ally"/> Ally</label></td>
+                </tr>
+                <tr onChange={handleOptionClick}>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="Enemy" /> Enemy</label></td>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="Attachment" /> Attachment</label></td>
+                </tr>
+                <tr onChange={handleOptionClick}>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="Location" /> Location</label></td>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="Event" /> Event</label></td>
+                </tr>
+                <tr onChange={handleOptionClick}>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="Location" /> Treachery</label></td>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="Side Quest" /> Side Quest</label></td>
+                </tr>
+              </body>
+            </table> 
+          </div>
         </div>
-        {/* </div> */}
-      </Container>
+        
+      </div>
     // </WidthContainer>
   )
 })
