@@ -193,6 +193,12 @@ defmodule SpadesGame.GameUI do
     end
   end
 
+  def get_top_card_of_stack(gameui, stack_id) do
+    stack = get_stack(gameui, stack_id)
+    card_id = Enum.at(stack["cardIds"],0)
+    get_card(gameui, card_id)
+  end
+
   ############################################################
   # Card actions                                             #
   ############################################################
@@ -828,13 +834,24 @@ defmodule SpadesGame.GameUI do
     end)
 
     # Check if we should load the first quest card
-    IO.puts("checking quest")
-    IO.inspect(Enum.count(get_stack_ids(gameui,"sharedQuestDeck")))
-    IO.inspect(Enum.count(get_stack_ids(gameui,"sharedMainQuest")))
-    quest_deck_stack_ids = get_stack_ids(gameui,"sharedQuestDeck")
-    main_quest_stack_ids = get_stack_ids(gameui,"sharedMainQuest")
+    main_quest_stack_ids = get_stack_ids(gameui, "sharedMainQuest")
+    quest_deck_stack_ids = get_stack_ids(gameui, "sharedQuestDeck")
     gameui = if Enum.count(quest_deck_stack_ids)>0 && Enum.count(main_quest_stack_ids)==0 do
-      move_stack(gameui, Enum.at(quest_deck_stack_ids, 0), "sharedMainQuest", 0)
+      # Dump nightmare/campaign cards into staging
+      Enum.reduce_while(quest_deck_stack_ids, gameui, fn(stack_id, acc) ->
+        card = get_top_card_of_stack(acc, stack_id)
+        card_type = card["sides"]["A"]["type"]
+        case card_type do
+          "Nightmare" ->
+            {:cont, move_stack(acc, stack_id, "sharedStaging", 0)}
+          "Campaign" ->
+            {:cont, move_stack(acc, stack_id, "sharedStaging", 0)}
+          "Quest" ->
+            {:halt, move_stack(acc, stack_id, "sharedMainQuest", 0)}
+          _ ->
+            {:halt, acc}
+        end
+      end)
     else
       gameui
     end
@@ -852,7 +869,7 @@ defmodule SpadesGame.GameUI do
     current_threat = gameui["game"]["playerData"][player_n]["threat"]
     gameui = put_in(gameui["game"]["playerData"][player_n]["threat"], current_threat + threat)
 
-    # If deck size has increased from 0, assume it is at start of game and a mulligan is needed
+    # If deck size has increased from 0, assume it is at start of game and a draw of 6 is needed
     round_number = gameui["game"]["roundNumber"]
     round_step = gameui["game"]["roundStep"]
     deck_size_after = Enum.count(get_stack_ids(gameui, player_n_deck_id))
@@ -879,8 +896,6 @@ defmodule SpadesGame.GameUI do
     else
       gameui
     end
-    IO.puts("GAMEUI")
-    IO.inspect(gameui, limit: :infinity)
   end
 
   # # Take a list of maps and add the index to each one with a key given by label

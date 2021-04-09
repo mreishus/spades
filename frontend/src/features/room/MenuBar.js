@@ -12,18 +12,6 @@ import { setGame } from "./gameUiSlice";
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
 
-export const downloadGameAsJson = () => {
-  const state = store.getState();
-  const exportObj = state.gameUi.game;
-  const exportName = state.gameUi.gameName;
-  var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
-  var downloadAnchorNode = document.createElement('a');
-  downloadAnchorNode.setAttribute("href",     dataStr);
-  downloadAnchorNode.setAttribute("download", exportName + ".json");
-  document.body.appendChild(downloadAnchorNode); // required for firefox
-  downloadAnchorNode.click();
-  downloadAnchorNode.remove();
-}
 
 
 
@@ -124,6 +112,20 @@ export const MenuBar = React.memo(({
         chatBroadcast("game_update", {message: "uploaded a game."});
       }
       reader.readAsText(event.target.files[0]);
+    }
+
+    const downloadGameAsJson = () => {
+      const state = store.getState();
+      const exportObj = state.gameUi.game;
+      const exportName = state.gameUi.gameName;
+      var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportObj));
+      var downloadAnchorNode = document.createElement('a');
+      downloadAnchorNode.setAttribute("href",     dataStr);
+      downloadAnchorNode.setAttribute("download", exportName + ".json");
+      document.body.appendChild(downloadAnchorNode); // required for firefox
+      downloadAnchorNode.click();
+      downloadAnchorNode.remove();
+      chatBroadcast("game_update", {message: "downloaded the game."});
     }
 
     return(
