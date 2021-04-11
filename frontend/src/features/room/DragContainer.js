@@ -104,24 +104,22 @@ export const DragContainer = React.memo(({
 
     // Moved to a different spot
     const newGroupById = reorderGroupStackIds(groupById, orig, dest);
-
-    if (origGroupId != destGroupId) {
-      const origGroupTitle = GROUPSINFO[origGroupId].name;
-      const destGroupTitle = GROUPSINFO[destGroupId].name;
-      if (!keypress["Shift"] && (origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
-        chatBroadcast("game_update",{message: "moved "+getDisplayNameFlipped(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
-        // Flip card faceup
-        const paths = [["game","cardById",topOfOrigStackCardId,"currentSide"]];
-        const values = ["A"];
-        const update = {paths: paths, values: values};
-        dispatch(setValues(update));
-      }
-      else {
-        chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
-      }
-      dispatch(setGroupById(newGroupById));
-      gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: keypress["Shift"]})
+    const origGroupTitle = GROUPSINFO[origGroupId].name;
+    const destGroupTitle = GROUPSINFO[destGroupId].name;
+    if (!keypress["Shift"] && (origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
+      chatBroadcast("game_update",{message: "moved "+getDisplayNameFlipped(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
+      // Flip card faceup
+      const paths = [["game","cardById",topOfOrigStackCardId,"currentSide"]];
+      const values = ["A"];
+      const update = {paths: paths, values: values};
+      dispatch(setValues(update));
     }
+    else {
+      chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
+    }
+    dispatch(setGroupById(newGroupById));
+    gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: keypress["Shift"]})
+
 
   }
 
