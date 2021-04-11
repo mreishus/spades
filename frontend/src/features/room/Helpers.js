@@ -95,9 +95,9 @@ export const getParentCardsInGroup = (game, groupId) => {
 }
 
  // List of playerN strings of players that are seated and not eliminated
-export const seatedNonEliminated = (gameUI) => {
-  const playerIDs = gameUI["playerIds"]
-  const playerData = gameUI["game"]["playerData"]
+export const seatedNonEliminated = (gameUi) => {
+  const playerIDs = gameUi["playerIds"]
+  const playerData = gameUi["game"]["playerData"]
   var seated = []
   Object.keys(playerIDs).forEach((PlayerI) => {
     if (playerIDs[PlayerI] && !playerData[PlayerI]["eliminated"]) {
@@ -107,13 +107,13 @@ export const seatedNonEliminated = (gameUI) => {
   return seated;
 }
 
-export const leftmostNonEliminatedPlayerN = (gameUI) => {
-  const seatedPlayerNs = seatedNonEliminated(gameUI);
+export const leftmostNonEliminatedPlayerN = (gameUi) => {
+  const seatedPlayerNs = seatedNonEliminated(gameUi);
   return seatedPlayerNs[0];
 }
 
-export const getNextPlayerN = (gameUI, playerN) => {
-  const seatedPlayerNs = seatedNonEliminated(gameUI);
+export const getNextPlayerN = (gameUi, playerN) => {
+  const seatedPlayerNs = seatedNonEliminated(gameUi);
   const seatedPlayerNs2 = seatedPlayerNs.concat(seatedPlayerNs);
   var nextPlayerN = null;
   for (var i=0; i<seatedPlayerNs2.length/2; i++) {
@@ -123,8 +123,8 @@ export const getNextPlayerN = (gameUI, playerN) => {
   return nextPlayerN;
 }
 
-export const flatListOfCards = (gameUI) => {
-  const groupById = gameUI["game"]["groupById"];
+export const flatListOfCards = (gameUi) => {
+  const groupById = gameUi["game"]["groupById"];
   const allCards = [];
   Object.keys(groupById).forEach((groupId) => {
     const group = groupById[groupId];
@@ -190,8 +190,8 @@ export const passesCriteria = (card, criteria) => {
   return true;
 }
 
-const listOfMatchingCards = (gameUI, criteria) => {
-  const allCards = flatListOfCards(gameUI);
+const listOfMatchingCards = (gameUi, criteria) => {
+  const allCards = flatListOfCards(gameUi);
   const matchingCards = [];
   for (var card of allCards) {
     if (passesCriteria(card, criteria)) {
@@ -201,8 +201,8 @@ const listOfMatchingCards = (gameUI, criteria) => {
   return matchingCards;
 }
 
-export const functionOnMatchingCards = (gameUI, gameBroadcast, chatBroadcast, criteria, func, args ) => {
-  const cards = listOfMatchingCards(gameUI, criteria);
+export const functionOnMatchingCards = (gameUi, gameBroadcast, chatBroadcast, criteria, func, args ) => {
+  const cards = listOfMatchingCards(gameUi, criteria);
   for (var card of cards) {
     const cardName = getCurrentFace(card).printName;
     const groupId = card["group_id"];

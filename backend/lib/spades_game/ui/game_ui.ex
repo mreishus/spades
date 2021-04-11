@@ -468,8 +468,6 @@ defmodule SpadesGame.GameUI do
           put_in(gameui["game"], options["game"])
         "update_values" ->
           update_values(gameui, options["paths"], options["values"])
-        "refresh" ->
-          refresh(gameui, options["player_n"])
         "action_on_matching_cards" ->
           action_on_matching_cards(gameui, options["criteria"], options["action"], options["options"])
         "deal_shadow" ->

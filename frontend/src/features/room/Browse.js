@@ -12,6 +12,7 @@ import { GroupView } from "./Group";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { GroupContextMenu } from "./GroupContextMenu";
 import { getParentCardsInGroup } from "./Helpers";
+import { setValues } from "./gameUiSlice";
 
 const Container = styled.div`
   padding: 1px 1px 1px 1px;
@@ -51,7 +52,9 @@ export const Browse = React.memo(({
 }) => {
   const gameStore = state => state?.gameUi?.game;
   const game = useSelector(gameStore);
+  const dispatch = useDispatch();
   const group = game["groupById"][groupId];
+  const groupType = group["type"];
   const parentCards = getParentCardsInGroup(game, groupId);
   const [selectedCardType, setSelectedCardType] = useState('All');
   const [selectedCardName, setSelectedCardName] = useState('');
@@ -63,14 +66,38 @@ export const Browse = React.memo(({
   //browseGroupTopN.forEach(i => {if (stacks[i]) faceupStackIDs.push(stacks[i].id)});
   //setFaceupStackIDs(faceupIDs);
 
+  // This allows the deck to be hidden instantly upon close (by hiding the top card)
+  // rather than waiting to the update from the server
+  const stopPeekingTopCard = () => {
+    if (numStacks === 0) return null;
+    const stackId0 = stackIds[0];
+    const cardIds = game["stackById"][stackId0]["cardIds"];
+    const cardId0 = cardIds[0];
+    const paths = [["game","cardById",cardId0,"peeking",playerN]]
+    const values = [false];
+    const update = {paths: paths, values: values};
+    dispatch(setValues(update)) 
+  }
+
   const handleOptionClick = (event) => {
     setSelectedCardType(event.target.value);
   }
 
   const handleCloseClick = (event) => {
-    setBrowseGroupId("");
-    setBrowseGroupTopN(0);
     gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: stackIds, value: false}})
+    if (groupType === "deck") stopPeekingTopCard();
+    setBrowseGroupId("");
+  }
+
+  const handleCloseAndShuffleClick = (event) => {
+    gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: stackIds, value: false}})
+    gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: groupId}})
+    if (groupType === "deck") stopPeekingTopCard();
+    setBrowseGroupId("");
+  }
+
+  const handleJustCloseClick = (event) => {
+    setBrowseGroupId("");
   }
 
   const handleSelectClick = (event) => {
@@ -116,9 +143,6 @@ export const Browse = React.memo(({
   // If browseGroupTopN not set, or equal to "All" or "None", show all stacks
   var browseGroupTopNint = isNormalInteger(browseGroupTopN) ? parseInt(browseGroupTopN) : numStacks;
   var filteredStackIndices = [...Array(browseGroupTopNint).keys()];
-  console.log("parentCards")
-  console.log(parentCards)
-  console.log(filteredStackIndices)
   // Filter by selected card type
   if (selectedCardType != "All") 
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
@@ -157,7 +181,6 @@ export const Browse = React.memo(({
     //     // visibility: beingBrowsed ? "hidden" : "visible"
     //   }}>
       <div className="relative h-full w-full">
-
         <div
           className="relative text-center h-full text-white float-left select-none opacity-40"
           style={{width:"15px", writingMode:"vertical-rl", left: "10px"}} 
@@ -201,7 +224,26 @@ export const Browse = React.memo(({
             />
           </div>
           <div style={{width:"25%", height:"100%", float:"left", padding: "10px"}}>
-
+            <div className="absolute right-0">
+              <div 
+                className="text-white hover:text-red-500 select-none mr-2 border-1"
+                onClick={handleCloseClick}
+              >
+                Stop peeking & close
+              </div>
+              <div 
+                className="text-white hover:text-red-500 select-none mr-2 border-1"
+                onClick={handleCloseAndShuffleClick}
+              >
+                Stop peeking, close & shuffle
+              </div>
+              <div 
+                className="text-white hover:text-red-500 select-none mr-2 border-1"
+                onClick={handleJustCloseClick}
+              >
+                Just close
+              </div>
+            </div>
             <table style={{width:"100%"}}>
               <body>
                 <tr>
@@ -219,7 +261,7 @@ export const Browse = React.memo(({
                   </td>
                 </tr>
                 <tr onChange={handleOptionClick}>
-                  <td><label className="text-white"><input type="radio" name="cardtype" value="All" defaultChecked/> All</label></td>
+                  <td><label className="text-white"><input type="radio" name="cardtype" value="All" defaultChecked/> All types</label></td>
                   <td><label className="text-white"><input type="radio" name="cardtype" value="Ally"/> Ally</label></td>
                 </tr>
                 <tr onChange={handleOptionClick}>
