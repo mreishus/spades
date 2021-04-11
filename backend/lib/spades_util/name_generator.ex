@@ -10270,7 +10270,6 @@ defmodule SpadesUtil.NameGenerator do
       syrup
       system
       tabby
-      tabernacle
       table
       tablecloth
       tablet
@@ -10326,8 +10325,6 @@ defmodule SpadesUtil.NameGenerator do
       technologist
       technology
       tectonics
-      teen
-      teenager
       teepee
       telephone
       telescreen
@@ -10343,7 +10340,6 @@ defmodule SpadesUtil.NameGenerator do
       temporariness
       temporary
       temptation
-      temptress
       tenant
       tendency
       tender
@@ -10368,9 +10364,6 @@ defmodule SpadesUtil.NameGenerator do
       terrapin
       terrarium
       territory
-      terror
-      terrorism
-      terrorist
       test
       testament
       testimonial
@@ -10401,8 +10394,6 @@ defmodule SpadesUtil.NameGenerator do
       thinking
       thirst
       thistle
-      thong
-      thongs
       thorn
       thought
       thousand
@@ -10538,7 +10529,6 @@ defmodule SpadesUtil.NameGenerator do
       transplantation
       transport
       transportation
-      trap
       trapdoor
       trapezium
       trapezoid

@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef, Component } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Tokens } from './Tokens';
-import { playerBackSRC, encounterBackSRC } from "./Constants"
-import { getCardFaceSRC } from "./CardBack"
-import { GROUPSINFO } from "./Constants"
+import { playerBackSRC, encounterBackSRC } from "./Constants";
+import { getCardFaceSRC } from "./CardBack";
+import { GROUPSINFO } from "./Constants";
 import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { CardMouseRegion } from "./CardMouseRegion"
@@ -11,7 +11,8 @@ import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContex
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getVisibleSide } from "./Helpers";
-import { setGame } from "./gameUiSlice"
+import { setGame } from "./gameUiSlice";
+import { Target } from "./Target";
 
 // PREVENT DOUBLECLICK REGISTERING 2 CLICK EVENTS
 export const delay = n => new Promise(resolve => setTimeout(resolve, n));
@@ -203,6 +204,12 @@ export const Card = React.memo(({
                     onMouseLeave={event => handleMouseLeave(event)}
                 >
                     {(card["peeking"][playerN] && !isInMyHand && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute bottom-0 text-2xl" icon={faEye}/>:null}
+                    
+                    <Target
+                        cardId={cardId}
+                        cardSize={cardSize}
+                    ></Target>
+
                     <Tokens
                         cardName={currentFace.name}
                         cardType={currentFace.type}

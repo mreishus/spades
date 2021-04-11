@@ -213,6 +213,18 @@ export const HandleKeyDown = ({
                 gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Deck", dest_group_id: playerN+"Hand", top_n: handSize, position: "t"}})
                 chatBroadcast("game_update", {message: "shuffled "+handSize+" cards into their deck and redrew an equal number."})
             }
+        } else if (k === "T" || k == "Escape") {
+            // Refresh all cards you control
+            chatBroadcast("game_update",{message: "removes all targets."});
+            //gameBroadcast("refresh",{player_n: playerN});
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[[["targeting", playerN], true]], 
+                    action: "update_card_values", 
+                    options: {updates: [[["targeting", playerN], false]]}
+                }
+            });
         }
 
         // Card specific hotkeys
@@ -368,12 +380,28 @@ export const HandleKeyDown = ({
                     gameBroadcast("game_action", {action: "deal_shadow", options:{card_id: activeCardId}});
                     chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
                 }
-            }        
-            // Send to appropriate discard pile
+            }
+            // Add target to card
+            else if (k === "t") {
+                const targetingPlayerN = activeCard.targeting[playerN];
+                const paths = [["game", "cardById", activeCardId, "targeting", playerN]];
+                var values = [true];
+                if (targetingPlayerN) {
+                    values = [false]
+                    chatBroadcast("game_update", {message: "removed target from "+displayName+"."});
+                } else {
+                    values = [true]
+                    chatBroadcast("game_update", {message: "targeted "+displayName+"."});
+                }
+                const update = {paths: paths, values: values};
+                dispatch(setValues(update));
+                gameBroadcast("update_values", update);
+            }
+            // Send to victory display
             else if (k === "v") {
                 chatBroadcast("game_update", {message: "added "+displayName+" to the victory display."});
                 gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: "sharedVictory", dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
-            }        
+            }
             // Send to appropriate discard pile
             else if (k === "x") {
                 // If card is the parent card of a stack, discard the whole stack

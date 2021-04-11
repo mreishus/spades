@@ -202,29 +202,31 @@ defmodule SpadesGame.GameUI do
   ############################################################
   # Card actions                                             #
   ############################################################
-  def card_action(gameui, action, card_id, options) do
+  def card_action(gameui, card_id, action, options) do
     IO.puts("card_action")
     IO.inspect(action)
     IO.inspect(card_id)
     card = get_card(gameui, card_id)
     gameui = case action do
-      "increment_token" ->
-        increment_token(gameui, card_id, options["token_type"], options["increment"])
-      "toggle_exhaust" ->
-        toggle_exhaust(gameui, card_id)
-      "flip_card" ->
-        flip_card(gameui, card, options)
-      "deal_shadow" ->
-        deal_shadow(gameui, card)
-      "detach" ->
-        detach(gameui, card_id)
-      "peek_card" ->
-        peek_card(gameui, options["player_n"], card_id, options["value"])
-      "update_card_state" ->
-        update_card_state(gameui, card, options["preseve_state"], options["orig_group_id"])
+      "update_card_values" ->
+        update_card_values(gameui, card_id, options["updates"])
       _ ->
         gameui
     end
+  end
+
+  # Update a single card parameter
+  def update_card_value(gameui, card_id, cardpath, value) do
+    update_value(gameui, ["game", "cardById", card_id] ++ cardpath, value)
+  end
+
+  # Update multiple parameters of a card
+  def update_card_values(gameui, card_id, updates) do
+    Enum.reduce(updates, gameui, fn(update, acc) ->
+      cardpath = Enum.at(update, 0)
+      value = Enum.at(update, 1)
+      acc = update_card_value(acc, card_id, cardpath, value)
+    end)
   end
 
   # card_action: move_card
@@ -468,6 +470,8 @@ defmodule SpadesGame.GameUI do
           update_values(gameui, options["paths"], options["values"])
         "refresh" ->
           refresh(gameui, options["player_n"])
+        "action_on_matching_cards" ->
+          action_on_matching_cards(gameui, options["criteria"], options["action"], options["options"])
         "deal_shadow" ->
           deal_shadow(gameui, options["card_id"])
         _ ->
@@ -539,13 +543,6 @@ defmodule SpadesGame.GameUI do
       acc = update_value(acc, path, Enum.at(values, index))
     end)
   end
-
-
-
-
-
-
-
 
 
   def insert_new_stack(gameui, group_id, stack_index, stack) do
@@ -922,8 +919,6 @@ defmodule SpadesGame.GameUI do
     all_cards = Enum.reduce(card_by_id, [], fn({card_id, card}, acc) ->
       #IO.puts("flattening #{group_id}")
       my_gsc = gsc(gameui, card)
-      IO.puts("my_gsc")
-      IO.inspect(my_gsc)
       {group_id, stack_index, card_index} = my_gsc
       card = Map.merge(card, %{"groupId" => group_id, "stackIndex" => stack_index, "cardIndex" => card_index})
       acc ++ [card]
@@ -931,32 +926,38 @@ defmodule SpadesGame.GameUI do
     #IO.inspect(all_cards)
   end
 
+  # Obtain a value from card based on cardpath
+  def get_value_from_cardpath(card, cardpath) do
+    Enum.reduce(cardpath, card, fn(entry, acc) ->
+      entry = if entry == "sideUp" do
+        card["currentSide"]
+      else
+        entry
+      end
+      entry = if entry == "sideDown" do
+        if card["currentSide"] == "A" do
+          "B"
+        else
+          "A"
+        end
+      else
+        entry
+      end
+      IO.puts("reducing #{entry}")
+      IO.inspect(acc)
+      acc = acc[entry]
+      IO.inspect(acc)
+    end)
+  end
+
   def passes_criteria(gameui, card, criteria) do
     Enum.reduce(criteria, true, fn(criterion, acc) ->
-      object_to_check =
-        case Enum.at(criterion,0) do
-          "sideA" ->
-            card["sides"]["A"]
-          "sideB" ->
-            card["sides"]["B"]
-          "sideUp" ->
-            card["sides"][card["currentSide"]]
-          "sideDown" ->
-            if card["currentSide"] == "A" do
-              card["sides"]["B"]
-            else
-              card["sides"]["A"]
-            end
-          "tokens" ->
-            card["tokens"]
-          "peeking" ->
-            card["peeking"]
-          _ ->
-            card
-        end
-      property = Enum.at(criterion,1)
-      value = Enum.at(criterion,2)
-      passed_criterion = object_to_check[property] == value
+      cardpath = Enum.at(criterion, 0)
+      value = Enum.at(criterion, 1)
+      cardvalue = get_value_from_cardpath(card, cardpath)
+      IO.inspect(cardpath)
+      IO.puts("checking if #{cardvalue} == #{value}")
+      passed_criterion = cardvalue == value
       acc = acc && passed_criterion
     end)
   end
@@ -965,10 +966,11 @@ defmodule SpadesGame.GameUI do
     flat_list = flat_list_of_cards(gameui)
     #IO.inspect(gameui)
     Enum.reduce(flat_list, gameui, fn(card, acc) ->
-      IO.puts("checking #{card["sides"]["A"]["name"]}")
-      IO.inspect(card["controller"])
+      IO.puts("checking card")
+      IO.inspect(card["sides"]["A"]["name"])
       acc = if passes_criteria(gameui, card, criteria) do
-        card_action(acc, action, card["id"], options)
+        IO.puts(" matched!")
+        card_action(acc, card["id"], action, options)
       else
         acc
       end
@@ -1030,12 +1032,12 @@ defmodule SpadesGame.GameUI do
 
   # Refresh cards controlled by player_n
   def refresh(gameui, player_n) do
-    gameui = action_on_matching_cards(
-      gameui,
-      [["card", "exhausted", true], ["card", "controller", player_n]],
-      "toggle_exhaust",
-      []
-    )
+    gameui #= action_on_matching_cards(
+    #   gameui,
+    #   [["card", "exhausted", true], ["card", "controller", player_n]],
+    #   "toggle_exhaust",
+    #   []
+    # )
   end
 
   # Increment a player's threat

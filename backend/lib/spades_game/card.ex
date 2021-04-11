@@ -21,7 +21,13 @@ defmodule SpadesGame.Card do
         "player1" => false,
         "player2" => false,
         "player3" => false,
-        "player4" => false
+        "player4" => false,
+      },
+      "targeting" => %{
+        "player1" => false,
+        "player2" => false,
+        "player3" => false,
+        "player4" => false,
       },
       "tokens" => Tokens.new(),
 
