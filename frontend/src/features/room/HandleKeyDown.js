@@ -165,7 +165,14 @@ export const HandleKeyDown = ({
             // Refresh all cards you control
             chatBroadcast("game_update",{message: "refreshes."});
             //gameBroadcast("refresh",{player_n: playerN});
-            gameBroadcast("game_action", {action: "refresh", options: {player_n: playerN}});
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[[["controller"], playerN]], 
+                    action: "update_card_values", 
+                    options: {updates: [[["exhausted"], false], [["rotation"], 0]]}
+                }
+            });
             // Raise your threat
             const newThreat = gameUi.game.playerData[playerN].threat+1;
             chatBroadcast("game_update", {message: "raises threat by 1 ("+newThreat+")."});
@@ -214,7 +221,7 @@ export const HandleKeyDown = ({
                 chatBroadcast("game_update", {message: "shuffled "+handSize+" cards into their deck and redrew an equal number."})
             }
         } else if (k === "T" || k == "Escape") {
-            // Refresh all cards you control
+            // Remove targets from all cards you targeted
             chatBroadcast("game_update",{message: "removes all targets."});
             //gameBroadcast("refresh",{player_n: playerN});
             gameBroadcast("game_action", {

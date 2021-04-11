@@ -1030,16 +1030,6 @@ defmodule SpadesGame.GameUI do
     Enum.at(seated_player_ns,0) || "player1"
   end
 
-  # Refresh cards controlled by player_n
-  def refresh(gameui, player_n) do
-    gameui #= action_on_matching_cards(
-    #   gameui,
-    #   [["card", "exhausted", true], ["card", "controller", player_n]],
-    #   "toggle_exhaust",
-    #   []
-    # )
-  end
-
   # Increment a player's threat
   def increment_threat(gameui, player_n, increment) do
     current_threat = gameui["game"]["playerData"][player_n]["threat"];
