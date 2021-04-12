@@ -648,16 +648,6 @@ defmodule SpadesGame.GameUI do
     put_in(gameui["playerIds"][player_n], user_id)
   end
 
-
-
-
-  # def flatten_group(group) do
-  #   Enum.reduce(Enum.with_index(group["stacks"]), [], fn({stack, index}, acc) ->
-  #     cards = index_list_of_maps(stack["cards"],"card_index")
-  #     cards = Enum.map(cards, fn(c) -> Map.merge(c, %{"stack_index" => index, "group_id" => group["id"]}) end)
-  #     acc ++ cards
-  #   end)
-  # end
   def update_stack_state(gameui, stack_id, options) do
     preserve_state = Enum.at(options, 0)
     orig_group_id = Enum.at(options, 1)
@@ -821,12 +811,27 @@ defmodule SpadesGame.GameUI do
   #   update_stacks(gameui, group_id, new_stacks)
   # end
 
+  def shuffle_changed_decks(old_gameui, new_gameui) do
+    group_by_id = new_gameui["game"]["groupById"]
+    Enum.reduce(group_by_id, new_gameui, fn({group_id, group}, acc) ->
+      # Check if the number of stacks in the deck has changed, and if so, we shuffle
+      old_stack_ids = get_stack_ids(old_gameui, group_id)
+      new_stack_ids = get_stack_ids(new_gameui, group_id)
+      acc = if group["type"] == "deck" and Enum.count(old_stack_ids) != Enum.count(new_stack_ids) do
+        shuffle_group(acc, group_id)
+      else
+        acc
+      end
+    end)
+  end
+
   def load_cards(gameui, user_id, load_list) do
     # Get player doing the loading
     player_n = get_player_n(gameui, user_id)
     # Get deck size before load
     player_n_deck_id = player_n<>"Deck"
     deck_size_before = Enum.count(get_stack_ids(gameui, player_n_deck_id))
+    old_gameui = gameui
 
     gameui = Enum.reduce(load_list, gameui, fn r, acc ->
       load_card(acc, r["cardRow"], r["groupId"], r["quantity"])
@@ -885,9 +890,12 @@ defmodule SpadesGame.GameUI do
     if deck_size_after > 6 do
       IO.puts("deck_size_after")
     end
+
+    # Shuffle decks with new cards
+    gameui = shuffle_changed_decks(old_gameui, gameui)
+
+    # Check if a hand needs to be drawn
     gameui = if round_number == 0 && round_step == "0.0" && deck_size_before == 0 && deck_size_after > 6 do
-      IO.puts("shuffling deck")
-      gameui = shuffle_group(gameui, player_n_deck_id)
       Enum.reduce(1..6, gameui, fn(i, acc) ->
         stack_ids = get_stack_ids(acc, player_n_deck_id)
         acc = move_stack(acc, Enum.at(stack_ids, 0), player_n<>"Hand", -1)
