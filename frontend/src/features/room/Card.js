@@ -266,17 +266,17 @@ export const Card = React.memo(({
                  <SubMenu title='Per round'>
                      {["Resource", "Progress", "Damage"].map((tokenType, tokenIndex) => (
                         <SubMenu title={tokenType}>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -5}}>-5</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -4}}>-4</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -3}}>-3</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -2}}>-2</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -1}}>-1</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 0}}>0</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 1}}>+1</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 2}}>+2</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 3}}>+3</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 4}}>+4</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 5}}>+5</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -5}}>-5 {card.tokensPerRound[tokenType.toLowerCase()]==-5 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -4}}>-4 {card.tokensPerRound[tokenType.toLowerCase()]==-4 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -3}}>-3 {card.tokensPerRound[tokenType.toLowerCase()]==-3 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -2}}>-2 {card.tokensPerRound[tokenType.toLowerCase()]==-2 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -1}}>-1 {card.tokensPerRound[tokenType.toLowerCase()]==-1 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  0}}>0 {card.tokensPerRound[tokenType.toLowerCase()]==0 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  1}}>+1 {card.tokensPerRound[tokenType.toLowerCase()]==1 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  2}}>+2 {card.tokensPerRound[tokenType.toLowerCase()]==2 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  3}}>+3 {card.tokensPerRound[tokenType.toLowerCase()]==3 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  4}}>+4 {card.tokensPerRound[tokenType.toLowerCase()]==4 ? "✓" : ""}</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  5}}>+5 {card.tokensPerRound[tokenType.toLowerCase()]==5 ? "✓" : ""}</MenuItem>
                         </SubMenu>
                     ))}
                  </SubMenu>
