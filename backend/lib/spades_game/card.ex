@@ -30,6 +30,7 @@ defmodule SpadesGame.Card do
         "player4" => false,
       },
       "tokens" => Tokens.new(),
+      "tokensPerRound" => %{},
 
       "cardBackOverride" => card_row["cardbackoverride"],
       "cardEncounterSet" => card_row["cardencounterset"],

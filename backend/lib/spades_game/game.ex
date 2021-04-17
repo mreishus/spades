@@ -23,6 +23,7 @@ defmodule SpadesGame.Game do
   @spec new(GameOptions.t()) :: Game.t()
   def new(%GameOptions{} = options) do
     %{
+      "version" => 0.1,
       "options" => options,
       "firstPlayer" => "player1",
       "roundNumber" => 0,

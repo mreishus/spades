@@ -162,6 +162,11 @@ export const Card = React.memo(({
                 gameBroadcast("shuffle_group", {group_id: data.destGroupId})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" into "+destGroupTitle+"."})
             }
+        } else if (data.action === "update_tokens_per_round") {
+            const increment = data.increment;
+            const tokenType = data.tokenType;
+            gameBroadcast("game_action", {action: "update_values", options: {paths: [["game", "cardById", card.id, "tokensPerRound", tokenType]], values: [increment]}})
+            chatBroadcast("game_update",{message: "added "+increment+" "+tokenType+" per round to "+displayName+"."})
         }
     }
     
@@ -257,6 +262,23 @@ export const Card = React.memo(({
                          <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
                      </SubMenu>
                      <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', destGroupId: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
+                 </SubMenu>
+                 <SubMenu title='Per round'>
+                     {["Resource", "Progress", "Damage"].map((tokenType, tokenIndex) => (
+                        <SubMenu title={tokenType}>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -5}}>-5</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -4}}>-4</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -3}}>-3</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -2}}>-2</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -1}}>-1</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 0}}>0</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 1}}>+1</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 2}}>+2</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 3}}>+3</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 4}}>+4</MenuItem>
+                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: 5}}>+5</MenuItem>
+                        </SubMenu>
+                    ))}
                  </SubMenu>
              </ContextMenu>
          </div>

@@ -84,11 +84,19 @@ defmodule SpadesGame.GameUI do
   end
 
   def get_tokens(gameui, card_id) do
-    gameui["game"]["cardById"][card_id]["tokens"]
+    get_card(gameui, card_id)["tokens"]
   end
 
   def get_token(gameui, card_id, token_type) do
     get_tokens(gameui, card_id)[token_type]
+  end
+
+  def get_tokens_per_round(gameui, card_id) do
+    get_card(gameui, card_id)["tokensPerRound"]
+  end
+
+  def get_token_per_round(gameui, card_id, token_type) do
+    get_tokens_per_round(gameui, card_id)[token_type]
   end
 
   def update_group(gameui, new_group) do
@@ -210,6 +218,10 @@ defmodule SpadesGame.GameUI do
     gameui = case action do
       "update_card_values" ->
         update_card_values(gameui, card_id, options["updates"])
+      "increment_token" ->
+        increment_token(gameui, card_id, options["token_type"], options["increment"])
+      "apply_tokens_per_round" ->
+        apply_tokens_per_round(gameui, card_id)
       _ ->
         gameui
     end
@@ -226,6 +238,14 @@ defmodule SpadesGame.GameUI do
       cardpath = Enum.at(update, 0)
       value = Enum.at(update, 1)
       acc = update_card_value(acc, card_id, cardpath, value)
+    end)
+  end
+
+  # Add tokens per round to card
+  def apply_tokens_per_round(gameui, card_id) do
+    tokens_per_round = get_tokens_per_round(gameui, card_id)
+    Enum.reduce(tokens_per_round, gameui, fn({token_type, increment}, acc) ->
+      acc = increment_token(acc, card_id, token_type, increment)
     end)
   end
 
@@ -256,14 +276,13 @@ defmodule SpadesGame.GameUI do
 
   # card_action increment_token
   def increment_token(gameui, card_id, token_type, increment) do
-    card = get_card(gameui, card_id)
-    old_value = card["tokens"][token_type]
+    old_value = get_token(gameui, card_id, token_type)
     new_value = if old_value + increment < 0 && Enum.member?(["resource", "progress", "damage", "time"], token_type) do
       0
     else
       old_value + increment
     end
-    update_token(gameui, card["id"], token_type, new_value)
+    update_token(gameui, card_id, token_type, new_value)
   end
 
   # card_action toggle_exhaust
@@ -337,6 +356,7 @@ defmodule SpadesGame.GameUI do
       card = if dest_group_type != "play" do
         card
         |> Map.put("tokens", Tokens.new())
+        |> Map.put("tokensPerRound", Tokens.new())
         |> Map.put("exhausted", false)
         |> Map.put("rotation", 0)
       else card end
@@ -926,7 +946,8 @@ defmodule SpadesGame.GameUI do
       #IO.puts("flattening #{group_id}")
       my_gsc = gsc(gameui, card)
       {group_id, stack_index, card_index} = my_gsc
-      card = Map.merge(card, %{"groupId" => group_id, "stackIndex" => stack_index, "cardIndex" => card_index})
+      group_type = get_group_type(gameui, group_id)
+      card = Map.merge(card, %{"groupId" => group_id, "stackIndex" => stack_index, "cardIndex" => card_index, "groupType" => group_type})
       acc ++ [card]
     end)
     #IO.inspect(all_cards)
@@ -935,6 +956,7 @@ defmodule SpadesGame.GameUI do
   # Obtain a value from card based on cardpath
   def get_value_from_cardpath(card, cardpath) do
     Enum.reduce(cardpath, card, fn(entry, acc) ->
+      IO.puts("reducing #{entry}")
       entry = if entry == "sideUp" do
         card["currentSide"]
       else

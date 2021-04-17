@@ -20,6 +20,8 @@ export const MenuBarDataContainer = React.memo(({
     const stackById = useSelector(stackStore);
     const numPlayersStore = state => state.gameUi.numPlayers;
     const numPlayers = useSelector(numPlayersStore);
+    const playerDataStore = state => state.gameUi.game.playerData;
+    const playerData = useSelector(playerDataStore);
 
     // const playerDataStore = state => state?.gameUi?.game?.playerData;
     // const playerData = useSelector(playerDataStore);  
@@ -46,7 +48,13 @@ export const MenuBarDataContainer = React.memo(({
         playerWillpower[card.controller] += cardWillpower + card.tokens.willpower;
       }
     })
-    const totalWillpower = playerWillpower["player1"] + playerWillpower["player2"] + playerWillpower["player3"] + playerWillpower["player4"];
+    //const totalWillpower = playerWillpower["player1"] + playerWillpower["player2"] + playerWillpower["player3"] + playerWillpower["player4"];
+    var totalWillpower = 0;
+    console.log("playerData",playerData);
+    for (var i =1; i<=numPlayers; i++) {
+      const playerI = "player"+i;
+      totalWillpower += playerData[playerI].willpower;
+    }
     const totalProgress = totalWillpower - stagingThreat;
 
     return(
@@ -62,7 +70,6 @@ export const MenuBarDataContainer = React.memo(({
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
-          willpower={playerWillpower["player1"]}
         />
         {numPlayers > 1 &&
         <MenuBarUser
@@ -71,7 +78,6 @@ export const MenuBarDataContainer = React.memo(({
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
-          willpower={playerWillpower["player2"]}
         />}
         {numPlayers > 2 &&
         <MenuBarUser
@@ -80,7 +86,6 @@ export const MenuBarDataContainer = React.memo(({
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
-          willpower={playerWillpower["player3"]}
         />}
         {numPlayers > 3 &&
         <MenuBarUser
@@ -89,7 +94,6 @@ export const MenuBarDataContainer = React.memo(({
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
-          willpower={playerWillpower["player4"]}
         />}
       </div>
     )

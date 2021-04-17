@@ -15,7 +15,6 @@ export const MenuBarUser = React.memo(({
   chatBroadcast,
   observingPlayerN,
   setObservingPlayerN,
-  willpower,
 }) => {
   const dispatch = useDispatch();
   const playerIdsStore = state => state?.gameUi?.playerIds;
@@ -29,9 +28,14 @@ export const MenuBarUser = React.memo(({
   const myUserID = myUser?.id;  
   const gameUiThreat = playerDataPlayerN ? playerDataPlayerN["threat"] : 0;
   const [threatValue, setThreatValue] = useState(gameUiThreat);
+  const gameUiWillpower = playerDataPlayerN ? playerDataPlayerN["willpower"] : 0;
+  const [willpowerValue, setWillpowerValue] = useState(gameUiWillpower);
   useEffect(() => {    
     if (gameUiThreat !== threatValue) setThreatValue(gameUiThreat);
   }, [gameUiThreat]);
+  useEffect(() => {    
+    if (gameUiWillpower !== willpowerValue) setWillpowerValue(gameUiWillpower);
+  }, [gameUiWillpower]);
 
   if (!playerIds) return null;
   if (!playerDataPlayerN) return null;
@@ -59,7 +63,25 @@ export const MenuBarUser = React.memo(({
       gameBroadcast("update_values",update);
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
-    }, 800);
+    }, 400);
+  }
+
+
+  const handleWillpowerChange = (event) => {
+    const newValue = event.target.value;
+    setWillpowerValue(newValue);
+    const increment = newValue - gameUiWillpower;
+    // Set up a delayed broadcast to update the game state that interrupts itself if the button is clicked again shortly after.
+    if (delayBroadcast) clearTimeout(delayBroadcast);
+    delayBroadcast = setTimeout(function() {
+      const paths = [["game", "playerData", playerN, "willpower"]];
+      const values = [parseInt(newValue)];
+      const update = {paths: paths, values: values};
+      dispatch(setValues(update));
+      gameBroadcast("update_values",update);
+      if (increment > 0) chatBroadcast("game_update",{message: "raises willpower by "+increment+" ("+newValue+")."});
+      if (increment < 0) chatBroadcast("game_update",{message: "reduces willpower by "+(-increment)+" ("+newValue+")."});
+    }, 400);
   }
 
   const handleSitClick = (action) => {
@@ -150,8 +172,9 @@ export const MenuBarUser = React.memo(({
           </div>
           <input 
             className="h-full w-1/2 float-left text-center bg-transparent" 
-            value={willpower}
-            // type="number" min="0" step="1"
+            value={willpowerValue}
+            onChange={handleWillpowerChange}
+            type="number" min="0" step="1"
             readonly
           ></input>
         </div>

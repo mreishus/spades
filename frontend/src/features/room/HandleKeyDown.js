@@ -205,13 +205,21 @@ export const HandleKeyDown = ({
                 gameBroadcast("game_action", {action: "update_values", options:{paths:[["game", "roundNumber"]], values: [newRoundNumber]}})
                 chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
             }
+            // Add a resource to each hero
             gameBroadcast("action_on_matching_cards",{
-                criteria: [["sideUp","type","Hero"],["card","controller",playerN]], 
+                criteria: [[["sides","sideUp","type"],"Hero"],[["controller"],playerN], [["groupType"],"play"]], 
                 action: "increment_token", 
-                options: ["resource", 1]
+                options: {token_type: "resource", increment: 1}
             })
+            // Draw a card
             gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
             chatBroadcast("game_update",{message: "drew a card."});
+            // Add custom set tokens per round
+            gameBroadcast("action_on_matching_cards",{
+                criteria: [[["controller"],playerN], [["groupType"],"play"]],
+                action: "apply_tokens_per_round", 
+                options: {}
+            })
         } else if (k === "M") {
             if (window.confirm('Shuffle hand in deck and redraw equal number?')) {
                 const hand = gameUi.game.groupById[playerN+"Hand"];
@@ -238,7 +246,6 @@ export const HandleKeyDown = ({
         if (activeCardAndLoc != null) {  
             const activeCardId = activeCardAndLoc.card.id; 
             const activeCard = gameUi.game.cardById[activeCardId]
-            var updateActiveCard = false;
             const activeCardFace = getCurrentFace(activeCard);
             const displayName = getDisplayName(activeCard);
             const tokens = activeCard.tokens;
@@ -333,13 +340,16 @@ export const HandleKeyDown = ({
                 console.log("commit to quest")
                 // const currentWillpower = gameUi.game.playerData[playerN].willpower;
                 // const newWillpower = currentWillpower + getCardWillpower(activeCard);
+                const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
+                const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                const newWillpower = currentWillpower + willpowerIncrement;
                 const paths = [
                     ["game", "cardById", activeCardId, "committed"], 
                     ["game", "cardById", activeCardId, "exhausted"], 
                     ["game", "cardById", activeCardId, "rotation"],
-                    // ["game", "playerData", playerN, "willpower"]
+                    ["game", "playerData", playerN, "willpower"],
                 ];
-                var values = [true, true, 90];
+                var values = [true, true, 90, newWillpower];
                 chatBroadcast("game_update", {message: "committed "+displayName+" to the quest."});
                 const update = {paths: paths, values: values};
                 dispatch(setValues(update));
@@ -348,8 +358,11 @@ export const HandleKeyDown = ({
             // Commit to quest without exhausting
             else if (k === "Q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
                 console.log("commit to quest")
-                const paths = [["game", "cardById", activeCardId, "committed"]];
-                var values = [true];
+                const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
+                const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                const newWillpower = currentWillpower + willpowerIncrement;
+                const paths = [["game", "cardById", activeCardId, "committed"], ["game", "playerData", playerN, "willpower"]];
+                var values = [true, newWillpower];
                 chatBroadcast("game_update", {message: "committed "+displayName+" to the quest without exhausting."});
                 const update = {paths: paths, values: values};
                 dispatch(setValues(update));
@@ -358,8 +371,16 @@ export const HandleKeyDown = ({
             // Uncommit to quest and ready
             else if (k === "q" && groupType === "play" && activeCard["committed"]) {
                 console.log("uncommit to quest")
-                const paths = [["game", "cardById", activeCardId, "committed"], ["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]];
-                var values = [false, false, 0];
+                const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
+                const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                const newWillpower = currentWillpower - willpowerIncrement;
+                const paths = [
+                    ["game", "cardById", activeCardId, "committed"], 
+                    ["game", "cardById", activeCardId, "exhausted"], 
+                    ["game", "cardById", activeCardId, "rotation"],
+                    ["game", "playerData", playerN, "willpower"]
+                ];
+                var values = [false, false, 0, newWillpower];
                 chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
                 if (activeCard["exhausted"]) chatBroadcast("game_update", {message: "readied "+displayName+"."});
                 const update = {paths: paths, values: values};
@@ -369,8 +390,11 @@ export const HandleKeyDown = ({
             // Uncommit to quest without readying
             else if (k === "Q" && groupType === "play" && activeCard["committed"]) {
                 console.log("uncommit to quest")
-                const paths = [["game", "cardById", activeCardId, "committed"]];
-                var values = [false];
+                const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
+                const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                const newWillpower = currentWillpower - willpowerIncrement;
+                const paths = [["game", "cardById", activeCardId, "committed"], ["game", "playerData", playerN, "willpower"]];
+                var values = [false, newWillpower];
                 chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
                 const update = {paths: paths, values: values};
                 dispatch(setValues(update));
