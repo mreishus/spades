@@ -62,14 +62,14 @@ export const GroupContextMenu = React.memo(({
                   <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck", position: "s"}}>Shuffle in </MenuItem>
               </SubMenu>
               <SubMenu title='Encounter Deck 2 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck1", position: "t"}}>Top </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck1", position: "b"}}>Bottom </MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck1", position: "s"}}>Shuffle in </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "t"}}>Top </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "b"}}>Bottom </MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "s"}}>Shuffle in </MenuItem>
               </SubMenu>
               <SubMenu title='Encounter Deck 3 &nbsp;'>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "t"}}>Top</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "b"}}>Bottom</MenuItem>
-                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck2", position: "s"}}>Shuffle in</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck3", position: "t"}}>Top</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck3", position: "b"}}>Bottom</MenuItem>
+                  <MenuItem onClick={handleMenuClick} data={{action: 'move_stacks', destGroupId: "sharedEncounterDeck3", position: "s"}}>Shuffle in</MenuItem>
               </SubMenu>
           </SubMenu>
       </ContextMenu>

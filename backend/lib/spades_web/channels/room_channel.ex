@@ -330,7 +330,7 @@ defmodule SpadesWeb.RoomChannel do
     GameUIServer.game_action(room_slug, user_id, action, options)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
-    notify(socket)
+    #notify(socket)
 
     {:reply, {:ok, client_state(socket)}, socket}
   end

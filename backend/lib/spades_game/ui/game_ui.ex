@@ -557,6 +557,7 @@ defmodule SpadesGame.GameUI do
 
   def update_values(gameui, paths, values) do
     IO.puts("game_ui update_values")
+    #raise "super error"
     Enum.reduce(Enum.with_index(paths), gameui, fn({path, index}, acc) ->
       acc = update_value(acc, path, Enum.at(values, index))
     end)

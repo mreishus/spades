@@ -9,9 +9,11 @@ import useChannel from "../../hooks/useChannel";
 import { setGameUi, setGame } from "./gameUiSlice";
 
 export const Room = ({ slug }) => {
-  const gameNameStore = state => state.gameUi.gameName;
   const dispatch = useDispatch();
+  const gameNameStore = state => state.gameUi.gameName;
   const gameName = useSelector(gameNameStore);
+  const errorStore = state => state.gameUi.error;
+  const error = useSelector(errorStore);
   const setMessages = useSetMessages();
 
   //const [gameUI, setGameUI] = useState<GameUI | null>(null);
@@ -25,11 +27,13 @@ export const Room = ({ slug }) => {
     ) {
       const { game_ui } = payload.response;
       console.log("dispatching to game", game_ui)
-      if (game_ui) {
-        dispatch(setGame(game_ui.game));
-        dispatch(setGameUi(game_ui));
+      if (game_ui.error && !error) {
+        alert("An error occured.");
       }
+      dispatch(setGame(game_ui.game));
+      dispatch(setGameUi(game_ui));
     }
+
   }, []);
   
   //const [messages, setMessages] = useState([]);

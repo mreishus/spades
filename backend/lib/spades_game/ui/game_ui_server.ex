@@ -422,7 +422,14 @@ defmodule SpadesGame.GameUIServer do
 
   def handle_call({:game_action, user_id, action, options}, _from, gameui) do
     IO.puts("game_ui_server: handle_call: game_action a")
-    GameUI.game_action(gameui, user_id, action, options)
+    try do
+      gameui = GameUI.game_action(gameui, user_id, action, options)
+      put_in(gameui["error"], false)
+    rescue
+      e in RuntimeError ->
+        IO.inspect(e)
+        put_in(gameui["error"],true)
+    end
     |> save_and_reply()
   end
 

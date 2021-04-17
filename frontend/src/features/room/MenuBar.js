@@ -5,6 +5,7 @@ import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { getCurrentFace } from "./Helpers";
 import { MenuBarUser } from "./MenuBarUser";
 import { MenuBarDataContainer } from "./MenuBarDataContainer";
+import { MenuBarTimer } from "./MenuBarTimer";
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
@@ -31,7 +32,7 @@ export const MenuBar = React.memo(({
     const dispatch = useDispatch();
     const inputFileDeck = useRef(null);
     const inputFileGame = useRef(null);
-    console.log("rendering menubar")
+    console.log("rendering menubar");
 
     const handleMenuClick = (data) => {
       if (!playerN) {
@@ -54,8 +55,9 @@ export const MenuBar = React.memo(({
         loadFileGame();
       } else if (data.action === "num_players") {
         const num = data.value;
-        gameBroadcast("game_action", {action: "update_values", options: {paths: [["numPlayers"], ["layout"]], values: [num, "layout" + num]}});
+        const gb = gameBroadcast("game_action", {action: "update_values", options: {paths: [["numPlayers"], ["layout"]], values: [num, "layout" + num]}});
         chatBroadcast("game_update", {message: "set the number of players to: " + num});
+        console.log('gb',gb.timeoutTimer);
       }
     }
 
@@ -216,6 +218,7 @@ export const MenuBar = React.memo(({
           </ul>
         </li>
       </ul>
+      <MenuBarTimer gameBroadcast={gameBroadcast}></MenuBarTimer>
       <MenuBarDataContainer
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}

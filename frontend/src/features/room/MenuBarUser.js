@@ -60,7 +60,8 @@ export const MenuBarUser = React.memo(({
       const values = [parseInt(newValue)];
       const update = {paths: paths, values: values};
       dispatch(setValues(update));
-      gameBroadcast("update_values",update);
+      const gb = gameBroadcast("update_values",update);
+      console.log('gb',gb.timeoutTimer);
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
     }, 400);
