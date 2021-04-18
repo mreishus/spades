@@ -25,6 +25,9 @@ export const MenuBar = React.memo(({
     const myUser = useProfile();
     const myUserID = myUser?.id;  
 
+    const groupByIdStore = state => state.gameUi.game.groupById;
+    const groupById = useSelector(groupByIdStore);
+
     const createdByStore = state => state.gameUi.created_by;
     const createdBy = useSelector(createdByStore);
     const host = myUserID === createdBy;
@@ -169,52 +172,41 @@ export const MenuBar = React.memo(({
                 <a href="#">Shared</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
-                      if (groupId.startsWith("shared"))
-                        return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                      const stackIds = groupById[groupId].stackIds;
+                      const deckType = groupById[groupId].type;
+                      if (deckType !== "play" && groupId.startsWith("shared"))
+                        return(
+                          <li className="relative" key={groupId}>
+                            <a className="absolute" onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">
+                              {GROUPSINFO[groupId].name}
+                            </a>
+                            <div className="absolute right-2 top-1">{stackIds.length}</div>
+                          </li>) 
                       else return null;
                     })}
                 </ul>
               </li>
-              <li key={"Player1"}>
-                <a href="#">Player 1</a>
+              {[1,2,3,4].map((N, playerIndex) => (
+              <li key={"Player"+N}>
+                <a href="#">Player {N}</a>
                   <ul className="third-level-menu">
                     {Object.keys(GROUPSINFO).map((groupId, index) => {
-                      if (groupId.startsWith("player1"))
-                        return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
+                      const stackIds = groupById[groupId].stackIds;
+                      const deckType = groupById[groupId].type;
+                      if (deckType !== "play" && groupId.startsWith("player"+N))
+                        return(
+                          <li className="relative" key={groupId}>
+                            <a className="absolute" onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">
+                              {GROUPSINFO[groupId].name}
+                            </a>
+                            <div className="absolute right-2 top-1">{stackIds.length}</div>
+                          </li>) 
                       else return null;
                     })}
                 </ul>
               </li>
-              <li key={"Player2"}>
-                <a href="#">Player 2</a>
-                  <ul className="third-level-menu">
-                    {Object.keys(GROUPSINFO).map((groupId, index) => {
-                      if (groupId.startsWith("player2"))
-                        return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
-                      else return null;
-                    })}
-                </ul>
-              </li>
-              <li key={"Player3"}>
-                <a href="#">Player 3</a>
-                  <ul className="third-level-menu">
-                    {Object.keys(GROUPSINFO).map((groupId, index) => {
-                      if (groupId.startsWith("player3"))
-                        return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
-                      else return null;
-                    })}
-                </ul>
-              </li>
-              <li key={"Player4"}>
-                  <a href="#">Player 4</a>
-                    <ul className="third-level-menu">
-                      {Object.keys(GROUPSINFO).map((groupId, index) => {
-                        if (groupId.startsWith("player4"))
-                          return(<li key={groupId}><a onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">{GROUPSINFO[groupId].name}</a></li>) 
-                        else return null;
-                      })}
-                  </ul>
-              </li>
+              ))}
+
           </ul>
         </li>
       </ul>
