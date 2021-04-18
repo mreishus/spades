@@ -5,7 +5,6 @@ import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { getCurrentFace } from "./Helpers";
 import { MenuBarUser } from "./MenuBarUser";
 import { MenuBarDataContainer } from "./MenuBarDataContainer";
-import { MenuBarTimer } from "./MenuBarTimer";
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
@@ -210,7 +209,6 @@ export const MenuBar = React.memo(({
           </ul>
         </li>
       </ul>
-      <MenuBarTimer gameBroadcast={gameBroadcast}></MenuBarTimer>
       <MenuBarDataContainer
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}

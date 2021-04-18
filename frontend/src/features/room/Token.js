@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { CARDSCALE } from "./Constants";
+import { tokenPrintName } from "./Helpers";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 //import cx from "classnames";
@@ -25,6 +25,7 @@ export const Token = React.memo(({
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
     const [amount, setAmount] = useState(tokenValue);
+    const printName = tokenPrintName(tokenType);
 
     useEffect(() => {    
         if (tokenValue !== amount) setAmount(tokenValue);
@@ -51,15 +52,15 @@ export const Token = React.memo(({
             //gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index:cardIndex});
             if (totalDelta > 0) {
                 if (totalDelta === 1) {
-                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+tokenType+" token to "+cardName+"."});
+                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+printName+" token to "+cardName+"."});
                 } else {
-                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+tokenType+" tokens to "+cardName+"."});
+                    chatBroadcast("game_update",{message: "added "+totalDelta+" "+printName+" tokens to "+cardName+"."});
                 }
             } else if (totalDelta < 0) {
                 if (totalDelta === -1) {
-                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+tokenType+" token from "+cardName+"."});
+                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+printName+" token from "+cardName+"."});
                 } else {
-                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+tokenType+" tokens from "+cardName+"."});
+                    chatBroadcast("game_update",{message: "removed "+(-totalDelta)+" "+printName+" tokens from "+cardName+"."});
                 }                
             }
         }, 500);

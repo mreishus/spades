@@ -69,6 +69,21 @@ export const getVisibleFaceSRC = (card, playerN) => {
   }
 }
 
+export const usesThreatToken = (cardType) => {
+  if (["Contract", "Hero", "Ally", "Attachment", "Event", "Objective Ally"].includes(cardType)) return false;
+  return true;
+} 
+
+export const processTokenType = (tokenType, cardType) => {
+  if (tokenType === "willpowerThreat") return usesThreatToken(cardType) ? "threat" : "willpower";
+  return tokenType;
+}
+
+export const tokenPrintName = (tokenType) => {
+  if (tokenType === "hitPoints") return "hit points";
+  return tokenType;
+}
+
 export const getCardWillpower = (card) => {
   const currentFace = getCurrentFace(card);
   return currentFace.willpower + card.tokens.willpower;

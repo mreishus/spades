@@ -13,6 +13,8 @@ import {
     getStackByCardId,
     getCardWillpower,
     getCurrentFace,
+    processTokenType,
+    tokenPrintName,
 } from "./Helpers";
 import { get } from "https";
 
@@ -22,10 +24,10 @@ const keyTokenMap = {
   "2": ["progress",1],
   "3": ["damage",1],
   "4": ["time",1],
-  "5": ["threat",1],
-  "6": ["willpower",1],
-  "7": ["attack",1],
-  "8": ["defense",1],
+  "5": ["willpowerThreat",1],
+  "6": ["attack",1],
+  "7": ["defense",1],
+  "8": ["hitPoints",1],
 }
 
 export const HandleKeyDown = ({
@@ -256,7 +258,9 @@ export const HandleKeyDown = ({
             const groupType = gameUi.game.groupById[groupId].type;
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
-                const tokenType = keyTokenMap[k][0];
+                var tokenType = keyTokenMap[k][0];
+                tokenType = processTokenType(tokenType, activeCardFace.type);
+                const printName = tokenPrintName(tokenType);
                 // Check if mouse is hoving over top half or bottom half of card
                 // Top half will increase tokens, bottom half will decrease
                 const mousePosition = activeCardAndLoc.mousePosition;
@@ -269,15 +273,15 @@ export const HandleKeyDown = ({
                 gameBroadcast("update_value",{path: ["game","cardById",activeCard.id,"tokens",tokenType], value: newVal})
                 if (delta > 0) {
                     if (delta === 1) {
-                        chatBroadcast("game_update",{message: "added "+delta+" "+tokenType+" token to "+displayName+"."});
+                        chatBroadcast("game_update",{message: "added "+delta+" "+printName+" token to "+displayName+"."});
                     } else {
-                        chatBroadcast("game_update",{message: "added "+delta+" "+tokenType+" tokens to "+displayName+"."});
+                        chatBroadcast("game_update",{message: "added "+delta+" "+printName+" tokens to "+displayName+"."});
                     }
                 } else {
                     if (delta === -1) {
-                        chatBroadcast("game_update",{message: "removed "+(-delta)+" "+tokenType+" token from "+displayName+"."});
+                        chatBroadcast("game_update",{message: "removed "+(-delta)+" "+printName+" token from "+displayName+"."});
                     } else {
-                        chatBroadcast("game_update",{message: "removed "+(-delta)+" "+tokenType+" tokens from "+displayName+"."});
+                        chatBroadcast("game_update",{message: "removed "+(-delta)+" "+printName+" tokens from "+displayName+"."});
                     }                
                 }
             }
