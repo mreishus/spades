@@ -370,22 +370,6 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
-    "update_values",
-    %{
-      "paths" => paths,
-      "values" => values,
-    },
-    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
-  ) do
-    GameUIServer.update_values(room_slug, user_id, paths, values)
-    state = GameUIServer.state(room_slug)
-    socket = socket |> assign(:game_ui, state)
-    notify(socket)
-
-    {:reply, {:ok, client_state(socket)}, socket}
-  end
-
-  def handle_in(
     "refresh",
     %{
       "player_n" => player_n,

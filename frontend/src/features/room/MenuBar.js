@@ -57,7 +57,7 @@ export const MenuBar = React.memo(({
         loadFileGame();
       } else if (data.action === "num_players") {
         const num = data.value;
-        const gb = gameBroadcast("game_action", {action: "update_values", options: {paths: [["numPlayers"], ["layout"]], values: [num, "layout" + num]}});
+        const gb = gameBroadcast("game_action", {action: "update_values", options: {updates: [["numPlayers", num], ["layout", "layout" + num]]}});
         chatBroadcast("game_update", {message: "set the number of players to: " + num});
         console.log('gb',gb.timeoutTimer);
       }

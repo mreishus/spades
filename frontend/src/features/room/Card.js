@@ -165,7 +165,7 @@ export const Card = React.memo(({
         } else if (data.action === "update_tokens_per_round") {
             const increment = data.increment;
             const tokenType = data.tokenType;
-            gameBroadcast("game_action", {action: "update_values", options: {paths: [["game", "cardById", card.id, "tokensPerRound", tokenType]], values: [increment]}})
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", card.id, "tokensPerRound", tokenType, increment]]}})
             chatBroadcast("game_update",{message: "added "+increment+" "+tokenType+" per round to "+displayName+"."})
         }
     }

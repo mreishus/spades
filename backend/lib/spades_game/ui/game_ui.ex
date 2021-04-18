@@ -236,16 +236,14 @@ defmodule SpadesGame.GameUI do
   end
 
   # Update a single card parameter
-  def update_card_value(gameui, card_id, cardpath, value) do
-    update_value(gameui, ["game", "cardById", card_id] ++ cardpath, value)
+  def update_card_value(gameui, card_id, update) do
+    update_value(gameui, ["game", "cardById", card_id] ++ update)
   end
 
   # Update multiple parameters of a card
   def update_card_values(gameui, card_id, updates) do
     Enum.reduce(updates, gameui, fn(update, acc) ->
-      cardpath = Enum.at(update, 0)
-      value = Enum.at(update, 1)
-      acc = update_card_value(acc, card_id, cardpath, value)
+      acc = update_card_value(acc, card_id, update)
     end)
   end
 
@@ -497,7 +495,7 @@ defmodule SpadesGame.GameUI do
         "set_game" ->
           put_in(gameui["game"], options["game"])
         "update_values" ->
-          update_values(gameui, options["paths"], options["values"])
+          update_values(gameui, options["updates"])
         "action_on_matching_cards" ->
           action_on_matching_cards(gameui, options["criteria"], options["action"], options["options"])
         "deal_shadow" ->
@@ -543,33 +541,46 @@ defmodule SpadesGame.GameUI do
   end
 
   #
-  def update_value(gameui, path, value) do
-    IO.puts("game_ui update_value")
-    IO.inspect(path)
-    IO.inspect(value)
-    case Enum.count(path) do
+  def update_value(obj, update) do
+    IO.puts("updating")
+    IO.inspect(obj)
+    IO.puts("update: ")
+    IO.inspect(update)
+    case Enum.count(update) do
+      0 ->
+        obj
       1 ->
-        put_in(gameui[Enum.at(path,0)], value)
-      2 ->
-        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)], value)
-      3 ->
-        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)], value)
-      4 ->
-        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)], value)
-      5 ->
-        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)][Enum.at(path,4)], value)
-      6 ->
-        put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)][Enum.at(path,4)][Enum.at(path,5)], value)
+        Enum.at(update, 0)
       _ ->
-        gameui
+        put_in(obj[Enum.at(update,0)], update_value(obj[Enum.at(update,0)], List.delete_at(update, 0)))
     end
   end
+  #   IO.puts("game_ui update_value")
+  #   IO.inspect(path)
+  #   IO.inspect(value)
+  #   case Enum.count(path) do
+  #     2 ->
+  #       put_in(gameui[Enum.at(path,0)], Enum.at(path,1))
+  #     3 ->
+  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)], value)
+  #     4 ->
+  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)], value)
+  #     5 ->
+  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)], value)
+  #     6 ->
+  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)][Enum.at(path,4)], value)
+  #     7 ->
+  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)][Enum.at(path,4)][Enum.at(path,5)], value)
+  #     _ ->
+  #       gameui
+  #   end
+  # end
 
-  def update_values(gameui, paths, values) do
+  def update_values(gameui, updates) do
     IO.puts("game_ui update_values")
     #raise "super error"
-    Enum.reduce(Enum.with_index(paths), gameui, fn({path, index}, acc) ->
-      acc = update_value(acc, path, Enum.at(values, index))
+    Enum.reduce(updates, gameui, fn(update, acc) ->
+      acc = update_value(acc, update)
     end)
   end
 

@@ -158,10 +158,7 @@ export const HandleKeyDown = ({
         } else if (k === "R") {
             if (gameUi.game.roundStep !== "7.R") {
                 //gameBroadcast("set_round_step", {phase: "Refresh", round_step: "7.R"}) 
-                gameBroadcast("update_values", {
-                    paths: [["game","roundStep"], ["game", "phase"]],
-                    values: ["7.R", "Refresh"] 
-                })
+                gameBroadcast("update_values", {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]})
                 chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
             }
             // Refresh all cards you control
@@ -178,7 +175,7 @@ export const HandleKeyDown = ({
             // Raise your threat
             const newThreat = gameUi.game.playerData[playerN].threat+1;
             chatBroadcast("game_update", {message: "raises threat by 1 ("+newThreat+")."});
-            gameBroadcast("game_action", {action: "update_values", options: {paths: [["game", "playerData", playerN, "threat"]], values: [newThreat]}});
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat]]}});
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
             if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
@@ -189,13 +186,13 @@ export const HandleKeyDown = ({
                 console.log(firstPlayerN);
                 console.log(nextPlayerN);
                 if (nextPlayerN) {
-                    gameBroadcast("update_values",{paths: [["game","firstPlayer"]], values: [nextPlayerN]});    
+                    gameBroadcast("update_values",{paths: [["game","firstPlayer", nextPlayerN]]});    
                     chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."})
                 }
             }
         } else if (k === "N") {
             if (gameUi["game"]["roundStep"] !== "1.R") {
-                gameBroadcast("game_action", {action: "update_values", options: {paths: [["game", "phase"], ["game", "roundStep"]], values: ["Resource", "1.R"]}})
+                gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "phase", "Resource"], ["game", "roundStep", "1.R"]]}})
                 chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
             }
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
@@ -204,7 +201,7 @@ export const HandleKeyDown = ({
                 // Update round number
                 const roundNumber = gameUi["game"]["roundNumber"];
                 const newRoundNumber = parseInt(roundNumber) + 1;
-                gameBroadcast("game_action", {action: "update_values", options:{paths:[["game", "roundNumber"]], values: [newRoundNumber]}})
+                gameBroadcast("game_action", {action: "update_values", options:{updates:[["game", "roundNumber", newRoundNumber]]}})
                 chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
             }
             // Add a resource to each hero
@@ -270,7 +267,7 @@ export const HandleKeyDown = ({
                 else delta = 0;
                 const newVal = tokens[tokenType]+delta;
                 if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
-                gameBroadcast("update_value",{path: ["game","cardById",activeCard.id,"tokens",tokenType], value: newVal})
+                gameBroadcast("game_action", {action:"update_values", options: {updates: [["game","cardById",activeCard.id,"tokens",tokenType, newVal]]}});
                 if (delta > 0) {
                     if (delta === 1) {
                         chatBroadcast("game_update",{message: "added "+delta+" "+printName+" token to "+displayName+"."});
@@ -294,22 +291,18 @@ export const HandleKeyDown = ({
                         //newTokens[tokenType] = 0; 
                     }
                 }
-                const paths = [["game","cardById",activeCardId,"tokens"]];
-                const values = [newTokens];
-                const update = {paths: paths, values: values}
-                dispatch(setValues(update))
-                gameBroadcast("update_values", update);
+                const updates = [["game","cardById",activeCardId,"tokens", newTokens]];
+                dispatch(setValues({updates: updates}))
+                gameBroadcast("game_action", {action:"update_values", options:{updates: updates}});
                 chatBroadcast("game_update", {message: "cleared all tokens from "+displayName+"."});
             }
             // Flip card
             else if (k === "f") {
-                const paths = [["game","cardById",activeCardId,"currentSide"]]
                 var newSide = "A";
                 if (activeCard["currentSide"] === "A") newSide = "B";
-                const values = [newSide];
-                const update = {paths: paths, values: values};
-                dispatch(setValues(update))
-                gameBroadcast("update_values", update);
+                const updates = [["game","cardById",activeCardId,"currentSide", newSide]]
+                dispatch(setValues({updates: updates}))
+                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
                 if (displayName==="player card" || displayName==="encounter card") {
                     chatBroadcast("game_update", {message: "flipped "+getDisplayName(activeCard)+" faceup."});
                 } else {
@@ -327,7 +320,6 @@ export const HandleKeyDown = ({
             // Exhaust card
             else if (k === "a" && groupType === "play") {
                 console.log("toggle exhaust")
-                const paths = [["game", "cardById", activeCardId, "exhausted"], ["game", "cardById", activeCardId, "rotation"]];
                 var values = [true, 90];
                 if (activeCard.exhausted) {
                     values = [false, 0];
@@ -335,9 +327,9 @@ export const HandleKeyDown = ({
                 } else {
                     chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
                 }
-                const update = {paths: paths, values: values};
-                dispatch(setValues(update));
-                gameBroadcast("update_values", update);
+                const updates = [["game", "cardById", activeCardId, "exhausted", values[0]], ["game", "cardById", activeCardId, "rotation", values[1]]];
+                dispatch(setValues({updates: updates}));
+                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
             }
             // Commit to quest and exhaust
             else if (k === "q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
@@ -347,17 +339,15 @@ export const HandleKeyDown = ({
                 const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
                 const currentWillpower = gameUi.game.playerData[playerN].willpower;
                 const newWillpower = currentWillpower + willpowerIncrement;
-                const paths = [
-                    ["game", "cardById", activeCardId, "committed"], 
-                    ["game", "cardById", activeCardId, "exhausted"], 
-                    ["game", "cardById", activeCardId, "rotation"],
-                    ["game", "playerData", playerN, "willpower"],
+                const updates = [
+                    ["game", "cardById", activeCardId, "committed", true], 
+                    ["game", "cardById", activeCardId, "exhausted", true], 
+                    ["game", "cardById", activeCardId, "rotation", 90],
+                    ["game", "playerData", playerN, "willpower", newWillpower],
                 ];
-                var values = [true, true, 90, newWillpower];
                 chatBroadcast("game_update", {message: "committed "+displayName+" to the quest."});
-                const update = {paths: paths, values: values};
-                dispatch(setValues(update));
-                gameBroadcast("update_values", update);
+                dispatch(setValues({updates: updates}));
+                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
             }
             // Commit to quest without exhausting
             else if (k === "Q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
@@ -365,12 +355,10 @@ export const HandleKeyDown = ({
                 const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
                 const currentWillpower = gameUi.game.playerData[playerN].willpower;
                 const newWillpower = currentWillpower + willpowerIncrement;
-                const paths = [["game", "cardById", activeCardId, "committed"], ["game", "playerData", playerN, "willpower"]];
-                var values = [true, newWillpower];
+                const updates = [["game", "cardById", activeCardId, "committed", true], ["game", "playerData", playerN, "willpower", newWillpower]];
                 chatBroadcast("game_update", {message: "committed "+displayName+" to the quest without exhausting."});
-                const update = {paths: paths, values: values};
-                dispatch(setValues(update));
-                gameBroadcast("update_values", update);
+                dispatch(setValues({updates: updates}));
+                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
             }
             // Uncommit to quest and ready
             else if (k === "q" && groupType === "play" && activeCard["committed"]) {
@@ -378,18 +366,16 @@ export const HandleKeyDown = ({
                 const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
                 const currentWillpower = gameUi.game.playerData[playerN].willpower;
                 const newWillpower = currentWillpower - willpowerIncrement;
-                const paths = [
-                    ["game", "cardById", activeCardId, "committed"], 
-                    ["game", "cardById", activeCardId, "exhausted"], 
-                    ["game", "cardById", activeCardId, "rotation"],
-                    ["game", "playerData", playerN, "willpower"]
+                const updates = [
+                    ["game", "cardById", activeCardId, "committed", false], 
+                    ["game", "cardById", activeCardId, "exhausted", false], 
+                    ["game", "cardById", activeCardId, "rotation", 0],
+                    ["game", "playerData", playerN, "willpower", newWillpower]
                 ];
-                var values = [false, false, 0, newWillpower];
                 chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
                 if (activeCard["exhausted"]) chatBroadcast("game_update", {message: "readied "+displayName+"."});
-                const update = {paths: paths, values: values};
-                dispatch(setValues(update));
-                gameBroadcast("update_values", update);
+                dispatch(setValues({updates: updates}));
+                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
             }
             // Uncommit to quest without readying
             else if (k === "Q" && groupType === "play" && activeCard["committed"]) {
@@ -397,12 +383,10 @@ export const HandleKeyDown = ({
                 const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
                 const currentWillpower = gameUi.game.playerData[playerN].willpower;
                 const newWillpower = currentWillpower - willpowerIncrement;
-                const paths = [["game", "cardById", activeCardId, "committed"], ["game", "playerData", playerN, "willpower"]];
-                var values = [false, newWillpower];
+                const updates = [["game", "cardById", activeCardId, "committed", false], ["game", "playerData", playerN, "willpower", newWillpower]];
                 chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
-                const update = {paths: paths, values: values};
-                dispatch(setValues(update));
-                gameBroadcast("update_values", update);
+                dispatch(setValues({updates: updates}));
+                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
             }
             // Deal shadow card
             else if (k === "s" && groupType == "play") {
@@ -419,7 +403,6 @@ export const HandleKeyDown = ({
             // Add target to card
             else if (k === "t") {
                 const targetingPlayerN = activeCard.targeting[playerN];
-                const paths = [["game", "cardById", activeCardId, "targeting", playerN]];
                 var values = [true];
                 if (targetingPlayerN) {
                     values = [false]
@@ -428,9 +411,9 @@ export const HandleKeyDown = ({
                     values = [true]
                     chatBroadcast("game_update", {message: "targeted "+displayName+"."});
                 }
-                const update = {paths: paths, values: values};
-                dispatch(setValues(update));
-                gameBroadcast("update_values", update);
+                const updates = [["game", "cardById", activeCardId, "targeting", playerN, values[0]]];
+                dispatch(setValues({updates: updates}));
+                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
             }
             // Send to victory display
             else if (k === "v") {

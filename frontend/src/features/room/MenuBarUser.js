@@ -56,12 +56,9 @@ export const MenuBarUser = React.memo(({
     // Set up a delayed broadcast to update the game state that interrupts itself if the button is clicked again shortly after.
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
-      const paths = [["game", "playerData", playerN, "threat"]];
-      const values = [parseInt(newValue)];
-      const update = {paths: paths, values: values};
-      dispatch(setValues(update));
-      const gb = gameBroadcast("update_values",update);
-      console.log('gb',gb.timeoutTimer);
+      const updates = [["game", "playerData", playerN, "threat", parseInt(newValue)]];
+      dispatch(setValues(updates));
+      gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
     }, 400);
@@ -75,11 +72,9 @@ export const MenuBarUser = React.memo(({
     // Set up a delayed broadcast to update the game state that interrupts itself if the button is clicked again shortly after.
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
-      const paths = [["game", "playerData", playerN, "willpower"]];
-      const values = [parseInt(newValue)];
-      const update = {paths: paths, values: values};
-      dispatch(setValues(update));
-      gameBroadcast("update_values",update);
+      const updates = [["game", "playerData", playerN, "willpower", parseInt(newValue)]];
+      dispatch(setValues(updates));
+      gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
       if (increment > 0) chatBroadcast("game_update",{message: "raises willpower by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces willpower by "+(-increment)+" ("+newValue+")."});
     }, 400);

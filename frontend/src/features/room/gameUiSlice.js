@@ -70,39 +70,18 @@ const deepUpdate = (obj1, obj2) => {
   }
 } 
 
-const updateValue = (obj, path, value) => {
-  const pathLength = path.length;
-  console.log("updating", path, value)
-  switch(pathLength) {
-    case 0:
-      break;
-    case 1:
-      obj[path[0]] = value;
-      break;
-    case 2:
-      obj[path[0]][path[1]] = value;
-      break;
-    case 3:
-      obj[path[0]][path[1]][path[2]] = value;
-      break;
-    case 4:
-      obj[path[0]][path[1]][path[2]][path[3]] = value;
-      break;
-    case 5:
-      obj[path[0]][path[1]][path[2]][path[3]][path[4]] = value;
-      break;
-    case 6:
-      obj[path[0]][path[1]][path[2]][path[3]][path[4]][path[5]] = value;
-      break;
+const updateValue = (obj, update) => {
+  const updateLength = update.length;
+  console.log("updating", update)
+  if (updateLength == 2) {
+    obj[update[0]] = update[1];
+  } else if (updateLength > 2) {
+    updateValue(obj[update[0]], update.slice(1));
   }
 }
 
-const updateValues = (obj, paths, values) => {
-  const numValues = values.length;
-  console.log("updating values", paths, values);
-  for (var i = 0; i < numValues; i++) {
-    updateValue(obj, paths[i], values[i])
-  }
+const updateValues = (obj, updates) => {
+  for (var update of updates) updateValue(obj, update);
 }
 
 const initialState = {"count": 1};
@@ -157,7 +136,8 @@ const gameUiSlice = createSlice({
     },
     setValues: (state, { payload }) => {
       console.log("setting values")
-      updateValues(state, payload.paths, payload.values);
+      console.log(payload)
+      updateValues(state, payload.updates);
     },
     incrementRound: (state, { payload }) => {
       console.log("increment round")

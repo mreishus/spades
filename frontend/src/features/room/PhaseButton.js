@@ -13,17 +13,8 @@ export const PhaseButton = React.memo(({
   const gameRoundStep = useSelector(gameRoundStepStore);
   const [hovering, setHovering] = useState(null);
   const isPhase = Object.keys(phaseInfo).includes(gameRoundStep);
-  const handleButtonClick = (roundStep, roundStepText) => {      
-    gameBroadcast("update_values", {
-      paths: [
-        ["game", "roundStep"],
-        ["game", "phase"]
-      ],
-      values: [
-        roundStep,
-        phase
-      ]
-    })
+  const handleButtonClick = (roundStep, roundStepText) => { 
+    gameBroadcast("game_action", {action: "update_values", options:{updates: [["game", "roundStep", roundStep], ["game", "phase", phase]]}});     
     chatBroadcast("game_update", {message: "set the round step to "+roundStepText+"."})
   }
   return (

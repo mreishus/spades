@@ -47,7 +47,7 @@ export const Token = React.memo(({
         // Set up a delayed broadcast to update the game state that interupts itself if the button is clicked again shortly after.
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
-            gameBroadcast("update_value",{path: ["game", "cardById", cardId, "tokens", tokenType], value: newAmount});
+            gameBroadcast("game_action", {action:"update_values", options: {updates: [["game", "cardById", cardId, "tokens", tokenType, newAmount]]}});
             //gameBroadcast("increment_token",{tokens_id: tokensId, type: type, increment: totalDelta})
             //gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index:cardIndex});
             if (totalDelta > 0) {
