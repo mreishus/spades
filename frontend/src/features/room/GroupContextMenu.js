@@ -14,8 +14,14 @@ export const GroupContextMenu = React.memo(({
 
     const handleMenuClick = (e, data) => {
         if (data.action === "shuffle_group") {
-          gameBroadcast("shuffle_group", {group_id: group.id})
+          gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: group.id}})
           chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+"."})
+        } else if (data.action === "choose_random") {
+          const stackIds = group.stackIds;
+          const rand = Math.floor(Math.random() * stackIds.length);
+          const randStackId = stackIds[rand];
+          gameBroadcast("game_action", {action: "target_stack", options: {stack_id: randStackId}})
+          chatBroadcast("game_update",{message: "randomly picked a card in "+GROUPSINFO[group.id].name+"."})
         } else if (data.action === "move_stacks") {
           gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: group.id, dest_group_id: data.destGroupId, position: data.position}})
           if (data.position === "t") {
@@ -44,6 +50,7 @@ export const GroupContextMenu = React.memo(({
           <hr></hr>
           <MenuItem onClick={handleMenuClick} data={{action: 'shuffle_group'}}>Shuffle</MenuItem>
           <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: "None"}}>Browse</MenuItem>
+          <MenuItem onClick={handleMenuClick} data={{action: 'choose_random',}}>Choose Random</MenuItem>
           {(1 || group.type === "deck" || group.type === "discard") ?
           (<div>
             <MenuItem onClick={handleMenuClick} data={{action: 'look_at', topN: "All"}}>Look at all</MenuItem>

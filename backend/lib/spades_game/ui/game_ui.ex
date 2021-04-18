@@ -83,6 +83,10 @@ defmodule SpadesGame.GameUI do
     gameui["game"]["cardById"][card_id]
   end
 
+  def get_targeting(gameui, card_id) do
+    get_card(gameui, card_id)["targeting"]
+  end
+
   def get_tokens(gameui, card_id) do
     get_card(gameui, card_id)["tokens"]
   end
@@ -117,6 +121,10 @@ defmodule SpadesGame.GameUI do
 
   def update_card(gameui, new_card) do
     put_in(gameui["game"]["cardById"][new_card["id"]], new_card)
+  end
+
+  def update_targeting(gameui, card_id, new_targeting) do
+    put_in(gameui["game"]["cardById"][card_id]["targeting"], new_targeting)
   end
 
   def update_tokens(gameui, card_id, new_tokens) do
@@ -476,6 +484,8 @@ defmodule SpadesGame.GameUI do
           peek_card(gameui, player_n, options["card_id"], options["value"])
         "move_card" ->
           move_card(gameui, options["card_id"], options["dest_group_id"], options["dest_stack_index"], options["dest_card_index"], options["combine"], options["preserve_state"])
+        "target_stack" ->
+          target_stack(gameui, player_n, options["stack_id"])
         "move_stack" ->
           move_stack(gameui, options["stack_id"], options["dest_group_id"], options["dest_stack_index"], options["combine"], options["preserve_state"])
         "move_stacks" ->
@@ -563,6 +573,13 @@ defmodule SpadesGame.GameUI do
     end)
   end
 
+  def target_stack(gameui, player_n, stack_id) do
+    card_ids = get_card_ids(gameui, stack_id)
+    card_id = Enum.at(card_ids, 0)
+    old_targeting = get_targeting(gameui, card_id)
+    new_targeting = put_in(old_targeting[player_n], true)
+    update_targeting(gameui, card_id, new_targeting)
+  end
 
   def insert_new_stack(gameui, group_id, stack_index, stack) do
     old_stack_ids = get_stack_ids(gameui, group_id)
