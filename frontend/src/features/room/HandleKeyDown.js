@@ -158,7 +158,7 @@ export const HandleKeyDown = ({
         } else if (k === "R") {
             if (gameUi.game.roundStep !== "7.R") {
                 //gameBroadcast("set_round_step", {phase: "Refresh", round_step: "7.R"}) 
-                gameBroadcast("update_values", {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]})
+                gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]}});
                 chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
             }
             // Refresh all cards you control
@@ -167,9 +167,9 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {
                 action: "action_on_matching_cards", 
                 options: {
-                    criteria:[[["controller"], playerN]], 
+                    criteria:[["controller", playerN]], 
                     action: "update_card_values", 
-                    options: {updates: [[["exhausted"], false], [["rotation"], 0]]}
+                    options: {updates: [["exhausted", false], ["rotation", 0]]}
                 }
             });
             // Raise your threat
@@ -205,20 +205,26 @@ export const HandleKeyDown = ({
                 chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
             }
             // Add a resource to each hero
-            gameBroadcast("action_on_matching_cards",{
-                criteria: [[["sides","sideUp","type"],"Hero"],[["controller"],playerN], [["groupType"],"play"]], 
-                action: "increment_token", 
-                options: {token_type: "resource", increment: 1}
-            })
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[["sides","sideUp","type","Hero"],["controller",playerN], ["groupType","play"]], 
+                    action: "increment_token", 
+                    options: {token_type: "resource", increment: 1}
+                }
+            });
             // Draw a card
             gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
             chatBroadcast("game_update",{message: "drew a card."});
             // Add custom set tokens per round
-            gameBroadcast("action_on_matching_cards",{
-                criteria: [[["controller"],playerN], [["groupType"],"play"]],
-                action: "apply_tokens_per_round", 
-                options: {}
-            })
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[["controller",playerN], ["groupType","play"]], 
+                    action: "apply_tokens_per_round", 
+                    options: {}
+                }
+            });
         } else if (k === "M") {
             if (window.confirm('Shuffle hand in deck and redraw equal number?')) {
                 const hand = gameUi.game.groupById[playerN+"Hand"];
@@ -234,9 +240,9 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {
                 action: "action_on_matching_cards", 
                 options: {
-                    criteria:[[["targeting", playerN], true]], 
+                    criteria:[["targeting", playerN, true]], 
                     action: "update_card_values", 
-                    options: {updates: [[["targeting", playerN], false]]}
+                    options: {updates: [["targeting", playerN, false]]}
                 }
             });
         }

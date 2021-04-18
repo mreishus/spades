@@ -542,10 +542,6 @@ defmodule SpadesGame.GameUI do
 
   #
   def update_value(obj, update) do
-    IO.puts("updating")
-    IO.inspect(obj)
-    IO.puts("update: ")
-    IO.inspect(update)
     case Enum.count(update) do
       0 ->
         obj
@@ -891,18 +887,18 @@ defmodule SpadesGame.GameUI do
     quest_deck_stack_ids = get_stack_ids(gameui, "sharedQuestDeck")
     gameui = if Enum.count(quest_deck_stack_ids)>0 && Enum.count(main_quest_stack_ids)==0 do
       # Dump nightmare/campaign cards into staging
-      Enum.reduce_while(quest_deck_stack_ids, gameui, fn(stack_id, acc) ->
+      Enum.reduce(quest_deck_stack_ids, gameui, fn(stack_id, acc) ->
         card = get_top_card_of_stack(acc, stack_id)
         card_type = card["sides"]["A"]["type"]
         case card_type do
           "Nightmare" ->
-            {:cont, move_stack(acc, stack_id, "sharedStaging", 0)}
+            move_stack(acc, stack_id, "sharedStaging", 0)
           "Campaign" ->
-            {:cont, move_stack(acc, stack_id, "sharedStaging", 0)}
+            move_stack(acc, stack_id, "sharedStaging", 0)
           "Quest" ->
-            {:halt, move_stack(acc, stack_id, "sharedMainQuest", 0)}
+            move_stack(acc, stack_id, "sharedMainQuest", 0)
           _ ->
-            {:halt, acc}
+            acc
         end
       end)
     else
@@ -1007,15 +1003,42 @@ defmodule SpadesGame.GameUI do
     end)
   end
 
-  def passes_criteria(gameui, card, criteria) do
-    Enum.reduce(criteria, true, fn(criterion, acc) ->
-      cardpath = Enum.at(criterion, 0)
-      value = Enum.at(criterion, 1)
-      cardvalue = get_value_from_cardpath(card, cardpath)
-      IO.inspect(cardpath)
-      IO.puts("checking if #{cardvalue} == #{value}")
-      passed_criterion = cardvalue == value
-      acc = acc && passed_criterion
+  def opposite_side(side) do
+    if side == "A" do
+      "B"
+    else
+      "A"
+    end
+  end
+
+  def passes_criterion(card, obj, criterion) do
+    case Enum.count(criterion) do
+      0 ->
+        false
+      1 ->
+        value = Enum.at(criterion, 0)
+        obj == value
+      _ ->
+        property = Enum.at(criterion,0)
+        property = case property do
+          "sideUp" ->
+            card["currentSide"]
+          "sideDown" ->
+            opposite_side(card["currentSide"])
+          _ ->
+            property
+        end
+        passes_criterion(card, obj[property], List.delete_at(criterion, 0))
+    end
+  end
+
+  def passes_criteria(card, criteria) do
+    Enum.reduce_while(criteria, true, fn(criterion, acc) ->
+      if passes_criterion(card, card, criterion) do
+        {:cont, true}
+      else
+        {:halt, false}
+      end
     end)
   end
 
@@ -1023,9 +1046,10 @@ defmodule SpadesGame.GameUI do
     flat_list = flat_list_of_cards(gameui)
     #IO.inspect(gameui)
     Enum.reduce(flat_list, gameui, fn(card, acc) ->
-      IO.puts("checking card")
+      IO.puts("checking card for")
+      IO.inspect(criteria)
       IO.inspect(card["sides"]["A"]["name"])
-      acc = if passes_criteria(gameui, card, criteria) do
+      acc = if passes_criteria(card, criteria) do
         IO.puts(" matched!")
         card_action(acc, card["id"], action, options)
       else
