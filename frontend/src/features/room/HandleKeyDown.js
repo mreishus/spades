@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
@@ -41,6 +41,7 @@ export const HandleKeyDown = ({
     const gameUiStore = state => state?.gameUi;
     const gameUi = useSelector(gameUiStore);
     const dispatch = useDispatch();
+    const [drawingArrowFrom, setDrawingArrowFrom] = useState(null);
 
     const activeCardAndLoc = useActiveCard();
     const setActiveCardAndLoc = useSetActiveCard();
@@ -233,7 +234,7 @@ export const HandleKeyDown = ({
                 gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Deck", dest_group_id: playerN+"Hand", top_n: handSize, position: "t"}})
                 chatBroadcast("game_update", {message: "shuffled "+handSize+" cards into their deck and redrew an equal number."})
             }
-        } else if (k === "T" || k == "Escape") {
+        } else if (k == "Escape") {
             // Remove targets from all cards you targeted
             chatBroadcast("game_update",{message: "removes all targets."});
             //gameBroadcast("refresh",{player_n: playerN});
@@ -243,6 +244,14 @@ export const HandleKeyDown = ({
                     criteria:[["targeting", playerN, true]], 
                     action: "update_card_values", 
                     options: {updates: [["targeting", playerN, false]]}
+                }
+            });
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[["controller", playerN]], 
+                    action: "update_card_values", 
+                    options: {updates: [["arrowIds", []]]}
                 }
             });
         }
@@ -469,6 +478,21 @@ export const HandleKeyDown = ({
                 gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: destGroupId}})
                 // gameBroadcast("shuffle_group", {group_id: destGroupId})
                 chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupId].name+"."})
+            }
+            // Draw an arrow
+            else if (k === "w") {
+                // Determine if this is the start or end of the arrow
+                if (drawingArrowFrom) {
+                    const drawingArrowTo = activeCardId;
+                    const oldArrowIds = gameUi.game.cardById[drawingArrowFrom].arrowIds;
+                    const newArrowIds = oldArrowIds.concat(drawingArrowTo);
+                    const updates = [["game", "cardById", drawingArrowFrom, "arrowIds", newArrowIds]];
+                    dispatch(setValues({updates: updates}));
+                    gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+                    setDrawingArrowFrom(null);
+                } else {
+                    setDrawingArrowFrom(activeCardId);
+                }
             }
         }
     }

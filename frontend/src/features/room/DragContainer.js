@@ -124,7 +124,9 @@ export const DragContainer = React.memo(({
         className="h-full w-full" 
         strokeColor="rgba(0,0,0,0.5)" 
         strokeWidth="15"
-        svgContainerStyle={{ zIndex: 1e5}} 
+        svgContainerStyle={{ 
+          zIndex: 1e5,
+        }} 
         endShape={{
           arrow: {
             arrowLength: 2,

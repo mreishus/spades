@@ -140,6 +140,19 @@ export const Card = React.memo(({
         setActiveCard(null);
     }
 
+    const arrowRelationList = () => {
+        const relationList = [];
+        for (var id of card.arrowIds) {
+            const relation = {
+                targetId: id,
+                targetAnchor: 'top',
+                sourceAnchor: 'bottom',
+            }
+            relationList.push(relation);
+        }
+        return relationList;
+    }
+
     const handleMenuClick = (e, data) => {
         if (data.action === "detach") {
             gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
@@ -179,35 +192,8 @@ export const Card = React.memo(({
     return (
         <div>
 
-
-            {/* <ArcherElement            
-            id={card.id}
-            relations={[{}
-                // {
-                //     targetId: 'element3',
-                //     targetAnchor: 'left',
-                //     sourceAnchor: 'right',
-                //     style: { strokeColor: 'blue', strokeWidth: 1 },
-                //     label: <div style={{ marginTop: '-20px' }}>Arrow 2</div>,
-                // },
-            ]}></ArcherElement> */}
-        {/* <ArcherElement            
-            id={card.id}
-            relations={[
-                // {
-                //     targetId: 'element3',
-                //     targetAnchor: 'left',
-                //     sourceAnchor: 'right',
-                //     style: { strokeColor: 'blue', strokeWidth: 1 },
-                //     label: <div style={{ marginTop: '-20px' }}>Arrow 2</div>,
-                // },
-            ]}
-        > */}
             <ContextMenuTrigger id={card.id} holdToDisplay={500}> 
             {/* <div className="flex h-full items-center"> */}
-
-              
-
                 <div 
                     className={isActive ? 'isActive' : ''}
                     key={card.id}
@@ -273,19 +259,13 @@ export const Card = React.memo(({
 
                     <ArcherElement
                         id={card.id}
-                        relations={[
-                            {
-                                targetId: '7db878e0-4dc5-470a-bf23-222178635c44',
-                                targetAnchor: 'top',
-                                sourceAnchor: 'bottom',
-                            },
-                            
-                        ]}
+                        relations={arrowRelationList()}
                     >
                         <div style={{
                             position: "absolute",
-                            width: "1px", 
-                            height: "1px",
+                            width: "15px", 
+                            height: "15px",
+                            backgroundColor: "red",
                             top: "70%",
                             left: "50%",
                         }}/>

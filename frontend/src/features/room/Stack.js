@@ -75,7 +75,7 @@ export const Stack = React.memo(({
           ref={dragProvided.innerRef}
           {...dragProvided.draggableProps}
           {...dragProvided.dragHandleProps}
-          style={{cursor: "default"}}
+          //style={{cursor: "default"}}
         >
           {cardIds.map((cardId, cardIndex) => {
             return(
