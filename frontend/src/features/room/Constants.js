@@ -284,7 +284,7 @@ export const LAYOUTINFO = {
       regions: [
         {id: "player1Play2", width: "37%"},
         {id: "player2Play2", width: "36%"},
-        {id: "sharedExtra1", width: "27%"},
+        {id: "sharedExtra2", width: "27%"},
       ]
     },
     {
@@ -293,7 +293,7 @@ export const LAYOUTINFO = {
         {id: "player1Event", width: "8%"},
         {id: "player2Play3", width: "28%"},
         {id: "player2Event", width: "8%"},
-        {id: "sharedExtra1", width: "27%"},
+        {id: "sharedExtra3", width: "27%"},
       ]
     },
     {

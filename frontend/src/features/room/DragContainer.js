@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useContext } from "react";
+import { ArcherContainer } from 'react-archer';
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from 'react-redux';
 import { setStackIds, setCardIds, setGroupById, setValues } from "./gameUiSlice";
@@ -72,17 +73,15 @@ export const DragContainer = React.memo(({
       if (!keypress["Shift"] && (origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
         chatBroadcast("game_update",{message: "attached "+getDisplayNameFlipped(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."})
         // Flip card faceup
-        const paths = [["game","cardById",topOfOrigStackCardId,"currentSide"]];
-        const values = ["A"];
-        const update = {paths: paths, values: values};
-        dispatch(setValues(update));
+        const updates = [["game","cardById",topOfOrigStackCardId,"currentSide", "A"]];
+        dispatch(setValues({updates: updates}));
       }
       else {
         chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."});
       }
       dispatch(setStackIds(newOrigGroup));
       dispatch(setCardIds(newDestStack));
-      gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: true, preserve_state: keypress["Shift"]})
+      gameBroadcast("game_action", {action:"move_stack", options:{stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: true, preserve_state: keypress["Shift"]}})
       return;
     }
 
@@ -109,28 +108,36 @@ export const DragContainer = React.memo(({
     if (!keypress["Shift"] && (origGroup.type === "hand" || origGroup.type === "deck" ) && (destGroup.type !== "hand" && destGroup.type !== "deck" )) {
       chatBroadcast("game_update",{message: "moved "+getDisplayNameFlipped(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
       // Flip card faceup
-      const paths = [["game","cardById",topOfOrigStackCardId,"currentSide"]];
-      const values = ["A"];
-      const update = {paths: paths, values: values};
-      dispatch(setValues(update));
+      const updates = [["game","cardById",topOfOrigStackCardId,"currentSide", "A"]];
+      dispatch(setValues({updates: updates}));
     }
     else {
       chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
     }
     dispatch(setGroupById(newGroupById));
-    gameBroadcast("move_stack", {stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: keypress["Shift"]})
-
-
+    gameBroadcast("game_action", {action:"move_stack", options:{stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: keypress["Shift"]}})
   }
 
   return(
     <DragDropContext onDragEnd={onDragEnd}>
-      <Table
-        playerN={playerN}
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-        setTyping={setTyping}
-      />
+      <ArcherContainer 
+        className="h-full w-full" 
+        strokeColor="rgba(0,0,0,0.5)" 
+        strokeWidth="15"
+        svgContainerStyle={{ zIndex: 1e5}} 
+        endShape={{
+          arrow: {
+            arrowLength: 2,
+            arrowThickness: 2,
+          }
+        }}>
+        <Table
+          playerN={playerN}
+          gameBroadcast={gameBroadcast}
+          chatBroadcast={chatBroadcast}
+          setTyping={setTyping}
+        />
+      </ArcherContainer>
     </DragDropContext>
   )
 });

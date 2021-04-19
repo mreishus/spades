@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, Component } from "react";
+import { ArcherElement } from 'react-archer';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tokens } from './Tokens';
 import { playerBackSRC, encounterBackSRC } from "./Constants";
@@ -172,12 +173,41 @@ export const Card = React.memo(({
     
     console.log('rendering card ',currentFace.name);
     console.log('rendering card ',visibleFace.name);
+    console.log(card.id);
     console.log(cardSize);
 
     return (
         <div>
+
+
+            {/* <ArcherElement            
+            id={card.id}
+            relations={[{}
+                // {
+                //     targetId: 'element3',
+                //     targetAnchor: 'left',
+                //     sourceAnchor: 'right',
+                //     style: { strokeColor: 'blue', strokeWidth: 1 },
+                //     label: <div style={{ marginTop: '-20px' }}>Arrow 2</div>,
+                // },
+            ]}></ArcherElement> */}
+        {/* <ArcherElement            
+            id={card.id}
+            relations={[
+                // {
+                //     targetId: 'element3',
+                //     targetAnchor: 'left',
+                //     sourceAnchor: 'right',
+                //     style: { strokeColor: 'blue', strokeWidth: 1 },
+                //     label: <div style={{ marginTop: '-20px' }}>Arrow 2</div>,
+                // },
+            ]}
+        > */}
             <ContextMenuTrigger id={card.id} holdToDisplay={500}> 
             {/* <div className="flex h-full items-center"> */}
+
+              
+
                 <div 
                     className={isActive ? 'isActive' : ''}
                     key={card.id}
@@ -213,7 +243,7 @@ export const Card = React.memo(({
                     <Target
                         cardId={cardId}
                         cardSize={cardSize}
-                    ></Target>
+                    />
 
                     <Tokens
                         cardName={currentFace.name}
@@ -240,7 +270,26 @@ export const Card = React.memo(({
                         setIsActive={setIsActive}
                         zIndex={zIndex}
                     />
-                    
+
+                    <ArcherElement
+                        id={card.id}
+                        relations={[
+                            {
+                                targetId: '7db878e0-4dc5-470a-bf23-222178635c44',
+                                targetAnchor: 'top',
+                                sourceAnchor: 'bottom',
+                            },
+                            
+                        ]}
+                    >
+                        <div style={{
+                            position: "absolute",
+                            width: "1px", 
+                            height: "1px",
+                            top: "70%",
+                            left: "50%",
+                        }}/>
+                    </ArcherElement>
                 </div>
             {/* </div> */}
             </ContextMenuTrigger>
@@ -281,6 +330,9 @@ export const Card = React.memo(({
                     ))}
                  </SubMenu>
              </ContextMenu>
+         {/* </ArcherElement> */}
+
+
          </div>
     )
 })

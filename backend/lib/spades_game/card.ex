@@ -29,6 +29,7 @@ defmodule SpadesGame.Card do
         "player3" => false,
         "player4" => false,
       },
+      "arrowIds" => [],
       "tokens" => Tokens.new(),
       "tokensPerRound" => %{},
 

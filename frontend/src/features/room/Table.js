@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import { ArcherElement } from 'react-archer';
 import { faStepBackward, faStepForward, faEquals, faAngleDoubleDown, faAngleDoubleUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
@@ -28,6 +29,11 @@ const WidthContainer = styled.div`
   float: left;
   height: 100%;
 `;
+
+const rootStyle = { display: 'flex', justifyContent: 'center' };
+const rowStyle = { margin: '200px 0', display: 'flex', justifyContent: 'space-between', }
+const boxStyle = { padding: '10px', border: '1px solid black', };
+
 
 export const Table = React.memo(({
   playerN,
@@ -81,6 +87,7 @@ export const Table = React.memo(({
   return (
 
     <div className="h-full flex">
+
       <PhaseBar
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}

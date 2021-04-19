@@ -11,7 +11,6 @@ const Container = styled.div`
   position: relative;
   userSelect: none;
   padding: 0;
-  cursor: default;
   min-width: ${props => props.stackWidth}vw;
   width: ${props => props.stackWidth}vw;
   min-height: 100%;
@@ -76,6 +75,7 @@ export const Stack = React.memo(({
           ref={dragProvided.innerRef}
           {...dragProvided.draggableProps}
           {...dragProvided.dragHandleProps}
+          style={{cursor: "default"}}
         >
           {cardIds.map((cardId, cardIndex) => {
             return(
