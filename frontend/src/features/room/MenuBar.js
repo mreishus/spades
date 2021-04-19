@@ -53,13 +53,14 @@ export const MenuBar = React.memo(({
         handleBrowseSelect(data.groupId);
       } else if (data.action === "download") {
         downloadGameAsJson();
-      } else if (data.action === "upload") {
+      } else if (data.action === "load_game") {
         loadFileGame();
       } else if (data.action === "num_players") {
         const num = data.value;
-        const gb = gameBroadcast("game_action", {action: "update_values", options: {updates: [["numPlayers", num], ["layout", "layout" + num]]}});
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["numPlayers", num]]}});
         chatBroadcast("game_update", {message: "set the number of players to: " + num});
-        console.log('gb',gb.timeoutTimer);
+      } else if (data.action === "layout") {
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["layout", data.value]]}});
       }
     }
 
@@ -146,21 +147,30 @@ export const MenuBar = React.memo(({
                   </ul>
                 </li>
               }
-              <li key={"load"}>
-                <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load Deck</a>
+              {host &&
+                <li key={"layout"}>
+                  <a href="#">Layout</a>
+                  <ul className="third-level-menu">
+                      <li key={"standard"}><a onClick={() => handleMenuClick({action:"layout", value: "standard"})} href="#">Standard</a></li>
+                      <li key={"extra"}><a onClick={() => handleMenuClick({action:"layout", value: "extra"})} href="#">Extra staging areas / map</a></li>
+                  </ul>
+                </li>                
+              }
+              <li key={"load_deck"}>
+                <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load deck</a>
                 <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck}/>
               </li>
-              <li key={"spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn Card</a></li>
+              <li key={"load_game"}>
+                <a  onClick={() => handleMenuClick({action:"load_game"})} href="#">Load game</a>
+                <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson}/>
+              </li>
+              <li key={"download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
+              <li key={"spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn card</a></li>
               <li key={"reset"}>
                   <a href="#">Reset Game</a>
                   <ul className="third-level-menu">
                       <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
                   </ul>
-              </li>
-              <li key={"download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
-              <li key={"upload"}>
-                <a  onClick={() => handleMenuClick({action:"upload"})} href="#">Upload game</a>
-                <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson}/>
               </li>
             </ul>
         </li>
@@ -205,7 +215,6 @@ export const MenuBar = React.memo(({
                 </ul>
               </li>
               ))}
-
           </ul>
         </li>
       </ul>

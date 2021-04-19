@@ -145,7 +145,7 @@ export const sectionToDiscardGroupId = (section, playerN) => {
 }
 
 export const LAYOUTINFO = {
-  "layout1": [
+  "layout1standard": [
     {
       regions: [
         {id: "sharedMainQuest", width: "12%"},
@@ -179,7 +179,41 @@ export const LAYOUTINFO = {
       ]
     },
   ],
-  "layout2b": [
+  "layout1extra": [
+    {
+      regions: [
+        {id: "sharedMainQuest", width: "12%"},
+        {id: "sharedActive", width: "9%"},
+        {id: "sharedStaging", width: "61%", style: "shaded", boxShadow: "true"},
+        {id: "sharedEncounterDeck", width: "9%"},
+        {id: "sharedEncounterDiscard", width: "9%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Engaged", width: "100%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Play1", width: "100%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "player1Play2", width: "90%"},
+        {id: "player1Event", width: "10%"},
+      ]
+    },
+    {
+      regions: [
+        {id: "Hand", width: "57%", style: "shaded"},
+        {id: "Deck", width: "9%", style: "shaded"},
+        {id: "Discard", width: "9%", style: "shaded"},
+      ]
+    },
+  ],
+  "layout2standard": [
     {
       regions: [
         {id: "sharedMainQuest", width: "9%"},
@@ -223,7 +257,7 @@ export const LAYOUTINFO = {
       ]
     },
   ],
-  "layout2": [
+  "layout2extra": [
     {
       regions: [
         {id: "sharedMainQuest", width: "9%"},
@@ -270,7 +304,7 @@ export const LAYOUTINFO = {
       ]
     },
   ],
-  "layout3": [
+  "layout3standard": [
     {
       regions: [
         {id: "sharedMainQuest", width: "9%"},
@@ -319,7 +353,7 @@ export const LAYOUTINFO = {
       ]
     },
   ],
-  "layout3map": [
+  "layout3extra": [
     {
       regions: [
         {id: "sharedMainQuest", width: "9%"},
@@ -365,7 +399,7 @@ export const LAYOUTINFO = {
       ]
     },
   ],
-  "layout4": [
+  "layout4standard": [
     {
       regions: [
         {id: "sharedMainQuest", width: "8%"},
@@ -427,7 +461,7 @@ export const LAYOUTINFO = {
       ]
     },
   ],
-  "layout4map": [
+  "layout4extra": [
     {
       regions: [
         {id: "sharedMainQuest", width: "8%"},

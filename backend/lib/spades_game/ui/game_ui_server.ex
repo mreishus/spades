@@ -198,15 +198,6 @@ defmodule SpadesGame.GameUIServer do
   end
 
   @doc """
-  update_value/5: A player just updated a value.
-  """
-  @spec update_value(String.t(), integer, List.t(), any) :: GameUI.t()
-  def update_value(gameName, user_id, path, value) do
-    IO.puts("game_ui_server: update_value")
-    GenServer.call(via_tuple(gameName), {:update_value, user_id, path, value})
-  end
-
-  @doc """
   round/3: A player changes the round step
   """
   @spec refresh(String.t(), integer, String.t()) :: GameUI.t()

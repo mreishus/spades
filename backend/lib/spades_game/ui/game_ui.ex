@@ -17,7 +17,7 @@ defmodule SpadesGame.GameUI do
       "created_at" => DateTime.utc_now(),
       "created_by" => user,
       "numPlayers" => 1,
-      "layout" => "layout1",
+      "layout" => "standard",
       "playerIds" => %{
         "player1" => user,
         "player2" => nil,

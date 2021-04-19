@@ -65,7 +65,7 @@ export const TableLayout = React.memo(({
   const layout = useSelector(layoutStore);
   const [chatHover, setChatHover] = useState(false);
   if (!layout) return;
-  const layoutInfo = LAYOUTINFO[layout];
+  const layoutInfo = LAYOUTINFO["layout" + numPlayers + layout];
   const numRows = layoutInfo.length;
   const rowHeight = 100/numRows; 
   const finalRowHeight = 100/numRows; 
