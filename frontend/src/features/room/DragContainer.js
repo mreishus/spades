@@ -31,6 +31,7 @@ export const DragContainer = React.memo(({
   const [, updateState] = React.useState();
   const forceUpdate = useForceUpdate();
   const archerContainerRef = React.createRef();
+  const arrowColors = ["rgba(255,0,0,0.6)", "rgba(0,200,0,0.6)", "rgba(0,128,255,0.6)", "rgba(128,0,255,0.6)"];
 
   const onDragEnd = (result) => {
     console.log("drag end ",result);
@@ -132,34 +133,35 @@ export const DragContainer = React.memo(({
 
         <DragDropContext onDragEnd={onDragEnd}>
 
-    <ArrowsBetweenDivsContextProvider>
-        {({ registerDivToArrowsContext }) => (
-          <>
-            {game.playerData.player1.arrows.map((arrowStartStop, arrowIndex) => {
-              return(
-                <ArrowBetweenDivs
-                  from={{ id: 'arrow-'+arrowStartStop[0], placement: ArrowAnchorPlacement.TOP }}
-                  to={{ id: 'arrow-'+arrowStartStop[1], placement: ArrowAnchorPlacement.BOTTOM }}
-                  orientation={LineOrientation.VERTICAL}
-                  strokeWidth={2}
-                  color="red"
-                />
-              )}
+          <ArrowsBetweenDivsContextProvider>
+            {({ registerDivToArrowsContext }) => (
+              <>
+                {["player1", "player2", "player3", "player4"].map((playerI, playerIndex) => {
+                  return(
+                    game.playerData[playerI].arrows.map((arrowStartStop, arrowIndex) => {
+                      return(
+                        <ArrowBetweenDivs
+                          from={{ id: 'arrow-'+arrowStartStop[0], placement: ArrowAnchorPlacement.TOP }}
+                          to={{ id: 'arrow-'+arrowStartStop[1], placement: ArrowAnchorPlacement.BOTTOM }}
+                          orientation={LineOrientation.VERTICAL}
+                          strokeWidth={4}
+                          color={arrowColors[playerIndex]}
+                        />
+                      )
+                    })
+                  )
+                })}
+
+              <Table
+                playerN={playerN}
+                gameBroadcast={gameBroadcast}
+                chatBroadcast={chatBroadcast}
+                setTyping={setTyping}
+                registerDivToArrowsContext={game.playerData.player1.arrows.length ? registerDivToArrowsContext: null}
+              />
+            </>
             )}
-
-
-            <Table
-              playerN={playerN}
-              gameBroadcast={gameBroadcast}
-              chatBroadcast={chatBroadcast}
-              setTyping={setTyping}
-              registerDivToArrowsContext={game.playerData.player1.arrows.length ? registerDivToArrowsContext: null}
-            />
-
-
-           </>
-         )}
-       </ArrowsBetweenDivsContextProvider>
+          </ArrowsBetweenDivsContextProvider>
 
         </DragDropContext>
 
