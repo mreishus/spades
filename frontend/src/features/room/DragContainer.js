@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useContext } from "react";
+import { ArrowsBetweenDivsContextProvider, ArrowBetweenDivs, LineOrientation, ArrowAnchorPlacement } from 'react-simple-arrows';
 import { ArcherContainer } from 'react-archer';
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from 'react-redux';
@@ -10,7 +11,11 @@ import { GROUPSINFO } from "./Constants"
 import { getDisplayName, getDisplayNameFlipped, getCurrentFace } from "./Helpers"
 import { useKeypress } from "../../contexts/KeypressContext";
 
-
+//create your forceUpdate hook
+function useForceUpdate(){
+  const [value, setValue] = useState(0); // integer state
+  return () => setValue(value => value + 1); // update the state to force render
+}
 
 export const DragContainer = React.memo(({
   playerN,
@@ -23,6 +28,9 @@ export const DragContainer = React.memo(({
   const game = useSelector(gameStore);
   const keypress = useKeypress();
   console.log("rendering dragcontainer");
+  const [, updateState] = React.useState();
+  const forceUpdate = useForceUpdate();
+  const archerContainerRef = React.createRef();
 
   const onDragEnd = (result) => {
     console.log("drag end ",result);
@@ -82,6 +90,7 @@ export const DragContainer = React.memo(({
       dispatch(setStackIds(newOrigGroup));
       dispatch(setCardIds(newDestStack));
       gameBroadcast("game_action", {action:"move_stack", options:{stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: true, preserve_state: keypress["Shift"]}})
+      
       return;
     }
 
@@ -119,27 +128,63 @@ export const DragContainer = React.memo(({
   }
 
   return(
-    <DragDropContext onDragEnd={onDragEnd}>
-      <ArcherContainer 
-        className="h-full w-full" 
-        strokeColor="rgba(0,0,0,0.5)" 
-        strokeWidth="15"
-        svgContainerStyle={{ 
-          zIndex: 1e5,
-        }} 
-        endShape={{
-          arrow: {
-            arrowLength: 2,
-            arrowThickness: 2,
-          }
-        }}>
-        <Table
-          playerN={playerN}
-          gameBroadcast={gameBroadcast}
-          chatBroadcast={chatBroadcast}
-          setTyping={setTyping}
-        />
-      </ArcherContainer>
-    </DragDropContext>
+
+
+        <DragDropContext onDragEnd={onDragEnd}>
+
+    <ArrowsBetweenDivsContextProvider>
+        {({ registerDivToArrowsContext }) => (
+          <>
+            {game.playerData.player1.arrows.map((arrowStartStop, arrowIndex) => {
+              return(
+                <ArrowBetweenDivs
+                  from={{ id: 'arrow-'+arrowStartStop[0], placement: ArrowAnchorPlacement.TOP }}
+                  to={{ id: 'arrow-'+arrowStartStop[1], placement: ArrowAnchorPlacement.BOTTOM }}
+                  orientation={LineOrientation.VERTICAL}
+                  strokeWidth={2}
+                  color="red"
+                />
+              )}
+            )}
+
+
+            <Table
+              playerN={playerN}
+              gameBroadcast={gameBroadcast}
+              chatBroadcast={chatBroadcast}
+              setTyping={setTyping}
+              registerDivToArrowsContext={game.playerData.player1.arrows.length ? registerDivToArrowsContext: null}
+            />
+
+
+           </>
+         )}
+       </ArrowsBetweenDivsContextProvider>
+
+        </DragDropContext>
+
+    //   <ArcherContainer 
+    //     className="h-full w-full" 
+    //     strokeColor="rgba(0,0,0,0.5)" 
+    //     strokeWidth="15"
+    //     svgContainerStyle={{ 
+    //       zIndex: 1e5,
+    //     }} 
+    //     ref={archerContainerRef}
+    //     endShape={{
+    //       arrow: {
+    //         arrowLength: 2,
+    //         arrowThickness: 2,
+    //       }
+    //     }}>
+    // <DragDropContext onDragEnd={onDragEnd}>
+    //     <Table
+    //       playerN={playerN}
+    //       gameBroadcast={gameBroadcast}
+    //       chatBroadcast={chatBroadcast}
+    //       setTyping={setTyping}
+    //     />
+    // </DragDropContext>
+    //   </ArcherContainer>
   )
 });

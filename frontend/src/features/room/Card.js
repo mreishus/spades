@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, Component } from "react";
-import { ArcherElement } from 'react-archer';
 import { useSelector, useDispatch } from 'react-redux';
 import { Tokens } from './Tokens';
 import { playerBackSRC, encounterBackSRC } from "./Constants";
@@ -98,6 +97,7 @@ export const Card = React.memo(({
     playerN,
     cardIndex,
     cardSize,
+    registerDivToArrowsContext
 }) => {
     const cardStore = state => state?.gameUi?.game?.cardById[cardId];
     const card = useSelector(cardStore);
@@ -144,7 +144,7 @@ export const Card = React.memo(({
         const relationList = [];
         for (var id of card.arrowIds) {
             const relation = {
-                targetId: id,
+                targetId: "archer-"+id,
                 targetAnchor: 'top',
                 sourceAnchor: 'bottom',
             }
@@ -183,16 +183,13 @@ export const Card = React.memo(({
             chatBroadcast("game_update",{message: "added "+increment+" "+tokenType+" per round to "+displayName+"."})
         }
     }
-    
-    console.log('rendering card ',currentFace.name);
+
     console.log('rendering card ',visibleFace.name);
-    console.log(card.id);
-    console.log(cardSize);
 
     return (
-        <div>
+        <div id={card.id}>
 
-            <ContextMenuTrigger id={card.id} holdToDisplay={500}> 
+            <ContextMenuTrigger id={"context-"+card.id} holdToDisplay={500}> 
             {/* <div className="flex h-full items-center"> */}
                 <div 
                     className={isActive ? 'isActive' : ''}
@@ -256,9 +253,19 @@ export const Card = React.memo(({
                         setIsActive={setIsActive}
                         zIndex={zIndex}
                     />
-
-                    <ArcherElement
-                        id={card.id}
+                    <div 
+                        ref={registerDivToArrowsContext ? (div) => registerDivToArrowsContext({ id: "arrow-"+card.id, div }) : null} 
+                        style={{
+                            position: "absolute",
+                            width: "1px", 
+                            height: "1px",
+                            backgroundColor: "red",
+                            top: "50%",
+                            left: "50%",
+                        }}
+                    />
+                    {/* <ArcherElement
+                        id={"archer-"+card.id}
                         relations={arrowRelationList()}
                     >
                         <div style={{
@@ -269,12 +276,33 @@ export const Card = React.memo(({
                             top: "70%",
                             left: "50%",
                         }}/>
-                    </ArcherElement>
+                    </ArcherElement> */}
+                    {/* <div
+                        id={"arrow-"+card.id} 
+                        style={{
+                            position: "absolute",
+                            width: "1px", 
+                            height: "1px",
+                            backgroundColor: "red",
+                            top: "50%",
+                            left: "50%",
+                            zIndex: 1e7
+                        }}>
+                        <Xarrow
+                            SVGcanvasStyle={{position: "absolute", zIndex: 1e7}}
+                            start={"arrow-"+card.id} //can be react ref
+                            end={"arrow-20a5d0e0-0827-447b-ba64-bfc04a0191a0"} //or an id
+                            
+                        />
+                    </div> */}
+
+
+
                 </div>
             {/* </div> */}
             </ContextMenuTrigger>
 
-             <ContextMenu id={card.id} style={{zIndex:1e8}}>
+             <ContextMenu id={"context-"+card.id} style={{zIndex:1e8}}>
                  <hr></hr>
                  {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
                  {visibleSide == "B"? <MenuItem onClick={handleMenuClick} data={{action: 'peek'}}>Peek</MenuItem>:null}

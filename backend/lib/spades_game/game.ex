@@ -29,7 +29,6 @@ defmodule SpadesGame.Game do
       "roundNumber" => 0,
       "phase" => "Beginning",
       "roundStep" => "0.0",
-
       "groupById" => Groups.new(),
       "stackById" => %{},
       "cardById"  => %{},

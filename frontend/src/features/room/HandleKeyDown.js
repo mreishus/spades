@@ -247,11 +247,9 @@ export const HandleKeyDown = ({
                 }
             });
             gameBroadcast("game_action", {
-                action: "action_on_matching_cards", 
+                action: "update_values", 
                 options: {
-                    criteria:[["controller", playerN]], 
-                    action: "update_card_values", 
-                    options: {updates: [["arrowIds", []]]}
+                    updates:[["game", "playerData", playerN, "arrows", []]], 
                 }
             });
         }
@@ -484,9 +482,10 @@ export const HandleKeyDown = ({
                 // Determine if this is the start or end of the arrow
                 if (drawingArrowFrom) {
                     const drawingArrowTo = activeCardId;
-                    const oldArrowIds = gameUi.game.cardById[drawingArrowFrom].arrowIds;
-                    const newArrowIds = oldArrowIds.concat(drawingArrowTo);
-                    const updates = [["game", "cardById", drawingArrowFrom, "arrowIds", newArrowIds]];
+                    const oldArrows = gameUi.game.playerData[playerN].arrows;
+                    const newArrows = oldArrows.concat([[drawingArrowFrom, drawingArrowTo]]);
+                    //const updates = [["game", "cardById", drawingArrowFrom, "arrowIds", newArrowIds]];
+                    const updates = [["game", "playerData", playerN, "arrows", newArrows]];
                     dispatch(setValues({updates: updates}));
                     gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
                     setDrawingArrowFrom(null);

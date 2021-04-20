@@ -12,7 +12,7 @@ export const Tokens = React.memo(({
     chatBroadcast,
     zIndex,
  }) => {
-    console.log("rendering tokens");
+    //console.log("rendering tokens");
     const keypress = useKeypress();
     const showButtons = isActive && keypress["Shift"];
     return(

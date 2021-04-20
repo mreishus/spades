@@ -39,7 +39,8 @@ export const Table = React.memo(({
   playerN,
   gameBroadcast,
   chatBroadcast,
-  setTyping
+  setTyping,
+  registerDivToArrowsContext
 }) => {
 
   //const gameUiStore = state => state.gameUi;
@@ -123,6 +124,7 @@ export const Table = React.memo(({
               setBrowseGroupId={setBrowseGroupId}
               browseGroupTopN={browseGroupTopN}
               setBrowseGroupTopN={setBrowseGroupTopN}
+              registerDivToArrowsContext={registerDivToArrowsContext}
             />
 
             {/* <div className="w-full" style={{minHeight: "20%", height: "20%", maxHeight: "20%"}}>

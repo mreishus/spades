@@ -46,6 +46,7 @@ export const Group = React.memo(({
   browseGroupId,
   setBrowseGroupId,
   setBrowseGroupTopN,
+  registerDivToArrowsContext
 }) => {
   console.log("rendering group ",groupId);
   const storeGroup = state => state?.gameUi?.game?.groupById?.[groupId];
@@ -83,6 +84,7 @@ export const Group = React.memo(({
         cardSize={cardSize}
         isCombineEnabled={group.type === "play"}
         selectedStackIndices={[...Array(numStacks).keys()]}
+        registerDivToArrowsContext={registerDivToArrowsContext}
       />
     </div>
   )

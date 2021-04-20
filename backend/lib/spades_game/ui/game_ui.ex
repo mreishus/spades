@@ -345,7 +345,10 @@ defmodule SpadesGame.GameUI do
   def update_card_state(gameui, card, preserve_state, orig_group_id) do
     IO.puts("preserve_state #{preserve_state} orig group #{orig_group_id}")
     if preserve_state do
-      gameui
+      # We still remove arrows
+      #card = put_in(card["arrowIds"], [])
+      update_card(gameui, card)
+      #gameui
     else
       card_name = card["sides"]["A"]["name"]
       card_id = card["id"]
@@ -356,6 +359,8 @@ defmodule SpadesGame.GameUI do
       orig_group_type = get_group_type(gameui, orig_group_id)
       dest_group_type = get_group_type(gameui, dest_group_id)
       IO.puts("orig #{orig_group_type} dest #{dest_group_type}")
+      # Remove arrows
+      #card = put_in(card["arrowIds"], [])
       # Set new controller
       card = put_in(card["controller"], dest_group["controller"])
       # Leaving play: clear tokens/exhaust

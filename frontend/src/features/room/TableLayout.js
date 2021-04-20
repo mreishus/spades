@@ -16,6 +16,7 @@ export const TableRegion = React.memo(({
   browseGroupId,
   setBrowseGroupId,
   setBrowseGroupTopN,
+  registerDivToArrowsContext,
 }) => {
   const groupId = ["Hand", "Deck", "Discard"].includes(region.id) ? observingPlayerN + region.id : region.id;
   const beingBrowsed = groupId === browseGroupId;
@@ -42,6 +43,7 @@ export const TableRegion = React.memo(({
           browseGroupId={browseGroupId}
           setBrowseGroupId={setBrowseGroupId}
           setBrowseGroupTopN={setBrowseGroupTopN}
+          registerDivToArrowsContext={registerDivToArrowsContext}
         />
       }
     </div>
@@ -58,6 +60,7 @@ export const TableLayout = React.memo(({
   setBrowseGroupId,
   browseGroupTopN,
   setBrowseGroupTopN,
+  registerDivToArrowsContext
 }) => {
   const numPlayersStore = state => state.gameUi.numPlayers;
   const numPlayers = useSelector(numPlayersStore);
@@ -71,7 +74,6 @@ export const TableLayout = React.memo(({
   const finalRowHeight = 100/numRows; 
   const cardSize = CARDSCALE/numRows;
   console.log("rendering layout");
-  console.log(rowHeight, finalRowHeight);
   return (
     layoutInfo.map((row, rowIndex) => (
       (browseGroupId && rowIndex === numRows - 2) ? 
@@ -112,6 +114,7 @@ export const TableLayout = React.memo(({
                 browseGroupId={browseGroupId}
                 setBrowseGroupId={setBrowseGroupId}
                 setBrowseGroupTopN={setBrowseGroupTopN}
+                registerDivToArrowsContext={registerDivToArrowsContext}
               />
             ))}
             {(rowIndex === numRows - 1) &&

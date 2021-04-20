@@ -48,6 +48,7 @@ export const Stack = React.memo(({
   cardSize,
   stackId,
   numStacks,
+  registerDivToArrowsContext
 }) => {
   const stackStore = state => state?.gameUi?.game?.stackById[stackId];
   const stack = useSelector(stackStore);
@@ -61,11 +62,13 @@ export const Stack = React.memo(({
   const stackWidth = groupType == "hand" ? handSpacing : cardSize/0.72 + cardSize/3*(cardIds.length-1);
   //const stackWidth = cardSize/0.72 + cardSize/3*(stack.cards.length-1);
   return (
+
     <Draggable 
       key={stackId} 
       draggableId={stackId} 
       index={stackIndex}
     >
+
       {(dragProvided, dragSnapshot) => (
         <Container
           isDragging={dragSnapshot.isDragging}
@@ -75,7 +78,6 @@ export const Stack = React.memo(({
           ref={dragProvided.innerRef}
           {...dragProvided.draggableProps}
           {...dragProvided.dragHandleProps}
-          //style={{cursor: "default"}}
         >
           {cardIds.map((cardId, cardIndex) => {
             return(
@@ -88,11 +90,14 @@ export const Stack = React.memo(({
                 cardId={cardId} 
                 cardIndex={cardIndex}
                 cardSize={cardSize}
+                registerDivToArrowsContext={registerDivToArrowsContext}
               />
             )
         })}
         </Container>
       )}
     </Draggable>
+// </div>
+//     </ArcherElement>
   );
 })

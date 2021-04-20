@@ -49,6 +49,7 @@ const StacksList = React.memo(({
   cardSize,
   stackIds,
   selectedStackIndices,
+  registerDivToArrowsContext
 }) => {
   const pile = (groupType=="deck" || groupType=="discard")
   //return(<div>{groupType}</div>)
@@ -73,6 +74,7 @@ const StacksList = React.memo(({
           cardSize={cardSize}
           stackId={stackId}
           numStacks={selectedStackIndices.length}
+          registerDivToArrowsContext={registerDivToArrowsContext}
         /> 
       ) : null 
     ))
@@ -89,8 +91,9 @@ export const Stacks = React.memo(({
   cardSize,
   isCombineEnabled,
   selectedStackIndices,
+  registerDivToArrowsContext
 }) => {
-  console.log("rendering stacks ",playerN,groupId,groupType,stackIds,selectedStackIndices)
+  console.log("rendering stacks ",groupId)
   return(
     <Droppable
       droppableId={groupId}
@@ -126,6 +129,7 @@ export const Stacks = React.memo(({
                 cardSize={cardSize}
                 stackIds={stackIds}
                 selectedStackIndices={selectedStackIndices}
+                registerDivToArrowsContext={registerDivToArrowsContext}
               />
               {dropProvided.placeholder}
             </DropZone>

@@ -16,6 +16,7 @@ defmodule SpadesGame.PlayerData do
       "willpower" => 0,
       "eliminated" => false,
       "cards_drawn_during_resource" => 1,
+      "arrows" => [],
     }
   end
 
