@@ -8,15 +8,11 @@ defmodule Spades.Rooms.Room do
 
   # Automatically convert to JSON when broadcasting %Room{}
   # Objects over channel messages
-  @derive {Jason.Encoder, only: [:id, :name, :slug, :player1, :player2, :player3, :player4]}
+  @derive {Jason.Encoder, only: [:id, :name, :slug]}
 
   schema "rooms" do
     field :name, :string
     field :slug, :string
-    field :player1, :integer
-    field :player2, :integer
-    field :player3, :integer
-    field :player4, :integer
 
     timestamps()
   end
@@ -24,7 +20,7 @@ defmodule Spades.Rooms.Room do
   @doc false
   def changeset(room, attrs) do
     room
-    |> cast(attrs, [:name, :player1, :player2, :player3, :player4])
+    |> cast(attrs, [:name])
     |> validate_required([:name])
     |> put_slug()
   end

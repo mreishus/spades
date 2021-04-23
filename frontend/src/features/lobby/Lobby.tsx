@@ -83,10 +83,10 @@ export const Lobby: React.FC = () => {
             <h3 className="mb-2 font-semibold">About</h3>
             <div className="max-w-none">
               <p className="mb-2">
-                playrings is a{" "}
+                DragnCards is a{" "}
                 <span className="font-semibold">
-                  free online multiplayer LotR LCG game
-                </span>, and is not affiliated with or endorsed by FFG in any way.
+                  free online multiplayer card game platfrom
+                </span>, and is not affiliated with or endorsed by FFG or any other company in any way.
               </p>
               <p className="mb-2">
                 If you have any suggestions or encounter any problems, please

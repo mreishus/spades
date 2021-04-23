@@ -33,7 +33,7 @@ export const AppNav: React.FC<Props> = () => {
               alt="Logo "
             />
                 */}
-            play <FontAwesomeIcon className="text-white" icon={faRing}/> rings
+            Dragn <FontAwesomeIcon className="text-white" icon={faRing}/> Cards
           </Link>
         </div>
         <div className="sm:hidden">

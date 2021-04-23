@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, useContext } from "react";
 import { ArrowsBetweenDivsContextProvider, ArrowBetweenDivs, LineOrientation, ArrowAnchorPlacement } from 'react-simple-arrows';
-import { ArcherContainer } from 'react-archer';
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from 'react-redux';
 import { setStackIds, setCardIds, setGroupById, setValues } from "./gameUiSlice";
