@@ -14,11 +14,7 @@ defmodule SpadesWeb.RoomView do
     %{
       id: room.id,
       name: room.name,
-      slug: room.slug,
-      player1: room.player1,
-      player2: room.player2,
-      player3: room.player3,
-      player4: room.player4
+      slug: room.slug
     }
   end
 end
