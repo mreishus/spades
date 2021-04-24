@@ -27,12 +27,12 @@ defmodule SpadesWeb.Router do
   end
 
   # Other scopes may use custom stacks.
-  scope "/api", SpadesWeb do
+  scope "/be/api", SpadesWeb do
     pipe_through(:api)
     resources("/rooms", RoomController, except: [:new, :edit])
   end
 
-  scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do
+  scope "/be/api/v1", SpadesWeb.API.V1, as: :api_v1 do
     pipe_through(:api)
 
     # Sign up / Sign In
@@ -57,7 +57,7 @@ defmodule SpadesWeb.Router do
     post("/games", GameController, :create)
   end
 
-  scope "/api/v1", SpadesWeb.API.V1, as: :api_v1 do
+  scope "/be/api/v1", SpadesWeb.API.V1, as: :api_v1 do
     pipe_through([:api, :api_protected])
 
     # Your protected API endpoints here
