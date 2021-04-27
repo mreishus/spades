@@ -10,23 +10,23 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :spades, SpadesWeb.Endpoint,
-  url: [host: "api.starspades.com", port: 80],
-  cache_static_manifest: "priv/static/cache_manifest.json",
-  check_origin: [
-    "//starspades.com",
-    "//api.starspades.com",
-    "//localhost",
-    "//172.22.2.30:31231",
-    "//172.22.2.31:31231",
-    "//172.22.2.32:31231",
-    "//172.22.2.33:31231",
-    "//172.22.2.30:31232",
-    "//172.22.2.31:31232",
-    "//172.22.2.32:31232",
-    "//172.22.2.33:31232"
-  ],
-  front_end_email_confirm_url: "http://starspades.com/confirm-email/{token}",
-  front_end_reset_password_url: "http://starspades.com/reset-password/{token}"
+  url: [host: "dragncards.com", port: 80],
+  cache_static_manifest: "priv/static/cache_manifest.json"
+  # check_origin: [
+  #   "//starspades.com",
+  #   "//api.starspades.com",
+  #   "//localhost",
+  #   "//172.22.2.30:31231",
+  #   "//172.22.2.31:31231",
+  #   "//172.22.2.32:31231",
+  #   "//172.22.2.33:31231",
+  #   "//172.22.2.30:31232",
+  #   "//172.22.2.31:31232",
+  #   "//172.22.2.32:31232",
+  #   "//172.22.2.33:31232"
+  # ],
+  # front_end_email_confirm_url: "http://starspades.com/confirm-email/{token}",
+  # front_end_reset_password_url: "http://starspades.com/reset-password/{token}"
 
 # Do not print debug messages in production
 config :logger, level: :info
@@ -67,3 +67,4 @@ config :logger, level: :info
 
 # No longer using prod.secret.exs - Letting
 # the release system check releases.exs at runtime
+import_config "prod.secret.exs"
