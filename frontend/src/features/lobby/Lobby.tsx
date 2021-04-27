@@ -55,7 +55,7 @@ export const Lobby: React.FC = () => {
           <div>
             <h1 className="mb-4">Lobby</h1>
             {isLoading && <div className="text-white">Loading..</div>}
-            {isError && <div className="text-white">Error..</div>}
+            {isError && <div className="text-white">Error communicating with server...</div>}
             <div className="mb-6">
               <h3 className="mb-2 font-semibold">New Game</h3>
               <div>
