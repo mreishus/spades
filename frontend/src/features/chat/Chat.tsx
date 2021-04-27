@@ -6,31 +6,23 @@ import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { ChatMessage } from "elixir-backend";
 
 interface Props {
-  roomName: string;
+  chatBroadcast: (eventName: string, payload: object) => void;
+  setTyping: React.Dispatch<React.SetStateAction<Boolean>>
 }
 
-export const Chat: React.FC<Props> = ({ roomName }) => {
+export const Chat: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
   const isLoggedIn = useIsLoggedIn();
-  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
-  const onChannelMessage = useCallback((event, payload) => {
-    if (
-      event === "phx_reply" &&
-      payload.response != null &&
-      payload.response.messages != null
-    ) {
-      setMessages(payload.response.messages);
-    }
-  }, []);
-  const broadcast = useChannel(`chat:${roomName}`, onChannelMessage);
-
+  console.log("rendering chat")
   return (
-    <div className="w-full">
-      Chat
-      <div className="mb-2">
-        <ChatMessages messages={messages} className="h-64" />
+
+    <div className="overflow-hidden h-full">
+      <div className="bg-gray-800 overflow-y-auto" style={{height: "calc(100% - 32px)"}}>
+        <ChatMessages/>
       </div>
-      {isLoggedIn && <ChatInput broadcast={broadcast} />}
+      <div className="text-center" >
+        {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping} />}
+      </div>
     </div>
   );
 };
-export default Chat;
+export default React.memo(Chat);

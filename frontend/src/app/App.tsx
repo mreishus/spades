@@ -44,8 +44,8 @@ const App: React.FC = () => {
     localStorage.removeItem("renewToken");
   }, [tokens.authToken]);
 
-  useHtmlClass(["text-gray-900", "antialiased"]);
-  useBodyClass(["min-h-screen", "bg-indigo-100"]);
+  useHtmlClass(["antialiased"]);
+  useBodyClass(["h-screen", "bg-white", "flex", "flex-col","max-w-screen"]);
 
   const authValue = useMemo(
     () => ({
@@ -80,7 +80,7 @@ const App: React.FC = () => {
   );
 
   return (
-    <React.StrictMode>
+    //<React.StrictMode>
       <AuthContext.Provider value={authValue}>
         <SocketProvider
           wsUrl={process.env.REACT_APP_WS_URL || "/be/socket"}
@@ -93,7 +93,7 @@ const App: React.FC = () => {
           </ProfileProvider>
         </SocketProvider>
       </AuthContext.Provider>
-    </React.StrictMode>
+    //</React.StrictMode>
   );
 };
 

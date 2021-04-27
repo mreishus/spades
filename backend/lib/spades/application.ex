@@ -17,9 +17,6 @@ defmodule Spades.Application do
       # GameUISupervisor and Process Registry
       {Registry, keys: :unique, name: SpadesGame.GameUIRegistry},
       SpadesGame.GameUISupervisor,
-      # GameAISupervisor and Process Registry
-      {Registry, keys: :unique, name: SpadesGame.GameAIRegistry},
-      SpadesGame.GameAISupervisor,
       # ChatSupervisor and Process Registry
       {Registry, keys: :unique, name: SpadesChat.ChatRegistry},
       SpadesChat.ChatSupervisor,
@@ -31,12 +28,15 @@ defmodule Spades.Application do
       # Starts a worker by calling: Spades.Worker.start_link(arg)
       # {Spades.Worker, arg},
     ]
-
+    IO.puts("spadesapp a")
     :ets.new(:game_uis, [:public, :named_table])
 
+    IO.puts("spadesapp b")
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Spades.Supervisor]
+
+    IO.puts("spadesapp c")
     Supervisor.start_link(children, opts)
   end
 

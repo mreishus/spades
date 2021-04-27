@@ -5,13 +5,14 @@ import React from "react";
 import useForm from "../../hooks/useForm";
 
 interface Props {
-  broadcast: (eventName: string, payload: object) => void;
+  chatBroadcast: (eventName: string, payload: object) => void;
+  setTyping: React.Dispatch<React.SetStateAction<Boolean>>
 }
 
-export const ChatInput: React.FC<Props> = ({ broadcast }) => {
+export const ChatInput: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
   const { inputs, handleSubmit, handleInputChange, setInputs } = useForm(
     async () => {
-      broadcast("message", { message: inputs.chat });
+      chatBroadcast("message", { message: inputs.chat });
       setInputs((inputs) => ({
         ...inputs,
         chat: "",
@@ -19,13 +20,15 @@ export const ChatInput: React.FC<Props> = ({ broadcast }) => {
     }
   );
   return (
-    <div className="max-w-md">
+    <div className="">
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           name="chat"
           placeholder="your message.."
-          className="form-control w-full"
+          className="form-control w-full bg-gray-900 text-white border-0"
+          onFocus={event => setTyping(true)}
+          onBlur={event => setTyping(false)}
           onChange={handleInputChange}
           value={inputs.chat || ""}
         />

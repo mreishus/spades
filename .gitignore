@@ -1,3 +1,5 @@
 *.swp
 *.swo
 priv_notes.txt
+node_modules
+cards

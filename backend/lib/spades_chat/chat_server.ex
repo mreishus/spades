@@ -65,6 +65,7 @@ defmodule SpadesChat.ChatServer do
   end
 
   def handle_call({:add_message, message}, _from, chat) do
+    IO.puts("chat_server add_message")
     chat = Chat.add_message(chat, message)
     {:reply, Chat.messages(chat), chat, @timeout}
   end

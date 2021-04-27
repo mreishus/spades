@@ -8,6 +8,7 @@ defmodule SpadesChat.ChatSupervisor do
   alias SpadesChat.ChatServer
 
   def start_link(_arg) do
+    IO.puts("chatsup start_link a")
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 

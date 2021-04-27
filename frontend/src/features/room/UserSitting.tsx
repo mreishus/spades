@@ -6,6 +6,6 @@ interface Props {
 }
 
 export const UserSitting: React.FC<Props> = ({ userId }) => {
-  return <UserName userId={userId} />;
+  return <UserName userID={userId} />;
 };
 export default UserSitting;

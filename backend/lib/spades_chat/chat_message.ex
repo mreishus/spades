@@ -7,7 +7,7 @@ defmodule SpadesChat.ChatMessage do
   alias SpadesChat.{ChatMessage}
 
   @derive Jason.Encoder
-  defstruct [:text, :sent_by, :when, :shortcode]
+  defstruct [:text, :sent_by, :when, :shortcode, :game_update]
 
   use Accessible
 
@@ -15,16 +15,18 @@ defmodule SpadesChat.ChatMessage do
           text: String.t(),
           sent_by: integer | nil,
           when: DateTime.t(),
-          shortcode: String.t()
+          shortcode: String.t(),
+          game_update: boolean,
         }
 
-  @spec new(String.t(), integer | nil) :: ChatMessage.t()
-  def new(text, sent_by) do
+  @spec new(String.t(), integer | nil, boolean) :: ChatMessage.t()
+  def new(text, sent_by, game_update \\ false) do
     %ChatMessage{
       text: text,
       sent_by: sent_by,
       when: DateTime.utc_now(),
-      shortcode: shortcode()
+      shortcode: shortcode(),
+      game_update: game_update
     }
   end
 

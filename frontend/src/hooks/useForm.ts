@@ -15,6 +15,7 @@ const useForm = (submitCallback: () => void) => {
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     event.persist();
+    event.stopPropagation(); 
     setInputs((inputs) => ({
       ...inputs,
       [event.target.name]: event.target.value,

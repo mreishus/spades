@@ -14,11 +14,7 @@ defmodule SpadesWeb.RoomView do
     %{
       id: room.id,
       name: room.name,
-      slug: room.slug,
-      west: room.west,
-      east: room.east,
-      south: room.south,
-      north: room.north
+      slug: room.slug
     }
   end
 end

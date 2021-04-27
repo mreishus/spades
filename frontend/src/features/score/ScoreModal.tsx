@@ -2,17 +2,15 @@ import React from "react";
 import ReactModal from "react-modal";
 import Button from "../../components/basic/Button";
 import ScoreTable from "./ScoreTable";
-import { GameScore } from "elixir-backend";
 
 interface Props {
   isOpen: boolean;
   closeModal: () => void;
-  score: GameScore;
 }
 
 ReactModal.setAppElement("#root");
 
-export const ScoreModal: React.FC<Props> = ({ isOpen, closeModal, score }) => {
+export const ScoreModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   return (
     <ReactModal
       closeTimeoutMS={200}
@@ -23,7 +21,7 @@ export const ScoreModal: React.FC<Props> = ({ isOpen, closeModal, score }) => {
       className="insert-auto overflow-auto p-5 bg-gray-100 border max-w-lg mx-auto my-12 rounded-lg outline-none"
     >
       <h1>Score</h1>
-      <ScoreTable score={score} />
+      <ScoreTable />
       <Button onClick={closeModal} className="">
         OK
       </Button>

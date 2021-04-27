@@ -2,29 +2,52 @@ defmodule SpadesGame.Card do
   @moduledoc """
   Represents a playing card.
   """
-  @derive Jason.Encoder
-  defstruct [:rank, :suit]
-  alias SpadesGame.Card
+  alias SpadesGame.{CardFace,Tokens}
 
-  @type t :: %Card{rank: rank, suit: suit}
-  @type suit :: :h | :d | :c | :s
-  @type rank :: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14
+  @type t :: Map.t()
 
-  def suits(), do: [:h, :d, :c, :s]
-  def ranks(), do: Enum.to_list(2..14)
+  @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
+  def card_from_cardrow(card_row, controller) do
+    IO.puts("creating card controlled by #{controller}")
+    %{
+      "id" => Ecto.UUID.generate,
+      "rotation" => 0,
+      "exhausted" => false,
+      "committed" => false,
+      "currentSide" => "A",
+      "owner" => controller,
+      "controller" => controller,
+      "peeking" => %{
+        "player1" => false,
+        "player2" => false,
+        "player3" => false,
+        "player4" => false,
+      },
+      "targeting" => %{
+        "player1" => false,
+        "player2" => false,
+        "player3" => false,
+        "player4" => false,
+      },
+      "tokens" => Tokens.new(),
+      "tokensPerRound" => %{},
 
-  @spec from_map(%{}) :: Card.t()
-  def from_map(%{"rank" => rank, "suit" => "c"}),
-    do: %Card{rank: rank, suit: :c}
+      "cardBackOverride" => card_row["cardbackoverride"],
+      "cardEncounterSet" => card_row["cardencounterset"],
+      "cardDbId" => card_row["cardid"],
+      "cardNumber" => String.to_integer(card_row["cardnumber"]),
+      "cardQuantity" => String.to_integer(card_row["cardquantity"]),
+      "cardSetId" => card_row["cardsetid"],
+      "cardPackName" => card_row["cardpackname"],
 
-  def from_map(%{"rank" => rank, "suit" => "s"}),
-    do: %Card{rank: rank, suit: :s}
+      "loadGroupId" => card_row["loadgroupid"],
+      "discardGroupId" => card_row["discardgroupid"],
 
-  def from_map(%{"rank" => rank, "suit" => "d"}),
-    do: %Card{rank: rank, suit: :d}
+      "sides"=> %{
+        "A"=>CardFace.cardface_from_cardrowside(card_row["sides"]["A"]),
+        "B"=>CardFace.cardface_from_cardrowside(card_row["sides"]["B"]),
+      }
+    }
+  end
 
-  def from_map(%{"rank" => rank, "suit" => "h"}),
-    do: %Card{rank: rank, suit: :h}
-
-  def from_map(m), do: m
 end

@@ -3,19 +3,21 @@ defmodule SpadesWeb.RoomChannel do
   This channel will handle individual game rooms.
   """
   use SpadesWeb, :channel
-  alias SpadesGame.{Card, GameUIServer, GameUIView}
+  alias SpadesGame.{Card, GameUIServer, GameUI}
 
   require Logger
 
   def join("room:" <> room_slug, _payload, socket) do
     # if authorized?(payload) do
+    IO.puts("roomchannel join a")
     state = GameUIServer.state(room_slug)
 
     socket =
       socket
       |> assign(:room_slug, room_slug)
       |> assign(:game_ui, state)
-
+    IO.puts("socket")
+    #IO.inspect(socket)
     # {:ok, socket}
     {:ok, client_state(socket), socket}
     # else
@@ -46,10 +48,22 @@ defmodule SpadesWeb.RoomChannel do
 
   def handle_in(
         "sit",
-        %{"whichSeat" => which_seat},
+        %{"playerN" => player_n},
         %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
       ) do
-    GameUIServer.sit(room_slug, user_id, which_seat)
+    GameUIServer.sit(room_slug, user_id, player_n)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+        "get_up",
+        %{"playerN" => player_n},
+        %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+      ) do
+    GameUIServer.sit(room_slug, nil, player_n)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)
@@ -77,7 +91,6 @@ defmodule SpadesWeb.RoomChannel do
     card = Card.from_map(card)
     # Ignoring return value; could work on passing an error up
     GameUIServer.play(room_slug, user_id, card)
-
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)
@@ -86,12 +99,314 @@ defmodule SpadesWeb.RoomChannel do
   end
 
   def handle_in(
-        "invite_bots",
-        _params,
-        %{assigns: %{room_slug: room_slug, user_id: _user_id}} = socket
-      ) do
-    GameUIServer.invite_bots(room_slug)
+    "update_gameui",
+    %{"gameui" => gameui},
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.update_gameui(room_slug, user_id, gameui)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
 
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "load_cards",
+    %{"load_list" => load_list},
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.load_cards(room_slug, user_id, load_list)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "reset_game",
+    %{},
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.reset_game(room_slug, user_id)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "peek_at",
+    %{
+      "group_id" => group_id,
+      "stack_indices" => stack_indices,
+      "card_indices" => card_indices,
+      "player_n" => player_n,
+      "reset_peek" => reset_peek,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    IO.puts("room_channel peek_at")
+    GameUIServer.peek_at(room_slug, user_id, group_id, stack_indices, card_indices, player_n, reset_peek)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "move_stack",
+    %{
+      "stack_id" => stack_id,
+      "dest_group_id" => dest_group_id,
+      "dest_stack_index" => dest_stack_index,
+      "combine" => combine,
+      "preserve_state" => preserve_state,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.move_stack(room_slug, user_id, stack_id, dest_group_id, dest_stack_index, combine, preserve_state)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "move_stacks",
+    %{
+      "orig_group_id" => orig_group_id,
+      "dest_group_id" => dest_group_id,
+      "position" => position,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    IO.puts("roomchannel move_stacks a")
+    GameUIServer.move_stacks(room_slug, user_id, orig_group_id, dest_group_id, position)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+      "update_card",
+      %{
+        "card" => card,
+        "group_id" => group_id,
+        "stack_index" => stack_index,
+        "card_index" => card_index,
+      },
+      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+    ) do
+    GameUIServer.update_card(room_slug, user_id, card, group_id, stack_index, card_index)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+      "increment_token",
+      %{
+        "group_id" => group_id,
+        "stack_index" => stack_index,
+        "card_index" => card_index,
+        "token_type" => token_type,
+        "increment" => increment,
+      },
+      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+    ) do
+    IO.puts("room_channel increment_token")
+    GameUIServer.increment_token(room_slug, user_id, group_id, stack_index, card_index, token_type, increment)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+      "deal_shadow",
+      %{
+        "group_id" => group_id,
+        "stack_index" => stack_index
+      },
+      %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+    ) do
+    GameUIServer.deal_shadow(room_slug, user_id, group_id, stack_index)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "move_card",
+    %{
+      "orig_group_id"    => orig_group_id,
+      "orig_stack_index" => orig_stack_index,
+      "orig_card_index"  => orig_card_index,
+      "dest_group_id"    => dest_group_id,
+      "dest_stack_index" => dest_stack_index,
+      "dest_card_index"  => dest_card_index,
+      "create_new_stack" => create_new_stack
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    IO.puts("room_channel move_card")
+    GameUIServer.move_card(room_slug, user_id, orig_group_id, orig_stack_index, orig_card_index, dest_group_id, dest_stack_index, dest_card_index, create_new_stack)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "shuffle_group",
+    %{
+      "group_id" => group_id
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.shuffle_group(room_slug, user_id, group_id)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "toggle_exhaust",
+    %{
+      "group_id" => group_id,
+      "stack_index" => stack_index,
+      "card_index" => card_index,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.toggle_exhaust(room_slug, user_id, group_id, stack_index, card_index)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+
+  def handle_in(
+    "card_action",
+    %{
+      "action" => action,
+      "card_id" => card_id,
+      "options" => options,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.card_action(room_slug, user_id, action, card_id, options)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "game_action",
+    %{
+      "action" => action,
+      "options" => options,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.game_action(room_slug, user_id, action, options)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    #notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "action_on_matching_cards",
+    %{
+      "criteria" => criteria,
+      "action" => action,
+      "options" => options,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.action_on_matching_cards(room_slug, user_id, criteria, action, options)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+
+  def handle_in(
+    "refresh",
+    %{
+      "player_n" => player_n,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.refresh(room_slug, user_id, player_n)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "set_first_player",
+    %{
+      "player_n" => player_n,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.set_first_player(room_slug, user_id, player_n)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "increment_threat",
+    %{
+      "player_n" => player_n,
+      "increment" => increment,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.increment_threat(room_slug, user_id, player_n, increment)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
+  def handle_in(
+    "increment_round",
+    %{
+      "increment" => increment,
+    },
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.increment_round(room_slug, user_id, increment)
     state = GameUIServer.state(room_slug)
     socket = socket |> assign(:game_ui, state)
     notify(socket)
@@ -144,27 +459,11 @@ defmodule SpadesWeb.RoomChannel do
     broadcast!(socket, "ask_for_update", %{})
   end
 
-  # Add authorization logic here as required.
-  # defp authorized?(_payload) do
-  #   true
-  # end
-
   # This is what part of the state gets sent to the client.
   # It can be used to transform or hide it before they get it.
-  #
-  # Here, we are using GameUIView to hide the other player's hands.
   defp client_state(socket) do
     user_id = Map.get(socket.assigns, :user_id) || 0
-
-    if Map.has_key?(socket.assigns, :game_ui) do
-      socket.assigns
-      |> Map.put(
-        :game_ui_view,
-        GameUIView.view_for(socket.assigns.game_ui, user_id)
-      )
-      |> Map.delete(:game_ui)
-    else
-      socket.assigns
-    end
+    IO.puts("client_state")
+    socket.assigns
   end
 end

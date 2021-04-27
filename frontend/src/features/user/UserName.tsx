@@ -5,29 +5,33 @@ import useAuth from "../../hooks/useAuth";
 import { RootState } from "../../rootReducer";
 
 interface Props {
-  userId: number | null;
+  userID: number | null;
+  defaultName?: String | null;
 }
 
-export const UserName: React.FC<Props> = ({ userId }) => {
+export const UserName: React.FC<Props> = ({ userID, defaultName }) => {
   const dispatch = useDispatch();
   const authContext = useAuth();
   useEffect(() => {
-    if (userId == null) {
+    if (userID == null) {
       return;
     }
-    dispatch(fetchUser(userId, authContext));
-  }, [authContext, dispatch, userId]);
+    dispatch(fetchUser(userID, authContext));
+  }, [authContext, dispatch, userID]);
 
   const user = useSelector(
-    (state: RootState) => state.users.usersById[userId || 0]
+    (state: RootState) => state.users.usersById[userID || 0]
   );
 
-  if (userId === null) {
+  if (userID === null) {
+    return <span className="text-gray-400">{defaultName ? defaultName : "anonymous"}</span>;
+  } 
+  if (userID < 0) {
     return null;
-  }
+  } 
   if (user != null) {
     return <span>{user.alias}</span>;
   }
-  return <div>user #{userId}</div>;
+  return <div>user #{userID}</div>;
 };
 export default UserName;
