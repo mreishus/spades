@@ -1,4 +1,4 @@
-defmodule SpadesWeb.ConnCase do
+defmodule DragnCardsWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -19,18 +19,18 @@ defmodule SpadesWeb.ConnCase do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
-      alias SpadesWeb.Router.Helpers, as: Routes
+      alias DragnCardsWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint SpadesWeb.Endpoint
+      @endpoint DragnCardsWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Spades.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(DragnCards.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Spades.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(DragnCards.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

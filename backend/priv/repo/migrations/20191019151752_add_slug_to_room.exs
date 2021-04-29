@@ -1,4 +1,4 @@
-defmodule Spades.Repo.Migrations.AddSlugToRoom do
+defmodule DragnCards.Repo.Migrations.AddSlugToRoom do
   use Ecto.Migration
 
   def change do

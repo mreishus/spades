@@ -1,10 +1,10 @@
 use Mix.Config
 
 # Configure your database
-config :spades, Spades.Repo,
+config :dragncards, DragnCards.Repo,
   username: "postgres",
   password: "postgres",
-  database: "spades_dev",
+  database: "dragncards_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -15,7 +15,7 @@ config :spades, Spades.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :spades, SpadesWeb.Endpoint,
+config :dragncards, DragnCardsWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -57,13 +57,13 @@ config :spades, SpadesWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :spades, SpadesWeb.Endpoint,
+config :dragncards, DragnCardsWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
-      ~r"lib/spades_web/{live,views}/.*(ex)$",
-      ~r"lib/spades_web/templates/.*(eex)$"
+      ~r"lib/dragncards_web/{live,views}/.*(ex)$",
+      ~r"lib/dragncards_web/templates/.*(eex)$"
     ]
   ]
 

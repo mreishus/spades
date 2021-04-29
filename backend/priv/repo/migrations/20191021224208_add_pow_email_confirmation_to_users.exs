@@ -1,4 +1,4 @@
-defmodule Spades.Repo.Migrations.AddPowEmailConfirmationToUsers do
+defmodule DragnCards.Repo.Migrations.AddPowEmailConfirmationToUsers do
   use Ecto.Migration
 
   def change do

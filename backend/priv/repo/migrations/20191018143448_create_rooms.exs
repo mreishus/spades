@@ -1,4 +1,4 @@
-defmodule Spades.Repo.Migrations.CreateRooms do
+defmodule DragnCards.Repo.Migrations.CreateRooms do
   use Ecto.Migration
 
   def change do

@@ -11,7 +11,7 @@ export const Home: React.FC<Props> = () => {
   /*   <Container> */
   /*     <Card className="mt-20 p-4 bg-gray-100 rounded-lg shadow-lg"> */
   /*       <div className="text-lg my-2"> */
-  /*         StarSpades is still WIP, and not available. The current goal is to */
+  /*         DragnCards is still WIP, and not available. The current goal is to */
   /*         have a minimally playable version ready on Nov 13, 2019. */
   /*       </div> */
   /*       <div>Last update: 2019-11-04.</div> */

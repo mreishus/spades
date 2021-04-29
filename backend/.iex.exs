@@ -1,9 +1,9 @@
-alias Spades.Rooms
-alias Spades.Rooms.Room
-alias Spades.Users
-alias Spades.Users.User
+alias DragnCards.Rooms
+alias DragnCards.Rooms.Room
+alias DragnCards.Users
+alias DragnCards.Users.User
 
-alias SpadesGame.{
+alias DragnCardsGame.{
   Card,
   CardFace,
   Group,
@@ -19,7 +19,7 @@ alias SpadesGame.{
   GameUISupervisor
 }
 
-alias SpadesChat.{
+alias DragnCardsChat.{
   Chat,
   ChatServer,
   ChatSupervisor,

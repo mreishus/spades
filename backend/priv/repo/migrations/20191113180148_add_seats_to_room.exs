@@ -1,4 +1,4 @@
-defmodule Spades.Repo.Migrations.AddSeatsToRoom do
+defmodule DragnCards.Repo.Migrations.AddSeatsToRoom do
   use Ecto.Migration
 
   def change do

@@ -1,4 +1,4 @@
-defmodule Spades.DataCase do
+defmodule DragnCards.DataCase do
   @moduledoc """
   This module defines the setup for tests requiring
   access to the application's data layer.
@@ -16,20 +16,20 @@ defmodule Spades.DataCase do
 
   using do
     quote do
-      alias Spades.Repo
+      alias DragnCards.Repo
 
       import Ecto
       import Ecto.Changeset
       import Ecto.Query
-      import Spades.DataCase
+      import DragnCards.DataCase
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Spades.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(DragnCards.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Spades.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(DragnCards.Repo, {:shared, self()})
     end
 
     :ok

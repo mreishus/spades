@@ -76,7 +76,7 @@ const joinChannel = (
       onMessage(event, payload);
     }
 
-    // Specific Hack for Spades
+    // Specific Hack for DragnCards
     // See room_channel.ex for more info
     if (event != null && event === "ask_for_update") {
       channel.push("request_state", {});

@@ -1,4 +1,4 @@
-# Spades
+# DragnCards
 
 To start your Phoenix server:
 

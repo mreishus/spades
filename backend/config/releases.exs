@@ -12,7 +12,7 @@ database_url =
     For example: ecto://USER:PASS@HOST/DATABASE
     """
 
-config :spades, Spades.Repo,
+config :dragncards, DragnCards.Repo,
   # ssl: true,
   url: database_url,
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
@@ -25,7 +25,7 @@ secret_key_base =
     You can generate one by calling: mix phx.gen.secret
     """
 
-config :spades, SpadesWeb.Endpoint,
+config :dragncards, DragnCardsWeb.Endpoint,
   http: [:inet6, port: String.to_integer(System.get_env("PORT") || "4000")],
   secret_key_base: secret_key_base
 
@@ -42,12 +42,12 @@ mailgun_domain =
     environment variable MAILGUN_DOMAIN is missing.
     """
 
-config :spades, Spades.Mailer,
+config :dragncards, DragnCards.Mailer,
   adapter: Swoosh.Adapters.Mailgun,
   api_key: mailgun_api_key,
   domain: mailgun_domain
 
-config :spades, SpadesWeb.PowMailer,
+config :dragncards, DragnCardsWeb.PowMailer,
   adapter: Swoosh.Adapters.Mailgun,
   api_key: mailgun_api_key,
   domain: mailgun_domain
@@ -57,7 +57,7 @@ config :spades, SpadesWeb.PowMailer,
 # If you are doing OTP releases, you need to instruct Phoenix
 # to start each relevant endpoint:
 #
-config :spades, SpadesWeb.Endpoint, server: true
+config :dragncards, DragnCardsWeb.Endpoint, server: true
 #
 # Then you can assemble a release by calling `mix release`.
 # See `mix help release` for more information.

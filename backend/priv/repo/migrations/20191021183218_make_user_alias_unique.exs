@@ -1,4 +1,4 @@
-defmodule Spades.Repo.Migrations.MakeUserAliasUnique do
+defmodule DragnCards.Repo.Migrations.MakeUserAliasUnique do
   use Ecto.Migration
 
   def change do
