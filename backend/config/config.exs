@@ -20,7 +20,8 @@ config :spades, :pow,
 
 # Configures the endpoint
 config :spades, SpadesWeb.Endpoint,
-  url: [host: "localhost"],
+  url: [host: "127.0.0.1"],
+  #url: [host: "localhost"],
   secret_key_base: "8fqaEQYF++61y9MByi3t+TE2+VGFuEQFfhrlBkzliKpM+1Vi5roQ3arQHNk7uRwi",
   render_errors: [view: SpadesWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: Spades.PubSub, adapter: Phoenix.PubSub.PG2]

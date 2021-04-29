@@ -1,0 +1,9 @@
+{
+  "dependencies": {
+    "husky": "^6.0.0",
+    "react-bootstrap": "^1.5.2"
+  },
+  "scripts": {
+    "prepare": "husky install"
+  }
+}
