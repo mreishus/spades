@@ -73,10 +73,8 @@ export const Browse = React.memo(({
     const stackId0 = stackIds[0];
     const cardIds = game["stackById"][stackId0]["cardIds"];
     const cardId0 = cardIds[0];
-    const paths = [["game","cardById",cardId0,"peeking",playerN]]
-    const values = [false];
-    const update = {paths: paths, values: values};
-    dispatch(setValues(update)) 
+    const updates = [["game","cardById",cardId0,"peeking",playerN,false]]
+    dispatch(setValues({updates: updates})) 
   }
 
   const handleOptionClick = (event) => {

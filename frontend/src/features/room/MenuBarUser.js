@@ -57,7 +57,7 @@ export const MenuBarUser = React.memo(({
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
       const updates = [["game", "playerData", playerN, "threat", parseInt(newValue)]];
-      dispatch(setValues(updates));
+      dispatch(setValues({updates: updates}));
       gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
@@ -73,7 +73,7 @@ export const MenuBarUser = React.memo(({
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
       const updates = [["game", "playerData", playerN, "willpower", parseInt(newValue)]];
-      dispatch(setValues(updates));
+      dispatch(setValues({updates: updates}));
       gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
       if (increment > 0) chatBroadcast("game_update",{message: "raises willpower by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces willpower by "+(-increment)+" ("+newValue+")."});
