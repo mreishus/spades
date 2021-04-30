@@ -108,6 +108,18 @@ export const getParentCardsInGroup = (game, groupId) => {
   return parentCards;
 }
 
+// List of playerN strings of seats that are not eliminated
+ export const nonEliminated = (gameUi) => {
+  const playerIDs = gameUi["playerIds"]
+  const playerData = gameUi["game"]["playerData"]
+  var playerNs = [];
+  for (var i = 1; i<= gameUi["numPlayers"]; i++) {
+    const playerI = "player"+i;
+    if (!playerData[playerI]["eliminated"]) playerNs.push(playerI);
+  }
+  return playerNs;
+}
+
  // List of playerN strings of players that are seated and not eliminated
 export const seatedNonEliminated = (gameUi) => {
   const playerIDs = gameUi["playerIds"]
@@ -122,16 +134,16 @@ export const seatedNonEliminated = (gameUi) => {
 }
 
 export const leftmostNonEliminatedPlayerN = (gameUi) => {
-  const seatedPlayerNs = seatedNonEliminated(gameUi);
-  return seatedPlayerNs[0];
+  const nonEliminatedPlayerNs = nonEliminated(gameUi);
+  return nonEliminatedPlayerNs[0];
 }
 
 export const getNextPlayerN = (gameUi, playerN) => {
-  const seatedPlayerNs = seatedNonEliminated(gameUi);
-  const seatedPlayerNs2 = seatedPlayerNs.concat(seatedPlayerNs);
+  const nonEliminatedPlayerNs = nonEliminated(gameUi);
+  const nonEliminatedPlayerNs2 = nonEliminatedPlayerNs.concat(nonEliminatedPlayerNs);
   var nextPlayerN = null;
-  for (var i=0; i<seatedPlayerNs2.length/2; i++) {
-    if (seatedPlayerNs2[i] === playerN) nextPlayerN = seatedPlayerNs2[i+1];
+  for (var i=0; i<nonEliminatedPlayerNs2.length/2; i++) {
+    if (nonEliminatedPlayerNs2[i] === playerN) nextPlayerN = nonEliminatedPlayerNs2[i+1];
   }
   if (nextPlayerN === playerN) nextPlayerN = null;
   return nextPlayerN;

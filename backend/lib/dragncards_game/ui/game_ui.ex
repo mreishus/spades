@@ -474,11 +474,11 @@ defmodule DragnCardsGame.GameUI do
   # Game actions                                                 #
   ################################################################
   def game_action(gameui, user_id, action, options) do
-    IO.puts("game_action")
-    IO.inspect(action)
+    IO.puts("game_action #{action}")
+    IO.inspect(options)
     player_n = get_player_n(gameui, user_id)
     if player_n do
-      gameui = case action do
+      case action do
         "draw_card" ->
           draw_card(gameui, options["player_n"])
         "peek_at" ->
@@ -517,7 +517,12 @@ defmodule DragnCardsGame.GameUI do
           gameui
       end
     else
-      gameui
+      case action do
+        "set_seat" ->
+          set_seat(gameui, options["user_id"], options["player_n"])
+          _ ->
+            gameui
+      end
     end
   end
 
@@ -628,7 +633,10 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def set_seat(gameui, user_id, player_n) do
-    put_in(gameui["playerIds"][player_n], user_id)
+    IO.inspect(gameui["playerIds"])
+    gameui = put_in(gameui["playerIds"][player_n], user_id)
+    IO.inspect(gameui["playerIds"])
+    gameui
   end
 
   def update_stack_state(gameui, stack_id, options) do

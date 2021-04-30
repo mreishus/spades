@@ -91,7 +91,7 @@ export const MenuBarUser = React.memo(({
     })
     // Sit in seat
     if (action === "sit") {
-      gameBroadcast("game_action", {action:"set_seat", options: {"player_n": playerI, "user_id": myUserID}});
+      gameBroadcast("game_action", {action: "set_seat", options: {"player_n": playerI, "user_id": myUserID}});
       chatBroadcast("game_update",{message: "sat in "+playerI+"'s seat."});
       setObservingPlayerN(playerI);
     } 

@@ -144,9 +144,19 @@ export const HandleKeyDown = ({
             chatBroadcast("game_update",{message: "drew a card."});
             gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}})
         } else if (k === "R") {
-            if (gameUi.game.roundStep !== "7.R") {
+            // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
+            // This prevents, for example, the token moving multiple times if players refresh at different times.
+            if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
+                // Set phase
                 gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]}});
                 chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
+                const firstPlayerN = gameUi.game.firstPlayer;
+                const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
+                // If nextPlayerN is null then it's a solo game, so don't pass the token
+                if (nextPlayerN) {
+                    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","firstPlayer", nextPlayerN]]}});    
+                    chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."})
+                }
             }
             // Refresh all cards you control
             chatBroadcast("game_update",{message: "refreshes."});
@@ -162,31 +172,22 @@ export const HandleKeyDown = ({
             const newThreat = gameUi.game.playerData[playerN].threat+1;
             chatBroadcast("game_update", {message: "raises threat by 1 ("+newThreat+")."});
             gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat]]}});
-            // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
-            // This prevents, for example, the token moving multiple times if players refresh at different times.
-            if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
-                const firstPlayerN = gameUi.game.firstPlayer;
-                const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
-                // If nextPlayerN is null then it's a solo game, so don't pass the token
-                if (nextPlayerN) {
-                    gameBroadcast("game_action", {action: "update_values", options: {paths: [["game","firstPlayer", nextPlayerN]]}});    
-                    chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."})
-                }
-            }
         } else if (k === "N") {
-            if (gameUi["game"]["roundStep"] !== "1.R") {
-                gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "phase", "Resource"], ["game", "roundStep", "1.R"]]}})
-                chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
-            }
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the round number increasing multiple times.
             if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
+                // Update phase
+                gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "phase", "Resource"], ["game", "roundStep", "1.R"]]}})
+                chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
                 // Update round number
                 const roundNumber = gameUi["game"]["roundNumber"];
                 const newRoundNumber = parseInt(roundNumber) + 1;
                 gameBroadcast("game_action", {action: "update_values", options:{updates:[["game", "roundNumber", newRoundNumber]]}})
                 chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
             }
+            // Draw a card
+            gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
+            chatBroadcast("game_update",{message: "drew a card."});
             // Add a resource to each hero
             gameBroadcast("game_action", {
                 action: "action_on_matching_cards", 
@@ -196,9 +197,8 @@ export const HandleKeyDown = ({
                     options: {token_type: "resource", increment: 1}
                 }
             });
-            // Draw a card
-            gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
-            chatBroadcast("game_update",{message: "drew a card."});
+            // Reset willpower count
+            gameBroadcast("game_action", {action: "update_values", options:{updates:[["game", "playerData", playerN, "willpower", 0]]}})
             // Add custom set tokens per round
             gameBroadcast("game_action", {
                 action: "action_on_matching_cards", 
@@ -206,6 +206,15 @@ export const HandleKeyDown = ({
                     criteria:[["controller",playerN], ["groupType","play"]], 
                     action: "apply_tokens_per_round", 
                     options: {}
+                }
+            });
+            // Uncommit all characters to the quest
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[["controller", playerN]], 
+                    action: "update_card_values", 
+                    options: {updates: [["committed", false]]}
                 }
             });
         } else if (k === "M") {
