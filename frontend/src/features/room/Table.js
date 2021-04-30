@@ -80,8 +80,8 @@ export const Table = React.memo(({
     const cardRow = cardDB[cardID];
     if (!cardRow) return;
     const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': "sharedStaging"}]
-    gameBroadcast("load_cards",{load_list: loadList});
-    chatBroadcast("game_update",{message: "spawned "+cardRow["sides"]["A"]["printName"]+"."});
+    gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
+    chatBroadcast("game_update", {message: "spawned "+cardRow["sides"]["A"]["printName"]+"."});
   }
 
   return (

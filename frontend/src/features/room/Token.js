@@ -48,8 +48,6 @@ export const Token = React.memo(({
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
             gameBroadcast("game_action", {action:"update_values", options: {updates: [["game", "cardById", cardId, "tokens", tokenType, newAmount]]}});
-            //gameBroadcast("increment_token",{tokens_id: tokensId, type: type, increment: totalDelta})
-            //gameBroadcast("update_card", {card: newCard, group_id: groupId, stack_index: stackIndex, card_index:cardIndex});
             if (totalDelta > 0) {
                 if (totalDelta === 1) {
                     chatBroadcast("game_update",{message: "added "+totalDelta+" "+printName+" token to "+cardName+"."});

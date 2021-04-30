@@ -170,11 +170,11 @@ export const Card = React.memo(({
                 chatBroadcast("game_update",{message: "moved "+displayName+" to top of "+destGroupTitle+"."})
             } else if (data.position === "b") {
                 gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: -1, dest_card_index: 0, combine: false, preserve_state: false}})
-                chatBroadcast("game_update",{message: "moved "+displayName+" to bottom of "+destGroupTitle+"."})
+                chatBroadcast("game_update", {message: "moved "+displayName+" to bottom of "+destGroupTitle+"."})
             } else if (data.position === "s") {
                 gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
-                gameBroadcast("shuffle_group", {group_id: data.destGroupId})
-                chatBroadcast("game_update",{message: "shuffled "+displayName+" into "+destGroupTitle+"."})
+                gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: data.destGroupId}})
+                chatBroadcast("game_update", {message: "shuffled "+displayName+" into "+destGroupTitle+"."})
             }
         } else if (data.action === "update_tokens_per_round") {
             const increment = data.increment;

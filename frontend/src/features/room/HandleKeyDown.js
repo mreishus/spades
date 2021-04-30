@@ -127,13 +127,7 @@ export const HandleKeyDown = ({
             const shiftHeld = (k === "E"); // keypress[0] === "Shift";
             const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
             chatBroadcast("game_update",{message: message});
-            gameBroadcast("move_stack",{
-                stack_id: topStackId, 
-                dest_group_id: "sharedStaging", 
-                dest_stack_index: -1,
-                combine: false,
-                preserve_state: shiftHeld,
-            });
+            gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
         } else if (k === "y") {
             dispatch(incrementRound());
         } else if (k === "d") {
@@ -149,22 +143,13 @@ export const HandleKeyDown = ({
             // Draw card
             chatBroadcast("game_update",{message: "drew a card."});
             gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}})
-            // gameBroadcast("move_stack",{
-            //     stack_id: topStackId, 
-            //     dest_group_id: "player1Hand", 
-            //     dest_stack_index: -1,
-            //     combine: false,
-            //     preserve_state: false,
-            // });
         } else if (k === "R") {
             if (gameUi.game.roundStep !== "7.R") {
-                //gameBroadcast("set_round_step", {phase: "Refresh", round_step: "7.R"}) 
                 gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]}});
                 chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
             }
             // Refresh all cards you control
             chatBroadcast("game_update",{message: "refreshes."});
-            //gameBroadcast("refresh",{player_n: playerN});
             gameBroadcast("game_action", {
                 action: "action_on_matching_cards", 
                 options: {
@@ -183,11 +168,8 @@ export const HandleKeyDown = ({
                 const firstPlayerN = gameUi.game.firstPlayer;
                 const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
                 // If nextPlayerN is null then it's a solo game, so don't pass the token
-                console.log("moving token");
-                console.log(firstPlayerN);
-                console.log(nextPlayerN);
                 if (nextPlayerN) {
-                    gameBroadcast("update_values",{paths: [["game","firstPlayer", nextPlayerN]]});    
+                    gameBroadcast("game_action", {action: "update_values", options: {paths: [["game","firstPlayer", nextPlayerN]]}});    
                     chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."})
                 }
             }
@@ -237,7 +219,6 @@ export const HandleKeyDown = ({
         } else if (k == "Escape") {
             // Remove targets from all cards you targeted
             chatBroadcast("game_update",{message: "removes all targets."});
-            //gameBroadcast("refresh",{player_n: playerN});
             gameBroadcast("game_action", {
                 action: "action_on_matching_cards", 
                 options: {
@@ -472,10 +453,8 @@ export const HandleKeyDown = ({
                 else if (activeCard.owner === "player3") destGroupId = "gPlayer3Deck";
                 else if (activeCard.owner === "player4") destGroupId = "gPlayer4Deck";
                 gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
-                // gameBroadcast("move_card", {orig_group_id: groupId, orig_stack_index: stackIndex, orig_card_index: cardIndex, dest_group_id: destGroupId, dest_stack_index: 0, dest_card_index: 0, create_new_stack: true})
                 gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: destGroupId}})
-                // gameBroadcast("shuffle_group", {group_id: destGroupId})
-                chatBroadcast("game_update",{message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupId].name+"."})
+                chatBroadcast("game_update", {message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupId].name+"."})
             }
             // Draw an arrow
             else if (k === "w") {

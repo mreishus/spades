@@ -505,6 +505,14 @@ defmodule DragnCardsGame.GameUI do
           action_on_matching_cards(gameui, options["criteria"], options["action"], options["options"])
         "deal_shadow" ->
           deal_shadow(gameui, options["card_id"])
+        "increment_token" ->
+          increment_token(gameui, options["card_id"], options["token_type"], options["increment"])
+        "reset_game" ->
+          reset_game(gameui)
+        "load_cards" ->
+          load_cards(gameui, options["user_id"], options["load_list"])
+        "set_seat" ->
+          set_seat(gameui, options["user_id"], options["player_n"])
         _ ->
           gameui
       end
@@ -513,7 +521,6 @@ defmodule DragnCardsGame.GameUI do
     end
   end
 
-  # game_action draw_card
   def draw_card(gameui, player_n) do
     stack_ids = get_stack_ids(gameui, player_n<>"Deck")
     if Enum.count(stack_ids) > 0 do
@@ -523,7 +530,11 @@ defmodule DragnCardsGame.GameUI do
     end
   end
 
-  # game_action reveal_encounter
+  def reset_game(gameui) do
+    new_game = Game.new(gameui["options"])
+    put_in(gameui["game"], new_game)
+  end
+
   def reveal_encounter(gameui, player_n, options) do
     stack_ids = get_stack_ids(gameui, "sharedEncounter")
     if Enum.count(stack_ids) > 0 do
@@ -533,7 +544,6 @@ defmodule DragnCardsGame.GameUI do
     end
   end
 
-  # game_action peek_at
   def peek_at(gameui, player_n, stack_ids, value) do
     IO.puts("game_action peek_at")
     IO.inspect(player_n)
@@ -556,30 +566,8 @@ defmodule DragnCardsGame.GameUI do
         put_in(obj[Enum.at(update,0)], update_value(obj[Enum.at(update,0)], List.delete_at(update, 0)))
     end
   end
-  #   IO.puts("game_ui update_value")
-  #   IO.inspect(path)
-  #   IO.inspect(value)
-  #   case Enum.count(path) do
-  #     2 ->
-  #       put_in(gameui[Enum.at(path,0)], Enum.at(path,1))
-  #     3 ->
-  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)], value)
-  #     4 ->
-  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)], value)
-  #     5 ->
-  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)], value)
-  #     6 ->
-  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)][Enum.at(path,4)], value)
-  #     7 ->
-  #       put_in(gameui[Enum.at(path,0)][Enum.at(path,1)][Enum.at(path,2)][Enum.at(path,3)][Enum.at(path,4)][Enum.at(path,5)], value)
-  #     _ ->
-  #       gameui
-  #   end
-  # end
 
   def update_values(gameui, updates) do
-    IO.puts("game_ui update_values")
-    #raise "super error"
     Enum.reduce(updates, gameui, fn(update, acc) ->
       acc = update_value(acc, update)
     end)
@@ -610,44 +598,22 @@ defmodule DragnCardsGame.GameUI do
   def delete_stack_from_stack_by_id(gameui, stack) do
     # Delete stack from stackById object
     old_stack_by_id = gameui["game"]["stackById"]
-    IO.puts("deleting stack")
-    IO.inspect(stack)
-    IO.puts("stackById")
-    IO.inspect(old_stack_by_id)
     new_stack_by_id = Map.delete(old_stack_by_id, stack["id"])
-    IO.puts("delete a")
     put_in(gameui["game"]["stackById"], new_stack_by_id)
   end
 
   def delete_stack_id_from_group_by_id(gameui, stack) do
     old_group = get_group_by_stack_id(gameui, stack["id"])
-    IO.puts("delete c")
     old_stack_ids = old_group["stackIds"]
-    IO.puts("delete d")
-    IO.inspect(gameui["game"]["groupById"])
     stack_index = get_stack_index_by_stack_id(gameui, stack["id"])
-    IO.puts("stack_index")
-    IO.inspect(stack_index)
     new_stack_ids = List.delete_at(old_stack_ids, stack_index)
-    IO.puts("new_stack_ids")
-    IO.inspect(new_stack_ids)
-    IO.puts("old_group")
-    IO.inspect(old_group)
     update_stack_ids(gameui, old_group["id"], new_stack_ids)
   end
 
   def remove_from_stack(gameui, stack, card) do
-    IO.puts("removing from stack")
-    IO.inspect(stack)
-    IO.inspect(card["id"])
     old_card_ids = get_card_ids(gameui, stack["id"])
-    IO.puts("old_card_ids")
-    IO.inspect(old_card_ids)
     card_index = get_card_index_by_card_id(gameui, card["id"])
-    IO.puts("card_index #{card_index}")
     new_card_ids = List.delete_at(old_card_ids, card_index)
-    IO.puts("new_card_ids")
-    IO.inspect(new_card_ids)
     if Enum.count(new_card_ids) == 0 do
       delete_stack(gameui, stack)
     else
@@ -656,45 +622,12 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def add_to_stack(gameui, stack, card, card_index) do
-    IO.puts("add_to_stack")
-    IO.inspect(stack)
-    IO.inspect(card)
-    IO.inspect(card_index)
     old_card_ids = get_card_ids(gameui, stack["id"])
     new_card_ids = List.insert_at(old_card_ids, card_index, card["id"])
     update_card_ids(gameui, stack["id"], new_card_ids)
   end
 
-
-
-
-
-
-  # def detach(gameui, card, options \\ nil) do
-  #   stack_id = get_stack_id_by_card_id(gameui, card["id"])
-  #   card_index = get_card_index_by_card_id(gameui, stack_id, card["id"])
-  #   stack_index = get_stack_index_by_stack_id(gameui, stack_id)
-  #   group_id = get_group_id_by_stack_id(gameui, stack_id)
-
-  #   new_stack = Stack.new()
-  #   old_stacks = get_stack_ids(gameui, group_id)
-  #   old_stack = get_stack(gameui, group_id, stack_index)
-  #   old_cards = get_card_ids(gameui, stack_id)
-  #   old_card = get_card(gameui, gsc)
-
-  #   # Delete old card
-  #   new_cards = List.delete_at(old_cards, card_index)
-  #   new_stack = put_in(old_stack["cards"], new_cards)
-  #   new_stacks = List.replace_at(old_stacks, stack_index, new_stack)
-
-  #   # Insert new card
-  #   new_stacks = List.insert_at(new_stacks, stack_index+1, Stack.stack_from_card(old_card))
-
-  #   # Put stacks into gameui
-  #   update_stacks(gameui, group_id, new_stacks)
-  # end
-
-  def sit(gameui, user_id, player_n) do
+  def set_seat(gameui, user_id, player_n) do
     put_in(gameui["playerIds"][player_n], user_id)
   end
 
@@ -739,8 +672,6 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def move_stack(gameui, stack_id, dest_group_id, dest_stack_index, combine \\ false, preserve_state \\ false) do
-    IO.puts("gameui move_stack")
-    pretty_print(gameui, "A")
     orig_group_id = get_group_by_stack_id(gameui, stack_id)["id"]
     orig_stack_index = get_stack_index_by_stack_id(gameui, stack_id)
     # If destination is negative, count backward from the end

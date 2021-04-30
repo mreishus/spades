@@ -65,7 +65,7 @@ export const MenuBarDataContainer = React.memo(({
           progress={totalProgress}
         />
         <MenuBarUser
-          playerN={"player1"}
+          playerI={"player1"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
@@ -73,7 +73,7 @@ export const MenuBarDataContainer = React.memo(({
         />
         {numPlayers > 1 &&
         <MenuBarUser
-          playerN={"player2"}
+          playerI={"player2"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
@@ -81,7 +81,7 @@ export const MenuBarDataContainer = React.memo(({
         />}
         {numPlayers > 2 &&
         <MenuBarUser
-          playerN={"player3"}
+          playerI={"player3"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
@@ -89,7 +89,7 @@ export const MenuBarDataContainer = React.memo(({
         />}
         {numPlayers > 3 &&
         <MenuBarUser
-          playerN={"player4"}
+          playerI={"player4"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}

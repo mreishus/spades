@@ -10,7 +10,7 @@ import { getCurrentFace } from "./Helpers";
 var delayBroadcast;
 
 export const MenuBarUser = React.memo(({
-  playerN,
+  playerI,
   gameBroadcast,
   chatBroadcast,
   observingPlayerN,
@@ -19,7 +19,7 @@ export const MenuBarUser = React.memo(({
   const dispatch = useDispatch();
   const playerIdsStore = state => state?.gameUi?.playerIds;
   const playerIds = useSelector(playerIdsStore);
-  const playerDataPlayerNStore = state => state?.gameUi?.game?.playerData?.[playerN];
+  const playerDataPlayerNStore = state => state?.gameUi?.game?.playerData?.[playerI];
   const playerDataPlayerN = useSelector(playerDataPlayerNStore);  
   const firstPlayerStore = state => state?.gameUi?.game?.firstPlayer;
   const firstPlayer = useSelector(firstPlayerStore);  
@@ -40,12 +40,12 @@ export const MenuBarUser = React.memo(({
   if (!playerIds) return null;
   if (!playerDataPlayerN) return null;
 
-  console.log("menubaruser ", playerN);
+  console.log("menubaruser ", playerI);
 
-  const sittingUserID = playerIds[playerN];
+  const sittingUserID = playerIds[playerI];
   
   // If not observing anyone, observe yourself
-  if (!observingPlayerN && (myUserID === sittingUserID)) setObservingPlayerN(playerN);
+  if (!observingPlayerN && (myUserID === sittingUserID)) setObservingPlayerN(playerI);
 
 
 
@@ -56,7 +56,7 @@ export const MenuBarUser = React.memo(({
     // Set up a delayed broadcast to update the game state that interrupts itself if the button is clicked again shortly after.
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
-      const updates = [["game", "playerData", playerN, "threat", parseInt(newValue)]];
+      const updates = [["game", "playerData", playerI, "threat", parseInt(newValue)]];
       dispatch(setValues({updates: updates}));
       gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
@@ -72,7 +72,7 @@ export const MenuBarUser = React.memo(({
     // Set up a delayed broadcast to update the game state that interrupts itself if the button is clicked again shortly after.
     if (delayBroadcast) clearTimeout(delayBroadcast);
     delayBroadcast = setTimeout(function() {
-      const updates = [["game", "playerData", playerN, "willpower", parseInt(newValue)]];
+      const updates = [["game", "playerData", playerI, "willpower", parseInt(newValue)]];
       dispatch(setValues({updates: updates}));
       gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
       if (increment > 0) chatBroadcast("game_update",{message: "raises willpower by "+increment+" ("+newValue+")."});
@@ -82,28 +82,28 @@ export const MenuBarUser = React.memo(({
 
   const handleSitClick = (action) => {
     // Get up from any seats first
-    Object.keys(playerIds).forEach((playerI) => {
-      const sittingUserIDi = playerIds[playerI];
+    Object.keys(playerIds).forEach((playeri) => {
+      const sittingUserIDi = playerIds[playeri];
       if (sittingUserIDi === myUserID) {
-        gameBroadcast("get_up",{"playerN": playerI});
-        chatBroadcast("game_update",{message: "got up from "+playerI+"'s seat."});
+        gameBroadcast("game_action", {action: "set_seat", options: {"player_n": playeri, "user_id": null}});
+        chatBroadcast("game_update", {message: "got up from "+playeri+"'s seat."});
       }
     })
     // Sit in seat
     if (action === "sit") {
-      gameBroadcast("sit",{"playerN": playerN});
-      chatBroadcast("game_update",{message: "sat in "+playerN+"'s seat."});
-      setObservingPlayerN(playerN);
+      gameBroadcast("game_action", {action:"set_seat", options: {"player_n": playerI, "user_id": myUserID}});
+      chatBroadcast("game_update",{message: "sat in "+playerI+"'s seat."});
+      setObservingPlayerN(playerI);
     } 
   }
 
   const handleObserveClick = () => {
-    if (observingPlayerN === playerN) {
+    if (observingPlayerN === playerI) {
       setObservingPlayerN(null);
-      chatBroadcast("game_update",{message: "stopped observing "+playerN+"."});
+      chatBroadcast("game_update",{message: "stopped observing "+playerI+"."});
     } else {
-      setObservingPlayerN(playerN);
-      chatBroadcast("game_update",{message: "started observing "+playerN+"."});
+      setObservingPlayerN(playerI);
+      chatBroadcast("game_update",{message: "started observing "+playerI+"."});
     }
   }
 
@@ -126,7 +126,7 @@ export const MenuBarUser = React.memo(({
       <div className="float-left h-full w-2/3">
         <div className="h-1/2 w-full flex justify-center">
           {/* Show First player token */}
-          {(firstPlayer === playerN) ? 
+          {(firstPlayer === playerI) ? 
             <img className="h-full mr-1 mb-1" src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}></img>
             : null}
           <UserName userID={sittingUserID} defaultName="Empty seat"></UserName>
@@ -141,7 +141,7 @@ export const MenuBarUser = React.memo(({
 
           <div 
             className={"h-full w-1/2 float-left flex justify-center "+
-              ((observingPlayerN===playerN) ? "bg-gray-500" : "hover:bg-gray-500")}
+              ((observingPlayerN===playerI) ? "bg-gray-500" : "hover:bg-gray-500")}
             onClick={() => handleObserveClick()}
           >Obsv</div>
         </div>

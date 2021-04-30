@@ -227,8 +227,7 @@ export const functionOnMatchingCards = (gameUi, gameBroadcast, chatBroadcast, cr
       case "increment_token":
         const tokenType = args[0];
         const increment = args[1];
-        console.log("increment_token", tokenType, increment);
-        gameBroadcast("increment_token",{group_id: groupId, stack_index: stackIndex, card_index: cardIndex, token_type: tokenType, increment: increment})
+        gameBroadcast("game_action", {action: func, options: {group_id: groupId, stack_index: stackIndex, card_index: cardIndex, token_type: tokenType, increment: increment}})
         if (increment > 0) {
             if (increment === 1) chatBroadcast("game_update",{message: "added "+increment+" "+tokenType+" token to "+cardName+"."});
             else chatBroadcast("game_update",{message: "added "+increment+" "+tokenType+" tokens to "+cardName+"."});

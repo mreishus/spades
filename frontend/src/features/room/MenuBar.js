@@ -43,7 +43,7 @@ export const MenuBar = React.memo(({
       }
       console.log(data);
       if (data.action === "reset_game") {
-        gameBroadcast("reset_game",{});
+        gameBroadcast("game_action", {action: "reset_game", options: {}});
         chatBroadcast("game_update", {message: "reset the game."});
       } else if (data.action === "load_deck") {
         loadFileDeck();
@@ -98,7 +98,7 @@ export const MenuBar = React.memo(({
               }
             })
           })
-          gameBroadcast("load_cards",{load_list: loadList});
+          gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
           chatBroadcast("game_update",{message: "loaded a deck."});
         })
       }
@@ -111,7 +111,7 @@ export const MenuBar = React.memo(({
       reader.onload = async (event) => { 
         const gameObj = JSON.parse(event.target.result);
         dispatch(setGame(gameObj));
-        gameBroadcast("game_action", {action: "update_values", options:{paths: [["game"]], values: [gameObj]}})
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", gameObj]]}})
         chatBroadcast("game_update", {message: "uploaded a game."});
       }
       reader.readAsText(event.target.files[0]);
