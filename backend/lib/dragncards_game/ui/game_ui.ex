@@ -16,7 +16,6 @@ defmodule DragnCardsGame.GameUI do
       "options" => options,
       "created_at" => DateTime.utc_now(),
       "created_by" => user,
-      "numPlayers" => 1,
       "layout" => "standard",
       "playerIds" => %{
         "player1" => user,
@@ -377,6 +376,12 @@ defmodule DragnCardsGame.GameUI do
         |> Map.put("currentSide", "B")
         |> set_all_peeking(false)
       else card end
+      # Entering discard: flip card faceup, no peeking
+      card = if dest_group_type == "discard" do
+        card
+        |> Map.put("currentSide", "A")
+        |> set_all_peeking(false)
+      else card end
       # Leaving hand/deck: flip card faceup
       card = if (orig_group_type == "deck" or orig_group_type =="hand") and dest_group_type != "deck" and dest_group_type != "hand" do
         flipped_card = Map.put(card, "currentSide", "A")
@@ -434,12 +439,6 @@ defmodule DragnCardsGame.GameUI do
 
   def peek_stack(gameui, stack, player_n, value) do
     card_ids = get_card_ids(gameui, stack["id"])
-    IO.puts("stack_action peek_stack")
-    pretty_print(gameui)
-    IO.inspect(stack)
-    IO.inspect(card_ids)
-    IO.inspect(player_n)
-    IO.inspect(value)
     Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
       card = get_card(gameui, card_id)
       acc = peek_card(acc, player_n, card_id, value)
@@ -450,9 +449,8 @@ defmodule DragnCardsGame.GameUI do
   # Group actions                                                 #
   #################################################################
   def group_action(gameui, action, group_id, options) do
-    IO.puts("group_action")
-    IO.inspect(action)
-    IO.inspect(group_id)
+    IO.puts("group_action #{action}")
+    IO.inspect(options)
     group = get_group(gameui, group_id)
     gameui = case action do
       "peek_group" ->
@@ -505,6 +503,8 @@ defmodule DragnCardsGame.GameUI do
           action_on_matching_cards(gameui, options["criteria"], options["action"], options["options"])
         "deal_shadow" ->
           deal_shadow(gameui, options["card_id"])
+        "deal_all_shadows" ->
+          deal_all_shadows(gameui)
         "increment_token" ->
           increment_token(gameui, options["card_id"], options["token_type"], options["increment"])
         "reset_game" ->
@@ -549,18 +549,80 @@ defmodule DragnCardsGame.GameUI do
     end
   end
 
+  def rotate_list_left(list) do
+    IO.puts("rotate_list_left")
+    IO.inspect(list)
+    nl = if Enum.count(list) > 0 do
+      Enum.slice(list, 1, Enum.count(list)) ++ [Enum.at(list,0)]
+    else
+      []
+    end
+    IO.inspect(nl)
+    nl
+  end
+
+  def get_non_eliminated_players(gameui) do
+    Enum.reduce(1..gameui["game"]["numPlayers"], [], fn(n, acc) ->
+      player_n = "player"<>Integer.to_string(n)
+      acc = if gameui["game"]["playerData"][player_n]["eliminated"] do
+        acc
+      else
+        acc ++ [player_n]
+      end
+      IO.puts("acc")
+      IO.inspect(acc)
+      acc
+    end)
+  end
+
+  def get_player_order(gameui) do
+    # Get list of non-eliminated players
+    IO.puts("non-elim-players")
+    players = get_non_eliminated_players(gameui)
+    IO.inspect(players)
+    # Rotate list until first player is first
+    rp = Enum.reduce_while(players, players, fn(player_n, acc) ->
+      if gameui["game"]["firstPlayer"] == Enum.at(acc, 0) do
+        {:halt, acc}
+      else
+        {:cont, rotate_list_left(acc)}
+      end
+    end)
+    IO.inspect(rp)
+    rp
+  end
+
+  def deal_player_n_shadows(gameui, player_n) do
+    # Get engaged enemy cards
+    criteria = [["groupId", player_n<>"Engaged"], ["cardIndex", 0], ["sides", "sideUp", "type", "Enemy"]]
+    engaged_enemy_cards = get_cards_matching_criteria(gameui, criteria)
+    # Get list of engagements costs
+    engagement_cost_list = Enum.reduce(engaged_enemy_cards, [], fn(card, acc)->
+      engagement_cost = get_value_from_cardpath(card, ["sides", "sideUp", "engagementCost"])
+      acc = acc ++ [%{"engagement_cost" => engagement_cost, "id" => card["id"]}]
+    end)
+    # Sort by engagement cost
+    sorted_enemy_list = Enum.reverse(Enum.sort_by(engagement_cost_list, &Map.fetch(&1, "engagement_cost")))
+    # Deal shadows
+    Enum.reduce(sorted_enemy_list, gameui, fn(item, acc) ->
+      acc = deal_shadow(acc, item["id"])
+    end)
+  end
+
+  def deal_all_shadows(gameui) do
+    player_order = get_player_order(gameui)
+    Enum.reduce(player_order, gameui, fn(player_n, acc) ->
+      deal_player_n_shadows(acc, player_n)
+    end)
+  end
+
   def peek_at(gameui, player_n, stack_ids, value) do
-    IO.puts("game_action peek_at")
-    IO.inspect(player_n)
-    IO.inspect(stack_ids)
-    IO.inspect(value)
     Enum.reduce(stack_ids, gameui, fn(stack_id, acc) ->
       stack = get_stack(gameui, stack_id)
       acc = peek_stack(acc, stack, player_n, value)
     end)
   end
 
-  #
   def update_value(obj, update) do
     case Enum.count(update) do
       0 ->
@@ -601,7 +663,6 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def delete_stack_from_stack_by_id(gameui, stack) do
-    # Delete stack from stackById object
     old_stack_by_id = gameui["game"]["stackById"]
     new_stack_by_id = Map.delete(old_stack_by_id, stack["id"])
     put_in(gameui["game"]["stackById"], new_stack_by_id)
@@ -633,10 +694,7 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def set_seat(gameui, user_id, player_n) do
-    IO.inspect(gameui["playerIds"])
-    gameui = put_in(gameui["playerIds"][player_n], user_id)
-    IO.inspect(gameui["playerIds"])
-    gameui
+    put_in(gameui["playerIds"][player_n], user_id)
   end
 
   def update_stack_state(gameui, stack_id, options) do
@@ -648,28 +706,18 @@ defmodule DragnCardsGame.GameUI do
       # Update cards in stack one at a time in reverse order
       # This is so that when the stack is removed from play,
       # order is preserved as cards are detached
-      IO.puts("update_stack_state moved #{stack_id} from #{orig_group_id}")
-      IO.inspect(gameui["game"]["stackById"])
       stack = get_stack(gameui, stack_id)
-      IO.puts("stack")
-      IO.inspect(stack)
       dest_group = get_group_by_stack_id(gameui, stack_id)
       dest_group_id = dest_group["id"]
       card_ids = get_card_ids(gameui, stack_id)
       gameui = Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
-        IO.puts("updating card state #{card_id}")
         card = get_card(acc, card_id)
         acc = update_card_state(acc, card, preserve_state, orig_group_id)
       end)
       # If a stack is out of play, we need to split it up
-      IO.puts("dest_group_id")
-      IO.inspect(dest_group_id)
-      IO.puts("dest_group_type")
-      IO.inspect(get_group_type(gameui, dest_group_id))
       if Enum.count(card_ids)>1 && get_group_type(gameui, dest_group_id) != "play" do
         reverse_card_ids = Enum.reverse(card_ids)
         Enum.reduce(reverse_card_ids, gameui, fn(card_id, acc) ->
-          IO.puts("detaching #{card_id}")
           pretty_print(gameui)
           acc = detach(acc, card_id)
         end)
@@ -986,15 +1034,21 @@ defmodule DragnCardsGame.GameUI do
     end)
   end
 
+  def get_cards_matching_criteria(gameui, criteria) do
+    flat_list = flat_list_of_cards(gameui)
+    Enum.reduce(flat_list, [], fn(card, acc) ->
+      acc = if passes_criteria(card, criteria) do
+        acc ++ [card]
+      else
+        acc
+      end
+    end)
+  end
+
   def action_on_matching_cards(gameui, criteria, action, options \\ nil) do
     flat_list = flat_list_of_cards(gameui)
-    #IO.inspect(gameui)
     Enum.reduce(flat_list, gameui, fn(card, acc) ->
-      IO.puts("checking card for")
-      IO.inspect(criteria)
-      IO.inspect(card["sides"]["A"]["name"])
       acc = if passes_criteria(card, criteria) do
-        IO.puts(" matched!")
         card_action(acc, card["id"], action, options)
       else
         acc

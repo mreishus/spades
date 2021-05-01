@@ -62,7 +62,7 @@ export const TableLayout = React.memo(({
   setBrowseGroupTopN,
   registerDivToArrowsContext
 }) => {
-  const numPlayersStore = state => state.gameUi.numPlayers;
+  const numPlayersStore = state => state.gameUi.game.numPlayers;
   const numPlayers = useSelector(numPlayersStore);
   const layoutStore = state => state.gameUi.layout;
   const layout = useSelector(layoutStore);

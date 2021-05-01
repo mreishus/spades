@@ -1,24 +1,24 @@
 export const getCurrentFace = (card) => {
   if (!card) return null;
-  return card["sides"][card["currentSide"]];
+  return card.sides[card.currentSide];
 }
 
 export const getDisplayName = (card) => {
-  const currentSide = card["currentSide"];
+  const currentSide = card.currentSide;
   const currentFace = getCurrentFace(card);
   if (currentSide == "A") {
-      const printName = currentFace["printName"];
-      const id = card["id"];
+      const printName = currentFace.printName;
+      const id = card.id;
       const id4digit = id.substr(id.length - 4);
       return printName;//+' ('+id4digit+')'; // Add unique identifier?
   } else { // Side B logic
-      const sideBName = card["sides"]["B"]["name"];
+      const sideBName = card.sides.B.name;
       if (sideBName == "player") {
           return 'player card';
       } else if (sideBName == "encounter") {
           return 'encounter card';
       } else if (sideBName) {
-          const printName = currentFace["printName"];
+          const printName = currentFace.printName;
           const id = card["id"];
           const id4digit = id.substr(id.length - 4);
           return printName;//+' ('+id4digit+')'; // Add unique identifier?
@@ -29,7 +29,7 @@ export const getDisplayName = (card) => {
 }
 
 export const getFlippedCard = (card) => {
-  return (card["currentSide"] === "A") ? {...card, ["currentSide"]: "B"} : {...card, ["currentSide"]: "A"};
+  return (card.currentSide === "A") ? {...card, ["currentSide"]: "B"} : {...card, ["currentSide"]: "A"};
 }
 
 export const getDisplayNameFlipped = (card) => {
@@ -38,14 +38,14 @@ export const getDisplayNameFlipped = (card) => {
 
 export const getVisibleSide = (card, playerN) => {
   if (!card) return null;
-  const currentSide = card["currentSide"];
-  if (currentSide == "A" || card["peeking"][playerN]) return "A";
+  const currentSide = card.currentSide;
+  if (currentSide == "A" || card.peeking[playerN]) return "A";
   else return "B";
 }
 
 export const getVisibleFace = (card, playerN) => {
   const visibleSide = getVisibleSide(card, playerN);
-  if (visibleSide) return card["sides"][visibleSide];
+  if (visibleSide) return card.sides[visibleSide];
   else return null;
 }
 
@@ -55,7 +55,7 @@ export const getVisibleFaceSRC = (card, playerN) => {
   if (visibleSide == "A") {
       return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.jpg';
   } else { // Side B logic
-      const sideBName = card["sides"]["B"]["name"];
+      const sideBName = card.sides.B.name;
       if (sideBName == "player") {
           return process.env.PUBLIC_URL + '/images/cardbacks/player.jpg';
       } else if (sideBName == "encounter") {
@@ -97,12 +97,12 @@ export const GetPlayerN = (playerIDs, id) => {
 }
 
 export const getParentCardsInGroup = (game, groupId) => {
-  const stackIds = game["groupById"][groupId]["stackIds"];
+  const stackIds = game.groupById[groupId].stackIds;
   const parentCards = [];
   for (var stackId of stackIds) {
-    const cardIds = game["stackById"][stackId]["cardIds"];
+    const cardIds = game.stackById[stackId].cardIds;
     const parentCardId = cardIds[0];
-    const parentCard = game["cardById"][parentCardId];
+    const parentCard = game.cardById[parentCardId];
     parentCards.push(parentCard);
   }
   return parentCards;
@@ -110,23 +110,23 @@ export const getParentCardsInGroup = (game, groupId) => {
 
 // List of playerN strings of seats that are not eliminated
  export const nonEliminated = (gameUi) => {
-  const playerIDs = gameUi["playerIds"]
-  const playerData = gameUi["game"]["playerData"]
+  const playerIDs = gameUi.playerIds;
+  const playerData = gameUi.game.playerData;
   var playerNs = [];
-  for (var i = 1; i<= gameUi["numPlayers"]; i++) {
+  for (var i = 1; i<= gameUi.game.numPlayers; i++) {
     const playerI = "player"+i;
-    if (!playerData[playerI]["eliminated"]) playerNs.push(playerI);
+    if (!playerData[playerI].eliminated) playerNs.push(playerI);
   }
   return playerNs;
 }
 
  // List of playerN strings of players that are seated and not eliminated
 export const seatedNonEliminated = (gameUi) => {
-  const playerIDs = gameUi["playerIds"]
-  const playerData = gameUi["game"]["playerData"]
+  const playerIDs = gameUi.playerIds;
+  const playerData = gameUi.game.playerData;
   var seated = []
   Object.keys(playerIDs).forEach((PlayerI) => {
-    if (playerIDs[PlayerI] && !playerData[PlayerI]["eliminated"]) {
+    if (playerIDs[PlayerI] && !playerData[PlayerI].eliminated) {
       seated.push(PlayerI);
     }
   })
@@ -150,17 +150,17 @@ export const getNextPlayerN = (gameUi, playerN) => {
 }
 
 export const flatListOfCards = (gameUi) => {
-  const groupById = gameUi["game"]["groupById"];
+  const groupById = gameUi.game.groupById;
   const allCards = [];
   Object.keys(groupById).forEach((groupId) => {
     const group = groupById[groupId];
     console.log("flattening",groupId);
-    const stacks = group["stacks"];
+    const stacks = group.stacks;
     console.log(stacks);
     for (var s = 0; s < stacks.length; s++) {
       console.log(s);
       const stack = stacks[s];
-      const cards = stack["cards"];
+      const cards = stack.cards;
       for (var c = 0; c < cards.length; c++) {
         const card = cards[c];
         const indexedCard = {

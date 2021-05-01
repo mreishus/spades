@@ -18,7 +18,7 @@ export const MenuBarDataContainer = React.memo(({
     const cardById = useSelector(cardStore); 
     const stackStore = state => state?.gameUi?.game?.stackById;
     const stackById = useSelector(stackStore);
-    const numPlayersStore = state => state.gameUi.numPlayers;
+    const numPlayersStore = state => state.gameUi.game.numPlayers;
     const numPlayers = useSelector(numPlayersStore);
     const playerDataStore = state => state.gameUi.game.playerData;
     const playerData = useSelector(playerDataStore);

@@ -25,6 +25,7 @@ defmodule DragnCardsGame.Game do
     %{
       "version" => 0.1,
       "options" => options,
+      "numPlayers" => 1,
       "firstPlayer" => "player1",
       "roundNumber" => 0,
       "phase" => "Beginning",

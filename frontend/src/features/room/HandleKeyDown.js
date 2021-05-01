@@ -142,7 +142,13 @@ export const HandleKeyDown = ({
             }
             // Draw card
             chatBroadcast("game_update",{message: "drew a card."});
-            gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}})
+            gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}});
+        } else if (k === "S") {
+            // Deal all shadow cards
+            // Set phase
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.2"], ["game", "phase", "Combat"]]}});
+            chatBroadcast("game_update", {message: "set the round step to 6.2: Deal shadow cards."});
+            gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
         } else if (k === "R") {
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
@@ -155,7 +161,7 @@ export const HandleKeyDown = ({
                 // If nextPlayerN is null then it's a solo game, so don't pass the token
                 if (nextPlayerN) {
                     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","firstPlayer", nextPlayerN]]}});    
-                    chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."})
+                    chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."});
                 }
             }
             // Refresh all cards you control
