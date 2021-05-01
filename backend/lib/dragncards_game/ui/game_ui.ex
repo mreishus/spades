@@ -335,6 +335,14 @@ defmodule DragnCardsGame.GameUI do
   # card_action detach
   def detach(gameui, card_id) do
     card = get_card(gameui, card_id)
+    # If it's rotated and not exhausted, it's a shadow card, so when we detach it we want to set its rotation to 0.
+    card = if card["exhausted"] == false && card["rotation"] != 0 do
+      put_in(card["rotation"], 0)
+    else
+      card
+    end
+    gameui = update_card(gameui, card)
+    # Get position of card and move it next to the initial stack
     {group_id, stack_index, card_index} = gsc(gameui, card)
     move_card(gameui, card_id, group_id, stack_index + 1, 0, false, true)
   end

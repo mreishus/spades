@@ -296,8 +296,6 @@ export const Card = React.memo(({
                         />
                     </div> */}
 
-
-
                 </div>
             {/* </div> */}
             </ContextMenuTrigger>
