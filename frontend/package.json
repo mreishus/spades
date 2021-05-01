@@ -16,7 +16,7 @@
     "@types/webpack-env": "^1.15.2",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
-    "date-fns": "^2.14.0",
+    "date-fns": "^2.21.1",
     "http-proxy-middleware": "^1.0.4",
     "phoenix": "^1.5.4",
     "prettier": "^2.0.5",
