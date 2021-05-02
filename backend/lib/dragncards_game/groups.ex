@@ -39,7 +39,7 @@ defmodule DragnCardsGame.Groups do
       "player1Play3"=>            Group.new("player1Play3","play","player1"),
       "player1Play4"=>            Group.new("player1Play4","play","player1"),
       "player1Engaged"=>          Group.new("player1Engaged","play","shared"),
-      "player1Event"=>            Group.new("player1Event","discard","player1"),
+      "player1Event"=>            Group.new("player1Event","play","player1"),
       "player2Hand"=>             Group.new("player2Hand","hand","player2"),
       "player2Deck"=>             Group.new("player2Deck","deck","player2"),
       "player2Discard"=>          Group.new("player2Discard","discard","player2"),
@@ -49,7 +49,7 @@ defmodule DragnCardsGame.Groups do
       "player2Play3"=>            Group.new("player2Play3","play","player2"),
       "player2Play4"=>            Group.new("player2Play4","play","player2"),
       "player2Engaged"=>          Group.new("player2Engaged","play","shared"),
-      "player2Event"=>            Group.new("player2Event","discard","player2"),
+      "player2Event"=>            Group.new("player2Event","play","player2"),
       "player3Hand"=>             Group.new("player3Hand","hand","player3"),
       "player3Deck"=>             Group.new("player3Deck","deck","player3"),
       "player3Discard"=>          Group.new("player3Discard","discard","player3"),
@@ -59,7 +59,7 @@ defmodule DragnCardsGame.Groups do
       "player3Play3"=>            Group.new("player3Play3","play","player3"),
       "player3Play4"=>            Group.new("player3Play4","play","player3"),
       "player3Engaged"=>          Group.new("player3Engaged","play","shared"),
-      "player3Event"=>            Group.new("player3Event","discard","player3"),
+      "player3Event"=>            Group.new("player3Event","play","player3"),
       "player4Hand"=>             Group.new("player4Hand","hand","player4"),
       "player4Deck"=>             Group.new("player4Deck","deck","player4"),
       "player4Discard"=>          Group.new("player4Discard","discard","player4"),
@@ -69,7 +69,7 @@ defmodule DragnCardsGame.Groups do
       "player4Play3"=>            Group.new("player4Play3","play","player4"),
       "player4Play4"=>            Group.new("player4Play4","play","player4"),
       "player4Engaged"=>          Group.new("player4Engaged","play","shared"),
-      "player4Event"=>            Group.new("player4Event","discard","player4"),
+      "player4Event"=>            Group.new("player4Event","play","player4"),
     }
   end
 

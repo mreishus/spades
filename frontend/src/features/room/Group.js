@@ -4,7 +4,7 @@ import styled from "@emotion/styled";
 import { Stacks } from "./Stacks";
 import Title from "./Title";
 import { GROUPSINFO } from "./Constants";
-import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
@@ -62,7 +62,11 @@ export const Group = React.memo(({
           style={{width:"15px", writingMode:"vertical-rl"}} 
         >
           <ContextMenuTrigger id={group.id} holdToDisplay={0}>
-          {GROUPSINFO[group.id].tablename}
+          {/* <div className={"rounded"+ (group.type == "play" ? "" : "hover:bg-gray-500")}> */}
+            <div>
+              {group.type == "play" ? "" : <FontAwesomeIcon className="text-white mb-2 pl-1" icon={faBars}/>}
+              {GROUPSINFO[group.id].tablename}
+            </div>
           </ContextMenuTrigger>
         </div>
       }
