@@ -108,11 +108,17 @@ export const MenuBar = React.memo(({
     const uploadGameAsJson = async(event) => {
       event.preventDefault();
       const reader = new FileReader();
-      reader.onload = async (event) => { 
-        const gameObj = JSON.parse(event.target.result);
-        dispatch(setGame(gameObj));
-        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", gameObj]]}})
-        chatBroadcast("game_update", {message: "uploaded a game."});
+      reader.onload = async (event) => {
+        try {
+          const gameObj = JSON.parse(event.target.result);
+          if (gameObj) {
+            dispatch(setGame(gameObj));
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", gameObj]]}})
+            chatBroadcast("game_update", {message: "uploaded a game."});
+          }
+        } catch(e) {
+            alert("Game must be a valid JSON file."); // error in the above string (in this case, yes)!
+        }
       }
       reader.readAsText(event.target.files[0]);
     }
