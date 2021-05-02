@@ -185,11 +185,11 @@ export const MenuBar = React.memo(({
                       const deckType = groupById[groupId].type;
                       if (deckType !== "play" && groupId.startsWith("shared"))
                         return(
-                          <li className="relative" key={groupId}>
-                            <a className="absolute" onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">
+                          <li className="relative cursor-pointer" onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} key={groupId}>
+                            <a className="absolute" href="#">
                               {GROUPSINFO[groupId].name}
                             </a>
-                            <div className="absolute right-2 top-1">{stackIds.length}</div>
+                            <div className="absolute right-2 top-1 select-none">{stackIds.length}</div>
                           </li>) 
                       else return null;
                     })}
@@ -204,11 +204,11 @@ export const MenuBar = React.memo(({
                       const deckType = groupById[groupId].type;
                       if (deckType !== "play" && groupId.startsWith("player"+N))
                         return(
-                          <li className="relative" key={groupId}>
+                          <li className="relative cursor-pointer" key={groupId}>
                             <a className="absolute" onClick={() => handleMenuClick({action:"look_at",groupId:groupId})} href="#">
                               {GROUPSINFO[groupId].name}
                             </a>
-                            <div className="absolute right-2 top-1">{stackIds.length}</div>
+                            <div className="absolute right-2 top-1 select-none">{stackIds.length}</div>
                           </li>) 
                       else return null;
                     })}
