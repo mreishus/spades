@@ -896,16 +896,16 @@ defmodule DragnCardsGame.GameUI do
     quest_deck_stack_ids = get_stack_ids(gameui, "sharedQuestDeck")
     gameui = if Enum.count(quest_deck_stack_ids)>0 && Enum.count(main_quest_stack_ids)==0 do
       # Dump nightmare/campaign cards into staging
-      Enum.reduce(quest_deck_stack_ids, gameui, fn(stack_id, acc) ->
+      Enum.reduce_while(quest_deck_stack_ids, gameui, fn(stack_id, acc) ->
         card = get_top_card_of_stack(acc, stack_id)
         card_type = card["sides"]["A"]["type"]
         case card_type do
           "Nightmare" ->
-            move_stack(acc, stack_id, "sharedStaging", 0)
+            {:cont, move_stack(acc, stack_id, "sharedStaging", 0)}
           "Campaign" ->
-            move_stack(acc, stack_id, "sharedStaging", 0)
+            {:cont, move_stack(acc, stack_id, "sharedStaging", 0)}
           "Quest" ->
-            move_stack(acc, stack_id, "sharedMainQuest", 0)
+            {:halt, move_stack(acc, stack_id, "sharedMainQuest", 0)}
           _ ->
             acc
         end
