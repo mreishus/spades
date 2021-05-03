@@ -16,6 +16,7 @@ module.exports = {
       'auto': 'auto',
     },
     extend: {
+      backgroundColor: ['odd', 'even'],
       width: {
         "1/100": "1",
         "2/100": "2",

@@ -13,6 +13,7 @@ const cardDB = require('../../cardDB/playringsCardDB.json');
 
 export const MenuBar = React.memo(({
     setShowSpawn,
+    setShowHotkeys,
     handleBrowseSelect,
     gameBroadcast,
     chatBroadcast,
@@ -183,6 +184,9 @@ export const MenuBar = React.memo(({
         <li>
         <div className="h-full flex text-xl items-center justify-center" href="#">View</div>
           <ul className="second-level-menu">
+              <li key={"Hotkeys"}>
+                <a href="#" onClick={() => setShowHotkeys(true)}>Hotkeys</a>
+              </li>
               <li key={"Shared"}>
                 <a href="#">Shared</a>
                   <ul className="third-level-menu">

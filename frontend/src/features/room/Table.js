@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { faStepBackward, faStepForward, faEquals, faAngleDoubleDown, faAngleDoubleUp } from "@fortawesome/free-solid-svg-icons";
+import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import Chat from "../chat/Chat";
 import { Group } from "./Group";
+import Draggable from 'react-draggable';
 import { TableLayout } from "./TableLayout";
 import { Browse } from "./Browse";
 import { GiantCard } from "./GiantCard";
@@ -18,16 +19,18 @@ import Dropdown from 'react-dropdown';
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { PlayerBar } from "./PlayerBar";
 import { PhaseBar } from "./PhaseBar";
+import { Hotkeys } from "./Hotkeys";
 import { setStackIds, setCardIds } from "./gameUiSlice";
 import { useMessages } from "../../contexts/MessagesContext";
 
-const cardDB = require('../../cardDB/playringsCardDB.json');
+const cardDb = require('../../cardDB/playringsCardDB.json');
 
 const WidthContainer = styled.div`
   padding: 2px 2px 2px 0.5vw;
   float: left;
   height: 100%;
 `;
+
 
 const rootStyle = { display: 'flex', justifyContent: 'center' };
 const rowStyle = { margin: '200px 0', display: 'flex', justifyContent: 'space-between', }
@@ -46,8 +49,9 @@ export const Table = React.memo(({
   //const dispatch = useDispatch();
   //const gameUi = useSelector(gameUiStore);
   const [showSpawn, setShowSpawn] = useState(false);
+  const [showHotkeys, setShowHotkeys] = useState(false);
   const [sittingPlayerN, setSittingPlayerN] = useState("");
-  const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDB));
+  const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDb));
   // Show/hide group that allows you to browse certain cards in a group
   const [browseGroupId, setBrowseGroupId] = useState("");
   // Indices of stacks in group being browsed
@@ -67,9 +71,9 @@ export const Table = React.memo(({
     //setSpawnCardName(event.target.value);
     const filteredName = event.target.value;
     const filteredIDs = []; //Object.keys(cardDB);
-    Object.keys(cardDB).map((cardID, index) => {
-      const card = cardDB[cardID]
-      const sideA = cardDB[cardID]["sides"]["A"]
+    Object.keys(cardDb).map((cardID, index) => {
+      const card = cardDb[cardID]
+      const sideA = cardDb[cardID]["sides"]["A"]
       const cardName = sideA["name"];
       if (cardName.toLowerCase().includes(filteredName.toLowerCase())) filteredIDs.push(cardID);
     })
@@ -77,7 +81,7 @@ export const Table = React.memo(({
   }
 
   const handleSpawnClick = (cardID) => {
-    const cardRow = cardDB[cardID];
+    const cardRow = cardDb[cardID];
     if (!cardRow) return;
     const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': "sharedStaging"}]
     gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
@@ -87,6 +91,7 @@ export const Table = React.memo(({
   return (
 
     <div className="h-full flex">
+      {showHotkeys && <Hotkeys setShowHotkeys={setShowHotkeys}/>}
 
       <PhaseBar
         gameBroadcast={gameBroadcast}
@@ -100,6 +105,7 @@ export const Table = React.memo(({
           <div className="bg-gray-600 text-white" style={{height: "6%"}}>
             <MenuBar
               setShowSpawn={setShowSpawn}
+              setShowHotkeys={setShowHotkeys}
               handleBrowseSelect={handleBrowseSelect}
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}
@@ -370,12 +376,12 @@ export const Table = React.memo(({
                   <th className="w-1/2">Set</th>
                 </tr>
               </thead>
-              {spawnFilteredIDs.map((cardID, index) => {
-                const card = cardDB[cardID]
-                const sideA = cardDB[cardID]["sides"]["A"]
-                const printName = sideA.printName;
+              {spawnFilteredIDs.map((cardId, index) => {
+                const card = cardDb[cardId];
+                const sideA = cardDb[cardId]["sides"]["A"];
+                const printName = sideA.printname;
                 return(
-                  <tr className="bg-gray-600 text-white cursor-pointer hover:bg-gray-500 hover:text-black" onClick={() => handleSpawnClick(cardID)}>
+                  <tr className="bg-gray-600 text-white cursor-pointer hover:bg-gray-500 hover:text-black" onClick={() => handleSpawnClick(cardId)}>
                     <td className="p-1">{printName}</td>
                     <td>{card.cardpackname}</td>
                   </tr>

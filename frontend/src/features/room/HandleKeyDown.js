@@ -128,8 +128,6 @@ export const HandleKeyDown = ({
             const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
             chatBroadcast("game_update",{message: message});
             gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
-        } else if (k === "y") {
-            dispatch(incrementRound());
         } else if (k === "d") {
             // Check remaining cards in deck
             const player1Deck = gameUi.game.groupById.player1Deck;
