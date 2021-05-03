@@ -30,6 +30,19 @@ const keyTokenMap = {
   "8": ["hitPoints",1],
 }
 
+const keyLogBase = {
+    "1": 0,
+    "2": 0,
+    "3": 0,
+    "4": 0,
+    "5": 0,
+    "6": 0,
+    "7": 0,
+    "8": 0,
+}
+
+var delayBroadcast;
+
 export const HandleKeyDown = ({
     playerN,
     typing, 
@@ -45,6 +58,10 @@ export const HandleKeyDown = ({
 
     const activeCardAndLoc = useActiveCard();
     const setActiveCardAndLoc = useSetActiveCard();
+
+    const [keyBackLog, setKeyBackLog] = useState({});
+    const [count, setCount] = useState(0);
+    console.log("render handlekeydown", keyBackLog)
 
     useEffect(() => {
         const onKeyDown = (event) => {
@@ -71,7 +88,7 @@ export const HandleKeyDown = ({
             document.removeEventListener('keyup', onKeyUp);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [gameUi, typing, keypress, activeCardAndLoc]);
+    }, [gameUi, typing, keypress, activeCardAndLoc, keyBackLog]);
 
     const handleKeyDown = (
         event, 
@@ -82,7 +99,6 @@ export const HandleKeyDown = ({
         gameBroadcast, 
         chatBroadcast,
     ) => {
-
         if (typing) return;
         if (!playerN) {
             alert("Please sit down to do that.")
@@ -90,10 +106,30 @@ export const HandleKeyDown = ({
         }
         const k = event.key;
         console.log(k);
+        console.log("count");
+        console.log(count);
+        setCount(count+1);
+        if (activeCardAndLoc != null) {  
+            const activeCardId = activeCardAndLoc.card.id; 
+            const activeCard = gameUi.game.cardById[activeCardId]
+            const activeCardFace = getCurrentFace(activeCard);
+            const displayName = getDisplayName(activeCard);
+            const tokens = activeCard.tokens;
+            const gsc = getGroupIdStackIndexCardIndex(gameUi.game, activeCardId);
+            const groupId = gsc.groupId;
+            const stackIndex = gsc.stackIndex;
+            const cardIndex = gsc.cardIndex;
+            const groupType = gameUi.game.groupById[groupId].type;
+
+        }
+
+
+
+
         // Keep track of last pressed key
         if (k === "Shift") setKeypress({"Shift": true});
-        else if (k === "Control") setKeypress({"Control": true});
-        else setKeypress({"Shift": false, "Control": false});
+        //else if (k === "Control") setKeypress({"Control": true});
+        //else setKeypress({"Shift": false, "Control": false});
 
         // General hotkeys
         if (k === "e" || k === "E") {
@@ -264,30 +300,62 @@ export const HandleKeyDown = ({
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 var tokenType = keyTokenMap[k][0];
                 tokenType = processTokenType(tokenType, activeCardFace.type);
-                const printName = tokenPrintName(tokenType);
                 // Check if mouse is hoving over top half or bottom half of card
                 // Top half will increase tokens, bottom half will decrease
                 const mousePosition = activeCardAndLoc.mousePosition;
-                var delta;
-                if (mousePosition === "top") delta = keyTokenMap[k][1];
-                else if (mousePosition === "bottom") delta = -keyTokenMap[k][1];
-                else delta = 0;
-                const newVal = tokens[tokenType]+delta;
+                var delta = (mousePosition === "top" ? 1 : -1)
+                const currentVal = gameUi.game.cardById[activeCardId].tokens[tokenType];
+                var newVal = currentVal + delta;
                 if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
-                gameBroadcast("game_action", {action:"update_values", options: {updates: [["game","cardById",activeCard.id,"tokens",tokenType, newVal]]}});
-                if (delta > 0) {
-                    if (delta === 1) {
-                        chatBroadcast("game_update",{message: "added "+delta+" "+printName+" token to "+displayName+"."});
-                    } else {
-                        chatBroadcast("game_update",{message: "added "+delta+" "+printName+" tokens to "+displayName+"."});
+
+                // Increment token 
+                var newKeyBackLog;
+                if (keyBackLog[tokenType]) {
+                    newKeyBackLog = {
+                        ...keyBackLog,
+                        [tokenType]: keyBackLog[tokenType] + delta
                     }
                 } else {
-                    if (delta === -1) {
-                        chatBroadcast("game_update",{message: "removed "+(-delta)+" "+printName+" token from "+displayName+"."});
-                    } else {
-                        chatBroadcast("game_update",{message: "removed "+(-delta)+" "+printName+" tokens from "+displayName+"."});
-                    }                
+                    newKeyBackLog = {
+                        ...keyBackLog,
+                        [tokenType]: delta
+                    }
                 }
+                setKeyBackLog(newKeyBackLog);
+
+                const updates = [["game","cardById",activeCardId,"tokens", tokenType, newVal]];
+                dispatch(setValues({updates: updates}))
+
+                if (delayBroadcast) clearTimeout(delayBroadcast);
+                delayBroadcast = setTimeout(function() {
+                    Object.keys(newKeyBackLog).map((tok, index) => {
+                        const val = newKeyBackLog[tok]; 
+                        //gameBroadcast("game_action", {action:"increment_token", options: {card_id: activeCardId, token_type: tok, increment: val}});
+                        chatBroadcast("game_update",{message: "added "+val+" "+tokenPrintName(tok)+" token(s) to "+displayName+"."});
+                    })
+                    gameBroadcast("game_action", {action:"increment_tokens", options: {card_id: activeCardId, token_increments: newKeyBackLog}});
+                    setKeyBackLog({})
+                }, 300);
+
+                // gameBroadcast("game_action", {action:"update_values", options: {updates: [["game","cardById",activeCard.id,"tokens",tokenType, newVal]]}});
+                // if (delta > 0) {
+                //     if (delta === 1) {
+                //         chatBroadcast("game_update",{message: "added "+delta+" "+printName+" token to "+displayName+"."});
+                //     } else {
+                //         chatBroadcast("game_update",{message: "added "+delta+" "+printName+" tokens to "+displayName+"."});
+                //     }
+                // } else {
+                //     if (delta === -1) {
+                //         chatBroadcast("game_update",{message: "removed "+(-delta)+" "+printName+" token from "+displayName+"."});
+                //     } else {
+                //         chatBroadcast("game_update",{message: "removed "+(-delta)+" "+printName+" tokens from "+displayName+"."});
+                //     }                
+                // }
+
+                // if (delayBroadcast) clearTimeout(delayBroadcast);
+                // delayBroadcast = setTimeout(function() {
+                //     console.log(keyBackLog);
+                // }, 5000);
             }
             // Set tokens to 0
             else if (k === "0" && groupType === "play") {

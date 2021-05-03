@@ -290,6 +290,13 @@ defmodule DragnCardsGame.GameUI do
     update_token(gameui, card_id, token_type, new_value)
   end
 
+  # card_action increment_tokens
+  def increment_token(gameui, card_id, token_increments) do
+    Enum.reduce(token_increments, gameui, fn({k,v}, acc) ->
+      acc = increment_token(acc, card_id, k, v)
+    end)
+  end
+
   # card_action toggle_exhaust
   def toggle_exhaust(gameui, card_id) do
     card = get_card(gameui, card_id)
@@ -515,6 +522,8 @@ defmodule DragnCardsGame.GameUI do
           deal_all_shadows(gameui)
         "increment_token" ->
           increment_token(gameui, options["card_id"], options["token_type"], options["increment"])
+        "increment_tokens" ->
+          increment_token(gameui, options["card_id"], options["token_increments"])
         "reset_game" ->
           reset_game(gameui)
         "load_cards" ->
