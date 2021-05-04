@@ -10,12 +10,15 @@ import { ChatMessage } from "elixir-backend";
 
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
+import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 
 interface Props {}
 
 export const Lobby: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
+  const myUser = useProfile();
+
   const [showModal, setShowModal] = useState(false);
   const [typing, setTyping] = useState<Boolean>(false);
   const { isLoading, isError, data, setData } = useDataApi<any>(
@@ -49,9 +52,14 @@ export const Lobby: React.FC = () => {
   useChannel("lobby:lobby", onChannelMessage);
   const rooms = data != null && data.data != null ? data.data : [];
 
+  const handleCreateRoomClick = () => {
+    if (myUser?.email_confirmed_at) setShowModal(true);
+    else alert("You must confirm your email before you can start a game.")
+  }
+
   return (
       <div style={{fontFamily:"Roboto"}}>
-        <div className="w-full mb-4 lg:w-3/4 xl:w-4/6">
+        <div className="w-full m-6 lg:w-3/4 xl:w-4/6">
           <div>
             <h1 className="mb-4">Lobby</h1>
             {isLoading && <div className="text-white">Loading..</div>}
@@ -60,7 +68,7 @@ export const Lobby: React.FC = () => {
               <h3 className="mb-2 font-semibold">New Game</h3>
               <div>
                 {isLoggedIn && (
-                  <Button isPrimary onClick={() => setShowModal(true)}>
+                  <Button isPrimary onClick={() => handleCreateRoomClick()}>
                     Create Room
                   </Button>
                 )}
