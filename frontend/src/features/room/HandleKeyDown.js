@@ -2,16 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
-import { setValues, incrementRound } from "./gameUiSlice";
+import { setValues } from "./gameUiSlice";
 import { 
     getDisplayName, 
     getDisplayNameFlipped, 
     getNextPlayerN, 
     leftmostNonEliminatedPlayerN, 
-    functionOnMatchingCards, 
     getGroupIdStackIndexCardIndex,
     getStackByCardId,
-    getCardWillpower,
     getCurrentFace,
     processTokenType,
     tokenPrintName,
@@ -60,7 +58,6 @@ export const HandleKeyDown = ({
     const setActiveCardAndLoc = useSetActiveCard();
 
     const [keyBackLog, setKeyBackLog] = useState({});
-    const [count, setCount] = useState(0);
     console.log("render handlekeydown", keyBackLog)
 
     useEffect(() => {
@@ -106,30 +103,9 @@ export const HandleKeyDown = ({
         }
         const k = event.key;
         console.log(k);
-        console.log("count");
-        console.log(count);
-        setCount(count+1);
-        if (activeCardAndLoc != null) {  
-            const activeCardId = activeCardAndLoc.card.id; 
-            const activeCard = gameUi.game.cardById[activeCardId]
-            const activeCardFace = getCurrentFace(activeCard);
-            const displayName = getDisplayName(activeCard);
-            const tokens = activeCard.tokens;
-            const gsc = getGroupIdStackIndexCardIndex(gameUi.game, activeCardId);
-            const groupId = gsc.groupId;
-            const stackIndex = gsc.stackIndex;
-            const cardIndex = gsc.cardIndex;
-            const groupType = gameUi.game.groupById[groupId].type;
-
-        }
-
-
-
-
-        // Keep track of last pressed key
+        // Keep track of held key
         if (k === "Shift") setKeypress({"Shift": true});
-        //else if (k === "Control") setKeypress({"Control": true});
-        //else setKeypress({"Shift": false, "Control": false});
+        else setKeypress({"Shift": false});
 
         // General hotkeys
         if (k === "e" || k === "E") {
@@ -322,10 +298,8 @@ export const HandleKeyDown = ({
                     }
                 }
                 setKeyBackLog(newKeyBackLog);
-
                 const updates = [["game","cardById",activeCardId,"tokens", tokenType, newVal]];
                 dispatch(setValues({updates: updates}))
-
                 if (delayBroadcast) clearTimeout(delayBroadcast);
                 delayBroadcast = setTimeout(function() {
                     Object.keys(newKeyBackLog).map((tok, index) => {
@@ -336,26 +310,6 @@ export const HandleKeyDown = ({
                     gameBroadcast("game_action", {action:"increment_tokens", options: {card_id: activeCardId, token_increments: newKeyBackLog}});
                     setKeyBackLog({})
                 }, 300);
-
-                // gameBroadcast("game_action", {action:"update_values", options: {updates: [["game","cardById",activeCard.id,"tokens",tokenType, newVal]]}});
-                // if (delta > 0) {
-                //     if (delta === 1) {
-                //         chatBroadcast("game_update",{message: "added "+delta+" "+printName+" token to "+displayName+"."});
-                //     } else {
-                //         chatBroadcast("game_update",{message: "added "+delta+" "+printName+" tokens to "+displayName+"."});
-                //     }
-                // } else {
-                //     if (delta === -1) {
-                //         chatBroadcast("game_update",{message: "removed "+(-delta)+" "+printName+" token from "+displayName+"."});
-                //     } else {
-                //         chatBroadcast("game_update",{message: "removed "+(-delta)+" "+printName+" tokens from "+displayName+"."});
-                //     }                
-                // }
-
-                // if (delayBroadcast) clearTimeout(delayBroadcast);
-                // delayBroadcast = setTimeout(function() {
-                //     console.log(keyBackLog);
-                // }, 5000);
             }
             // Set tokens to 0
             else if (k === "0" && groupType === "play") {

@@ -1,7 +1,6 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import RoomGame from "./RoomGame";
-import GameUIContext from "../../contexts/GameUIContext";
 import {useSetMessages} from '../../contexts/MessagesContext';
 import {KeypressProvider} from '../../contexts/KeypressContext';
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext';
@@ -56,7 +55,6 @@ export const Room = ({ slug }) => {
   if (gameName !== slug) return (<div></div>);
   else {
     return (
-      // <Container>
         <div className="gamebackground"
           style={{height: "97vh"}}
         >
@@ -66,7 +64,6 @@ export const Room = ({ slug }) => {
               </ActiveCardProvider>
             </KeypressProvider>
         </div>
-      // </Container>
     );
   }
 };

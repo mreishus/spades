@@ -1,41 +1,13 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
-import Chat from "../chat/Chat";
-import { Group } from "./Group";
-import Draggable from 'react-draggable';
+import React, { useState } from "react";
 import { TableLayout } from "./TableLayout";
-import { Browse } from "./Browse";
 import { GiantCard } from "./GiantCard";
 import { MenuBar } from "./MenuBar";
-import styled from "@emotion/styled";
-import { GROUPSINFO } from "./Constants"
-import Button from "../../components/basic/Button";
-import { getDisplayName, getCurrentFace } from "./Helpers"
 import ReactModal from "react-modal";
-import Dropdown from 'react-dropdown';
-import { handleBrowseTopN } from "./HandleBrowseTopN";
-import { PlayerBar } from "./PlayerBar";
 import { PhaseBar } from "./PhaseBar";
 import { Hotkeys } from "./Hotkeys";
-import { setStackIds, setCardIds } from "./gameUiSlice";
 import { useMessages } from "../../contexts/MessagesContext";
 
 const cardDb = require('../../cardDB/playringsCardDB.json');
-
-const WidthContainer = styled.div`
-  padding: 2px 2px 2px 0.5vw;
-  float: left;
-  height: 100%;
-`;
-
-
-const rootStyle = { display: 'flex', justifyContent: 'center' };
-const rowStyle = { margin: '200px 0', display: 'flex', justifyContent: 'space-between', }
-const boxStyle = { padding: '10px', border: '1px solid black', };
-
 
 export const Table = React.memo(({
   playerN,

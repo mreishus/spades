@@ -22,18 +22,17 @@ export const DragContainer = React.memo(({
   chatBroadcast,
   setTyping
 }) => {
+  console.log("Rendering DragContainer");
   const gameStore = state => state?.gameUi?.game;
   const dispatch = useDispatch();
   const game = useSelector(gameStore);
   const keypress = useKeypress();
-  console.log("rendering dragcontainer");
   const [, updateState] = React.useState();
   const forceUpdate = useForceUpdate();
   const archerContainerRef = React.createRef();
   const arrowColors = ["rgba(255,0,0,0.6)", "rgba(0,200,0,0.6)", "rgba(0,128,255,0.6)", "rgba(128,0,255,0.6)"];
 
   const onDragEnd = (result) => {
-    console.log("drag end ",result);
     const groupById = game.groupById;
     const orig = result.source;
     const origGroupId = orig.droppableId;
@@ -128,14 +127,11 @@ export const DragContainer = React.memo(({
   }
 
   return(
-
-
         <DragDropContext onDragEnd={onDragEnd}>
-
           <ArrowsBetweenDivsContextProvider>
             {({ registerDivToArrowsContext }) => (
               <>
-                {["player1", "player2", "player3", "player4"].map((playerI, playerIndex) => {
+                {Object.keys(game.playerData).map((playerI, playerIndex) => {
                   return(
                     game.playerData[playerI].arrows.map((arrowStartStop, arrowIndex) => {
                       return(
