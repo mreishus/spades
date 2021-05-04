@@ -12,7 +12,7 @@ defmodule DragnCardsWeb.PowMailer do
   def cast(%{user: user, subject: subject, text: text, html: html}) do
     %Swoosh.Email{}
     |> to({"", user.email})
-    |> from({"OneRingTeki", "noreply@oneringteki.com"})
+    |> from({"DragnCards", "postmaster@noreply.dragncards.com"})
     |> subject(subject)
     |> html_body(html)
     |> text_body(text)
