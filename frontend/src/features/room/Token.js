@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { tokenPrintName } from "./Helpers";
 import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-//import cx from "classnames";
 
 var delayBroadcast;
 
@@ -20,8 +19,6 @@ export const Token = React.memo(({
 }) => {
     const tokenStore = state => state?.gameUi?.game?.cardById?.[cardId]?.tokens?.[tokenType];
     const tokenValue = useSelector(tokenStore);
-    //console.log('rendering token on ',cardId, tokenType);
-    //console.log(gameUI.game.groups[groupId].stacks)
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
     const [amount, setAmount] = useState(tokenValue);
@@ -68,31 +65,15 @@ export const Token = React.memo(({
         event.stopPropagation();
     }
 
-    // document.onkeydown = function(evt) {
-    //     evt = evt || window.event;
-    //     if (evt.shiftKey) {
-    //         setAdjustVisible(true);
-    //     }
-    // };
-
-    // document.onkeyup = function(evt) {
-    //     evt = evt || window.event;
-    //     if (evt.shiftKey) {
-    //         setAdjustVisible(false);
-    //     }
-    // };
-
     return(
         <div
-            
             style={{
                 position: "absolute",
                 left: `${left}`,
                 top: `${top}`,
-                height: `25%`,//${CARDSCALE/0.72/4}vw`,
-                width: `35%`,//${CARDSCALE/0.72/4}vw`,
+                height: `25%`,
+                width: `35%`,
                 alignItems: "center",
-                //backgroundSize: "no-repeat scroll 0% 0% / contain",
                 zIndex: showButtons ? zIndex + 1 : zIndex,
                 display: showButtons || amount!==0 ? "block" : "none",
             }}

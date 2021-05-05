@@ -19,8 +19,8 @@ const col2Class = "w-2/3";
 export const Hotkeys = React.memo(({
     setShowHotkeys,
 }) => {
-  const iconImg = (token_type) => {
-    return(<img className="m-auto h-6" src={process.env.PUBLIC_URL + '/images/tokens/'+token_type+'.png'}/>)
+  const iconImg = (tokenType) => {
+    return(<img className="m-auto h-6" src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}/>)
   }
 
   return(

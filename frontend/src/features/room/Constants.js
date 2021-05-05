@@ -191,18 +191,21 @@ export const LAYOUTINFO = {
     },
     {
       regions: [
-        {id: "player1Engaged", width: "100%"},
+        {id: "player1Engaged", width: "65%"},
+        {id: "sharedExtra1", width: "35%"},
       ]
     },
     {
       regions: [
-        {id: "player1Play1", width: "100%"},
+        {id: "player1Play1", width: "65%"},
+        {id: "sharedExtra2", width: "35%"},
       ]
     },
     {
       regions: [
-        {id: "player1Play2", width: "90%"},
+        {id: "player1Play2", width: "55%"},
         {id: "player1Event", width: "10%"},
+        {id: "sharedExtra3", width: "35%"},
       ]
     },
     {

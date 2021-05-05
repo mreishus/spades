@@ -1,93 +1,14 @@
-import React, { useState, useEffect, useRef, Component } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import React, { useState, useRef } from "react";
+import { useSelector } from 'react-redux';
 import { Tokens } from './Tokens';
-import { playerBackSRC, encounterBackSRC } from "./Constants";
-import { getCardFaceSRC } from "./CardBack";
 import { GROUPSINFO } from "./Constants";
-import styled from "@emotion/styled";
 import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { CardMouseRegion } from "./CardMouseRegion"
-import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
+import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getVisibleSide } from "./Helpers";
-import { setGame } from "./gameUiSlice";
 import { Target } from "./Target";
-
-// PREVENT DOUBLECLICK REGISTERING 2 CLICK EVENTS
-export const delay = n => new Promise(resolve => setTimeout(resolve, n));
-
-export const cancellablePromise = promise => {
-    let isCanceled = false;
-  
-    const wrappedPromise = new Promise((resolve, reject) => {
-      promise.then(
-        value => (isCanceled ? reject({ isCanceled, value }) : resolve(value)),
-        error => reject({ isCanceled, error }),
-      );
-    });
-  
-    return {
-      promise: wrappedPromise,
-      cancel: () => (isCanceled = true),
-    };
-};
-
-const useCancellablePromises = () => {
-  const pendingPromises = useRef([]);
-
-  const appendPendingPromise = promise =>
-    pendingPromises.current = [...pendingPromises.current, promise];
-
-  const removePendingPromise = promise =>
-    pendingPromises.current = pendingPromises.current.filter(p => p !== promise);
-
-  const clearPendingPromises = () => pendingPromises.current.map(p => p.cancel());
-
-  const api = {
-    appendPendingPromise,
-    removePendingPromise,
-    clearPendingPromises,
-  };
-
-  return api;
-};
-
-const useClickPreventionOnDoubleClick = (onClick, onDoubleClick) => {
-    const api = useCancellablePromises();
-  
-    const handleClick = () => {
-      api.clearPendingPromises();
-      const waitForClick = cancellablePromise(delay(300));
-      api.appendPendingPromise(waitForClick);
-  
-      return waitForClick.promise
-        .then(() => {
-          api.removePendingPromise(waitForClick);
-          onClick();
-        })
-        .catch(errorInfo => {
-          api.removePendingPromise(waitForClick);
-          if (!errorInfo.isCanceled) {
-            throw errorInfo.error;
-          }
-        });
-    };
-  
-    const handleDoubleClick = () => {
-      api.clearPendingPromises();
-      onDoubleClick();
-    };
-  
-    return [handleClick, handleDoubleClick];
-};
-// END PREVENT DOUBLECLICK REGISTERING 2 CLICK EVENTS
-
-
-
-    // const storeCard = state => state.game.cardById[inputCard.id];
-    // const dispatch = useDispatch();
-    // const hello = useSelector(storeCard);
 
 export const Card = React.memo(({
     cardId,
@@ -98,7 +19,7 @@ export const Card = React.memo(({
     cardIndex,
     cardSize,
     registerDivToArrowsContext
-}) => {
+}) => {    
     const cardStore = state => state?.gameUi?.game?.cardById[cardId];
     const card = useSelector(cardStore);
     if (!card) return null;
@@ -107,35 +28,16 @@ export const Card = React.memo(({
     const visibleFace = getVisibleFace(card, playerN);
     const isInMyHand = groupId === (playerN+"Hand");
     const zIndex = 1000 - cardIndex;
-    // useEffect(() => {    
-    //     if (JSON.stringify(inputCard) !== JSON.stringify(card)) setCard(inputCard);
-    // }, [inputCard]);
-
-    // const [, updateState] = React.useState();
-    // const forceUpdate = React.useCallback(() => updateState({}), []);
+    console.log('Rendering Card ',visibleFace.name);
     const setActiveCard = useSetActiveCard();
-
     const [isActive, setIsActive] = useState(false);
     const displayName = getDisplayName(card);
-    //const groups = gameUIView.game_ui.game.groups;
-    //const cardWatch = groups[group.id].stacks[stackIndex]?.cards[cardIndex];
 
-    //if (groupId==='sharedStaging') console.log('rendering CardComponent');
-    //if (groupId==='sharedStaging') console.log(card);
-
-    // useEffect(() => {    
-    //   if (card) setCard(card);
-    // }, [card]);
-    //console.log('rendering',group.id,stackIndex,cardIndex, "comp");
-
-    const onClick = (event) => {
+    const onClick = (_event) => {
         console.log(card);
-        console.log(playerN);
-        console.log(card.peeking[playerN]);
-        return;
     }
 
-    const handleMouseLeave = (event) => {
+    const handleMouseLeave = (_event) => {
         setIsActive(false);
         setActiveCard(null);
     }
@@ -153,7 +55,7 @@ export const Card = React.memo(({
         return relationList;
     }
 
-    const handleMenuClick = (e, data) => {
+    const handleMenuClick = (_event, data) => {
         if (data.action === "detach") {
             gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
             chatBroadcast("game_update", {message: "detached "+displayName+"."})
@@ -184,13 +86,9 @@ export const Card = React.memo(({
         }
     }
 
-    console.log('rendering card ',visibleFace.name);
-
     return (
         <div id={card.id}>
-
-            <ContextMenuTrigger id={"context-"+card.id} holdToDisplay={500}> 
-            {/* <div className="flex h-full items-center"> */}
+            <ContextMenuTrigger id={"context-"+card.id} holdToDisplay={500}>
                 <div 
                     className={isActive ? 'isActive' : ''}
                     key={card.id}
@@ -200,7 +98,7 @@ export const Card = React.memo(({
                         height: `${cardSize*visibleFace.height}vw`,
                         width: `${cardSize*visibleFace.width}vw`,
                         left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize/3*cardIndex}vw`,
-                        top: "50%", //`${0.2 + (1.39-visibleFace.height)*cardSize/2}vw`,
+                        top: "50%",
                         borderRadius: '6px',
                         MozBoxShadow: isActive ? '0 0 7px yellow' : '',
                         WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
@@ -218,16 +116,13 @@ export const Card = React.memo(({
                         transitionProperty: "transform",
                     }}
                     onClick={onClick}
-                    //onDoubleClick={handleDoubleClick}
                     onMouseLeave={event => handleMouseLeave(event)}
                 >
                     {(card["peeking"][playerN] && !isInMyHand && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute bottom-0 text-2xl" icon={faEye}/>:null}
-                    
                     <Target
                         cardId={cardId}
                         cardSize={cardSize}
                     />
-
                     <Tokens
                         cardName={currentFace.name}
                         cardType={currentFace.type}
@@ -237,7 +132,6 @@ export const Card = React.memo(({
                         chatBroadcast={chatBroadcast}
                         zIndex={zIndex}
                     />
-
                     <CardMouseRegion 
                         position={"top"}
                         top={"0%"}
@@ -245,7 +139,6 @@ export const Card = React.memo(({
                         setIsActive={setIsActive}
                         zIndex={zIndex}
                     />
-                    
                     <CardMouseRegion 
                         position={"bottom"}
                         top={"50%"}
@@ -259,7 +152,6 @@ export const Card = React.memo(({
                             position: "absolute",
                             width: "1px", 
                             height: "1px",
-                            backgroundColor: "red",
                             top: "50%",
                             left: "50%",
                         }}
@@ -277,131 +169,45 @@ export const Card = React.memo(({
                             left: "50%",
                         }}/>
                     </ArcherElement> */}
-                    {/* <div
-                        id={"arrow-"+card.id} 
-                        style={{
-                            position: "absolute",
-                            width: "1px", 
-                            height: "1px",
-                            backgroundColor: "red",
-                            top: "50%",
-                            left: "50%",
-                            zIndex: 1e7
-                        }}>
-                        <Xarrow
-                            SVGcanvasStyle={{position: "absolute", zIndex: 1e7}}
-                            start={"arrow-"+card.id} //can be react ref
-                            end={"arrow-20a5d0e0-0827-447b-ba64-bfc04a0191a0"} //or an id
-                            
-                        />
-                    </div> */}
-
                 </div>
-            {/* </div> */}
             </ContextMenuTrigger>
 
-             <ContextMenu id={"context-"+card.id} style={{zIndex:1e8}}>
-                 <hr></hr>
-                 {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
-                 {visibleSide === "B"? <MenuItem onClick={handleMenuClick} data={{action: 'peek'}}>Peek</MenuItem>:null}
-                 {card["peeking"][playerN] ? <MenuItem onClick={handleMenuClick} data={{action: 'unpeek'}}>Stop peeking</MenuItem>:null}
-                 <SubMenu title='Move to'>
-                     <SubMenu title='Encounter Deck'>
-                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "t"}}>Top</MenuItem>
-                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "b"}}>Bottom</MenuItem>
-                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
-                     </SubMenu>
-                     <SubMenu title="Owner's Deck">
-                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "t"}}>Top</MenuItem>
-                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
-                         <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
-                     </SubMenu>
-                     <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', destGroupId: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
-                 </SubMenu>
-                 <SubMenu title='Per round'>
-                     {["Resource", "Progress", "Damage"].map((tokenType, tokenIndex) => (
-                        <SubMenu title={tokenType}>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -5}}>-5 {card.tokensPerRound[tokenType.toLowerCase()]==-5 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -4}}>-4 {card.tokensPerRound[tokenType.toLowerCase()]==-4 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -3}}>-3 {card.tokensPerRound[tokenType.toLowerCase()]==-3 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -2}}>-2 {card.tokensPerRound[tokenType.toLowerCase()]==-2 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -1}}>-1 {card.tokensPerRound[tokenType.toLowerCase()]==-1 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  0}}>0 {card.tokensPerRound[tokenType.toLowerCase()]==0 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  1}}>+1 {card.tokensPerRound[tokenType.toLowerCase()]==1 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  2}}>+2 {card.tokensPerRound[tokenType.toLowerCase()]==2 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  3}}>+3 {card.tokensPerRound[tokenType.toLowerCase()]==3 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  4}}>+4 {card.tokensPerRound[tokenType.toLowerCase()]==4 ? "✓" : ""}</MenuItem>
-                            <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  5}}>+5 {card.tokensPerRound[tokenType.toLowerCase()]==5 ? "✓" : ""}</MenuItem>
-                        </SubMenu>
-                    ))}
-                 </SubMenu>
-             </ContextMenu>
-         {/* </ArcherElement> */}
-
-
-         </div>
+            <ContextMenu id={"context-"+card.id} style={{zIndex:1e8}}>
+                <hr></hr>
+                {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
+                {visibleSide === "B"? <MenuItem onClick={handleMenuClick} data={{action: 'peek'}}>Peek</MenuItem>:null}
+                {card["peeking"][playerN] ? <MenuItem onClick={handleMenuClick} data={{action: 'unpeek'}}>Stop peeking</MenuItem>:null}
+                <SubMenu title='Move to'>
+                    <SubMenu title='Encounter Deck'>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "t"}}>Top</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "b"}}>Bottom</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
+                    </SubMenu>
+                    <SubMenu title="Owner's Deck">
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "t"}}>Top</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
+                    </SubMenu>
+                    <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', destGroupId: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
+                </SubMenu>
+                <SubMenu title='Per round'>
+                    {["Resource", "Progress", "Damage"].map((tokenType, _tokenIndex) => (
+                    <SubMenu title={tokenType}>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -5}}>-5 {card.tokensPerRound[tokenType.toLowerCase()]==-5 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -4}}>-4 {card.tokensPerRound[tokenType.toLowerCase()]==-4 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -3}}>-3 {card.tokensPerRound[tokenType.toLowerCase()]==-3 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -2}}>-2 {card.tokensPerRound[tokenType.toLowerCase()]==-2 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -1}}>-1 {card.tokensPerRound[tokenType.toLowerCase()]==-1 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  0}}>0 {card.tokensPerRound[tokenType.toLowerCase()]==0 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  1}}>+1 {card.tokensPerRound[tokenType.toLowerCase()]==1 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  2}}>+2 {card.tokensPerRound[tokenType.toLowerCase()]==2 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  3}}>+3 {card.tokensPerRound[tokenType.toLowerCase()]==3 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  4}}>+4 {card.tokensPerRound[tokenType.toLowerCase()]==4 ? "✓" : ""}</MenuItem>
+                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  5}}>+5 {card.tokensPerRound[tokenType.toLowerCase()]==5 ? "✓" : ""}</MenuItem>
+                    </SubMenu>
+                ))}
+                </SubMenu>
+            </ContextMenu>
+        </div>
     )
 })
-
-
-// class CardClass extends Component {
-
-//     shouldComponentUpdate = (nextProps, nextState) => {
-        
-//         if ( 
-//             (JSON.stringify(nextProps.inputCard)!==JSON.stringify(this.props.inputCard)) ||
-//             (nextProps.groupId!==this.props.groupId) ||
-//             (nextProps.stackIndex!==this.props.stackIndex) ||
-//             (nextProps.cardIndex!==this.props.cardIndex)
-//         ) {
-//             return true;
-//         } else {
-//             return false; 
-//         }
-//     };
-  
-//     render() {
-//         return(
-//             <CardComponent
-//                 inputCard={this.props.inputCard}
-//                 cardIndex={this.props.cardIndex}
-//                 stackIndex={this.props.stackIndex}
-//                 groupId={this.props.groupId}
-//                 gameBroadcast={this.props.gameBroadcast}
-//                 chatBroadcast={this.props.chatBroadcast}
-//                 playerN={this.props.playerN}
-//             ></CardComponent>
-//         )
-//     }
-// }
-
-
-// const CardView = React.memo(({
-//     inputCard,
-//     cardIndex,
-//     stackIndex,
-//     groupId,
-//     gameBroadcast,
-//     chatBroadcast,
-//     playerN,
-//   }) => {
-//     //if (groupId==='sharedStaging') console.log('rendering Cardview');
-//     console.log('rendering',groupId,stackIndex,cardIndex, "view");
-//     const cardObj = JSON.parse(inputCard);
-//     return (
-//         <CardClass
-//             inputCard={cardObj}
-//             cardIndex={cardIndex}
-//             stackIndex={stackIndex}
-//             groupId={groupId}
-//             gameBroadcast={gameBroadcast}
-//             chatBroadcast={chatBroadcast}
-//             playerN={playerN}
-//         ></CardClass>
-//     )
-// });
-
-// export default CardView;
-
-
-

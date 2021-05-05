@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React from "react";
 import { Token } from "./Token";
 import { usesThreatToken } from "./Helpers";
 import { useKeypress } from "../../contexts/KeypressContext";
