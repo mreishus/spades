@@ -73,7 +73,7 @@ const deepUpdate = (obj1, obj2) => {
 const updateValue = (obj, update) => {
   const updateLength = update.length;
   console.log("updating", update)
-  if (updateLength == 2) {
+  if (updateLength === 2) {
     obj[update[0]] = update[1];
   } else if (updateLength > 2) {
     updateValue(obj[update[0]], update.slice(1));

@@ -4,7 +4,6 @@ import { Group } from "./Group";
 import { Browse } from "./Browse";
 import { CARDSCALE, LAYOUTINFO } from "./Constants";
 import Chat from "../chat/Chat";
- 
 
 export const TableRegion = React.memo(({
   region,
@@ -26,7 +25,7 @@ export const TableRegion = React.memo(({
       style={{
         width: region.width,
         padding: "0 0 0 0.5vw",
-        background: (region.style == "shaded") ? "rgba(0, 0, 0, 0.3)" : "",
+        background: (region.style === "shaded") ? "rgba(0, 0, 0, 0.3)" : "",
         MozBoxShadow: (region.boxShadow) ? '0 10px 10px 5px rgba(0,0,0,0.3)' : "",
         WebkitBoxShadow: (region.boxShadow) ? '0 10px 10px 5px rgba(0,0,0,0.3)' : "",
         boxShadow: (region.boxShadow) ? '0 10px 10px 5px rgba(0,0,0,0.3)' : "",
@@ -62,6 +61,7 @@ export const TableLayout = React.memo(({
   setBrowseGroupTopN,
   registerDivToArrowsContext
 }) => {
+  console.log("Rendering TableLayout");
   const numPlayersStore = state => state.gameUi.game.numPlayers;
   const numPlayers = useSelector(numPlayersStore);
   const layoutStore = state => state.gameUi.layout;
@@ -70,20 +70,16 @@ export const TableLayout = React.memo(({
   if (!layout) return;
   const layoutInfo = LAYOUTINFO["layout" + numPlayers + layout];
   const numRows = layoutInfo.length;
-  const rowHeight = 100/numRows; 
-  const finalRowHeight = 100/numRows; 
+  const rowHeight = `${100/numRows}%`; 
   const cardSize = CARDSCALE/numRows;
-  console.log("rendering layout");
   return (
-    layoutInfo.map((row, rowIndex) => (
-      (browseGroupId && rowIndex === numRows - 2) ? 
+    layoutInfo.map((row, rowIndex) => {
+      if (browseGroupId && rowIndex === numRows - 2) {
+        return(
         <div 
           className="flex flex-1 bg-gray-700 border rounded-lg outline-none w-full" 
-          style={{
-            minHeight: (rowIndex === numRows - 1) ? `${finalRowHeight}%` : `${rowHeight}%`, 
-            height:    (rowIndex === numRows - 1) ? `${finalRowHeight}%` : `${rowHeight}%`, 
-            maxHeight: (rowIndex === numRows - 1) ? `${finalRowHeight}%` : `${rowHeight}%`,
-          }}>
+          style={{height: rowHeight}}
+        >
           <Browse
             groupId={browseGroupId}
             cardSize={cardSize}
@@ -95,15 +91,13 @@ export const TableLayout = React.memo(({
             setBrowseGroupTopN={setBrowseGroupTopN}
           />
           </div>
-        :
+        )} else {
+          return(
           <div 
             className="relative w-full" 
-            style={{
-              minHeight: (rowIndex === numRows - 1) ? `${finalRowHeight}%` : `${rowHeight}%`, 
-              height:    (rowIndex === numRows - 1) ? `${finalRowHeight}%` : `${rowHeight}%`, 
-              maxHeight: (rowIndex === numRows - 1) ? `${finalRowHeight}%` : `${rowHeight}%`,
-            }}>
-            {row.regions.map((region, regionIndex) => (
+            style={{height: rowHeight}}
+          >
+            {row.regions.map((region, _regionIndex) => (
               <TableRegion
                 region={region}
                 cardSize={cardSize}
@@ -128,7 +122,7 @@ export const TableLayout = React.memo(({
               </div>
             }
           </div>
-
-    ))
+          )}
+        })
   )
 })

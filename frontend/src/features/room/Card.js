@@ -303,7 +303,7 @@ export const Card = React.memo(({
              <ContextMenu id={"context-"+card.id} style={{zIndex:1e8}}>
                  <hr></hr>
                  {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
-                 {visibleSide == "B"? <MenuItem onClick={handleMenuClick} data={{action: 'peek'}}>Peek</MenuItem>:null}
+                 {visibleSide === "B"? <MenuItem onClick={handleMenuClick} data={{action: 'peek'}}>Peek</MenuItem>:null}
                  {card["peeking"][playerN] ? <MenuItem onClick={handleMenuClick} data={{action: 'unpeek'}}>Stop peeking</MenuItem>:null}
                  <SubMenu title='Move to'>
                      <SubMenu title='Encounter Deck'>

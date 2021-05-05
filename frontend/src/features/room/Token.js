@@ -31,7 +31,7 @@ export const Token = React.memo(({
         if (tokenValue !== amount) setAmount(tokenValue);
     }, [tokenValue]);
 
-    if (tokenValue == null) return null;
+    if (tokenValue === null) return null;
 
     function clickArrow(event,delta) {
         event.stopPropagation();

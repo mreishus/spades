@@ -62,9 +62,8 @@ export const Group = React.memo(({
           style={{width:"15px", writingMode:"vertical-rl"}} 
         >
           <ContextMenuTrigger id={group.id} holdToDisplay={0}>
-          {/* <div className={"rounded"+ (group.type == "play" ? "" : "hover:bg-gray-500")}> */}
             <div>
-              {group.type == "play" ? "" : <FontAwesomeIcon className="text-white mb-2 pl-1" icon={faBars}/>}
+              {group.type === "play" ? "" : <FontAwesomeIcon className="text-white mb-2 pl-1" icon={faBars}/>}
               {GROUPSINFO[group.id].tablename}
             </div>
           </ContextMenuTrigger>

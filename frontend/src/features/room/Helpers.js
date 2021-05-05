@@ -6,16 +6,16 @@ export const getCurrentFace = (card) => {
 export const getDisplayName = (card) => {
   const currentSide = card.currentSide;
   const currentFace = getCurrentFace(card);
-  if (currentSide == "A") {
+  if (currentSide === "A") {
       const printName = currentFace.printName;
       const id = card.id;
       const id4digit = id.substr(id.length - 4);
       return printName;//+' ('+id4digit+')'; // Add unique identifier?
   } else { // Side B logic
       const sideBName = card.sides.B.name;
-      if (sideBName == "player") {
+      if (sideBName === "player") {
           return 'player card';
-      } else if (sideBName == "encounter") {
+      } else if (sideBName === "encounter") {
           return 'encounter card';
       } else if (sideBName) {
           const printName = currentFace.printName;
@@ -39,7 +39,7 @@ export const getDisplayNameFlipped = (card) => {
 export const getVisibleSide = (card, playerN) => {
   if (!card) return null;
   const currentSide = card.currentSide;
-  if (currentSide == "A" || card.peeking[playerN]) return "A";
+  if (currentSide === "A" || card.peeking[playerN]) return "A";
   else return "B";
 }
 
@@ -52,13 +52,13 @@ export const getVisibleFace = (card, playerN) => {
 export const getVisibleFaceSRC = (card, playerN) => {
   if (!card) return "";
   const visibleSide = getVisibleSide(card, playerN);
-  if (visibleSide == "A") {
+  if (visibleSide === "A") {
       return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.jpg';
   } else { // Side B logic
       const sideBName = card.sides.B.name;
-      if (sideBName == "player") {
+      if (sideBName === "player") {
           return process.env.PUBLIC_URL + '/images/cardbacks/player.jpg';
-      } else if (sideBName == "encounter") {
+      } else if (sideBName === "encounter") {
           return process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg';
       } else if (sideBName) {
           return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.B.jpg';
@@ -195,7 +195,7 @@ export const passesCriteria = (card, criteria) => {
         break;
       case "sideDown":
         console.log("dwn");
-        if (card["currentSide"] == "A") objectToCheck = card["sides"]["B"];
+        if (card["currentSide"] === "A") objectToCheck = card["sides"]["B"];
         else objectToCheck = card["sides"]["A"];
         break;
       case "tokens":

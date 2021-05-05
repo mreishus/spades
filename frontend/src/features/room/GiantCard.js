@@ -1,11 +1,11 @@
-import React, { Component } from "react";
+import React from "react";
 import { useActiveCard } from "../../contexts/ActiveCardContext";
 import { getVisibleFace, getVisibleFaceSRC } from "./Helpers";
 
 export const GiantCard = ({playerN}) => {
+  console.log("Rendering GiantCard");
   const activeCardAndLoc = useActiveCard();
   const activeCard = activeCardAndLoc?.card
-  console.log("rendering giantcard");
   const visibleFace = getVisibleFace(activeCard, playerN)
   if (activeCard) {
     return (
@@ -24,8 +24,7 @@ export const GiantCard = ({playerN}) => {
           zIndex: 1e6,
           width: visibleFace.height >= visibleFace.width ? "25%" : "35%",
         }}
-      >
-      </img>
+      />
     )
   } else {
     return(null)

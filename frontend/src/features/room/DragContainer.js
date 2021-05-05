@@ -53,7 +53,7 @@ export const DragContainer = React.memo(({
 
       dest.index = -1;
       for(var i=0; i<=destGroupStackIds.length; i++) {
-        if(destGroupStackIds[i] == dest.draggableId){
+        if(destGroupStackIds[i] === dest.draggableId){
           dest.index = i;
         }
       }

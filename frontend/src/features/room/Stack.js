@@ -38,7 +38,7 @@ export const Stack = React.memo(({
   const numStacksNonZero = numStacks > 0 ? numStacks : 1;
   var handSpacing = 45/(numStacksNonZero);
   if (handSpacing > cardSize) handSpacing = cardSize;
-  const stackWidth = groupType == "hand" ? handSpacing : cardSize/0.72 + cardSize/3*(cardIds.length-1);
+  const stackWidth = groupType === "hand" ? handSpacing : cardSize/0.72 + cardSize/3*(cardIds.length-1);
   //const stackWidth = cardSize/0.72 + cardSize/3*(stack.cards.length-1);
   return (
     <Draggable 

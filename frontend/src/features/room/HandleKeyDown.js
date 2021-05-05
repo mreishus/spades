@@ -162,7 +162,7 @@ export const HandleKeyDown = ({
         } else if (k === "R") {
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
-            if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
+            if (playerN === leftmostNonEliminatedPlayerN(gameUi)) {
                 // Set phase
                 gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]}});
                 chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
@@ -191,7 +191,7 @@ export const HandleKeyDown = ({
         } else if (k === "N") {
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the round number increasing multiple times.
-            if (playerN == leftmostNonEliminatedPlayerN(gameUi)) {
+            if (playerN === leftmostNonEliminatedPlayerN(gameUi)) {
                 // Update phase
                 gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "phase", "Resource"], ["game", "roundStep", "1.R"]]}})
                 chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
@@ -241,7 +241,7 @@ export const HandleKeyDown = ({
                 gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Deck", dest_group_id: playerN+"Hand", top_n: handSize, position: "t"}})
                 chatBroadcast("game_update", {message: "shuffled "+handSize+" cards into their deck and redrew an equal number."})
             }
-        } else if (k == "Escape") {
+        } else if (k === "Escape") {
             // Remove targets from all cards you targeted
             chatBroadcast("game_update",{message: "removes all targets."});
             gameBroadcast("game_action", {
@@ -418,7 +418,7 @@ export const HandleKeyDown = ({
                 gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
             }
             // Deal shadow card
-            else if (k === "s" && groupType == "play") {
+            else if (k === "s" && groupType === "play") {
                 const encounterStackIds = gameUi.game.groupById.sharedEncounterDeck.stackIds;
                 const stacksLeft = encounterStackIds.length;
                 // If no cards, check phase of game
@@ -452,7 +452,7 @@ export const HandleKeyDown = ({
             // Send to appropriate discard pile
             else if (k === "x") {
                 // If card is the parent card of a stack, discard the whole stack
-                if (cardIndex == 0) {
+                if (cardIndex === 0) {
                     const stack = getStackByCardId(gameUi.game.stackById, activeCardId);
                     if (!stack) return;
                     const cardIds = stack.cardIds;
@@ -470,7 +470,7 @@ export const HandleKeyDown = ({
                     gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
                 }
                 // If the card was a quest card, load the next quest card
-                if (activeCardFace.type == "Quest") {
+                if (activeCardFace.type === "Quest") {
                     const questDeckStackIds = gameUi.game.groupById[activeCard.loadGroupId].stackIds;
                     if (questDeckStackIds.length > 0) {
                         chatBroadcast("game_update", {message: "advanced the quest."});
