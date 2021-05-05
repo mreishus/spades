@@ -1,36 +1,12 @@
-import React, { Component, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import styled from "@emotion/styled";
 import { Stacks } from "./Stacks";
-import Title from "./Title";
 import { GROUPSINFO } from "./Constants";
-import { faChevronDown, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenuTrigger } from "react-contextmenu";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { GroupContextMenu } from "./GroupContextMenu";
 import { getParentCardsInGroup } from "./Helpers";
 import { setValues } from "./gameUiSlice";
-
-const Container = styled.div`
-  padding: 1px 1px 1px 1px;
-  max-height: 100%;
-  height: 100%;
-  width: 100%;
-`;
-
-const Header = styled.div`
-  align-items: center;
-  justify-content: center;
-  color: white;
-  height: 13%;
-`;
-
-const WidthContainer = styled.div`
-  padding: 2px 2px 2px 0.5vw;
-  float: left;
-  height: 100%;
-`;
 
 const isNormalInteger = (str) => {
   var n = Math.floor(Number(str));
@@ -73,20 +49,20 @@ export const Browse = React.memo(({
     setSelectedCardType(event.target.value);
   }
 
-  const handleCloseClick = (event) => {
+  const handleCloseClick = (_event) => {
     gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: stackIds, value: false}})
     if (groupType === "deck") stopPeekingTopCard();
     setBrowseGroupId("");
   }
 
-  const handleCloseAndShuffleClick = (event) => {
+  const handleCloseAndShuffleClick = (_event) => {
     gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: stackIds, value: false}})
     gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: groupId}})
     if (groupType === "deck") stopPeekingTopCard();
     setBrowseGroupId("");
   }
 
-  const handleJustCloseClick = (event) => {
+  const handleJustCloseClick = (_event) => {
     setBrowseGroupId("");
   }
 
