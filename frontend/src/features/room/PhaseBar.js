@@ -1,4 +1,4 @@
-import React, { Component, useState, useRef } from "react";
+import React from "react";
 import { PhaseButton } from "./PhaseButton";
 
 export const PhaseBar = React.memo(({
@@ -6,7 +6,7 @@ export const PhaseBar = React.memo(({
   chatBroadcast,
 }) => {
   return(
-    <div className="bg-gray-500" style={{width:"48px"}}>
+    <div className="bg-gray-500" style={{width:"48px", zIndex: 1e6}}>
       <PhaseButton
         phase={"Start"}
         text={"α"}

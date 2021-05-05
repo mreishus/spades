@@ -20,7 +20,7 @@ export const PhaseButton = React.memo(({
   return (
     <div 
       className={"relative text-center select-none text-gray-100"}
-      style={{height: height, maxHeight: height, borderBottom: (phase === "pEnd") ? "" : "1px solid"}}
+      style={{height: height, maxHeight: height, borderBottom: (phase === "End") ? "" : "1px solid"}}
     >
       <div
         className={`absolute h-full ${isPhase ? "bg-red-800" : ""}`}
@@ -28,9 +28,7 @@ export const PhaseButton = React.memo(({
       >
         {text}
       </div>
-      <div
-        className="w-full h-full text-sm flex flex-col float-left"
-      >
+      <div className="w-full h-full text-sm flex flex-col float-left">
         {Object.keys(phaseInfo).map((roundStep, index) => {
           const isHovering = (hovering === roundStep);
           const isRoundStep = (gameRoundStep === roundStep);
@@ -40,26 +38,19 @@ export const PhaseButton = React.memo(({
               key={roundStep}
               className={`flex flex-1 items-center`} 
               style={{
-                zIndex:1e6, 
                 width: isHovering ? "375px" : "100%",
-                // MozBoxShadow: '50px 0 10px 5px black',
-                // WebkitBoxShadow: '50px 0 10px 5px black',
-                // boxShadow: '50px 0 10px 5px black',
               }}
               onClick={() => handleButtonClick(roundStep, roundStepText)}
               onMouseEnter={() => setHovering(roundStep)}
               onMouseLeave={() => setHovering(null)}
             >
-              <div className="flex justify-center" style={{width:"24px"}}>
-                  
-              </div>
+              <div className="flex justify-center" style={{width:"24px"}}/>
               <div className={`flex h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"}`} style={{width:"24px"}}>
                 {roundStep}
               </div>
-              <div className={`flex flex-1 h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"} ${isHovering ? "block" : "hidden"}`}>
+              <div className={`flex flex-1 h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"} ${isHovering ? "block" : "hidden"}`} >
                 {roundStepText}
               </div>
-              {/* style={{display: (hovering === roundStep) ? "block" : "none"}} */}
             </div>
           )
         })}
