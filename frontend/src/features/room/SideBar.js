@@ -1,13 +1,13 @@
 import React from "react";
-import { PhaseButton } from "./PhaseButton";
+import { SideBarPhase } from "./SideBarPhase";
 
-export const PhaseBar = React.memo(({
+export const SideBar = React.memo(({
   gameBroadcast,
   chatBroadcast,
 }) => {
   return(
     <div className="bg-gray-500" style={{width:"48px", zIndex: 1e6}}>
-      <PhaseButton
+      <SideBarPhase
         phase={"Start"}
         text={"α"}
         height={"4%"}
@@ -16,8 +16,8 @@ export const PhaseBar = React.memo(({
         phaseInfo={{
           "0.0": "0.0: Beginning of the round",
         }}
-      ></PhaseButton>
-      <PhaseButton
+      />
+      <SideBarPhase
         phase={"Resource"}
         text={"Resource"}
         height={"11%"}
@@ -28,8 +28,8 @@ export const PhaseBar = React.memo(({
           "1.R": "1.2 & 1.3: Gain resources and draw cards",
           "1.4": "1.4: End of the Resource phase",
         }}
-      ></PhaseButton>
-      <PhaseButton
+      />
+      <SideBarPhase
         phase={"Planning"}
         text={"Planning"}
         height={"11%"}
@@ -40,8 +40,8 @@ export const PhaseBar = React.memo(({
           "2.P": "2.2 & 2.3: Play cards in turn order",
           "2.4": "2.4: End of the Planning phase",
         }}
-      ></PhaseButton>
-      <PhaseButton
+      />
+      <SideBarPhase
         phase={"Quest"}
         text={"Quest"}
         height={"17%"}
@@ -54,8 +54,8 @@ export const PhaseBar = React.memo(({
           "3.4": "3.4: Quest resolution",
           "3.5": "3.5: End of the Quest phase",
         }}
-      ></PhaseButton>
-      <PhaseButton
+      />
+      <SideBarPhase
         phase={"Travel"}
         text={"Travel"}
         height={"11%"}
@@ -66,8 +66,8 @@ export const PhaseBar = React.memo(({
           "4.2": "4.2: Travel opportunity",
           "4.3": "4.3: End of the Travel phase",
         }}
-      ></PhaseButton>
-      <PhaseButton
+      />
+      <SideBarPhase
         phase={"Encounter"}
         text={"Encounter"}
         height={"14%"}
@@ -79,8 +79,8 @@ export const PhaseBar = React.memo(({
           "5.3": "5.3: Engagement checks",
           "5.4": "5.4: End of the Encounter phase",
         }}
-      ></PhaseButton>
-      <PhaseButton
+      />
+      <SideBarPhase
         phase={"Combat"}
         text={"Combat"}
         height={"17%"}
@@ -93,8 +93,8 @@ export const PhaseBar = React.memo(({
           "6.P": "6.7-6.10: Player attacks",
           "6.11": "6.11: End of the Combat phase",
         }}
-      ></PhaseButton>
-      <PhaseButton
+      />
+      <SideBarPhase
         phase={"Refresh"}
         text={"Refresh"}
         height={"11%"}
@@ -105,8 +105,8 @@ export const PhaseBar = React.memo(({
           "7.R": "7.2-7.4: Ready cards, raise threat, pass P1 token",
           "7.3": "7.3: End of the Refresh phase",
         }}
-      ></PhaseButton>
-      <PhaseButton
+      />
+      <SideBarPhase
         phase={"End"}
         text={"Ω"}
         height={"4%"}
@@ -115,7 +115,7 @@ export const PhaseBar = React.memo(({
         phaseInfo={{
           "0.1": "0.1: End of the round",
         }}
-      ></PhaseButton>
+      />
     </div>
   )
 })

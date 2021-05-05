@@ -3,7 +3,7 @@ import { TableLayout } from "./TableLayout";
 import { GiantCard } from "./GiantCard";
 import { MenuBar } from "./MenuBar";
 import { SpawnCardModal } from "./SpawnCardModal";
-import { PhaseBar } from "./PhaseBar";
+import { SideBar } from "./SideBar";
 import { Hotkeys } from "./Hotkeys";
 
 export const Table = React.memo(({
@@ -29,16 +29,13 @@ export const Table = React.memo(({
   }
 
   return (
-
     <div className="h-full flex">
       {showHotkeys && <Hotkeys setShowHotkeys={setShowHotkeys}/>}
-
       {/* Side panel */}
-      <PhaseBar
+      <SideBar
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
       />
-
       {/* Main panel */}
       <div className="flex w-full">
         <div className="flex flex-col w-full h-full">
@@ -55,10 +52,10 @@ export const Table = React.memo(({
               setSittingPlayerN={setSittingPlayerN}
               observingPlayerN={observingPlayerN}
               setObservingPlayerN={setObservingPlayerN}
-            ></MenuBar>
+            />
           </div>
           {/* Table */}
-          <div className=""  style={{height: "94%"}}>
+          <div className="" style={{height: "94%"}}>
             <TableLayout
               observingPlayerN={observingPlayerN}
               gameBroadcast={gameBroadcast} 
@@ -84,7 +81,6 @@ export const Table = React.memo(({
         />
       }
     </div>
-
   );
 })
 
