@@ -4,7 +4,7 @@ import { Droppable, Draggable } from "react-beautiful-dnd";
 import { Stack } from "./Stack";
 import CardBack from "./CardBack"
 
-const Wrapper = styled.div`
+const Container = styled.div`
   background-color: ${props => props.isDraggingOver ? "rgba(1,1,1,0.3)" : ""};
   moz-box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.3)" : ""};
   webkit-box-shadow: ${props => props.isDraggingOver ? "0 0 15px 12px rgba(1,1,1,0.3)" : ""};
@@ -32,12 +32,6 @@ const DropZone = styled.div`
   padding: 0 0 0 0;
 `;
 
-/* stylelint-disable block-no-empty */
-const Container = styled.div`
-  height: 100%;
-`;
-/* stylelint-enable */
-
 const StacksList = React.memo(({
   isDraggingOver,
   isDraggingFrom,
@@ -52,14 +46,12 @@ const StacksList = React.memo(({
   registerDivToArrowsContext
 }) => {
   const pile = (groupType=="deck" || groupType=="discard")
-  //return(<div>{groupType}</div>)
   // Truncate stacked piles
   var stackIdsToShow;
   if (pile && isDraggingOver && !isDraggingFrom) stackIdsToShow = [];
   else if (pile && stackIds.length>1) stackIdsToShow = [stackIds[0]]
   else stackIdsToShow = stackIds;
   if (!stackIdsToShow) return null;
-  console.log('rendering stacks');
   return (
     stackIdsToShow?.map((stackId, stackIndex) => (
       (selectedStackIndices.includes(stackIndex)) ? (
@@ -93,7 +85,7 @@ export const Stacks = React.memo(({
   selectedStackIndices,
   registerDivToArrowsContext
 }) => {
-  console.log("rendering stacks ",groupId)
+  console.log("Rendering Stacks for ",groupId)
   return(
     <Droppable
       droppableId={groupId}
@@ -103,14 +95,14 @@ export const Stacks = React.memo(({
       direction={groupType=="deck" || groupType=="discard" ? "vertical" : "horizontal"}
     >
       {(dropProvided, dropSnapshot) => (
-        <Wrapper
+        <Container
           isDraggingOver={dropSnapshot.isDraggingOver}
           isDropDisabled={false}
           isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
           {...dropProvided.droppableProps}
           groupType={groupType}
         >
-          <Container>
+          <div className="h-full">
             <CardBack 
               groupType={groupType} 
               stackIds={stackIds} 
@@ -133,8 +125,8 @@ export const Stacks = React.memo(({
               />
               {dropProvided.placeholder}
             </DropZone>
-          </Container>
-        </Wrapper>
+          </div>
+        </Container>
       )}
     </Droppable>
   )

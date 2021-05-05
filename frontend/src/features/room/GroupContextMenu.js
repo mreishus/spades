@@ -1,6 +1,6 @@
-import React, { Component, useState } from "react";
+import React from "react";
 import { GROUPSINFO } from "./Constants";
-import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
+import { ContextMenu, MenuItem, SubMenu } from "react-contextmenu";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 
 export const GroupContextMenu = React.memo(({

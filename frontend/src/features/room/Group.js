@@ -1,40 +1,11 @@
-import React, { Component } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import styled from "@emotion/styled";
+import React from "react";
+import { useSelector } from 'react-redux';
 import { Stacks } from "./Stacks";
-import Title from "./Title";
 import { GROUPSINFO } from "./Constants";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
-import { handleBrowseTopN } from "./HandleBrowseTopN";
+import { ContextMenuTrigger } from "react-contextmenu";
 import { GroupContextMenu } from "./GroupContextMenu";
-
-const Container = styled.div`
-  max-height: 100%;
-  height: 100%;
-  width: 100%;
-`;
-
-const Header = styled.div`
-  float: left;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  width: 15px;
-  writing-mode: vertical-rl;
-  text-align: center;
-  align-items: center;
-  position: absolute;
-  justify-content: center;
-  display: flex;
-`;
-
-const WidthContainer = styled.div`
-  padding: 2px 2px 2px 0.5vw;
-  float: left;
-  height: 100%;
-`;
 
 export const Group = React.memo(({
   groupId,
@@ -53,7 +24,6 @@ export const Group = React.memo(({
   const group = useSelector(storeGroup);
   if (!group) return null;
   const numStacks = group.stackIds.length;
-  const beingBrowsed = browseGroupId === groupId;
   return(
     <div className="h-full w-full">
       {hideTitle ? null :

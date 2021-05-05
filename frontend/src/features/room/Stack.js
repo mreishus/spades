@@ -4,7 +4,6 @@ import styled from "@emotion/styled";
 import { Card } from "./Card";
 import { Draggable } from "react-beautiful-dnd";
 
-
 const Container = styled.div`
   position: relative;
   userSelect: none;
@@ -29,11 +28,11 @@ export const Stack = React.memo(({
   numStacks,
   registerDivToArrowsContext
 }) => {
+  console.log('Rendering Stack ',stackIndex);
   const stackStore = state => state?.gameUi?.game?.stackById[stackId];
   const stack = useSelector(stackStore);
   if (!stack) return null;
   const cardIds = stack.cardIds;
-  console.log('Rendering Stack ',stackIndex);
   // Calculate size of stack for proper spacing. Changes base on group type and number of stack in group.
   const numStacksNonZero = numStacks > 0 ? numStacks : 1;
   var handSpacing = 45/(numStacksNonZero);
