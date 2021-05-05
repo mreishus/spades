@@ -1,11 +1,11 @@
 import React, { Component, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentFace } from "./Helpers";
-import { MenuBarUser } from "./MenuBarUser";
-import { MenuBarShared } from "./MenuBarShared";
+import { TopBarUser } from "./TopBarUser";
+import { TopBarShared } from "./TopBarShared";
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 
-export const MenuBarDataContainer = React.memo(({
+export const TopBarDataContainer = React.memo(({
   gameBroadcast,
   chatBroadcast,
   observingPlayerN,
@@ -59,12 +59,12 @@ export const MenuBarDataContainer = React.memo(({
 
     return(
       <div className="h-full">
-        <MenuBarShared 
+        <TopBarShared 
           round={round}
           threat={stagingThreat}
           progress={totalProgress}
         />
-        <MenuBarUser
+        <TopBarUser
           playerI={"player1"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
@@ -72,7 +72,7 @@ export const MenuBarDataContainer = React.memo(({
           setObservingPlayerN={setObservingPlayerN}
         />
         {numPlayers > 1 &&
-        <MenuBarUser
+        <TopBarUser
           playerI={"player2"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
@@ -80,7 +80,7 @@ export const MenuBarDataContainer = React.memo(({
           setObservingPlayerN={setObservingPlayerN}
         />}
         {numPlayers > 2 &&
-        <MenuBarUser
+        <TopBarUser
           playerI={"player3"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
@@ -88,7 +88,7 @@ export const MenuBarDataContainer = React.memo(({
           setObservingPlayerN={setObservingPlayerN}
         />}
         {numPlayers > 3 &&
-        <MenuBarUser
+        <TopBarUser
           playerI={"player4"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}

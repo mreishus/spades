@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { TableLayout } from "./TableLayout";
 import { GiantCard } from "./GiantCard";
-import { MenuBar } from "./MenuBar";
+import { TopBar } from "./TopBar";
 import { SpawnCardModal } from "./SpawnCardModal";
 import { SideBar } from "./SideBar";
 import { Hotkeys } from "./Hotkeys";
@@ -41,7 +41,7 @@ export const Table = React.memo(({
         <div className="flex flex-col w-full h-full">
           {/* Game menu bar */}
           <div className="bg-gray-600 text-white" style={{height: "6%"}}>
-            <MenuBar
+            <TopBar
               setShowSpawn={setShowSpawn}
               setShowHotkeys={setShowHotkeys}
               handleBrowseSelect={handleBrowseSelect}

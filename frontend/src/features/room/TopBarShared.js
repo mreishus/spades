@@ -1,6 +1,6 @@
 import React from "react";
 
-export const MenuBarShared = React.memo(({
+export const TopBarShared = React.memo(({
   round,
   threat,
   progress

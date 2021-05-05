@@ -1,10 +1,10 @@
 import React, { Component, useState, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { getCurrentFace } from "./Helpers"
-import { MenuBarShared } from "./MenuBarShared"
+import { TopBarShared } from "./TopBarShared"
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 
-export const MenuBarSharedContainer = React.memo(({setPlayerWillpower}) => {
+export const TopBarSharedContainer = React.memo(({setPlayerWillpower}) => {
   
     const stagingStore = state => state?.gameUi?.game?.groupById?.sharedStaging.stackIds;
     const stagingStackIds = useSelector(stagingStore);
@@ -42,7 +42,7 @@ export const MenuBarSharedContainer = React.memo(({setPlayerWillpower}) => {
     setPlayerWillpower(playerWillpower);
 
     return(
-      <MenuBarShared 
+      <TopBarShared 
         round={round}
         threat={stagingThreat}
         progress={totalProgress}

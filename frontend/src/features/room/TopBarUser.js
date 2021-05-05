@@ -9,13 +9,14 @@ import { getCurrentFace } from "./Helpers";
 
 var delayBroadcast;
 
-export const MenuBarUser = React.memo(({
+export const TopBarUser = React.memo(({
   playerI,
   gameBroadcast,
   chatBroadcast,
   observingPlayerN,
   setObservingPlayerN,
 }) => {
+  console.log("Rendering TopBarUser ", playerI);
   const dispatch = useDispatch();
   const playerIdsStore = state => state?.gameUi?.playerIds;
   const playerIds = useSelector(playerIdsStore);
@@ -40,14 +41,10 @@ export const MenuBarUser = React.memo(({
   if (!playerIds) return null;
   if (!playerDataPlayerN) return null;
 
-  console.log("menubaruser ", playerI);
-
   const sittingUserID = playerIds[playerI];
   
   // If not observing anyone, observe yourself
   if (!observingPlayerN && (myUserID === sittingUserID)) setObservingPlayerN(playerI);
-
-
 
   const handleThreatChange = (event) => {
     const newValue = event.target.value;
