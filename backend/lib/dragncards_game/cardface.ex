@@ -63,7 +63,7 @@ defmodule DragnCardsGame.CardFace do
       "unique" => card_row_side["unique"],
       "victoryPoints" => convert_to_integer(card_row_side["victorypoints"]),
       "willpower" => convert_to_integer(card_row_side["willpower"]),
-      "triggerSteps" => trigger_steps_from_text(card_row_side["keywords"], card_row_side["text"])
+      "triggers" => trigger_steps_from_text(card_row_side["keywords"], card_row_side["text"])
     }
   end
 end

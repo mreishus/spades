@@ -34,7 +34,7 @@ defmodule DragnCardsGame.Game do
       "groupById" => Groups.new(),
       "stackById" => %{},
       "cardById"  => %{},
-      "triggers" => %{},
+      "triggerMap" => %{},
       "playerData" => %{
         "player1" => PlayerData.new(),
         "player2" => PlayerData.new(),

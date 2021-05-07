@@ -133,6 +133,11 @@ defmodule DragnCardsGame.GameUI do
     put_in(gameui["game"]["cardById"][card_id]["tokens"][token_type], new_value)
   end
 
+  def get_current_card_face(gameui, card_id) do
+    card = get_card(gameui, card_id)
+    card["sides"][card["currentSide"]]
+  end
+
   def get_group_by_stack_id(gameui, stack_id) do
     Enum.reduce(gameui["game"]["groupById"], nil, fn({group_id, group}, acc) ->
       acc = if stack_id in group["stackIds"] do group else acc end
@@ -408,7 +413,15 @@ defmodule DragnCardsGame.GameUI do
         controller = get_group_controller(gameui, dest_group_id)
         put_in(card["peeking"][controller], true)
       else card end
-      update_card(gameui, card)
+      gameui = update_card(gameui, card)
+      # Update game based on card moving
+      gameui = if dest_group_type == "play" do
+        IO.puts("adding triggers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        add_triggers(gameui, card["id"])
+      else
+        IO.puts("removing triggers ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        remove_triggers(gameui, card["id"])
+      end
     end
   end
 
@@ -529,6 +542,8 @@ defmodule DragnCardsGame.GameUI do
           load_cards(gameui, options["user_id"], options["load_list"])
         "set_seat" ->
           set_seat(gameui, options["user_id"], options["player_n"])
+        "target_card_ids" ->
+          target_card_ids(gameui, player_n, options["card_ids"])
         _ ->
           gameui
       end
@@ -563,6 +578,49 @@ defmodule DragnCardsGame.GameUI do
     else
       gameui
     end
+  end
+
+  def add_trigger(gameui, round_step, card_id) do
+    old_round_step_triggers = gameui["game"]["triggerMap"][round_step]
+    if old_round_step_triggers && Enum.member?(old_round_step_triggers, card_id) do
+      gameui
+    else
+      new_round_step_triggers = if old_round_step_triggers do
+        old_round_step_triggers ++ [card_id]
+      else
+        [card_id]
+      end
+      put_in(gameui["game"]["triggerMap"][round_step], new_round_step_triggers)
+    end
+  end
+
+  def add_triggers(gameui, card_id) do
+    card_face = get_current_card_face(gameui, card_id)
+    IO.puts("card_face")
+    IO.inspect(card_face)
+    card_triggers = card_face["triggers"]
+    IO.puts("card_trigger")
+    IO.inspect(card_triggers)
+    Enum.reduce(card_triggers, gameui, fn(round_step, acc) ->
+      acc = add_trigger(acc, round_step, card_id)
+    end)
+  end
+
+  def remove_trigger(gameui, round_step, card_id) do
+    old_round_step_triggers = gameui["game"]["triggerMap"][round_step]
+    if old_round_step_triggers && Enum.member?(old_round_step_triggers, card_id) do
+      put_in(gameui["game"]["triggerMap"][round_step], Enum.reject(old_round_step_triggers, &(&1 == card_id)))
+    else
+      gameui
+    end
+  end
+
+  def remove_triggers(gameui, card_id) do
+    card_face = get_current_card_face(gameui, card_id)
+    card_triggers = card_face["triggers"]
+    Enum.reduce(card_triggers, gameui, fn(round_step, acc) ->
+      acc = remove_trigger(acc, round_step, card_id)
+    end)
   end
 
   def rotate_list_left(list) do
@@ -662,6 +720,17 @@ defmodule DragnCardsGame.GameUI do
     old_targeting = get_targeting(gameui, card_id)
     new_targeting = put_in(old_targeting[player_n], true)
     update_targeting(gameui, card_id, new_targeting)
+  end
+
+  def target_card_ids(gameui, player_n, card_ids) do
+    Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
+      IO.puts(card_id)
+      old_targeting = get_targeting(acc, card_id)
+      IO.puts("old_targeting")
+      IO.inspect(old_targeting)
+      new_targeting = put_in(old_targeting[player_n], true)
+      acc = update_targeting(acc, card_id, new_targeting)
+    end)
   end
 
   def insert_new_stack(gameui, group_id, stack_index, stack) do

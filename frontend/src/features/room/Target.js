@@ -18,8 +18,8 @@ export const Target = React.memo(({
     return (
         <div className="absolute"
             style={{
-                width: `${cardSize*1.4}vw`,
-                height: `${cardSize*1.4}vw`,
+                width: `${cardSize}vw`,
+                height: `${cardSize}vw`,
                 opacity: "60%",
                 left: "50%",
                 top: "50%",

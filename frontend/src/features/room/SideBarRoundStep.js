@@ -10,11 +10,18 @@ export const SideBarRoundStep = React.memo(({
 }) => {
   const gameRoundStepStore = state => state?.gameUi?.game?.roundStep;
   const gameRoundStep = useSelector(gameRoundStepStore);
+  const triggerRoundStepStore = state => state?.gameUi?.game?.triggerMap?.[roundStep];
+  const triggerCardIds = useSelector(triggerRoundStepStore);
+  const numTriggers = triggerCardIds ? triggerCardIds.length : 0;
   const [hovering, setHovering] = useState(null);
   const isRoundStep = (gameRoundStep === roundStep);
   const handleButtonClick = (roundStep, roundStepText) => { 
     gameBroadcast("game_action", {action: "update_values", options:{updates: [["game", "roundStep", roundStep], ["game", "phase", phase]]}});     
     chatBroadcast("game_update", {message: "set the round step to "+roundStepText+"."})
+  }
+  const targetTriggers = () => { 
+    gameBroadcast("game_action", {action: "target_card_ids", options:{card_ids: triggerCardIds}});     
+    //chatBroadcast("game_update", {message: "set the round step to "+roundStepText+"."})
   }
   return (
     <div 
@@ -31,7 +38,14 @@ export const SideBarRoundStep = React.memo(({
       <div className={`flex h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"}`} style={{width:"24px"}}>
         {roundStep}
       </div>
-      <div class="absolute rounded-full h-5 w-5 flex items-center justify-center bg-red-600 border -right-4">3</div>
+      {numTriggers > 0 &&
+        <div 
+          class="absolute rounded-full h-5 w-5 flex items-center justify-center bg-red-800 hover:bg-red-600 border -right-4"
+          onClick={() => targetTriggers()}
+        >
+          {numTriggers}
+        </div>
+      }
       <div className={`flex flex-1 h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"} ${hovering ? "block" : "hidden"}`} >
         {roundStepText}
       </div>
