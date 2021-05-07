@@ -20,15 +20,25 @@ defmodule DragnCardsGame.CardFace do
   @spec trigger_steps_from_text(String.t(), String.t()) :: List.t()
   def trigger_steps_from_text(keywords, text) do
     steps = []
-    steps = if String.match?(text, ~r/At the beginning of the round/i) do steps ++ ["0.0"] else steps end
-    steps = if String.match?(text, ~r/At the beginning of the resource phase/i) do steps ++ ["1.1"] else steps end
-    steps = if String.match?(text, ~r/At the beginning of the planning phase/i) do steps ++ ["2.1"] else steps end
-    steps = if String.match?(text, ~r/At the beginning of the quest phase/i) do steps ++ ["3.1"] else steps end
-    steps = if String.match?(text, ~r/At the beginning of the staging step/i) do steps ++ ["3.3"] else steps end
-    steps = if String.match?(text, ~r/At the beginning of the travel phase/i) do steps ++ ["4.1"] else steps end
-    steps = if String.match?(text, ~r/At the beginning of the encounter phase/i) do steps ++ ["5.1"] else steps end
-    steps = if String.match?(text, ~r/At the beginning of the combat phase/i) do steps ++ ["6.1"] else steps end
-    steps = if String.match?(text, ~r/At the beginning of the refresh phase/i) do steps ++ ["7.1"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the round/i) do steps ++ ["0.0"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the resource phase/i) do steps ++ ["1.1"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the planning phase/i) do steps ++ ["2.1"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the quest phase/i) do steps ++ ["3.1"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the staging step/i) do steps ++ ["3.3"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the travel phase/i) do steps ++ ["4.1"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the encounter phase/i) do steps ++ ["5.1"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the combat phase/i) do steps ++ ["6.1"] else steps end
+    steps = if String.match?(text, ~r/at the beginning of the refresh phase/i) do steps ++ ["7.1"] else steps end
+
+    steps = if String.match?(text, ~r/at the end of the round/i) do steps ++ ["0.1"] else steps end
+    steps = if String.match?(text, ~r/at the end of the resource phase/i) do steps ++ ["1.4"] else steps end
+    steps = if String.match?(text, ~r/at the end of the planning phase/i) do steps ++ ["2.4"] else steps end
+    steps = if String.match?(text, ~r/at the end of the quest phase/i) do steps ++ ["3.1"] else steps end
+    steps = if String.match?(text, ~r/at the end of the staging step/i) do steps ++ ["3.3"] else steps end
+    steps = if String.match?(text, ~r/at the end of the travel phase/i) do steps ++ ["4.3"] else steps end
+    steps = if String.match?(text, ~r/at the end of the encounter phase/i) do steps ++ ["5.4"] else steps end
+    steps = if String.match?(text, ~r/at the end of the combat phase/i) do steps ++ ["6.11"] else steps end
+    steps = if String.match?(text, ~r/at the end of the refresh phase/i) do steps ++ ["7.3"] else steps end
     IO.inspect(text)
     IO.puts("steps")
     IO.inspect(steps)
