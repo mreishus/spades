@@ -33,6 +33,7 @@ export const Table = React.memo(({
       {showHotkeys && <Hotkeys setShowHotkeys={setShowHotkeys}/>}
       {/* Side panel */}
       <SideBar
+        playerN={playerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
       />

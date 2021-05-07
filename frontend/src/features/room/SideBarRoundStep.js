@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 
 export const SideBarRoundStep = React.memo(({
+  playerN,
   phase,
   roundStep, 
   roundStepText,
@@ -20,6 +21,17 @@ export const SideBarRoundStep = React.memo(({
     chatBroadcast("game_update", {message: "set the round step to "+roundStepText+"."})
   }
   const targetTriggers = () => { 
+
+    // Remove targets from all cards you targeted
+    gameBroadcast("game_action", {
+        action: "action_on_matching_cards", 
+        options: {
+            criteria:[["targeting", playerN, true]], 
+            action: "update_card_values", 
+            options: {updates: [["targeting", playerN, false]]}
+        }
+    });
+    chatBroadcast("game_update", {message: "removes targets."})
     gameBroadcast("game_action", {action: "target_card_ids", options:{card_ids: triggerCardIds}});     
     //chatBroadcast("game_update", {message: "set the round step to "+roundStepText+"."})
   }

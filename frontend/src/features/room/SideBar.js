@@ -2,12 +2,14 @@ import React from "react";
 import { SideBarPhase } from "./SideBarPhase";
 
 export const SideBar = React.memo(({
+  playerN,
   gameBroadcast,
   chatBroadcast,
 }) => {
   return(
     <div className="bg-gray-500" style={{width:"48px", zIndex: 1e6}}>
       <SideBarPhase
+        playerN={playerN}
         phase={"Start"}
         text={"α"}
         height={"4%"}
@@ -18,6 +20,7 @@ export const SideBar = React.memo(({
         }}
       />
       <SideBarPhase
+        playerN={playerN}
         phase={"Resource"}
         text={"Resource"}
         height={"11%"}
@@ -30,6 +33,7 @@ export const SideBar = React.memo(({
         }}
       />
       <SideBarPhase
+        playerN={playerN}
         phase={"Planning"}
         text={"Planning"}
         height={"11%"}
@@ -42,6 +46,7 @@ export const SideBar = React.memo(({
         }}
       />
       <SideBarPhase
+        playerN={playerN}
         phase={"Quest"}
         text={"Quest"}
         height={"17%"}
@@ -56,6 +61,7 @@ export const SideBar = React.memo(({
         }}
       />
       <SideBarPhase
+        playerN={playerN}
         phase={"Travel"}
         text={"Travel"}
         height={"11%"}
@@ -68,6 +74,7 @@ export const SideBar = React.memo(({
         }}
       />
       <SideBarPhase
+        playerN={playerN}
         phase={"Encounter"}
         text={"Encounter"}
         height={"14%"}
@@ -81,6 +88,7 @@ export const SideBar = React.memo(({
         }}
       />
       <SideBarPhase
+        playerN={playerN}
         phase={"Combat"}
         text={"Combat"}
         height={"17%"}
@@ -95,6 +103,7 @@ export const SideBar = React.memo(({
         }}
       />
       <SideBarPhase
+        playerN={playerN}
         phase={"Refresh"}
         text={"Refresh"}
         height={"11%"}
@@ -107,6 +116,7 @@ export const SideBar = React.memo(({
         }}
       />
       <SideBarPhase
+        playerN={playerN}
         phase={"End"}
         text={"Ω"}
         height={"4%"}
