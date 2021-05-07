@@ -26,6 +26,7 @@ defmodule DragnCardsGame.Game do
       "version" => 0.1,
       "options" => options,
       "numPlayers" => 1,
+      "layout" => "standard",
       "firstPlayer" => "player1",
       "roundNumber" => 0,
       "phase" => "Beginning",
@@ -33,6 +34,7 @@ defmodule DragnCardsGame.Game do
       "groupById" => Groups.new(),
       "stackById" => %{},
       "cardById"  => %{},
+      "triggers" => %{},
       "playerData" => %{
         "player1" => PlayerData.new(),
         "player2" => PlayerData.new(),

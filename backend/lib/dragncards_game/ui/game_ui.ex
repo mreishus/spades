@@ -16,7 +16,6 @@ defmodule DragnCardsGame.GameUI do
       "options" => options,
       "created_at" => DateTime.utc_now(),
       "created_by" => user,
-      "layout" => "standard",
       "playerIds" => %{
         "player1" => user,
         "player2" => nil,

@@ -31,6 +31,7 @@ export const SideBarRoundStep = React.memo(({
       <div className={`flex h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"}`} style={{width:"24px"}}>
         {roundStep}
       </div>
+      <div class="absolute rounded-full h-5 w-5 flex items-center justify-center bg-red-600 border -right-4">3</div>
       <div className={`flex flex-1 h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"} ${hovering ? "block" : "hidden"}`} >
         {roundStepText}
       </div>

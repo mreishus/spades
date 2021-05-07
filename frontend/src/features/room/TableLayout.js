@@ -64,7 +64,7 @@ export const TableLayout = React.memo(({
   console.log("Rendering TableLayout");
   const numPlayersStore = state => state.gameUi.game.numPlayers;
   const numPlayers = useSelector(numPlayersStore);
-  const layoutStore = state => state.gameUi.layout;
+  const layoutStore = state => state.gameUi?.game?.layout;
   const layout = useSelector(layoutStore);
   const [chatHover, setChatHover] = useState(false);
   if (!layout) return;
