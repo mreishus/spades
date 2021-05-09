@@ -142,14 +142,24 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
         } else if (k === "d") {
             // Check remaining cards in deck
-            const player1Deck = gameUi.game.groupById.player1Deck;
-            const deckStackIds = player1Deck["stackIds"];
+            const playerDeck = gameUi.game.groupById[playerN+"Deck"];
+            const deckStackIds = playerDeck["stackIds"];
             const stacksLeft = deckStackIds.length;
             // If no cards, give error message and break
             if (stacksLeft === 0) {
                 chatBroadcast("game_update",{message: " tried to draw a card, but their deck is empty."});
                 return;
             }
+            // const playerHand = gameUi.game.groupById[playerN+"Hand"];
+            // const handStackIds = playerHand.stackIds;
+            // const topStackId = deckStackIds[0];
+            // const topCardId = gameUi.game.stackById[topStackId].cardIds[0];
+            // const newHandStackIds = handStackIds.concat(topStackId);
+            // const updates = [
+            //     ["game","groupById",playerN+"Hand","stackIds",newHandStackIds],
+            //     ["game","cardById",topCardId,"currentSide","A"]
+            // ];
+            // dispatch(setValues({updates: updates}))
             // Draw card
             chatBroadcast("game_update",{message: "drew a card."});
             gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}});
