@@ -4,10 +4,7 @@ declare module "elixir-backend" {
     public id: number;
     public name: string;
     public slug: string;
-    public player1: null | number;
-    public player2: null | number;
-    public player3: null | number;
-    public player4: null | number;
+    public created_by: null | number;
   }
 
 

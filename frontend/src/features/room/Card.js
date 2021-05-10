@@ -10,6 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getVisibleSide } from "./Helpers";
 import { Target } from "./Target";
 
+
 export const Card = React.memo(({
     cardId,
     groupId,
@@ -88,7 +89,7 @@ export const Card = React.memo(({
 
     return (
         <div id={card.id}>
-            <ContextMenuTrigger id={"context-"+card.id} holdToDisplay={500}>
+            {/* <ContextMenuTrigger id={"context-"+card.id} holdToDisplay={500}> */}
                 <div 
                     className={isActive ? 'isActive' : ''}
                     key={card.id}
@@ -115,7 +116,7 @@ export const Card = React.memo(({
                         OTransitionProperty: "-o-transform",
                         transitionProperty: "transform",
                     }}
-                    onClick={onClick}
+                    //onClick={onClick}
                     onMouseLeave={event => handleMouseLeave(event)}
                 >
                     {(card["peeking"][playerN] && !isInMyHand && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute bottom-0 text-2xl" icon={faEye}/>:null}
@@ -170,7 +171,7 @@ export const Card = React.memo(({
                         }}/>
                     </ArcherElement> */}
                 </div>
-            </ContextMenuTrigger>
+            {/* </ContextMenuTrigger>
 
             <ContextMenu id={"context-"+card.id} style={{zIndex:1e8}}>
                 <hr></hr>
@@ -207,7 +208,7 @@ export const Card = React.memo(({
                     </SubMenu>
                 ))}
                 </SubMenu>
-            </ContextMenu>
+            </ContextMenu> */}
         </div>
     )
 })

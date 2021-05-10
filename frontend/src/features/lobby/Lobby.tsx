@@ -97,8 +97,7 @@ export const Lobby: React.FC = () => {
                 </span>, and is not affiliated with or endorsed by FFG or any other company in any way.
               </p>
               <p className="mb-2">
-                If you have any suggestions or encounter any problems, please
-                email me: <AdminContact />
+                If you have any suggestions or encounter any problems, please report them on <a href="https://github.com/seastan/DragnCards">GitHub</a>.
               </p>
             </div>
             <CreateRoomModal

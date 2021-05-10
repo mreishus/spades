@@ -53,10 +53,7 @@ defmodule DragnCardsGame.GameRegistry do
     IO.puts("to_room_param")
     %{
       name: gameui["gameName"],
-      player1: gameui["seats"]["player1"]["sitting"],
-      player2: gameui["seats"]["player2"]["sitting"],
-      player3: gameui["seats"]["player3"]["sitting"],
-      player4: gameui["seats"]["player4"]["sitting"]
+      created_by: gameui["created_by"],
     }
   end
 

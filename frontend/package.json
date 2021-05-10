@@ -54,6 +54,7 @@
     "react-scroll-to-bottom": "^1.3.2",
     "react-simple-arrows": "^0.2.0",
     "react-timer-hook": "^3.0.2",
+    "react-transition-group": "^4.4.1",
     "react-xarrows": "^1.6.1",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",

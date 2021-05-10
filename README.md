@@ -1,2 +1,2 @@
-# spades ![](https://github.com/mreishus/spades/workflows/CI/badge.svg)
+# DragnCards
 Multiplayer online card game written in Elixir, Phoenix, React, and Typescript.
