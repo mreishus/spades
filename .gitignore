@@ -3,3 +3,6 @@
 priv_notes.txt
 node_modules
 cards
+backend/config/releases.exs
+*~
+backend/config/prod.secret.exs
