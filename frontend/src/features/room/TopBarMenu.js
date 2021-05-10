@@ -45,7 +45,7 @@ export const TopBarMenu = React.memo(({
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "numPlayers", num]]}});
       chatBroadcast("game_update", {message: "set the number of players to: " + num});
     } else if (data.action === "layout") {
-      gameBroadcast("game_action", {action: "update_values", options: {updates: [["layout", data.value]]}});
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "layout", data.value]]}});
     }
   }
 

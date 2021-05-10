@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { SideBarRoundStep } from "./SideBarRoundStep";
 
 export const SideBarPhase = React.memo(({
+  playerN,
   phase, 
   text,
   height,
@@ -29,6 +30,7 @@ export const SideBarPhase = React.memo(({
           const roundStepText = phaseInfo[roundStep];
           return (
             <SideBarRoundStep
+              playerN={playerN}
               phase={phase}
               roundStep={roundStep}
               roundStepText={roundStepText}

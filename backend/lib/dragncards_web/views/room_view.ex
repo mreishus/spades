@@ -14,7 +14,8 @@ defmodule DragnCardsWeb.RoomView do
     %{
       id: room.id,
       name: room.name,
-      slug: room.slug
+      slug: room.slug,
+      created_by: room.created_by,
     }
   end
 end

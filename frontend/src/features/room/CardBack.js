@@ -23,7 +23,7 @@ const CardBack = React.memo(({
   const card1 = useSelector(storeCard1);  
   const numPlayersStore = state => state.gameUi.game.numPlayers;
   const numPlayers = useSelector(numPlayersStore);
-  const layoutStore = state => state.gameUi?.layout;
+  const layoutStore = state => state.gameUi?.game?.layout;
   const layout = useSelector(layoutStore);
   const layoutInfo = LAYOUTINFO["layout" + numPlayers + layout];
   const numRows = layoutInfo.length;

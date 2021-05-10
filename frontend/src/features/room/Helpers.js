@@ -4,6 +4,7 @@ export const getCurrentFace = (card) => {
 }
 
 export const getDisplayName = (card) => {
+  if (!card) return;
   const currentSide = card.currentSide;
   const currentFace = getCurrentFace(card);
   if (currentSide === "A") {
@@ -81,6 +82,12 @@ export const processTokenType = (tokenType, cardType) => {
 export const tokenPrintName = (tokenType) => {
   if (tokenType === "hitPoints") return "hit points";
   return tokenType;
+}
+
+export const tokenTitleName = (tokenType) => {
+  if (tokenType === "hitPoints") return "hit points";
+  const printName = tokenPrintName(tokenType);
+  return printName.charAt(0).toUpperCase() + printName.slice(1)
 }
 
 export const getCardWillpower = (card) => {

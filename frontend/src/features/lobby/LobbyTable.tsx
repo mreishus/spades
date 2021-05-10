@@ -17,16 +17,7 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
         <Link to={"/room/" + room.slug}>{room.name}</Link>
       </td>
       <td className={tdClass}>
-        <UserName userID={room.player1} />
-      </td>
-      <td className={tdClass}>
-        <UserName userID={room.player2} />
-      </td>
-      <td className={tdClass}>
-        <UserName userID={room.player3} />
-      </td>
-      <td className={tdClass}>
-        <UserName userID={room.player4} />
+        <UserName userID={room.created_by} />
       </td>
     </tr>
   ));
