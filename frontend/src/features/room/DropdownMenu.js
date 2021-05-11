@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { DropdownMenuCard } from "./DropdownMenuCard";
+import { DropdownMenuCommon } from "./DropdownMenuCommon";
 import { useMousePosition } from "../../contexts/MousePositionContext";
 import { useDropdownMenu, useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 
@@ -17,7 +17,7 @@ export const DropdownMenu = React.memo(({
   const [isHovering, setIsHovering] = useState(false);
   const [top, setTop] = useState(0);
   const [left, setLeft] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);  
   console.log("Rendering DropdownMenuCard ", isHovering, playerN);
 
   useEffect(() => {
@@ -50,7 +50,7 @@ export const DropdownMenu = React.memo(({
 
   if (dropdownMenu.type == "card") { 
     return (
-      <DropdownMenuCard
+      <DropdownMenuCommon
         playerN={playerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
