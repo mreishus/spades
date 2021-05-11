@@ -2,14 +2,14 @@ import React, { useState, useRef } from "react";
 import { useSelector } from 'react-redux';
 import { Tokens } from './Tokens';
 import { GROUPSINFO } from "./Constants";
-import { ContextMenu, MenuItem, SubMenu, ContextMenuTrigger } from "react-contextmenu";
 import { CardMouseRegion } from "./CardMouseRegion"
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getVisibleSide } from "./Helpers";
 import { Target } from "./Target";
-
+import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
+import useLongPress from "../../hooks/useLongPress";
 
 export const Card = React.memo(({
     cardId,
@@ -31,12 +31,41 @@ export const Card = React.memo(({
     const zIndex = 1000 - cardIndex;
     console.log('Rendering Card ',visibleFace.name);
     const setActiveCard = useSetActiveCard();
+    const setDropdownMenu = useSetDropdownMenu();
     const [isActive, setIsActive] = useState(false);
     const displayName = getDisplayName(card);
 
-    const onClick = (_event) => {
-        console.log(card);
+    // const onClick = (event) => {
+    //     console.log("long press")
+    //     const dropdownMenu = {
+    //         card: card,
+    //         x: event.clientX,
+    //         y: event.clientY,
+    //         cardIndex: cardIndex,
+    //     }
+    //     console.log(dropdownMenu)
+    //     setDropdownMenu(dropdownMenu);
+    // }
+
+    const onLongPress = () => {
+        console.log('longpress is triggered');
+        const dropdownMenu = {
+            card: card,
+            cardIndex: cardIndex,
+        }
+        setDropdownMenu(dropdownMenu);
+    };
+
+    const onClick = () => {
+        console.log('click is triggered')
     }
+
+    const defaultOptions = {
+        shouldPreventDefault: true,
+        delay: 500,
+    };
+    
+    const longPress = useLongPress(onLongPress, onClick, defaultOptions);
 
     const handleMouseLeave = (_event) => {
         setIsActive(false);
@@ -90,7 +119,7 @@ export const Card = React.memo(({
     return (
         <div id={card.id}>
             {/* <ContextMenuTrigger id={"context-"+card.id} holdToDisplay={500}> */}
-                <div 
+                <div {...longPress}
                     className={isActive ? 'isActive' : ''}
                     key={card.id}
                     style={{

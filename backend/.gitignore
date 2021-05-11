@@ -5,6 +5,7 @@ Session.vim
 
 # Dev Secret config - api keys
 config/dev.secret.exs
+config/prod.secret.exs
 
 # The directory Mix will write compiled artifacts to.
 /_build/
@@ -43,3 +44,4 @@ npm-debug.log
 
 # language server
 .elixir_ls
+
