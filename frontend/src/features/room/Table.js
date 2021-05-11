@@ -5,7 +5,7 @@ import { TopBar } from "./TopBar";
 import { SpawnCardModal } from "./SpawnCardModal";
 import { SideBar } from "./SideBar";
 import { Hotkeys } from "./Hotkeys";
-import { DropdownMenuCard } from "./DropDownMenuCard";
+import { DropdownMenu } from "./DropdownMenu";
 
 import "../../css/custom-dropdown.css";
 
@@ -40,7 +40,6 @@ export const Table = React.memo(({
         x: event.clientX,
         y: event.clientY,
       })
-      console.log("mousedown ~~~~~~~~~~~~~~~~~~~~")
     }
     document.addEventListener('mousedown', handleMouseDown);
     return () => {
@@ -50,7 +49,7 @@ export const Table = React.memo(({
 
   return (
     <div className="h-full flex">
-      <DropdownMenuCard
+      <DropdownMenu
         playerN={playerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}

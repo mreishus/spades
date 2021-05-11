@@ -50,6 +50,7 @@ export const Card = React.memo(({
     const onLongPress = () => {
         console.log('longpress is triggered');
         const dropdownMenu = {
+            type: "card",
             card: card,
             cardIndex: cardIndex,
         }
