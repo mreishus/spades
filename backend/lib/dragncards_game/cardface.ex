@@ -13,7 +13,7 @@ defmodule DragnCardsGame.CardFace do
     result = Integer.parse(my_string)
     case result do
       {number, _} -> number
-      :error -> nil
+      :error -> 0
     end
   end
 

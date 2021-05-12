@@ -4,6 +4,8 @@ import RoomGame from "./RoomGame";
 import {useSetMessages} from '../../contexts/MessagesContext';
 import {KeypressProvider} from '../../contexts/KeypressContext';
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext';
+import {DropdownMenuProvider} from '../../contexts/DropdownMenuContext';
+import {MousePositionProvider} from '../../contexts/MousePositionContext';
 import useChannel from "../../hooks/useChannel";
 import { setGameUi, setGame } from "./gameUiSlice";
 
@@ -59,9 +61,13 @@ export const Room = ({ slug }) => {
           style={{height: "97vh"}}
         >
             <KeypressProvider value={{Shift: false}}>
-              <ActiveCardProvider value={null}>
-                <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
-              </ActiveCardProvider>
+              <MousePositionProvider value={null}>
+                <DropdownMenuProvider value={null}>
+                  <ActiveCardProvider value={null}>
+                    <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
+                  </ActiveCardProvider>
+                </DropdownMenuProvider>
+              </MousePositionProvider>
             </KeypressProvider>
         </div>
     );

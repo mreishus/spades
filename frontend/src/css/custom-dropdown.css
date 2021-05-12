@@ -7,7 +7,7 @@
     --nav-size: 60px;
     --border: 1px solid #474a4d;
     --border-radius: 8px;
-    --speed: 300ms; 
+    --speed: 500ms; 
   }
   
   ul {
@@ -95,6 +95,20 @@
     width: 100%;
   }
   
+  .menu-title {
+    height: 25px;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+    font-size: large;
+    border-radius: var(--border-radius);
+    padding: 0px;
+    margin-bottom: 15px;
+    color: white;
+    text-decoration: none;
+    vertical-align: text-top;
+  }
+
   .menu-item {
     height: 30px;
     display: flex;
@@ -110,7 +124,6 @@
   .menu-item .icon-button {
     margin-right: 0.5rem;
   }
-  
   
   .menu-item .icon-button:hover {
     filter: none;

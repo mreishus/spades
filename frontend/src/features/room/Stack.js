@@ -44,6 +44,7 @@ export const Stack = React.memo(({
       key={stackId} 
       draggableId={stackId} 
       index={stackIndex}
+      isDragDisabled={playerN === null}
     >
       {(dragProvided, dragSnapshot) => (
         <Container
