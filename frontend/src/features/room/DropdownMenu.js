@@ -10,15 +10,15 @@ export const DropdownMenu = React.memo(({
   gameBroadcast,
   chatBroadcast,
 }) => {
-  const mousePostion = useMousePosition();
+  const mousePosition = useMousePosition();
   const dropdownMenu = useDropdownMenu();
   const setDropdownMenu = useSetDropdownMenu();
   
   const [isHovering, setIsHovering] = useState(false);
-  const [top, setTop] = useState(0);
-  const [left, setLeft] = useState(0);
+  const [mouseX, setMouseX] = useState(0);
+  const [mouseY, setMouseY] = useState(0);
   const [isOpen, setIsOpen] = useState(false);  
-  console.log("Rendering DropdownMenuCard ", isHovering, playerN);
+  console.log("Rendering DropdownMenu ", isHovering, playerN);
 
   useEffect(() => {
 
@@ -39,27 +39,26 @@ export const DropdownMenu = React.memo(({
     }
   }, [dropdownMenu, isHovering])
 
-  if (!mousePostion) return null;
+  if (!mousePosition) return null;
   if (!dropdownMenu) return null;
 
   if (!isOpen) {
-    setLeft((mousePostion.x < (window.innerWidth/2))  ? mousePostion.x : mousePostion.x -300);
-    setTop((mousePostion.y < (window.innerHeight/2)) ? mousePostion.y : mousePostion.y -50);
+    setMouseX(mousePosition.x);
+    setMouseY(mousePosition.y);
     setIsOpen(true);
   }
 
-  if (dropdownMenu.type == "card") { 
-    return (
-      <DropdownMenuCommon
-        playerN={playerN}
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-        top={top}
-        left={left}
-        dropdownMenu={dropdownMenu}
-        setDropdownMenu={setDropdownMenu}
-        setIsHovering={setIsHovering}
-      />
-  )} else return null;
+  return (
+    <DropdownMenuCommon
+      playerN={playerN}
+      gameBroadcast={gameBroadcast}
+      chatBroadcast={chatBroadcast}
+      mouseX={mouseX}
+      mouseY={mouseY}
+      dropdownMenu={dropdownMenu}
+      setDropdownMenu={setDropdownMenu}
+      setIsHovering={setIsHovering}
+    />
+  )
 
 })

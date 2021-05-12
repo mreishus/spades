@@ -3,6 +3,7 @@ import { CSSTransition } from 'react-transition-group';
 import { GROUPSINFO } from "./Constants";
 import { handleDropdownClickCommon } from "./DropdownMenuClick";
 import { DropdownMenuCard } from "./DropdownMenuCard";
+import { DropdownMenuGroup } from "./DropdownMenuGroup";
 import { getDisplayName, tokenTitleName, getVisibleSide } from "./Helpers";
 import { faArrowUp, faArrowDown, faRandom, faReply, faChevronRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -13,8 +14,8 @@ export const DropdownMenuCommon = React.memo(({
   playerN,
   gameBroadcast,
   chatBroadcast,
-  top,
-  left,
+  mouseX,
+  mouseY,
   dropdownMenu,
   setDropdownMenu,
   setIsHovering,
@@ -38,7 +39,7 @@ export const DropdownMenuCommon = React.memo(({
       setActiveMenu(props.goToMenu);
       return;
     }
-    handleDropdownClickCommon(dropdownMenu, props, gameBroadcast, chatBroadcast);
+    handleDropdownClickCommon(dropdownMenu, props, playerN, gameBroadcast, chatBroadcast);
     setActiveMenu("main");
     setIsHovering(false);
     setDropdownMenu(null);
@@ -49,8 +50,8 @@ export const DropdownMenuCommon = React.memo(({
     return (
       <DropdownMenuCard
         playerN={playerN}
-        top={top}
-        left={left}
+        mouseX={mouseX}
+        mouseY={mouseY}
         menuHeight={menuHeight}
         dropdownMenu={dropdownMenu}
         handleDropdownClick={handleDropdownClick}
@@ -61,10 +62,10 @@ export const DropdownMenuCommon = React.memo(({
     )
   } else if (dropdownMenu.type === "group") {
     return (
-      <DropdownMenuCard
+      <DropdownMenuGroup
         playerN={playerN}
-        top={top}
-        left={left}
+        mouseX={mouseX}
+        mouseY={mouseY}
         menuHeight={menuHeight}
         dropdownMenu={dropdownMenu}
         handleDropdownClick={handleDropdownClick}

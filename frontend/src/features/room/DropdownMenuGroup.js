@@ -6,10 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DropdownItem, GoBack } from "./DropdownMenuHelpers";
 import "../../css/custom-dropdown.css";
 
-export const DropdownMenuCard = React.memo(({
+export const DropdownMenuGroup = React.memo(({
   playerN,
-  top,
-  left,
+  mouseX,
+  mouseY,
   menuHeight,
   dropdownMenu,
   handleDropdownClick,
@@ -17,9 +17,7 @@ export const DropdownMenuCard = React.memo(({
   activeMenu,
   setIsHovering,
 }) => {
-  const menuCard = dropdownMenu.card;
-  const menuCardIndex = dropdownMenu.cardIndex;
-  const visibleSide = getVisibleSide(menuCard);
+  const menuGroup = dropdownMenu.group;
   
   const DropdownMoveTo = (props) => {
     return (
@@ -27,7 +25,7 @@ export const DropdownMenuCard = React.memo(({
         <GoBack goToMenu="moveTo" clickCallback={handleDropdownClick}/>
         <DropdownItem
           leftIcon={<FontAwesomeIcon icon={faArrowUp}/>}
-          action="moveCard"
+          action="moveStacks"
           destGroupId={props.destGroupId}
           position="top"
           clickCallback={handleDropdownClick}>
@@ -35,7 +33,7 @@ export const DropdownMenuCard = React.memo(({
         </DropdownItem>
         <DropdownItem
           leftIcon={<FontAwesomeIcon icon={faRandom}/>}
-          action="moveCard"
+          action="moveStacks"
           destGroupId={props.destGroupId}
           position="shuffle"
           clickCallback={handleDropdownClick}>
@@ -43,7 +41,7 @@ export const DropdownMenuCard = React.memo(({
         </DropdownItem>
         <DropdownItem
           leftIcon={<FontAwesomeIcon icon={faArrowDown}/>}
-          action="moveCard"
+          action="moveStacks"
           destGroupId={props.destGroupId}
           position="bottom"
           clickCallback={handleDropdownClick}>
@@ -52,6 +50,9 @@ export const DropdownMenuCard = React.memo(({
       </div>
     )
   }
+
+  const left = mouseX < (window.innerWidth/2)  ? mouseX : mouseX -300;
+  const top = mouseY < (window.innerHeight/2) ? mouseY : mouseY -250;
 
   return (
     <div 
@@ -65,20 +66,17 @@ export const DropdownMenuCard = React.memo(({
         <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
           in={activeMenu === "main"}>
         <div className="menu">
-          {menuCardIndex>0 ? <DropdownItem action="detach">Detach</DropdownItem> : null}
-          {(visibleSide === "B" && !menuCard?.peeking[playerN]) ? <DropdownItem action="peek">Peek</DropdownItem> : null}
-          {menuCard?.peeking[playerN] ? <DropdownItem action="unpeek">Stop peeking</DropdownItem> : null}
+          <DropdownItem action="shuffle" clickCallback={handleDropdownClick}>Shuffle</DropdownItem>
+          <DropdownItem action="lookAt" topN="None" clickCallback={handleDropdownClick}>Browse</DropdownItem>
+          <DropdownItem action="lookAt" topN="All" clickCallback={handleDropdownClick}>Look at all</DropdownItem>
+          <DropdownItem action="lookAt" topN="5" clickCallback={handleDropdownClick}>Look at top 5</DropdownItem>
+          <DropdownItem action="lookAt" topN="10" clickCallback={handleDropdownClick}>Look at top 10</DropdownItem>
+          <DropdownItem action="chooseRandom" clickCallback={handleDropdownClick}>Choose Random</DropdownItem>
           <DropdownItem
             rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
             goToMenu="moveTo"
             clickCallback={handleDropdownClick}>
             Move to
-          </DropdownItem>
-          <DropdownItem
-            rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
-            goToMenu="perRound"
-            clickCallback={handleDropdownClick}>
-            Per round
           </DropdownItem>
         </div>
       </CSSTransition>
@@ -89,70 +87,51 @@ export const DropdownMenuCard = React.memo(({
           <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
           <DropdownItem
             rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
-            goToMenu="moveToEncounter"
+            goToMenu="moveToMy"
+            clickCallback={handleDropdownClick}>
+            My Deck
+          </DropdownItem>
+          <DropdownItem
+            rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+            goToMenu="moveToEncounter1"
             clickCallback={handleDropdownClick}>
             Encounter Deck
           </DropdownItem>
           <DropdownItem
             rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
-            goToMenu="moveToOwner"
+            goToMenu="moveToEncounter2"
             clickCallback={handleDropdownClick}>
-            Owner's Deck
+            Encounter Deck 2
           </DropdownItem>
           <DropdownItem
-            action="moveCard"
-            destGroupId="sharedVictory"
-            position="top"
+            rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+            goToMenu="moveToEncounter3"
             clickCallback={handleDropdownClick}>
-            Victory Display
+            Encounter Deck 3
           </DropdownItem>
         </div>
       </CSSTransition>
 
       <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveToEncounter"}>
-        <DropdownMoveTo destGroupId="sharedEncounterDeck"/>
-      </CSSTransition>
-
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveToOwner"}>
+          in={activeMenu === "moveToMy"}>
         <DropdownMoveTo destGroupId={playerN+"Deck"}/>
       </CSSTransition>
 
       <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "perRound"}>
-        <div className="menu">
-          <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
-          {["resource", "progress", "damage"].map((tokenType, _tokenIndex) => (
-            <DropdownItem
-              rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
-              goToMenu={tokenType+"PerRound"}
-              tokenType={tokenType}
-              clickCallback={handleDropdownClick}>
-              {tokenTitleName(tokenType)}
-            </DropdownItem>
-          ))}
-        </div>
+          in={activeMenu === "moveToEncounter1"}>
+        <DropdownMoveTo destGroupId="sharedEncounterDeck"/>
       </CSSTransition>
 
-      {["resource", "progress", "damage"].map((tokenType, _tokenIndex) => (
-        <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-        in={activeMenu === tokenType+"PerRound"}>
-          <div className="menu">
-            <GoBack goToMenu="perRound" clickCallback={handleDropdownClick}/>
-            {[-3,-2,-1,0,1,2,3].map((increment, _tokenIndex) => (
-              <DropdownItem
-                rightIcon={menuCard.tokensPerRound[tokenType]===increment ? <FontAwesomeIcon icon={faCheck}/> : null}
-                action={"incrementTokenPerRound"}
-                tokenType={tokenType}
-                increment={increment}
-                clickCallback={handleDropdownClick}>
-                {increment}
-              </DropdownItem>
-            ))}
-          </div>
-        </CSSTransition>
-      ))}
+      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
+          in={activeMenu === "moveToEncounter2"}>
+        <DropdownMoveTo destGroupId="sharedEncounterDeck2"/>
+      </CSSTransition>
+
+      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
+          in={activeMenu === "moveToEncounter3"}>
+        <DropdownMoveTo destGroupId="sharedEncounterDeck3"/>
+      </CSSTransition>
+      
     </div>
   );
 })

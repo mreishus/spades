@@ -8,8 +8,8 @@ import "../../css/custom-dropdown.css";
 
 export const DropdownMenuCard = React.memo(({
   playerN,
-  top,
-  left,
+  mouseX,
+  mouseY,
   menuHeight,
   dropdownMenu,
   handleDropdownClick,
@@ -53,6 +53,9 @@ export const DropdownMenuCard = React.memo(({
     )
   }
 
+  const left = mouseX < (window.innerWidth/2)  ? mouseX : mouseX -300;
+  const top = mouseY < (window.innerHeight/2) ? mouseY : mouseY -150;
+
   return (
     <div 
       className="dropdown" 
@@ -65,9 +68,9 @@ export const DropdownMenuCard = React.memo(({
         <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
           in={activeMenu === "main"}>
         <div className="menu">
-          {menuCardIndex>0 ? <DropdownItem action="detach">Detach</DropdownItem> : null}
-          {(visibleSide === "B" && !menuCard?.peeking[playerN]) ? <DropdownItem action="peek">Peek</DropdownItem> : null}
-          {menuCard?.peeking[playerN] ? <DropdownItem action="unpeek">Stop peeking</DropdownItem> : null}
+          {menuCardIndex>0 ? <DropdownItem action="detach" clickCallback={handleDropdownClick}>Detach</DropdownItem> : null}
+          {(visibleSide === "B" && !menuCard?.peeking[playerN]) ? <DropdownItem action="peek" clickCallback={handleDropdownClick}>Peek</DropdownItem> : null}
+          {menuCard?.peeking[playerN] ? <DropdownItem action="unpeek" clickCallback={handleDropdownClick}>Stop peeking</DropdownItem> : null}
           <DropdownItem
             rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
             goToMenu="moveTo"

@@ -35,20 +35,7 @@ export const Card = React.memo(({
     const [isActive, setIsActive] = useState(false);
     const displayName = getDisplayName(card);
 
-    // const onClick = (event) => {
-    //     console.log("long press")
-    //     const dropdownMenu = {
-    //         card: card,
-    //         x: event.clientX,
-    //         y: event.clientY,
-    //         cardIndex: cardIndex,
-    //     }
-    //     console.log(dropdownMenu)
-    //     setDropdownMenu(dropdownMenu);
-    // }
-
     const onLongPress = () => {
-        console.log('longpress is triggered');
         const dropdownMenu = {
             type: "card",
             card: card,
@@ -59,7 +46,7 @@ export const Card = React.memo(({
     };
 
     const onClick = () => {
-        console.log('click is triggered')
+        console.log(card);
     }
 
     const defaultOptions = {
