@@ -7,6 +7,10 @@ import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { GroupContextMenu } from "./GroupContextMenu";
 import { getParentCardsInGroup } from "./Helpers";
 import { setValues } from "./gameUiSlice";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
+import useLongPress from "../../hooks/useLongPress";
 
 const isNormalInteger = (str) => {
   var n = Math.floor(Number(str));
@@ -26,6 +30,7 @@ export const Browse = React.memo(({
   const gameStore = state => state?.gameUi?.game;
   const game = useSelector(gameStore);
   const dispatch = useDispatch();
+  const setDropdownMenu = useSetDropdownMenu();
   const group = game["groupById"][groupId];
   const groupType = group["type"];
   const parentCards = getParentCardsInGroup(game, groupId);
@@ -33,6 +38,30 @@ export const Browse = React.memo(({
   const [selectedCardName, setSelectedCardName] = useState('');
   const stackIds = group["stackIds"];
   const numStacks = stackIds.length;
+
+    
+  const onLongPress = () => {
+    console.log(group);
+  };
+
+  const onClick = () => {
+    console.log('longpress is triggered');
+    const dropdownMenu = {
+        type: "group",
+        group: group,
+        title: GROUPSINFO[groupId].name,
+        setBrowseGroupId: setBrowseGroupId,
+        setBrowseGroupTopN: setBrowseGroupTopN,
+    }
+    setDropdownMenu(dropdownMenu);
+  }
+
+  const defaultOptions = {
+      shouldPreventDefault: true,
+      delay: 500,
+  };
+
+  const longPress = useLongPress(onLongPress, onClick, defaultOptions);
 
   // This allows the deck to be hidden instantly upon close (by hiding the top card)
   // rather than waiting to the update from the server
@@ -107,21 +136,19 @@ export const Browse = React.memo(({
     <div className="relative h-full w-full">
       <div
         className="relative text-center h-full text-white float-left select-none opacity-40"
-        style={{width:"15px", writingMode:"vertical-rl", left: "10px"}} 
+        style={{width:"15px", writingMode:"vertical-rl", paddingLeft: "25px"}} 
       >
-        <ContextMenuTrigger id={groupId} holdToDisplay={0}>
-        {GROUPSINFO[groupId].tablename}
-        </ContextMenuTrigger>
-      </div>
-      
-      <GroupContextMenu
-        group={group}
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-        playerN={playerN}
-        setBrowseGroupId={setBrowseGroupId}
-        setBrowseGroupTopN={setBrowseGroupTopN}
-      />
+        {group.type === "play" ? 
+          <div>
+            {GROUPSINFO[group.id].tablename}
+          </div>
+        :
+          <div {...longPress}>
+            <FontAwesomeIcon className="text-white mb-2 pl-1" icon={faBars}/>
+            {GROUPSINFO[group.id].tablename}
+          </div>
+        }
+      </div> 
 
       <div className="absolute" style={{height:"100%", width:"100%", paddingLeft: "25px"}}>
         <div style={{width:"75%", height:"100%", float:"left"}}>
