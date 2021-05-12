@@ -58,7 +58,6 @@ export const Group = React.memo(({
           className="relative text-center h-full text-white float-left select-none opacity-40"
           style={{width:"15px", writingMode:"vertical-rl"}} 
         >
-          {/* <ContextMenuTrigger id={group.id} holdToDisplay={0}> */}
           {group.type === "play" ? 
             <div>
               {GROUPSINFO[group.id].tablename}
@@ -69,18 +68,8 @@ export const Group = React.memo(({
               {GROUPSINFO[group.id].tablename}
             </div>
           }
-            
-          {/* </ContextMenuTrigger> */}
         </div>
       }
-      {/* <GroupContextMenu
-        group={group}
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-        playerN={playerN}
-        setBrowseGroupId={setBrowseGroupId}
-        setBrowseGroupTopN={setBrowseGroupTopN}
-      /> */}
       <Stacks
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
