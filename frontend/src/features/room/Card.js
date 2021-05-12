@@ -36,6 +36,10 @@ export const Card = React.memo(({
     const displayName = getDisplayName(card);
 
     const onLongPress = () => {
+        console.log(card);
+    };
+
+    const onClick = () => {
         const dropdownMenu = {
             type: "card",
             card: card,
@@ -43,10 +47,6 @@ export const Card = React.memo(({
             cardIndex: cardIndex,
         }
         setDropdownMenu(dropdownMenu);
-    };
-
-    const onClick = () => {
-        console.log(card);
     }
 
     const defaultOptions = {
