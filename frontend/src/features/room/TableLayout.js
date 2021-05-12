@@ -77,7 +77,7 @@ export const TableLayout = React.memo(({
       if (browseGroupId && rowIndex === numRows - 2) {
         return(
         <div 
-          className="flex flex-1 bg-gray-700 border rounded-lg outline-none w-full" 
+          className="flex flex-1 bg-gray-700 rounded-lg outline-none w-full" 
           style={{height: rowHeight}}
         >
           <Browse

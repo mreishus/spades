@@ -27,6 +27,10 @@ export const Group = React.memo(({
   const setDropdownMenu = useSetDropdownMenu();
   
   const onLongPress = () => {
+    console.log(group);
+  };
+
+  const onClick = () => {
     console.log('longpress is triggered');
     const dropdownMenu = {
         type: "group",
@@ -36,10 +40,6 @@ export const Group = React.memo(({
         setBrowseGroupTopN: setBrowseGroupTopN,
     }
     setDropdownMenu(dropdownMenu);
-  };
-
-  const onClick = () => {
-      console.log(group);
   }
 
   const defaultOptions = {
