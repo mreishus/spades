@@ -3,7 +3,8 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Draggable from 'react-draggable';
 
-const keyClass = "m-auto border rounded-md w-6 h-6 bg-gray-500 text-center bottom";
+const keyClass = "m-auto border rounded-md w-6 h-6 bg-gray-500 text-center bottom inline-block";
+const keyClassLong = "m-auto border rounded-md w-12 h-6 bg-gray-500 text-center bottom inline-block";
 const windowClass = "insert-auto overflow-auto bg-gray-700 border max-w-lg rounded-lg outline-none text-white";
 const windowStyle = {
   position:"absolute", 
@@ -38,7 +39,7 @@ export const Hotkeys = React.memo(({
               <th className={col2Class}>Description</th>
             </tr>
             <tr className={"bg-gray-500"}>
-              <td className="p-1 text-center"><div className={keyClass+" inline-block w-12"}>Shift</div></td>
+              <td className="p-1 text-center"><div className={keyClassLong}>Shift</div></td>
               <td className="p-1 text-center">Display all tokens</td>
             </tr>
             <tr className={"bg-gray-600"}>
@@ -103,7 +104,7 @@ export const Hotkeys = React.memo(({
               <td className="text-center">Commit / uncommit from quest</td>
             </tr>
             <tr className={"bg-gray-500"}>
-              <td className="p-1 text-center"><div className={keyClass+" inline-block w-12"}>Shift</div><div className="inline-block p-1">+</div><div className={keyClass+" inline-block"}>q</div></td>
+              <td className="p-1 text-center"><div className={keyClassLong}>Shift</div><div className="inline-block p-1">+</div><div className={keyClass}>q</div></td>
               <td className="text-center">Commit / uncommit from quest without exhausting / readying</td>
             </tr>
             <tr className={"bg-gray-600"}>
@@ -143,37 +144,37 @@ export const Hotkeys = React.memo(({
               <td className="text-center">Reveal encounter card</td>
             </tr>
             <tr className={"bg-gray-500"}>
-              <td className="p-1 text-center"><div className={keyClass+" inline-block w-12"}>Shift</div>
+              <td className="p-1 text-center"><div className={keyClassLong}>Shift</div>
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"}>e</div></td>
               <td className="text-center">Deal facedown encounter card</td>
             </tr>
             <tr className={"bg-gray-600"}>
-              <td className="p-1 text-center"><div className={keyClass+" inline-block w-12"}>Shift</div>
+              <td className="p-1 text-center"><div className={keyClassLong}>Shift</div>
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"}>m</div></td>
               <td className="text-center">Mulligan</td>
             </tr>
             <tr className={"bg-gray-500"}>
-              <td className="p-1 text-center"><div className={keyClass+" inline-block w-12"}>Shift</div>
+              <td className="p-1 text-center"><div className={keyClassLong}>Shift</div>
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"}>n</div></td>
               <td className="text-center">Draw card and gain resources. If host, increment round.</td>
             </tr>
             <tr className={"bg-gray-600"}>
-              <td className="p-1 text-center"><div className={keyClass+" inline-block w-12"}>Shift</div>
+              <td className="p-1 text-center"><div className={keyClassLong}>Shift</div>
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"}>r</div></td>
               <td className="text-center">Refresh and raise threat. If host, move 1st player token.</td>
             </tr>
             <tr className={"bg-gray-500"}>
-              <td className="p-1 text-center"><div className={keyClass+" inline-block w-12"}>Shift</div>
+              <td className="p-1 text-center"><div className={keyClassLong}>Shift</div>
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"}>s</div></td>
               <td className="text-center">Deal all shadow cards</td>
             </tr>
             <tr className={"bg-gray-600"}>
-              <td className="p-1 text-center"><div className={keyClass+" inline-block w-8"}>Esc</div></td>
+              <td className="p-1 text-center"><div className={keyClassLong}>Esc</div></td>
               <td className="text-center">Clear targets/arrows</td>
             </tr>
           </table>
