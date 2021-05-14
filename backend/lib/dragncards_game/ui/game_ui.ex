@@ -756,6 +756,8 @@ defmodule DragnCardsGame.GameUI do
           deal_shadow(gameui, options["card_id"])
         "deal_all_shadows" ->
           deal_all_shadows(gameui)
+        "increment_threat" ->
+          increment_threat(gameui, player_n, options["increment"])
         "increment_token" ->
           increment_token(gameui, options["card_id"], options["token_type"], options["increment"])
         "increment_tokens" ->
@@ -792,6 +794,11 @@ defmodule DragnCardsGame.GameUI do
 
   def set_seat(gameui, user_id, player_n) do
     put_in(gameui["playerIds"][player_n], user_id)
+  end
+
+  def increment_threat(gameui, player_n, increment) do
+    current_threat = gameui["game"]["playerData"][player_n]["threat"]
+    put_in(gameui["game"]["playerData"][player_n]["threat"], current_threat + increment)
   end
 
   def reset_game(gameui) do
@@ -912,12 +919,8 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def load_card(gameui, card_row, group_id, quantity) do
-    IO.puts("quantity #{quantity}")
     Enum.reduce(1..quantity, gameui, fn(index, acc) ->
-      IO.inspect(card_row["sides"]["A"]["name"])
       stack_ids = get_stack_ids(gameui, group_id)
-      IO.puts("group size")
-      IO.inspect(Enum.count(stack_ids))
       acc = add_card_row_to_group(acc, group_id, card_row)
     end)
   end
@@ -972,7 +975,13 @@ defmodule DragnCardsGame.GameUI do
     # Calculate threat cost
     threat = Enum.reduce(load_list, 0, fn(r, acc) ->
       sideA = r["cardRow"]["sides"]["A"]
-      if sideA["type"] == "Hero" do
+      if sideA["type"] == "Hero" && r["groupId"] == player_n<>"Play1" do
+        IO.puts("CARD THREAT ~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        IO.inspect(sideA["name"])
+        IO.inspect(sideA["cost"])
+        IO.inspect(sideA["type"])
+        IO.inspect(sideA["quantity"])
+        IO.inspect(acc)
         acc + CardFace.convert_to_integer(sideA["cost"])*r["quantity"]
       else
         acc
@@ -986,26 +995,7 @@ defmodule DragnCardsGame.GameUI do
     round_number = gameui["game"]["roundNumber"]
     round_step = gameui["game"]["roundStep"]
     pretty_print(gameui)
-    IO.puts("deck size before")
-    IO.inspect(deck_size_before)
-    IO.puts("player_n_deck_id")
-    IO.inspect(player_n_deck_id)
-    IO.puts("stack_ids")
-    IO.inspect(get_stack_ids(gameui, player_n_deck_id))
     deck_size_after = Enum.count(get_stack_ids(gameui, player_n_deck_id))
-    IO.puts("checking for mulligan #{round_number} #{round_step} #{deck_size_before} #{deck_size_after}")
-    if round_number == 0 do
-      IO.puts("round_number")
-    end
-    if round_step == "0.0" do
-      IO.puts("round_step")
-    end
-    if deck_size_before == 0 do
-      IO.puts("deck_size_before")
-    end
-    if deck_size_after > 6 do
-      IO.puts("deck_size_after")
-    end
 
     # Shuffle decks with new cards
     gameui = shuffle_changed_decks(old_gameui, gameui)

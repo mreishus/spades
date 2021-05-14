@@ -26,6 +26,7 @@ export const Browse = React.memo(({
   browseGroupTopN,
   setBrowseGroupId,
   setBrowseGroupTopN,
+  setTyping,
 }) => {
   const gameStore = state => state?.gameUi?.game;
   const game = useSelector(gameStore);
@@ -178,7 +179,15 @@ export const Browse = React.memo(({
               </td>
               <td className="" style={{width:"150px"}}>
                 <div className="w-full">
-                  <input style={{width:"100px"}} type="text" id="name" name="name" placeholder="Card name..." onChange={handleInputTyping}></input>
+                  <input 
+                    style={{width:"100px"}} 
+                    type="text" 
+                    id="name" 
+                    name="name" 
+                    placeholder="Card name..." 
+                    onChange={handleInputTyping}
+                    onFocus={event => setTyping(true)}
+                    onBlur={event => setTyping(false)}/>
                 </div>
               </td>
             </tr>

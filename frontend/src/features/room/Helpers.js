@@ -96,6 +96,7 @@ export const getCardWillpower = (card) => {
 }
 
 export const GetPlayerN = (playerIDs, id) => {
+  if (!playerIDs) return null;
   var playerN = null;
   Object.keys(playerIDs).forEach(playerI => {
     if (playerIDs[playerI] === id) playerN = playerI;
@@ -156,25 +157,25 @@ export const getNextPlayerN = (gameUi, playerN) => {
   return nextPlayerN;
 }
 
-export const flatListOfCards = (gameUi) => {
-  const groupById = gameUi.game.groupById;
+export const flatListOfCards = (game) => {
+  const groupById = game.groupById;
   const allCards = [];
   Object.keys(groupById).forEach((groupId) => {
     const group = groupById[groupId];
-    console.log("flattening",groupId);
-    const stacks = group.stacks;
-    console.log(stacks);
-    for (var s = 0; s < stacks.length; s++) {
-      console.log(s);
-      const stack = stacks[s];
-      const cards = stack.cards;
-      for (var c = 0; c < cards.length; c++) {
-        const card = cards[c];
+    const stackIds = group.stackIds;
+    for (var s=0; s<stackIds.length; s++) {
+      const stackId = stackIds[s];
+      const stack = game.stackById[stackId];
+      const cardIds = stack.cardIds;
+      for (var c=0; c<cardIds.length; c++) {
+        const cardId = cardIds[c];
+        const card = game.cardById[cardId];
         const indexedCard = {
           ...card,
-          ["group_id"]: groupId,
-          ["stack_index"]: s,
-          ["card_index"]: c, 
+          ["groupId"]: groupId,
+          ["stackIndex"]: s,
+          ["cardIndex"]: c,
+          ["groupType"]: group.type,
         }
         allCards.push(indexedCard);
       }
@@ -289,5 +290,15 @@ export const getGroupIdStackIndexCardIndex = (game, cardId) => {
   })
 }
 
+
+export const handleLoadDeckAutomation = (loadList, gameBroadcast, chatBroadcast) => {
+  for (const item of loadList) {
+    console.log(item.cardRow.sides.A.name, item.cardRow.cardid)
+    if (item.cardRow.cardid == "6dc19efc-af54-4eff-b9ee-ee45e9fd4072") {// Tactics Eowyn
+      gameBroadcast("game_action", {action: "increment_threat", options: {increment: -3}})
+      chatBroadcast("game_update", {message: "reduced threat by 3."});
+    }
+  }  
+}
 
 

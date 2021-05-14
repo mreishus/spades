@@ -101,6 +101,7 @@ export const Table = React.memo(({
       <GiantCard playerN={playerN}/>
       {showSpawn && 
         <SpawnCardModal 
+          setTyping={setTyping}
           setShowSpawn={setShowSpawn}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
