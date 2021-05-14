@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import { ArrowsBetweenDivsContextProvider, ArrowBetweenDivs, LineOrientation, ArrowAnchorPlacement } from 'react-simple-arrows';
 import { DragDropContext } from "react-beautiful-dnd";
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,11 +9,15 @@ import { Table } from "./Table";
 import { GROUPSINFO } from "./Constants"
 import { getDisplayName, getDisplayNameFlipped, getCurrentFace } from "./Helpers"
 import { useKeypress } from "../../contexts/KeypressContext";
+import { processGameChange } from "../automation/ProcessGameChange";
 
-//create your forceUpdate hook
-function useForceUpdate(){
-  const [value, setValue] = useState(0); // integer state
-  return () => setValue(value => value + 1); // update the state to force render
+// custom hook for getting previous value 
+function usePrevious(value) {
+  const ref = useRef();
+  useEffect(() => {
+    ref.current = value;
+  });
+  return ref.current;
 }
 
 export const DragContainer = React.memo(({
@@ -27,10 +31,14 @@ export const DragContainer = React.memo(({
   const dispatch = useDispatch();
   const game = useSelector(gameStore);
   const keypress = useKeypress();
-  const [, updateState] = React.useState();
-  const forceUpdate = useForceUpdate();
-  const archerContainerRef = React.createRef();
+  //const archerContainerRef = React.createRef();
   const arrowColors = ["rgba(255,0,0,0.6)", "rgba(0,200,0,0.6)", "rgba(0,128,255,0.6)", "rgba(128,0,255,0.6)"];
+
+  const prevGame = usePrevious(game)
+
+  useEffect(() => {
+    processGameChange(prevGame, game, playerN, gameBroadcast, chatBroadcast);
+  }, [game]);
 
   const onDragEnd = (result) => {
     const groupById = game.groupById;
@@ -128,6 +136,7 @@ export const DragContainer = React.memo(({
 
   return(
         <DragDropContext onDragEnd={onDragEnd}>
+          {/* <HandleGameChange gameUi={gameUi} playerN={playerN} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/> */}
           <ArrowsBetweenDivsContextProvider>
             {({ registerDivToArrowsContext }) => (
               <>

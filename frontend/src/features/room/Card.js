@@ -39,7 +39,7 @@ export const Card = React.memo(({
         console.log(card);
     };
 
-    const onClick = () => {
+    const handleClick = () => {
         const dropdownMenu = {
             type: "card",
             card: card,
@@ -54,7 +54,7 @@ export const Card = React.memo(({
         delay: 500,
     };
     
-    const longPress = useLongPress(onLongPress, onClick, defaultOptions);
+    //const longPress = useLongPress(onLongPress, onClick, defaultOptions);
 
     const handleMouseLeave = (_event) => {
         setIsActive(false);
@@ -74,41 +74,11 @@ export const Card = React.memo(({
         return relationList;
     }
 
-    const handleMenuClick = (_event, data) => {
-        if (data.action === "detach") {
-            gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
-            chatBroadcast("game_update", {message: "detached "+displayName+"."})
-        } else if (data.action === "peek") {
-            gameBroadcast("game_action", {action: "peek_card", options: {card_id: card.id, value: true}})
-            chatBroadcast("game_update", {message: "peeked at "+displayName+"."})
-        } else if (data.action === "unpeek") {
-            gameBroadcast("game_action", {action: "peek_card", options: {card_id: card.id, value: false}})
-            chatBroadcast("game_update", {message: " stopped peeking at "+displayName+"."})
-        } else if (data.action === "move_card") {
-            const destGroupTitle = GROUPSINFO[data.destGroupId].name;
-            if (data.position === "t") {
-                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
-                chatBroadcast("game_update",{message: "moved "+displayName+" to top of "+destGroupTitle+"."})
-            } else if (data.position === "b") {
-                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: -1, dest_card_index: 0, combine: false, preserve_state: false}})
-                chatBroadcast("game_update", {message: "moved "+displayName+" to bottom of "+destGroupTitle+"."})
-            } else if (data.position === "s") {
-                gameBroadcast("game_action", {action: "move_card", options: {card_id: card.id, dest_group_id: data.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
-                gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: data.destGroupId}})
-                chatBroadcast("game_update", {message: "shuffled "+displayName+" into "+destGroupTitle+"."})
-            }
-        } else if (data.action === "update_tokens_per_round") {
-            const increment = data.increment;
-            const tokenType = data.tokenType;
-            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", card.id, "tokensPerRound", tokenType, increment]]}})
-            chatBroadcast("game_update",{message: "added "+increment+" "+tokenType+" per round to "+displayName+"."})
-        }
-    }
-
     return (
         <div id={card.id}>
             {/* <ContextMenuTrigger id={"context-"+card.id} holdToDisplay={500}> */}
-                <div {...longPress}
+                <div 
+                // {...longPress}
                     className={isActive ? 'isActive' : ''}
                     key={card.id}
                     style={{
@@ -134,7 +104,7 @@ export const Card = React.memo(({
                         OTransitionProperty: "-o-transform",
                         transitionProperty: "transform",
                     }}
-                    //onClick={onClick}
+                    onClick={handleClick}
                     onMouseLeave={event => handleMouseLeave(event)}
                 >
                     {(card["peeking"][playerN] && !isInMyHand && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute bottom-0 text-2xl" icon={faEye}/>:null}
@@ -189,44 +159,6 @@ export const Card = React.memo(({
                         }}/>
                     </ArcherElement> */}
                 </div>
-            {/* </ContextMenuTrigger>
-
-            <ContextMenu id={"context-"+card.id} style={{zIndex:1e8}}>
-                <hr></hr>
-                {cardIndex>0 ? <MenuItem onClick={handleMenuClick} data={{action: 'detach'}}>Detach</MenuItem>:null}
-                {visibleSide === "B"? <MenuItem onClick={handleMenuClick} data={{action: 'peek'}}>Peek</MenuItem>:null}
-                {card["peeking"][playerN] ? <MenuItem onClick={handleMenuClick} data={{action: 'unpeek'}}>Stop peeking</MenuItem>:null}
-                <SubMenu title='Move to'>
-                    <SubMenu title='Encounter Deck'>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "t"}}>Top</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "b"}}>Bottom</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: "sharedEncounterDeck", position: "s"}}>Shuffle in (h)</MenuItem>
-                    </SubMenu>
-                    <SubMenu title="Owner's Deck">
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "t"}}>Top</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "b"}}>Bottom</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'move_card', destGroupId: card.owner+"Deck", position: "s"}}>Shuffle in (h)</MenuItem>
-                    </SubMenu>
-                    <MenuItem onClick={handleMenuClick} data={{ action: 'move_card', destGroupId: "sharedVictory", position: "t" }}>Victory Display</MenuItem>
-                </SubMenu>
-                <SubMenu title='Per round'>
-                    {["Resource", "Progress", "Damage"].map((tokenType, _tokenIndex) => (
-                    <SubMenu title={tokenType}>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -5}}>-5 {card.tokensPerRound[tokenType.toLowerCase()]==-5 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -4}}>-4 {card.tokensPerRound[tokenType.toLowerCase()]==-4 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -3}}>-3 {card.tokensPerRound[tokenType.toLowerCase()]==-3 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -2}}>-2 {card.tokensPerRound[tokenType.toLowerCase()]==-2 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment: -1}}>-1 {card.tokensPerRound[tokenType.toLowerCase()]==-1 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  0}}>0 {card.tokensPerRound[tokenType.toLowerCase()]==0 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  1}}>+1 {card.tokensPerRound[tokenType.toLowerCase()]==1 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  2}}>+2 {card.tokensPerRound[tokenType.toLowerCase()]==2 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  3}}>+3 {card.tokensPerRound[tokenType.toLowerCase()]==3 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  4}}>+4 {card.tokensPerRound[tokenType.toLowerCase()]==4 ? "✓" : ""}</MenuItem>
-                        <MenuItem onClick={handleMenuClick} data={{action: 'update_tokens_per_round', tokenType: tokenType.toLowerCase(), increment:  5}}>+5 {card.tokensPerRound[tokenType.toLowerCase()]==5 ? "✓" : ""}</MenuItem>
-                    </SubMenu>
-                ))}
-                </SubMenu>
-            </ContextMenu> */}
         </div>
     )
 })

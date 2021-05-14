@@ -4,6 +4,7 @@ import ReactModal from "react-modal";
 const cardDb = require('../../cardDB/playringsCardDB.json');
 
 export const SpawnCardModal = React.memo(({
+    setTyping,
     setShowSpawn,
     gameBroadcast,
     chatBroadcast,
@@ -41,7 +42,16 @@ export const SpawnCardModal = React.memo(({
         className="insert-auto overflow-auto p-5 bg-gray-700 border max-w-lg mx-auto my-12 rounded-lg outline-none"
       >
         <h1 className="mb-2">Spawn a card</h1>
-        <input style={{width:"50%"}} type="text" id="name" name="name" className="mb-6 mt-5" placeholder=" Card name..." onChange={handleSpawnTyping}></input>
+        <input 
+          style={{width:"50%"}} 
+          type="text" 
+          id="name" 
+          name="name" 
+          className="mb-6 mt-5" 
+          placeholder=" Card name..." 
+          onChange={handleSpawnTyping}
+          onFocus={event => setTyping(true)}
+          onBlur={event => setTyping(false)}/>
         {(spawnFilteredIDs.length) ? 
           (spawnFilteredIDs.length>15) ?
             <div className="text-white">Too many results</div> :

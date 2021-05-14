@@ -8,14 +8,24 @@ import {DropdownMenuProvider} from '../../contexts/DropdownMenuContext';
 import {MousePositionProvider} from '../../contexts/MousePositionContext';
 import useChannel from "../../hooks/useChannel";
 import { setGameUi, setGame } from "./gameUiSlice";
+import { GetPlayerN } from "./Helpers";
+import useProfile from "../../hooks/useProfile";
 
 export const Room = ({ slug }) => {
   const dispatch = useDispatch();
+  const gameUiStore = state => state.gameUi;
+  const gameUi = useSelector(gameUiStore);
   const gameNameStore = state => state.gameUi.gameName;
   const gameName = useSelector(gameNameStore);
   const errorStore = state => state.gameUi.error;
   const error = useSelector(errorStore);
   const setMessages = useSetMessages();
+  const storePlayerIds = state => state?.gameUi?.playerIds;
+  const playerIds = useSelector(storePlayerIds);
+  const myUser = useProfile();
+  const myUserID = myUser?.id;
+  
+  const playerN = GetPlayerN(playerIds, myUserID);
 
   //const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
@@ -64,7 +74,7 @@ export const Room = ({ slug }) => {
               <MousePositionProvider value={null}>
                 <DropdownMenuProvider value={null}>
                   <ActiveCardProvider value={null}>
-                    <RoomGame gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
+                    <RoomGame playerN={playerN} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
                   </ActiveCardProvider>
                 </DropdownMenuProvider>
               </MousePositionProvider>

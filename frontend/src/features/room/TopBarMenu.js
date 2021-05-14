@@ -4,6 +4,7 @@ import useProfile from "../../hooks/useProfile";
 import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
+import { handleLoadDeckAutomation } from "./Helpers";
 
 const cardDB = require('../../cardDB/playringsCardDB.json');
 
@@ -85,6 +86,8 @@ export const TopBarMenu = React.memo(({
         })
         gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
         chatBroadcast("game_update",{message: "loaded a deck."});
+        // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
+        handleLoadDeckAutomation(loadList, gameBroadcast, chatBroadcast);
       })
     }
     reader.readAsText(event.target.files[0]);

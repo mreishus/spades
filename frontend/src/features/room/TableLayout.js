@@ -89,6 +89,7 @@ export const TableLayout = React.memo(({
             browseGroupTopN={browseGroupTopN}
             setBrowseGroupId={setBrowseGroupId}
             setBrowseGroupTopN={setBrowseGroupTopN}
+            setTyping={setTyping}
           />
           </div>
         )} else {
