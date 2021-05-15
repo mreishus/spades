@@ -11,16 +11,18 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
   const tdClass = "p-3 border-b border-gray-400";
   const thClass = "p-3 border-b border-gray-400";
 
-  let roomItems = rooms.map((room: Room) => (
-    <tr key={room.id}>
-      <td className={tdClass}>
-        <Link to={"/room/" + room.slug}>{room.name}</Link>
-      </td>
-      <td className={tdClass}>
-        <UserName userID={room.created_by} />
-      </td>
-    </tr>
-  ));
+  let roomItems = rooms.map((room: Room) => {
+    if (room.privacy_type === "public") return (
+      <tr key={room.id}>
+        <td className={tdClass}>
+          <Link to={"/room/" + room.slug}>{room.name}</Link>
+        </td>
+        <td className={tdClass}>
+          <UserName userID={room.created_by} />
+        </td>
+      </tr>
+    )
+  });
 
   if (roomItems.length === 0) {
     return (

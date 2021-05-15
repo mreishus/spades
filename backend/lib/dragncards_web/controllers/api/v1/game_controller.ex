@@ -6,13 +6,15 @@ defmodule DragnCardsWeb.API.V1.GameController do
   alias DragnCards.Rooms
   alias DragnCards.Rooms.Room
   alias DragnCardsUtil.{NameGenerator}
-  alias DragnCardsGame.{GameOptions, GameUISupervisor}
+  alias DragnCardsGame.GameUISupervisor
 
   def create(conn, _params) do
     Logger.debug("game_controller create")
     game_name = NameGenerator.generate()
     user = _params["room"]["user"]
-    options = %GameOptions{}
+    options = %{"privacyType" => _params["room"]["privacy_type"]}
+    IO.puts("options")
+    IO.inspect(options)
     GameUISupervisor.start_game(game_name, user, options)
     room = Rooms.get_room_by_name(game_name)
     if room do

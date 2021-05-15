@@ -28,7 +28,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   const myUserID = myUser?.id;
 
   const createRoom = async () => {
-    const data = { room: { name: "", user: myUserID } };
+    const data = { room: { name: "", user: myUserID, privacy_type: privacyType.value} };
     setIsLoading(true);
     setIsError(false);
     console.log('creating room with ');

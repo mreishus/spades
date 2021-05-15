@@ -54,6 +54,7 @@ defmodule DragnCardsGame.GameRegistry do
     %{
       name: gameui["gameName"],
       created_by: gameui["created_by"],
+      privacy_type: gameui["privacyType"],
     }
   end
 

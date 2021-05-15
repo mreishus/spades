@@ -6,7 +6,7 @@ defmodule DragnCardsGame.GameUIServer do
   @timeout :timer.minutes(60)
 
   require Logger
-  alias DragnCardsGame.{Game, Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack, Tokens}
+  alias DragnCardsGame.{Game, Card, GameUI, GameRegistry, Groups, User, Stack, Tokens}
 
   def is_player(gameui, user_id) do
     ids = gameui["playerIds"]
@@ -20,8 +20,8 @@ defmodule DragnCardsGame.GameUIServer do
   @doc """
   start_link/3: Generates a new game server under a provided name.
   """
-  @spec start_link(String.t(), User.t(), %GameOptions{}) :: {:ok, pid} | {:error, any}
-  def start_link(gameName, user, %GameOptions{} = options) do
+  @spec start_link(String.t(), User.t(), %{}) :: {:ok, pid} | {:error, any}
+  def start_link(gameName, user, %{} = options) do
     IO.puts("gameuiserver: start_link a")
     GenServer.start_link(__MODULE__, {gameName, user, options}, name: via_tuple(gameName))
     IO.puts("gameuiserver: start_link b")
@@ -83,7 +83,7 @@ defmodule DragnCardsGame.GameUIServer do
   ####### IMPLEMENTATION ##############
   #####################################
 
-  def init({gameName, user, options = %GameOptions{}}) do
+  def init({gameName, user, options = %{}}) do
     IO.puts("game_ui_server init a")
     gameui =
       case :ets.lookup(:game_uis, gameName) do

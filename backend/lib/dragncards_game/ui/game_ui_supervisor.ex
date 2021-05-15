@@ -5,7 +5,7 @@ defmodule DragnCardsGame.GameUISupervisor do
 
   use DynamicSupervisor
 
-  alias DragnCardsGame.{GameUIServer, GameOptions}
+  alias DragnCardsGame.GameUIServer
 
   def start_link(_arg) do
     IO.puts("gameuisupervisor: start_link a")
@@ -19,7 +19,7 @@ defmodule DragnCardsGame.GameUISupervisor do
   @doc """
   Starts a `GameUIServer` process and supervises it.
   """
-  def start_game(game_name, user, %GameOptions{} = options) do
+  def start_game(game_name, user, %{} = options) do
     IO.puts("gameuisup: start a")
     IO.inspect(user)
     child_spec = %{
