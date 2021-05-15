@@ -21,7 +21,7 @@ export const Button: React.FC<Props> = ({
   // bg-gray-300
   const classes = cx(
     className,
-    "px-2 py-1 rounded",
+    "px-2 py-1 rounded w-full",
     { "bg-gray-300": !isPrimary },
     { "bg-blue-800 text-gray-100 shadow-lg": isPrimary }
   );

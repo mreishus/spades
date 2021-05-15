@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { Redirect } from "react-router";
+import Select from 'react-select'
 import axios from "axios";
 import ReactModal from "react-modal";
 import Button from "../../components/basic/Button";
 import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
+
+const options = [
+  { value: 'public', label: 'Public' },
+  { value: 'private', label: 'Private' },
+]
 
 interface Props {
   isOpen: boolean;
@@ -16,12 +22,13 @@ ReactModal.setAppElement("#root");
 export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [privacyType, setPrivacyType] = useState(options[0]);
   const [roomSlugCreated, setRoomSlugCreated] = useState(null);
   const myUser = useProfile();
   const myUserID = myUser?.id;
 
   const createRoom = async () => {
-    const data = { room: { name: "", user: myUserID } };
+    const data = { room: { name: "", user: myUserID, privacy_type: privacyType.value} };
     setIsLoading(true);
     setIsError(false);
     console.log('creating room with ');
@@ -42,6 +49,10 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
     }
   };
 
+  const handlePrivacyChange = (selectedOption: any) => {
+    setPrivacyType(selectedOption);
+  };
+
   if (roomSlugCreated != null) {
     return <Redirect push to={`/room/${roomSlugCreated}`} />;
   }
@@ -53,18 +64,19 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
       onRequestClose={closeModal}
       contentLabel="Create New Game"
       overlayClassName="fixed inset-0 bg-black-50 z-50"
-      className="insert-auto overflow-auto p-5 bg-gray-700 border max-w-lg mx-auto my-12 rounded-lg outline-none"
+      className="insert-auto overflow-auto p-5 bg-gray-700 border w-80 mx-auto my-12 rounded-lg outline-none"
     >
       <h1 className="mb-2">Create Room</h1>
       <div className="">
-        <p className="italic text-white">No options available yet.</p>
-      </div>
+        <Select         
+          value={privacyType}
+          onChange={handlePrivacyChange}
+          options={options} />
 
-      <div className="mt-4">
-        <Button onClick={createRoom} disabled={isLoading}>
+        <Button onClick={createRoom} className="mt-2" disabled={isLoading}>
           Create
         </Button>
-        <Button onClick={closeModal} className="ml-2">
+        <Button onClick={closeModal} className="mt-2">
           Cancel
         </Button>
       </div>

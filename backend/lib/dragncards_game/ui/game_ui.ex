@@ -3,19 +3,20 @@ defmodule DragnCardsGame.GameUI do
   One level on top of Game.
   """
 
-  alias DragnCardsGame.{Game, GameOptions, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens, CardFace, Player}
+  alias DragnCardsGame.{Game, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens, CardFace, Player}
 
   @type t :: Map.t()
 
-  @spec new(String.t(), User.t(), GameOptions.t()) :: GameUI.t()
-  def new(game_name, user, %GameOptions{} = options) do
+  @spec new(String.t(), User.t(), Map.t()) :: GameUI.t()
+  def new(game_name, user, %{} = options) do
     IO.puts("game_ui new")
-    %{
+    gameui = %{
       "game" => Game.new(options),
       "gameName" => game_name,
       "options" => options,
       "created_at" => DateTime.utc_now(),
       "created_by" => user,
+      "privacyType" => options["privacyType"],
       "playerIds" => %{
         "player1" => user,
         "player2" => nil,
@@ -23,6 +24,8 @@ defmodule DragnCardsGame.GameUI do
         "player4" => nil,
       }
     }
+    IO.inspect(gameui)
+    gameui
   end
 
   def pretty_print(gameui, header \\ nil) do
@@ -919,10 +922,18 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def load_card(gameui, card_row, group_id, quantity) do
-    Enum.reduce(1..quantity, gameui, fn(index, acc) ->
-      stack_ids = get_stack_ids(gameui, group_id)
-      acc = add_card_row_to_group(acc, group_id, card_row)
-    end)
+    IO.puts("load_card")
+    IO.inspect(card_row)
+    IO.inspect(group_id)
+    IO.inspect(quantity)
+    if quantity do
+      Enum.reduce(1..quantity, gameui, fn(index, acc) ->
+        stack_ids = get_stack_ids(gameui, group_id)
+        acc = add_card_row_to_group(acc, group_id, card_row)
+      end)
+    else
+      gameui
+    end
   end
 
   def shuffle_changed_decks(old_gameui, new_gameui) do

@@ -6,7 +6,7 @@ defmodule DragnCardsGame.GameUIServer do
   @timeout :timer.minutes(60)
 
   require Logger
-  alias DragnCardsGame.{Game, Card, GameOptions, GameUI, GameRegistry, Groups, User, Stack, Tokens}
+  alias DragnCardsGame.{Game, Card, GameUI, GameRegistry, Groups, User, Stack, Tokens}
 
   def is_player(gameui, user_id) do
     ids = gameui["playerIds"]
@@ -20,8 +20,8 @@ defmodule DragnCardsGame.GameUIServer do
   @doc """
   start_link/3: Generates a new game server under a provided name.
   """
-  @spec start_link(String.t(), User.t(), %GameOptions{}) :: {:ok, pid} | {:error, any}
-  def start_link(gameName, user, %GameOptions{} = options) do
+  @spec start_link(String.t(), User.t(), %{}) :: {:ok, pid} | {:error, any}
+  def start_link(gameName, user, %{} = options) do
     IO.puts("gameuiserver: start_link a")
     GenServer.start_link(__MODULE__, {gameName, user, options}, name: via_tuple(gameName))
     IO.puts("gameuiserver: start_link b")
@@ -70,11 +70,20 @@ defmodule DragnCardsGame.GameUIServer do
     GenServer.call(via_tuple(gameName), {:game_action, user_id, action, options})
   end
 
+  @doc """
+  leave/2: User just leave the room (Closed browser or clicked out).
+  If they're in a seat, we need to mark them as gone.
+  Maybe eventually there will be some sophisticated disconnect/reconnect
+  system?
+  """
+  def leave(game_name, user_id) do
+    GenServer.call(via_tuple(game_name), {:leave, user_id})
+  end
   #####################################
   ####### IMPLEMENTATION ##############
   #####################################
 
-  def init({gameName, user, options = %GameOptions{}}) do
+  def init({gameName, user, options = %{}}) do
     IO.puts("game_ui_server init a")
     gameui =
       case :ets.lookup(:game_uis, gameName) do
@@ -134,8 +143,13 @@ defmodule DragnCardsGame.GameUIServer do
   # Given the current state of the game, what should the
   # GenServer timeout be? (Games with winners expire quickly)
   defp timeout(_state) do
-    IO.puts("timeout set")
     @timeout
+  end
+
+  def handle_call({:leave, user_id}, _from, gameui) do
+    # When a user leaves, we currently do nothing
+    gameui
+    |> save_and_reply()
   end
 
   # When timing out, the order is handle_info(:timeout, _) -> terminate({:shutdown, :timeout}, _)

@@ -1,15 +1,18 @@
 import { GROUPSINFO } from "./Constants";
-import { getDisplayName } from "./Helpers";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
+import { 
+  getDisplayName, 
+  getGroupIdStackIndexCardIndex,
+} from "./Helpers";
 
 // dropdownMenu is an object that gets populated with infor about a card when a card is pressed, or about a group when a group is pressed.
 
-export const handleDropdownClickCommon = (dropdownMenu, props, playerN, gameBroadcast, chatBroadcast) => {
-  if (dropdownMenu.type === "card") handleDropdownClickCard(dropdownMenu, props, playerN, gameBroadcast, chatBroadcast)
-  else if (dropdownMenu.type === "group") handleDropdownClickGroup(dropdownMenu, props, playerN, gameBroadcast, chatBroadcast)
+export const handleDropdownClickCommon = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
+  if (dropdownMenu.type === "card") handleDropdownClickCard(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast)
+  else if (dropdownMenu.type === "group") handleDropdownClickGroup(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast)
 }
 
-export const handleDropdownClickCard = (dropdownMenu, props, playerN, gameBroadcast, chatBroadcast) => {
+export const handleDropdownClickCard = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
   const menuCard = dropdownMenu.card;
   const displayName = getDisplayName(menuCard);
   if (props.action === "detach") {
@@ -39,10 +42,22 @@ export const handleDropdownClickCard = (dropdownMenu, props, playerN, gameBroadc
       const tokenType = props.tokenType;
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "tokensPerRound", tokenType, increment]]}})
       chatBroadcast("game_update", {message: "added "+increment+" "+tokenType+" token(s) per round to "+displayName+"."})
+  } else if (props.action === "swapWithTop") {
+    const gsc = getGroupIdStackIndexCardIndex(game, menuCard.id);
+    const stackIndex = gsc.stackIndex;
+    const deckStackIds = game.groupById[playerN+"Deck"].stackIds;
+    if (deckStackIds.length > 0) {
+        const stackId0 = deckStackIds[0];
+        const cardId0 = game.stackById[stackId0].cardIds[0];
+        //gameBroadcast("game_action", {action: "swap_card", options: {card_id_1: }})
+        gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: playerN+"Deck", dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+        gameBroadcast("game_action", {action: "move_card", options: {card_id: cardId0, dest_group_id: playerN+"Hand", dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})
+        chatBroadcast("game_update", {message: "swapped a card in their hand with the top of their deck."})       
+    }
   }
 }
 
-export const handleDropdownClickGroup = (dropdownMenu, props, playerN, gameBroadcast, chatBroadcast) => {
+export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
   const group = dropdownMenu.group;
   if (props.action === "shuffle") {
     gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: group.id}})

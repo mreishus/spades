@@ -7,6 +7,7 @@ import { DropdownMenuGroup } from "./DropdownMenuGroup";
 import { getDisplayName, tokenTitleName, getVisibleSide } from "./Helpers";
 import { faArrowUp, faArrowDown, faRandom, faReply, faChevronRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useSelector } from 'react-redux';
 import { calcHeightCommon, DropdownItem, GoBack } from "./DropdownMenuHelpers";
 import "../../css/custom-dropdown.css";
 
@@ -21,6 +22,9 @@ export const DropdownMenuCommon = React.memo(({
   setIsHovering,
 }) => {
   
+  const gameStore = state => state?.gameUi?.game;
+  const game = useSelector(gameStore);
+
   const [activeMenu, setActiveMenu] = useState('main');
   const [menuHeight, setMenuHeight] = useState(null);
 
@@ -39,7 +43,7 @@ export const DropdownMenuCommon = React.memo(({
       setActiveMenu(props.goToMenu);
       return;
     }
-    handleDropdownClickCommon(dropdownMenu, props, playerN, gameBroadcast, chatBroadcast);
+    handleDropdownClickCommon(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast);
     setActiveMenu("main");
     setIsHovering(false);
     setDropdownMenu(null);
