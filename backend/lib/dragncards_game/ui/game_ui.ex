@@ -919,10 +919,18 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def load_card(gameui, card_row, group_id, quantity) do
-    Enum.reduce(1..quantity, gameui, fn(index, acc) ->
-      stack_ids = get_stack_ids(gameui, group_id)
-      acc = add_card_row_to_group(acc, group_id, card_row)
-    end)
+    IO.puts("load_card")
+    IO.inspect(card_row)
+    IO.inspect(group_id)
+    IO.inspect(quantity)
+    if quantity do
+      Enum.reduce(1..quantity, gameui, fn(index, acc) ->
+        stack_ids = get_stack_ids(gameui, group_id)
+        acc = add_card_row_to_group(acc, group_id, card_row)
+      end)
+    else
+      gameui
+    end
   end
 
   def shuffle_changed_decks(old_gameui, new_gameui) do

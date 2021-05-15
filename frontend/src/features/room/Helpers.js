@@ -290,15 +290,55 @@ export const getGroupIdStackIndexCardIndex = (game, cardId) => {
   })
 }
 
-
-export const handleLoadDeckAutomation = (loadList, gameBroadcast, chatBroadcast) => {
-  for (const item of loadList) {
-    console.log(item.cardRow.sides.A.name, item.cardRow.cardid)
-    if (item.cardRow.cardid == "6dc19efc-af54-4eff-b9ee-ee45e9fd4072") {// Tactics Eowyn
-      gameBroadcast("game_action", {action: "increment_threat", options: {increment: -3}})
-      chatBroadcast("game_update", {message: "reduced threat by 3."});
+const isCardDbIdInLoadList = (loadList, cardDbId) => {
+  for (var item of loadList) {
+    console.log(item.cardRow.sides.A.name,item.cardRow.cardid,cardDbId)
+    if (item.cardRow.cardid === cardDbId) {
+      return true;
     }
   }  
 }
+
+export const processLoadList = (loadList, playerN) => {
+  const loreThurindir = isCardDbIdInLoadList(loadList, "12946b30-a231-4074-a524-960365081360")
+  const theOneRing = isCardDbIdInLoadList(loadList, "423e9efe-7908-4c04-97bd-f4a826081c9f")
+  const newLoadList = [...loadList];
+
+  if (loreThurindir) {
+    for (var i=0; i<loadList.length; i++) {
+      const item = loadList[i];
+      console.log(item.cardRow.sides.A.type);
+      if (item.cardRow.sides.A.type == "Side Quest") {
+        newLoadList[i] = {...item, quantity: item.quantity - 1};
+        newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})
+      }
+    }  
+  }
+
+  if (theOneRing) {
+    for (var i=0; i<loadList.length; i++) {
+      const item = loadList[i];
+      if (item.cardRow.sides.A.traits.includes("Master.")) {
+        newLoadList[i] = {...item, quantity: item.quantity - 1};
+        newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})
+      }      
+      if (item.cardRow.id === "423e9efe-7908-4c04-97bd-f4a826081c9f") {
+        newLoadList[i] = {...item, groupId: playerN+"Play2"};
+      }
+
+    }  
+  } 
+  return newLoadList; 
+
+}
+
+export const processPostLoad = (loadList, playerN, gameBroadcast, chatBroadcast) => {
+  const tacticsEowyn = isCardDbIdInLoadList(loadList, "6dc19efc-af54-4eff-b9ee-ee45e9fd4072")
+  if (tacticsEowyn) {
+    gameBroadcast("game_action", {action: "increment_threat", options: {increment: -3}})
+    chatBroadcast("game_update", {message: "reduced threat by 3."});
+  }
+}
+
 
 
