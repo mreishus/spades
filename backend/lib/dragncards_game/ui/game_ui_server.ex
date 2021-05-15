@@ -70,6 +70,15 @@ defmodule DragnCardsGame.GameUIServer do
     GenServer.call(via_tuple(gameName), {:game_action, user_id, action, options})
   end
 
+  @doc """
+  leave/2: User just leave the room (Closed browser or clicked out).
+  If they're in a seat, we need to mark them as gone.
+  Maybe eventually there will be some sophisticated disconnect/reconnect
+  system?
+  """
+  def leave(game_name, user_id) do
+    GenServer.call(via_tuple(game_name), {:leave, user_id})
+  end
   #####################################
   ####### IMPLEMENTATION ##############
   #####################################
@@ -134,8 +143,13 @@ defmodule DragnCardsGame.GameUIServer do
   # Given the current state of the game, what should the
   # GenServer timeout be? (Games with winners expire quickly)
   defp timeout(_state) do
-    IO.puts("timeout set")
     @timeout
+  end
+
+  def handle_call({:leave, user_id}, _from, gameui) do
+    # When a user leaves, we currently do nothing
+    gameui
+    |> save_and_reply()
   end
 
   # When timing out, the order is handle_info(:timeout, _) -> terminate({:shutdown, :timeout}, _)

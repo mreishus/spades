@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from "react";
+import { ChatMessage } from "elixir-backend";
 import { Link } from "react-router-dom";
 import CreateRoomModal from "./CreateRoomModal";
 import LobbyTable from "./LobbyTable";
@@ -6,8 +7,6 @@ import Button from "../../components/basic/Button";
 import Container from "../../components/basic/Container";
 import AdminContact from "../../components/AdminContact";
 import Chat from "../chat/Chat";
-import { ChatMessage } from "elixir-backend";
-
 import useDataApi from "../../hooks/useDataApi";
 import useChannel from "../../hooks/useChannel";
 import useProfile from "../../hooks/useProfile";
@@ -58,37 +57,40 @@ export const Lobby: React.FC = () => {
   }
 
   return (
-      <div style={{fontFamily:"Roboto"}}>
-        <div className="w-full m-6 lg:w-3/4 xl:w-4/6">
-          <div>
-            <h1 className="mb-4">Lobby</h1>
-            {isLoading && <div className="text-white">Loading..</div>}
-            {isError && <div className="text-white">Error communicating with server...</div>}
-            <div className="mb-6">
-              <h3 className="mb-2 font-semibold">New Game</h3>
-              <div>
-                {isLoggedIn && (
-                  <Button isPrimary onClick={() => handleCreateRoomClick()}>
-                    Create Room
-                  </Button>
-                )}
-                {!isLoggedIn && (
-                  <span className="p-2 text-white bg-gray-700 rounded">
-                    <Link to="/login" className="mr-1 text-white">
-                      Log In
-                    </Link>
-                    to create a room
-                  </span>
-                )}
+      <div className="w-full" style={{fontFamily:"Roboto"}}>
+        <div className="mt-4 mx-auto w-80">
+            <h1 className="mb-4 text-center">Lobby</h1>
+            {isLoading && <div className="text-white text-center">Connecting to server...</div>}
+            {isError && <div className="text-white text-center">Error communicating with server...</div>}
+            {(!isLoading && !isError) &&
+              <div className="mb-6">
+                {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
+                <div className="mx-auto w-48">
+                  {isLoggedIn && (
+                    <Button isPrimary onClick={() => handleCreateRoomClick()}>
+                      Create Room
+                    </Button>
+                  )}
+                  {!isLoggedIn && (
+                    <span className="p-2 text-white bg-gray-700 rounded">
+                      <Link to="/login" className="mr-1 text-white">
+                        Log In
+                      </Link>
+                      to create a room
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="mb-6">
-              <h3 className="mb-2 font-semibold">Current Games</h3>
-              <div className="mb-4">
-                <LobbyTable rooms={rooms} />
+            }
+            {(!isLoading && !isError) &&
+              <div className="mb-6 w-full">
+                <h3 className="mb-2 font-semibold text-center">Current Games</h3>
+                <div className="mb-4 w-full">
+                  <LobbyTable rooms={rooms} />
+                </div>
               </div>
-            </div>
-            <h3 className="mb-2 font-semibold">About</h3>
+            }
+            <h3 className="mt-6 font-semibold text-center">About</h3>
             <div className="max-w-none">
               <p className="mb-2">
                 DragnCards is a{" "}
@@ -105,7 +107,6 @@ export const Lobby: React.FC = () => {
               closeModal={() => setShowModal(false)}
             />
           </div>
-        </div>
         {/* <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">
           <div className="flex items-end h-full">
             <Chat chatBroadcast={chatBroadcast} messages={messages} setTyping={setTyping} />

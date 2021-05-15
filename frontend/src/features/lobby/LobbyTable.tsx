@@ -24,13 +24,13 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
 
   if (roomItems.length === 0) {
     return (
-      <div className="p-3 text-white rounded bg-gray-700 max-w-lg">
+      <div className="p-3 text-white rounded bg-gray-700 w-full">
         No rooms created.
       </div>
     );
   }
   return (
-    <table className="shadow rounded border bg-gray-100">
+    <table className="shadow rounded border bg-gray-100 w-full">
       <thead>
         <tr>
           <th className={thClass}>name</th>
