@@ -12,7 +12,11 @@ defmodule DragnCardsWeb.API.V1.GameController do
     Logger.debug("game_controller create")
     game_name = NameGenerator.generate()
     user = _params["room"]["user"]
-    options = %{"privacyType" => _params["room"]["privacy_type"]}
+    options = %{
+      "privacyType" => _params["room"]["privacy_type"],
+      "ringsDbId" => _params["game_options"]["ringsdb_id"],
+      "ringsDbType" => _params["game_options"]["ringsdb_type"],
+    }
     IO.puts("options")
     IO.inspect(options)
     GameUISupervisor.start_game(game_name, user, options)

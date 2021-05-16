@@ -299,15 +299,38 @@ const isCardDbIdInLoadList = (loadList, cardDbId) => {
   }  
 }
 
+export const arrayMove = (arr, old_index, new_index) => {
+  while (old_index < 0) {
+      old_index += arr.length;
+  }
+  while (new_index < 0) {
+      new_index += arr.length;
+  }
+  if (new_index >= arr.length) {
+      var k = new_index - arr.length + 1;
+      while (k--) {
+          arr.push(undefined);
+      }
+  }
+  arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+  return arr;
+};
+
 export const processLoadList = (loadList, playerN) => {
   const loreThurindir = isCardDbIdInLoadList(loadList, "12946b30-a231-4074-a524-960365081360")
   const theOneRing = isCardDbIdInLoadList(loadList, "423e9efe-7908-4c04-97bd-f4a826081c9f")
-  const newLoadList = [...loadList];
+  var newLoadList = [...loadList];
+
+  for (var i=0; i<loadList.length; i++) {
+    const item = loadList[i];
+    if (item.cardRow.sides.A.type === "Contract") {
+      newLoadList = arrayMove(newLoadList, i, 0); 
+    }
+  }
 
   if (loreThurindir) {
     for (var i=0; i<loadList.length; i++) {
       const item = loadList[i];
-      console.log(item.cardRow.sides.A.type);
       if (item.cardRow.sides.A.type == "Side Quest") {
         newLoadList[i] = {...item, quantity: item.quantity - 1};
         newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})

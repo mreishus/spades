@@ -6,6 +6,7 @@ import ReactModal from "react-modal";
 import Button from "../../components/basic/Button";
 import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
+import { Link } from "react-router-dom";
 
 const options = [
   { value: 'public', label: 'Public' },
@@ -14,12 +15,15 @@ const options = [
 
 interface Props {
   isOpen: boolean;
+  isLoggedIn: boolean;
   closeModal: () => void;
+  ringsDbId: string;
+  ringsDbType: string;
 }
 
 ReactModal.setAppElement("#root");
 
-export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
+export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModal, ringsDbId, ringsDbType }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [privacyType, setPrivacyType] = useState(options[0]);
@@ -28,11 +32,19 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
   const myUserID = myUser?.id;
 
   const createRoom = async () => {
-    const data = { room: { name: "", user: myUserID, privacy_type: privacyType.value} };
+    const data = { 
+      room: { 
+        name: "", 
+        user: myUserID, 
+        privacy_type: privacyType.value,
+      },
+      game_options: {
+        ringsdb_id: ringsDbId,
+        ringsdb_type: ringsDbType,
+      }
+    };
     setIsLoading(true);
     setIsError(false);
-    console.log('creating room with ');
-    console.log(data);
     try {
       const res = await axios.post("/be/api/v1/games", data);
       console.log(res);
@@ -43,7 +55,6 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
       const room = res.data.success.room;
       setRoomSlugCreated(room.slug);
     } catch (err) {
-      console.log('err')
       setIsLoading(false);
       setIsError(true);
     }
@@ -64,25 +75,35 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, closeModal }) => {
       onRequestClose={closeModal}
       contentLabel="Create New Game"
       overlayClassName="fixed inset-0 bg-black-50 z-50"
-      className="insert-auto overflow-auto p-5 bg-gray-700 border w-80 mx-auto my-12 rounded-lg outline-none"
+      className="insert-auto overflow-auto p-5 bg-gray-700 border w-64 mx-auto my-12 rounded-lg outline-none"
     >
-      <h1 className="mb-2">Create Room</h1>
-      <div className="">
-        <Select         
-          value={privacyType}
-          onChange={handlePrivacyChange}
-          options={options} />
 
-        <Button onClick={createRoom} className="mt-2" disabled={isLoading}>
-          Create
-        </Button>
-        <Button onClick={closeModal} className="mt-2">
-          Cancel
-        </Button>
-      </div>
+      <h1 className="mb-2">Create Room</h1>
+      {isLoggedIn ?
+        <div className="mb-4">
+          <Select         
+            value={privacyType}
+            onChange={handlePrivacyChange}
+            options={options} />
+          
+          <Button onClick={createRoom} className="mt-2" disabled={isLoading}>
+            Create
+          </Button>
+          <Button onClick={closeModal} className="mt-2 bg-red-300">
+            Cancel
+          </Button>
+        </div>
+        :
+        <span className="mt-5 p-2 text-white bg-gray-600 rounded">
+            <Link to="/login" className="mr-1 text-white">
+              Log in 
+            </Link> 
+            first, then try again
+        </span>
+      }
       {isError && (
         <div className="mt-2 bg-red-200 p-2 rounded border">
-          Error creating room.
+          Error creating room. Are you logged in?
         </div>
       )}
     </ReactModal>

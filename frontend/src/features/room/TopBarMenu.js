@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import useProfile from "../../hooks/useProfile";
 import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
@@ -19,11 +19,88 @@ export const TopBarMenu = React.memo(({
 
   const createdByStore = state => state.gameUi.created_by;
   const createdBy = useSelector(createdByStore);
+  const optionsStore = state => state.gameUi.options;
+  const options = useSelector(optionsStore);
   const host = myUserID === createdBy;
   
   const dispatch = useDispatch();
   const inputFileDeck = useRef(null);
   const inputFileGame = useRef(null);
+
+  useEffect(() => {
+    console.log(options);
+    if (options["ringsDbId"]) {
+      const ringsDbId = options["ringsDbId"];
+      const ringsDbType = options["ringsDbType"];
+      const urlBase = "http://www.ringsdb.com/api/"
+      const url = ringsDbType === "public" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
+      fetch(url)
+      .then(response => response.json())
+      .then((jsonData) => {
+        // jsonData is parsed json object received from url
+        const slots = jsonData.slots;
+        const sideslots = jsonData.sideslots;
+        var loadList = [];
+        var fetches = [];
+        Object.keys(slots).forEach((slot, slotIndex) => {
+          const quantity = slots[slot];
+          const slotUrl = urlBase+"public/card/"+slot+".json"
+          fetches.push(fetch(slotUrl)
+            .then(response => response.json())
+            .then((slotJsonData) => {
+              // jsonData is parsed json object received from url
+              var cardRow = cardDB[slotJsonData.octgnid];
+              if (cardRow && !slotJsonData.name.includes("MotK")) {
+                const type = slotJsonData.type_name;
+                const loadGroupId = (type === "Hero" || type === "Contract") ? playerN+"Play1" : playerN+"Deck";
+                cardRow['loadgroupid'] = loadGroupId;
+                cardRow['discardgroupid'] = sectionToDiscardGroupId(playerN+"Discard",playerN);
+                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+              }
+            })
+            .catch((error) => {
+              // handle your errors here
+              console.error("Could not find card", slot);
+            })
+          )
+        })
+        Object.keys(sideslots).forEach((slot, slotIndex) => {
+          const quantity = slots[slot];
+          const slotUrl = urlBase+"public/card/"+slot+".json"
+          fetches.push(fetch(slotUrl)
+            .then(response => response.json())
+            .then((slotJsonData) => {
+              // jsonData is parsed json object received from url
+              var cardRow = cardDB[slotJsonData.octgnid];
+              if (cardRow) {
+                const type = slotJsonData.type_name;
+                const loadGroupId = playerN+"Sideboard";
+                cardRow['loadgroupid'] = loadGroupId;
+                cardRow['discardgroupid'] = sectionToDiscardGroupId(playerN+"Discard",playerN);
+                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+              }
+            })
+            .catch((error) => {
+              // handle your errors here
+              console.error("Could not find card", slot);
+            })
+          )
+        })
+        Promise.all(fetches).then(function() {
+          // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
+          loadList = processLoadList(loadList, playerN);
+          gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
+          chatBroadcast("game_update",{message: "loaded a deck."});
+          processPostLoad(loadList, playerN, gameBroadcast, chatBroadcast);
+        });
+      })
+      .catch((error) => {
+        // handle your errors here
+        alert("Error loading deck. If you are attempting to load an unpublished deck, make sure you have link sharing turned on in your RingsDB profile settings.")
+      })
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["options", "ringsDbId", null],["options", "ringsDbType", null]]}})
+    }
+  }, [options]);
 
   const handleMenuClick = (data) => {
     if (!playerN) {
@@ -56,6 +133,42 @@ export const TopBarMenu = React.memo(({
 
   const loadFileGame = () => {
     inputFileGame.current.click();
+  }
+
+  const loadRingsDb = async(event) => {
+    event.preventDefault();
+    const reader = new FileReader();
+    reader.onload = async (event) => { 
+      const xmltext = (event.target.result)
+      var parseString = require('xml2js').parseString;
+      parseString(xmltext, function (err, deckJSON) {
+        if (!deckJSON) return;
+        const sections = deckJSON.deck.section;
+        var loadList = [];
+        sections.forEach(section => {
+          const sectionName = section['$'].name;
+          const cards = section.card;
+          if (!cards) return;
+          cards.forEach(card => {
+            const cardDbId = card['$'].id;
+            const quantity = parseInt(card['$'].qty);
+            var cardRow = cardDB[cardDbId];
+            if (cardRow) {
+              const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
+              cardRow['loadgroupid'] = loadGroupId;
+              cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
+              loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
+            }
+          })
+        })
+        // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
+        loadList = processLoadList(loadList, playerN);
+        gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
+        chatBroadcast("game_update",{message: "loaded a deck."});
+        processPostLoad(loadList, playerN, gameBroadcast, chatBroadcast);
+      })
+    }
+    reader.readAsText(event.target.files[0]);
   }
 
   const loadDeck = async(event) => {

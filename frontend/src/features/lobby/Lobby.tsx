@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { ChatMessage } from "elixir-backend";
 import { Link } from "react-router-dom";
 import CreateRoomModal from "./CreateRoomModal";
@@ -17,14 +17,31 @@ interface Props {}
 export const Lobby: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
+  const myUserID = myUser?.id;
 
   const [showModal, setShowModal] = useState(false);
+  const [ringsDbId, setRingsDbId] = useState("");
+  const [ringsDbType, setRingsDbType] = useState("");
   const [typing, setTyping] = useState<Boolean>(false);
   const { isLoading, isError, data, setData } = useDataApi<any>(
     "/be/api/rooms",
     null
   );
 
+  useEffect(() => {
+    const url = window.location.href;
+    if (url.includes("newroom")) {
+
+      if (url.includes("ringsdb")) {
+        console.log("here")
+        var split_url = url.split( '/' );
+        console.log(split_url);
+        setRingsDbType(split_url[split_url.length - 2])
+        setRingsDbId(split_url[split_url.length - 1])
+      }
+      setShowModal(true);
+    }
+  }, []);
 
   const onChannelMessage = useCallback(
     (event, payload) => {
@@ -104,7 +121,10 @@ export const Lobby: React.FC = () => {
             </div>
             <CreateRoomModal
               isOpen={showModal}
+              isLoggedIn={isLoggedIn}
               closeModal={() => setShowModal(false)}
+              ringsDbId={ringsDbId}
+              ringsDbType={ringsDbType}
             />
           </div>
         {/* <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">

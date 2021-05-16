@@ -5,6 +5,7 @@ import PrivateRoute from "./PrivateRoute";
 import AuthTest from "../components/AuthTest";
 import RoomShow from "../pages/RoomShow";
 import LobbyIndex from "../pages/LobbyIndex";
+import Lobby from "../features/lobby/Lobby";
 import Home from "../pages/Home";
 import Login from "../features/auth/Login";
 import Signup from "../features/auth/Signup";
@@ -25,6 +26,7 @@ const AppRouter: React.FC = () => {
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         <Route path="/profile" component={Profile} />
+        <Route path="/newroom" component={Lobby} />
         <Route
           path="/reset-password/:reset_token"
           component={DoResetPassword}

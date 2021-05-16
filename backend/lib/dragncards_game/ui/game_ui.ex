@@ -24,8 +24,13 @@ defmodule DragnCardsGame.GameUI do
         "player4" => nil,
       }
     }
-    IO.inspect(gameui)
-    gameui
+    # gameui = if options["ringsDBId"] do
+    #   load_ringsdb(gameui, options["ringsDbType"], options["ringsDbId"])
+    # else
+    #   gameui
+    # end
+    # IO.inspect(gameui)
+    # gameui
   end
 
   def pretty_print(gameui, header \\ nil) do
@@ -53,6 +58,7 @@ defmodule DragnCardsGame.GameUI do
       end
     end)
   end
+
 
   ############################################################
   # Getters                                                  #

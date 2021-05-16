@@ -107,7 +107,7 @@ export const Login: React.FC<Props> = () => {
               />
             </div>
             <div className="flex items-center justify-between">
-              <Button isSubmit isPrimary>
+              <Button isSubmit isPrimary className="mx-2">
                 Sign In
               </Button>
 
