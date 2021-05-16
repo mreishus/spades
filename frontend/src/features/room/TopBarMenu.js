@@ -32,8 +32,8 @@ export const TopBarMenu = React.memo(({
     if (options["ringsDbId"]) {
       const ringsDbId = options["ringsDbId"];
       const ringsDbType = options["ringsDbType"];
-      const urlBase = "http://www.ringsdb.com/api/"
-      const url = ringsDbType === "public" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
+      const urlBase = "https://www.ringsdb.com/api/"
+      const url = ringsDbType === "decklist" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
       fetch(url)
       .then(response => response.json())
       .then((jsonData) => {

@@ -75,7 +75,14 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
       onRequestClose={closeModal}
       contentLabel="Create New Game"
       overlayClassName="fixed inset-0 bg-black-50 z-50"
-      className="insert-auto overflow-auto p-5 bg-gray-700 border w-64 mx-auto my-12 rounded-lg outline-none"
+      className="insert-auto overflow-auto p-5 bg-gray-700 border mx-auto my-12 rounded-lg outline-none"
+      style={{
+        overlay: {
+        },
+        content: {
+          width: '300px',
+        }
+      }}
     >
 
       <h1 className="mb-2">Create Room</h1>
