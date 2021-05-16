@@ -14,7 +14,7 @@ defmodule DragnCardsWeb.API.V1.GameController do
     user = _params["room"]["user"]
     options = %{
       "privacyType" => _params["room"]["privacy_type"],
-      "ringsDbId" => _params["game_options"]["ringsdb_id"],
+      "ringsDbIds" => _params["game_options"]["ringsdb_ids"],
       "ringsDbType" => _params["game_options"]["ringsdb_type"],
     }
     IO.puts("options")

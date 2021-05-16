@@ -14,13 +14,28 @@ import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 
 interface Props {}
 
+const isNormalInteger = (str: string) => {
+  var n = Math.floor(Number(str));
+  return n !== Infinity && String(n) === str && n >= 0;
+}
+
+const filterArrayForPositiveInt = (arr: Array<string>) => {
+  const newArr = [];
+  for (var s of arr) {
+    if (isNormalInteger(s)) {
+      newArr.push(s);
+    }
+  }
+  return newArr;
+}
+
 export const Lobby: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
   const myUserID = myUser?.id;
 
   const [showModal, setShowModal] = useState(false);
-  const [ringsDbId, setRingsDbId] = useState("");
+  const [ringsDbIds, setRingsDbIds] = useState<Array<string>>([]);
   const [ringsDbType, setRingsDbType] = useState("");
   const [typing, setTyping] = useState<Boolean>(false);
   const { isLoading, isError, data, setData } = useDataApi<any>(
@@ -34,10 +49,13 @@ export const Lobby: React.FC = () => {
 
       if (url.includes("ringsdb")) {
         console.log("here")
-        var split_url = url.split( '/' );
-        console.log(split_url);
-        setRingsDbType(split_url[split_url.length - 2])
-        setRingsDbId(split_url[split_url.length - 1])
+        var splitUrl = url.split( '/' );
+        console.log(splitUrl);
+        const ringsdbIndex = splitUrl.findIndex((e) => e === "ringsdb")
+        setRingsDbType(splitUrl[ringsdbIndex + 1])
+        var intArray = splitUrl.slice(ringsdbIndex + 2, splitUrl.length)
+        intArray = filterArrayForPositiveInt(intArray);
+        setRingsDbIds(intArray);
       }
       setShowModal(true);
     }
@@ -123,7 +141,7 @@ export const Lobby: React.FC = () => {
               isOpen={showModal}
               isLoggedIn={isLoggedIn}
               closeModal={() => setShowModal(false)}
-              ringsDbId={ringsDbId}
+              ringsDbIds={ringsDbIds}
               ringsDbType={ringsDbType}
             />
           </div>

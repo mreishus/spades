@@ -29,77 +29,91 @@ export const TopBarMenu = React.memo(({
 
   useEffect(() => {
     console.log(options);
-    if (options["ringsDbId"]) {
-      const ringsDbId = options["ringsDbId"];
-      const ringsDbType = options["ringsDbType"];
-      const urlBase = "https://www.ringsdb.com/api/"
-      const url = ringsDbType === "decklist" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
-      fetch(url)
-      .then(response => response.json())
-      .then((jsonData) => {
-        // jsonData is parsed json object received from url
-        const slots = jsonData.slots;
-        const sideslots = jsonData.sideslots;
-        var loadList = [];
-        var fetches = [];
-        Object.keys(slots).forEach((slot, slotIndex) => {
-          const quantity = slots[slot];
-          const slotUrl = urlBase+"public/card/"+slot+".json"
-          fetches.push(fetch(slotUrl)
-            .then(response => response.json())
-            .then((slotJsonData) => {
-              // jsonData is parsed json object received from url
-              var cardRow = cardDB[slotJsonData.octgnid];
-              if (cardRow && !slotJsonData.name.includes("MotK")) {
-                const type = slotJsonData.type_name;
-                const loadGroupId = (type === "Hero" || type === "Contract") ? playerN+"Play1" : playerN+"Deck";
-                cardRow['loadgroupid'] = loadGroupId;
-                cardRow['discardgroupid'] = sectionToDiscardGroupId(playerN+"Discard",playerN);
-                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
-              }
-            })
-            .catch((error) => {
-              // handle your errors here
-              console.error("Could not find card", slot);
-            })
-          )
+    if (options["ringsDbIds"]) {
+      // Turn off trigger
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["options", "ringsDbIds", null],["options", "ringsDbType", null]]}})
+      // Load ringsdb decks by ids
+      const ringsDbIds = options["ringsDbIds"];
+      const numDecks = ringsDbIds.length;
+      if (numDecks>1 && numDecks<=4) {
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "numPlayers", numDecks]]}});
+        chatBroadcast("game_update", {message: "set the number of players to: " + numDecks});
+      }
+      for (var i=0; i<numDecks; i++) {
+        const playerI = "player"+(i+1);
+        chatBroadcast("game_update",{message: "is loading a deck from RingsDb..."});
+        const ringsDbId = ringsDbIds[i];
+        const ringsDbType = options["ringsDbType"];
+        const urlBase = "https://www.ringsdb.com/api/"
+        const url = ringsDbType === "decklist" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
+        fetch(url)
+        .then(response => response.json())
+        .then((jsonData) => {
+          // jsonData is parsed json object received from url
+          const slots = jsonData.slots;
+          const sideslots = jsonData.sideslots;
+          var loadList = [];
+          var fetches = [];
+          Object.keys(slots).forEach((slot, slotIndex) => {
+            const quantity = slots[slot];
+            const slotUrl = urlBase+"public/card/"+slot+".json"
+            fetches.push(fetch(slotUrl)
+              .then(response => response.json())
+              .then((slotJsonData) => {
+                // jsonData is parsed json object received from url
+                var cardRow = cardDB[slotJsonData.octgnid];
+                if (cardRow && !slotJsonData.name.includes("MotK")) {
+                  const type = slotJsonData.type_name;
+                  const loadGroupId = (type === "Hero" || type === "Contract") ? playerI+"Play1" : playerI+"Deck";
+                  cardRow['loadgroupid'] = loadGroupId;
+                  cardRow['discardgroupid'] = sectionToDiscardGroupId(playerI+"Discard",playerI);
+                  loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+                }
+              })
+              .catch((error) => {
+                // handle your errors here
+                console.error("Could not find card", slot);
+              })
+            )
+          })
+          Object.keys(sideslots).forEach((slot, slotIndex) => {
+            const quantity = slots[slot];
+            const slotUrl = urlBase+"public/card/"+slot+".json"
+            fetches.push(fetch(slotUrl)
+              .then(response => response.json())
+              .then((slotJsonData) => {
+                // jsonData is parsed json object received from url
+                var cardRow = cardDB[slotJsonData.octgnid];
+                if (cardRow) {
+                  const type = slotJsonData.type_name;
+                  const loadGroupId = playerI+"Sideboard";
+                  cardRow['loadgroupid'] = loadGroupId;
+                  cardRow['discardgroupid'] = sectionToDiscardGroupId(playerI+"Discard",playerI);
+                  loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+                }
+              })
+              .catch((error) => {
+                // handle your errors here
+                console.error("Could not find card", slot);
+              })
+            )
+          })
+          Promise.all(fetches).then(function() {
+            // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
+            loadList = processLoadList(loadList, playerI);
+            gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList, for_player_n: playerI}});
+            chatBroadcast("game_update",{message: "loaded a deck."});
+            processPostLoad(loadList, playerI, gameBroadcast, chatBroadcast);
+          });
         })
-        Object.keys(sideslots).forEach((slot, slotIndex) => {
-          const quantity = slots[slot];
-          const slotUrl = urlBase+"public/card/"+slot+".json"
-          fetches.push(fetch(slotUrl)
-            .then(response => response.json())
-            .then((slotJsonData) => {
-              // jsonData is parsed json object received from url
-              var cardRow = cardDB[slotJsonData.octgnid];
-              if (cardRow) {
-                const type = slotJsonData.type_name;
-                const loadGroupId = playerN+"Sideboard";
-                cardRow['loadgroupid'] = loadGroupId;
-                cardRow['discardgroupid'] = sectionToDiscardGroupId(playerN+"Discard",playerN);
-                loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
-              }
-            })
-            .catch((error) => {
-              // handle your errors here
-              console.error("Could not find card", slot);
-            })
-          )
+        .catch((error) => {
+          // handle your errors here
+          alert("Error loading deck. If you are attempting to load an unpublished deck, make sure you have link sharing turned on in your RingsDB profile settings.")
         })
-        Promise.all(fetches).then(function() {
-          // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
-          loadList = processLoadList(loadList, playerN);
-          gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
-          chatBroadcast("game_update",{message: "loaded a deck."});
-          processPostLoad(loadList, playerN, gameBroadcast, chatBroadcast);
-        });
-      })
-      .catch((error) => {
-        // handle your errors here
-        alert("Error loading deck. If you are attempting to load an unpublished deck, make sure you have link sharing turned on in your RingsDB profile settings.")
-      })
-      gameBroadcast("game_action", {action: "update_values", options: {updates: [["options", "ringsDbId", null],["options", "ringsDbType", null]]}})
-    }
+      // Deck loaded
+      }
+      // Loop over decks complete
+    } 
   }, [options]);
 
   const handleMenuClick = (data) => {

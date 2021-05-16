@@ -774,7 +774,7 @@ defmodule DragnCardsGame.GameUI do
         "reset_game" ->
           reset_game(gameui)
         "load_cards" ->
-          load_cards(gameui, player_n, options["load_list"])
+          load_cards(gameui, player_n, options["load_list"], options["for_player_n"])
         "set_seat" ->
           set_seat(gameui, options["user_id"], options["player_n"])
         "target_card_ids" ->
@@ -956,7 +956,8 @@ defmodule DragnCardsGame.GameUI do
     end)
   end
 
-  def load_cards(gameui, player_n, load_list) do
+  def load_cards(gameui, player_n, load_list, for_player_n) do
+    player_n = if for_player_n do for_player_n else player_n end
     # Get deck size before load
     player_n_deck_id = player_n<>"Deck"
     deck_size_before = Enum.count(get_stack_ids(gameui, player_n_deck_id))

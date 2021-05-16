@@ -17,13 +17,13 @@ interface Props {
   isOpen: boolean;
   isLoggedIn: boolean;
   closeModal: () => void;
-  ringsDbId: string;
+  ringsDbIds: Array<string>;
   ringsDbType: string;
 }
 
 ReactModal.setAppElement("#root");
 
-export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModal, ringsDbId, ringsDbType }) => {
+export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModal, ringsDbIds, ringsDbType }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [privacyType, setPrivacyType] = useState(options[0]);
@@ -39,7 +39,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
         privacy_type: privacyType.value,
       },
       game_options: {
-        ringsdb_id: ringsDbId,
+        ringsdb_ids: ringsDbIds,
         ringsdb_type: ringsDbType,
       }
     };
