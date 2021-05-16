@@ -44,9 +44,11 @@ defmodule DragnCardsWeb.API.V1.RegistrationController do
   """
   @spec send_confirmation_email(map(), Conn.t()) :: any()
   def send_confirmation_email(user, conn) do
-    IO.puts("send confirm")
+    IO.puts("send confirmation")
     IO.inspect(user)
     IO.inspect(conn)
+    IO.puts("secret_key_base")
+    IO.inspect(conn.secret_key_base)
     url = confirmation_url(conn, user)
     IO.puts("url")
     IO.inspect(url)
@@ -56,19 +58,14 @@ defmodule DragnCardsWeb.API.V1.RegistrationController do
     email = PowEmailConfirmation.Phoenix.Mailer.email_confirmation(conn, unconfirmed_user, url)
     IO.puts("email")
     IO.inspect(email)
-    a = Pow.Phoenix.Mailer.deliver(conn, email)
-    IO.puts("deliver")
-    IO.inspect(a)
+    Pow.Phoenix.Mailer.deliver(conn, email)
   end
 
   defp confirmation_url(conn, user) do
     token = PowEmailConfirmation.Plug.sign_confirmation_token(conn, user)
     IO.puts("token")
     IO.inspect(token)
-    a = Application.get_env(:dragncards, DragnCardsWeb.Endpoint)[:front_end_email_confirm_url]
+    Application.get_env(:dragncards, DragnCardsWeb.Endpoint)[:front_end_email_confirm_url]
     |> String.replace("{token}", token)
-    IO.puts("env")
-    IO.inspect(a)
-    a
   end
 end
