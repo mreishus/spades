@@ -6,7 +6,12 @@ import store from "../../store";
 import { setGame } from "./gameUiSlice";
 import { processLoadList, processPostLoad } from "./Helpers";
 
-const cardDB = require('../../cardDB/playringsCardDB.json');
+const cardDB_OCTGN = require('../../cardDB/cardDB.json');
+const cardDB_ALeP = require('../../cardDB/cardDB_ALeP.json');
+const cardDB = {
+  ...cardDB_OCTGN,
+  ...cardDB_ALeP
+};
 
 export const TopBarMenu = React.memo(({
     setShowSpawn,

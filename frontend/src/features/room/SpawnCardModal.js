@@ -1,7 +1,12 @@
 import React, {useState} from "react";
 import ReactModal from "react-modal";
 
-const cardDb = require('../../cardDB/playringsCardDB.json');
+const cardDB_OCTGN = require('../../cardDB/cardDB.json');
+const cardDB_ALeP = require('../../cardDB/cardDB_ALeP.json');
+const cardDB = {
+  ...cardDB_OCTGN,
+  ...cardDB_ALeP
+};
 
 export const SpawnCardModal = React.memo(({
     setTyping,
@@ -10,22 +15,24 @@ export const SpawnCardModal = React.memo(({
     chatBroadcast,
 }) => {
 
-    const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDb));
+    const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDB));
 
     const handleSpawnClick = (cardID) => {
-        const cardRow = cardDb[cardID];
+        const cardRow = cardDB[cardID];
         if (!cardRow) return;
+        console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+        console.log(cardRow)
         const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': "sharedStaging"}]
         gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
-        chatBroadcast("game_update", {message: "spawned "+cardRow["sides"]["A"]["printName"]+"."});
+        chatBroadcast("game_update", {message: "spawned "+cardRow["sides"]["A"]["printname"]+"."});
     }
 
     const handleSpawnTyping = (event) => {
         //setSpawnCardName(event.target.value);
         const filteredName = event.target.value;
         const filteredIDs = []; //Object.keys(cardDB);
-        Object.keys(cardDb).map((cardID, index) => {
-          const sideA = cardDb[cardID]["sides"]["A"]
+        Object.keys(cardDB).map((cardID, index) => {
+          const sideA = cardDB[cardID]["sides"]["A"]
           const cardName = sideA["name"];
           if (cardName.toLowerCase().includes(filteredName.toLowerCase())) filteredIDs.push(cardID);
         })
@@ -63,8 +70,8 @@ export const SpawnCardModal = React.memo(({
                 </tr>
               </thead>
               {spawnFilteredIDs.map((cardId, index) => {
-                const card = cardDb[cardId];
-                const sideA = cardDb[cardId]["sides"]["A"];
+                const card = cardDB[cardId];
+                const sideA = cardDB[cardId]["sides"]["A"];
                 const printName = sideA.printname;
                 return(
                   <tr className="bg-gray-600 text-white cursor-pointer hover:bg-gray-500 hover:text-black" onClick={() => handleSpawnClick(cardId)}>
