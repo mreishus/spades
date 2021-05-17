@@ -5,7 +5,7 @@ const cardDB_OCTGN = require('../../cardDB/cardDB.json');
 const cardDB_ALeP = require('../../cardDB/cardDB_ALeP.json');
 const cardDB = {
   ...cardDB_OCTGN,
-  ...cardDB_ALeP
+  ...cardDB_ALeP,
 };
 
 export const SpawnCardModal = React.memo(({
@@ -32,9 +32,15 @@ export const SpawnCardModal = React.memo(({
         const filteredName = event.target.value;
         const filteredIDs = []; //Object.keys(cardDB);
         Object.keys(cardDB).map((cardID, index) => {
-          const sideA = cardDB[cardID]["sides"]["A"]
+          const cardRow = cardDB[cardID]
+          const sideA = cardRow["sides"]["A"]
           const cardName = sideA["name"];
-          if (cardName.toLowerCase().includes(filteredName.toLowerCase())) filteredIDs.push(cardID);
+          const cardPack = cardRow["cardpackname"]
+          if (
+            cardName.toLowerCase().includes(filteredName.toLowerCase()) &&
+            !cardPack.toLowerCase().includes("custom") &&
+            !cardPack.toLowerCase().includes("alep")
+          ) filteredIDs.push(cardID);
         })
         setSpawnFilteredIDs(filteredIDs);
     }
