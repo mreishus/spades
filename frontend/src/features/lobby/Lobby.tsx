@@ -48,7 +48,6 @@ export const Lobby: React.FC = () => {
     if (url.includes("newroom")) {
 
       if (url.includes("ringsdb")) {
-        console.log("here")
         var splitUrl = url.split( '/' );
         console.log(splitUrl);
         const ringsdbIndex = splitUrl.findIndex((e) => e === "ringsdb")

@@ -34,7 +34,6 @@ defmodule DragnCardsUtil.NameGenerator do
       abstracted
       absurd
       abundant
-      abusive
       abysmal
       academic
       acceptable
@@ -6978,7 +6977,6 @@ defmodule DragnCardsUtil.NameGenerator do
       fragrance
       frame
       framework
-      fratricide
       fraud
       fraudster
       freak
@@ -7387,7 +7385,6 @@ defmodule DragnCardsUtil.NameGenerator do
       homeownership
       hometown
       homework
-      homicide
       homogenate
       homonym
       honesty
@@ -10174,10 +10171,8 @@ defmodule DragnCardsUtil.NameGenerator do
       suck
       suede
       suet
-      suffocation
       sugar
       suggestion
-      suicide
       suit
       suitcase
       suite

@@ -77,7 +77,7 @@ export const TopBarMenu = React.memo(({
             )
           })
           Object.keys(sideslots).forEach((slot, slotIndex) => {
-            const quantity = slots[slot];
+            const quantity = sideslots[slot];
             const slotUrl = urlBase+"public/card/"+slot+".json"
             fetches.push(fetch(slotUrl)
               .then(response => response.json())

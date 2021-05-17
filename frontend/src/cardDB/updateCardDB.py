@@ -3,6 +3,7 @@ import unidecode
 import json
 
 url = 'https://spreadsheets.google.com/feeds/list/11fW57D2_3gwOFWomWoEEozKOwKsGpYokwmIF_LIy_tY/oi3rxyc/public/values?alt=json'
+#url = 'https://spreadsheets.google.com/feeds/list/1Qz0P6CG3eDFv9Xi5YSp07AJNVIQFPTwls6mDv0UWgk4/oi3rxyc/public/values?alt=json'
 
 response = requests.get(url)
 response_dict = json.loads(response.text)
@@ -31,5 +32,5 @@ def prettifyGoogleSheetsJSON(data):
     return newDict
 
 cleanDict = prettifyGoogleSheetsJSON(response_dict)
-with open('playringsCardDB.json', 'w') as outfile:
-        json.dump(cleanDict, outfile)
+with open('cardDB_ALeP.json', 'w') as outfile:
+        json.dump(cleanDict, outfile, indent=4)
