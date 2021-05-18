@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, RouteComponentProps } from "react-router-dom";
+import { useClearCache } from 'react-clear-cache';
 import Container from "../../components/basic/Container";
 
 import useDataApi from "../../hooks/useDataApi";
@@ -14,6 +15,8 @@ export const ConfirmEmail: React.FC<Props> = ({ match }) => {
     params: { confirm_token },
   } = match;
 
+  const { isLatestVersion, emptyCacheStorage } = useClearCache();
+
   // TODO: make useDataApi check for specific error messages
   // coming from the API, the way the login post does.
   const { isLoading, isError, data } = useDataApi<any>(
@@ -22,6 +25,13 @@ export const ConfirmEmail: React.FC<Props> = ({ match }) => {
   );
 
   const isConfirmed = data != null && data.success != null;
+
+  useEffect(() => {
+    if (isConfirmed) {
+      console.log("Email confirmed, clearing cache.");
+      emptyCacheStorage();
+    }
+  }, [isConfirmed]);
 
   return (
     <Container>
