@@ -4,6 +4,9 @@ import { Group } from "./Group";
 import { Browse } from "./Browse";
 import { CARDSCALE, LAYOUTINFO } from "./Constants";
 import Chat from "../chat/Chat";
+import { handleBrowseTopN } from "./HandleBrowseTopN"; 
+
+var delayBroadcast;
 
 export const TableRegion = React.memo(({
   region,
@@ -64,10 +67,28 @@ export const TableLayout = React.memo(({
   console.log("Rendering TableLayout");
   const numPlayersStore = state => state.gameUi.game.numPlayers;
   const numPlayers = useSelector(numPlayersStore);
+  const groupByIdStore = state => state.gameUi.game.groupById;
+  const groupById = useSelector(groupByIdStore);
   const layoutStore = state => state.gameUi?.game?.layout;
   const layout = useSelector(layoutStore);
   const [chatHover, setChatHover] = useState(false);
   if (!layout) return;
+
+  const handleBrowseClick = (groupId) => {
+    handleBrowseTopN("All", groupById[groupId], playerN, gameBroadcast, chatBroadcast, setBrowseGroupId, setBrowseGroupTopN);
+  }
+  const handleStartChatHover = () => {
+    if (delayBroadcast) clearTimeout(delayBroadcast);
+    delayBroadcast = setTimeout(function() {
+        setChatHover(true);
+    }, 500);
+  }
+  const handleStopChatHover = () => {
+    if (delayBroadcast) clearTimeout(delayBroadcast);
+    setChatHover(false);
+  }
+
+  const quickViewClassName = "bg-gray-800 hover:bg-gray-600 h-1/4 w-full p-1 cursor-default"
   const layoutInfo = LAYOUTINFO["layout" + numPlayers + layout];
   const numRows = layoutInfo.length;
   const rowHeight = `${100/numRows}%`; 
@@ -112,14 +133,35 @@ export const TableLayout = React.memo(({
                 registerDivToArrowsContext={registerDivToArrowsContext}
               />
             ))}
+            {/* Add buttons and chat to bottom right */}
             {(rowIndex === numRows - 1) &&
-              <div 
-                className="absolute overflow-hidden" 
-                style={{height: chatHover ? `${numRows*100}%` : `100%`, width: "25%", right: "0", bottom: "0", opacity: 0.7, zIndex: 1e6}}
-                onMouseEnter={() => setChatHover(true)}
-                onMouseLeave={() => setChatHover(false)}
-              >
-                <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
+              <div className="absolute right-0 bottom-0 h-full w-1/4">
+                <div className="h-full text-xs text-center text-gray-400" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)"}}>
+                  <div className={quickViewClassName} onClick={() => handleBrowseClick("sharedSetAside")}>
+                    <div>SA</div>
+                    <div>{groupById["sharedSetAside"].stackIds.length}</div>
+                  </div>
+                  <div className={quickViewClassName} onClick={() => handleBrowseClick(observingPlayerN+"Sideboard")}>
+                    <div>SB</div>
+                    <div>{groupById[observingPlayerN+"Sideboard"]?.stackIds.length}</div>
+                  </div>
+                  <div className={quickViewClassName} onClick={() => handleBrowseClick("sharedQuestDeck")}>
+                    <div>QD</div>
+                    <div>{groupById["sharedQuestDeck"].stackIds.length}</div>
+                  </div>
+                  <div className={quickViewClassName} onClick={() => handleBrowseClick("sharedEncounterDeck2")}>
+                    <div>ED</div>
+                    <div>{groupById["sharedEncounterDeck2"].stackIds.length}</div>
+                  </div>
+                </div>
+                <div 
+                  className="absolute bottom-0 right-0" 
+                  style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'calc(100% - 30px)', opacity: 0.7, zIndex: 1e6}}
+                  onMouseEnter={() => handleStartChatHover()}
+                  onMouseLeave={() => handleStopChatHover()}
+                >
+                  <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
+                </div>
               </div>
             }
           </div>

@@ -90,14 +90,12 @@ export const DragContainer = React.memo(({
         // Flip card faceup
         const updates = [["game","cardById",topOfOrigStackCardId,"currentSide", "A"]];
         dispatch(setValues({updates: updates}));
-      }
-      else {
+      } else {
         chatBroadcast("game_update",{message: "attached "+getDisplayName(topOfOrigStackCard)+" from "+GROUPSINFO[origGroupId].name+" to "+getDisplayName(topOfDestStackCard)+" in "+GROUPSINFO[destGroupId].name+"."});
       }
       dispatch(setStackIds(newOrigGroup));
       dispatch(setCardIds(newDestStack));
       gameBroadcast("game_action", {action:"move_stack", options:{stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: true, preserve_state: keypress["Shift"]}})
-      
       return;
     }
 
@@ -131,7 +129,7 @@ export const DragContainer = React.memo(({
       chatBroadcast("game_update",{message: "moved "+getDisplayName(topOfOrigStackCard)+" from "+origGroupTitle+" to "+destGroupTitle+"."});
     }
     dispatch(setGroupById(newGroupById));
-    gameBroadcast("game_action", {action:"move_stack", options:{stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: keypress["Shift"]}})
+    gameBroadcast("game_action", {action:"move_stack", options:{stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: (keypress["Shift"] || destGroupId === origGroupId)}})
   }
 
   return(
