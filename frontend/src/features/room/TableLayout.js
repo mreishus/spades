@@ -159,9 +159,9 @@ export const TableLayout = React.memo(({
                     <div>QD</div>
                     <div>{groupById["sharedQuestDeck"].stackIds.length}</div>
                   </div>
-                  <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick("sharedEncounterDeck2")}>
-                    <div>ED</div>
-                    <div>{groupById["sharedEncounterDeck2"].stackIds.length}</div>
+                  <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick("sharedVictory")}>
+                    <div>VD</div>
+                    <div>{groupById["sharedVictory"].stackIds.length}</div>
                   </div>
                 </div>
               </div>
