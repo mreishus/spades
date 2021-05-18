@@ -48,7 +48,7 @@ export const Group = React.memo(({
     <div className="h-full w-full">
       {hideTitle ? null :
         <div
-          className="relative text-center h-full text-white float-left select-none opacity-40"
+          className="relative text-center h-full float-left select-none text-gray-500"
           style={{width:"15px", writingMode:"vertical-rl"}} 
         >
           {group.type === "play" ? 
@@ -56,9 +56,9 @@ export const Group = React.memo(({
               {GROUPSINFO[group.id].tablename}
             </div>
           :
-            <div>
-              <FontAwesomeIcon onClick={handleEyeClick}  className="text-white mb-2 pl-1" icon={faEye}/>
-              <FontAwesomeIcon onClick={handleBarsClick}  className="text-white mb-2 pl-1" icon={faBars}/>
+            <div className="w-full h-full">
+              <FontAwesomeIcon onClick={handleEyeClick}  className="hover:text-white mb-2 pl-1" icon={faEye}/>
+              <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white mb-2 pl-1" icon={faBars}/>
               <span className="mt-1">{GROUPSINFO[group.id].tablename}</span>
             </div>
           }

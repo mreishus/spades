@@ -13,7 +13,7 @@ const Container = styled.div`
   -moz-transition: all 0.2s;
   -o-transition: all 0.2s;
   transition: all 0.2s;
-  padding: 0 0 0 0;
+  padding-left: 0px;
   height: 100%;
   user-select: none;
   overflow-x: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "none" : "auto"};
