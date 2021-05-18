@@ -6,7 +6,7 @@
                 "printname": "Children of Eorl",
                 "unique": "",
                 "type": "Presentation",
-                "sphere": "Purple",
+                "sphere": "",
                 "traits": "",
                 "keywords": "",
                 "cost": "",
@@ -22,8 +22,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -47,7 +47,7 @@
         "cardid": "a674bcf7-1cf7-4afd-be9c-8416aeac3fbc",
         "cardnumber": "0.1",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "Children of Eorl"
     },
     "c8fc048c-819a-443f-ab69-44ef26e2b0eb": {
         "sides": {
@@ -72,8 +72,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -122,8 +122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -172,8 +172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -222,8 +222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -272,8 +272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -322,8 +322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -372,8 +372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -422,8 +422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -472,8 +472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -522,8 +522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -572,8 +572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -622,8 +622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -672,8 +672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -722,8 +722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -772,8 +772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -822,8 +822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -872,8 +872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -922,8 +922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -972,8 +972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1022,8 +1022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1072,8 +1072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1122,8 +1122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1172,8 +1172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1222,8 +1222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1272,8 +1272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1322,8 +1322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1372,8 +1372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1422,8 +1422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1472,8 +1472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1522,8 +1522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1572,8 +1572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1622,8 +1622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1672,8 +1672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1722,8 +1722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1772,8 +1772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1822,8 +1822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1872,8 +1872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1922,8 +1922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -1972,8 +1972,8 @@
                 "shadow": "Shadow: If the active location is vast, deal 1 damage to the defending character."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2022,8 +2022,8 @@
                 "shadow": "Shadow: If the active location is vast, the attacking enemy makes an additional attack after this one."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2072,8 +2072,8 @@
                 "shadow": "Shadow: If the active location is vast, discard 1 attachment from the defending character."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2122,8 +2122,8 @@
                 "shadow": "Shadow: If the active location is vast, raise your threat by 2."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2172,8 +2172,8 @@
                 "shadow": "Shadow: If the active location is vast, the defending character cannot ready until the end of the round."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2222,8 +2222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2272,8 +2272,8 @@
                 "shadow": "Shadow: Exhaust a character you control."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2322,8 +2322,8 @@
                 "shadow": "Shadow: After this attack, deal X damage to the defending character. X is 1 less than the character's remaining hit points."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2372,8 +2372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2422,8 +2422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2472,8 +2472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2522,8 +2522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2572,8 +2572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2622,8 +2622,8 @@
                 "shadow": "Shadow: Attacking enemy cannot take damage until the end of the round."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2672,8 +2672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2722,8 +2722,8 @@
                 "shadow": "Shadow: Exhaust a character you control with 3 or more [attack]."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2772,8 +2772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2822,8 +2822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2872,8 +2872,8 @@
                 "shadow": "Shadow: Return attacking enemy to the staging area after this attack."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2922,8 +2922,8 @@
                 "shadow": "Shadow: If attacking enemy is in the staging area, it makes an additional attack after this one."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -2972,8 +2972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3022,8 +3022,8 @@
                 "shadow": "Shadow: Raise your threat by 2."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3072,8 +3072,8 @@
                 "shadow": "Shadow: Deal 2 damage among characters you control."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3122,8 +3122,8 @@
                 "shadow": "Shadow: Either discard an attachment you control or raise your threat by 3."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3172,8 +3172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3222,8 +3222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3272,8 +3272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3322,8 +3322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3372,8 +3372,8 @@
                 "shadow": "Shadow: Add the top 2 cards of your deck to the attacking enemy's loot pile."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3422,8 +3422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3472,8 +3472,8 @@
                 "shadow": "Shadow: If this attack deals damage, add the top card of your deck to attacking enemy's loot pile."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3522,8 +3522,8 @@
                 "shadow": "Shadow: If this attack destroys a character, attacking enemy makes an additional attack."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3572,8 +3572,8 @@
                 "shadow": "Shadow: Raise your threat by 1 for each card in the attacking enemy's loot pile."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3622,8 +3622,8 @@
                 "shadow": "Shadow: Attacking enemy gets +X [attack], where X is the number of different spheres among cards in its loot pile."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3672,8 +3672,8 @@
                 "shadow": "Shadow: If attacking enemy is non-unique, return it to the staging area after this attack."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3722,8 +3722,8 @@
                 "shadow": "Shadow: After this attack, attacking enemy engages the next player and makes an immediate attack."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3772,8 +3772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3822,8 +3822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3872,8 +3872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3922,8 +3922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -3972,8 +3972,8 @@
                 "shadow": "Shadow: Any damage dealt to the defending character by this attack is instead dealt to Erelas Beacon."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4022,8 +4022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4072,8 +4072,8 @@
                 "shadow": "Shadow: Either discard 2 attachments you control or deal 1 damage to Erelas Beacon."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4122,8 +4122,8 @@
                 "shadow": "Shadow: Either discard all resources from each hero you control or deal 1 damage to Erelas Beacon."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4172,8 +4172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4222,8 +4222,8 @@
                 "shadow": "Shadow: Either attacking enemy gets +3 [attack] or deal 1 damage to Erelas Beacon. "
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4272,8 +4272,8 @@
                 "shadow": "Shadow: After this attack, either discard the defending character or deal 1 damage to Erelas Beacon."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4322,8 +4322,8 @@
                 "shadow": "Shadow: Either the attacking enemy makes an additional attack or deal 1 damage to Erelas Beacon."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4372,8 +4372,8 @@
                 "shadow": "Shadow: Either raise your threat by 4 or deal 1 damage to Erelas Beacon."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4472,8 +4472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4522,8 +4522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4572,8 +4572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4622,8 +4622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4672,8 +4672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4722,8 +4722,8 @@
                 "shadow": "Shadow: If you control a [bi]Mount[/bi] objective, either attach it to the attacking enemy as a guarded objective or discard the defending character after this attack resolves."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4772,8 +4772,8 @@
                 "shadow": "Shadow: Attacking enemy gets +1 [attack] for each [bi]Mount[/bi] objective the players control."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4822,8 +4822,8 @@
                 "shadow": "Shadow: Put Bridle-biter into play engaged with you and deal it a shadow card."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4872,8 +4872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4922,8 +4922,8 @@
                 "shadow": "Shadow: Raise your threat by 1 for each [bi]Mount[/bi] objective you control."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -4972,8 +4972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5022,8 +5022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5072,8 +5072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5122,8 +5122,8 @@
                 "shadow": "Shadow: Discard 1 random card from your hand."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5647,7 +5647,7 @@
         "cardid": "06d215a9-7d53-4882-a25a-6fff7880bff8",
         "cardnumber": "999",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Horse Lord's Ire"
     },
     "fc0ed013-95d9-46e3-bd98-6d6b41a8c559": {
         "sides": {
@@ -5672,8 +5672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5697,7 +5697,7 @@
         "cardid": "fc0ed013-95d9-46e3-bd98-6d6b41a8c559",
         "cardnumber": "0.1",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Aldburg Plot"
     },
     "b2b0edb1-5ea7-4a4e-9495-6a084fee744f": {
         "sides": {
@@ -5722,8 +5722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5772,8 +5772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5822,8 +5822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5872,8 +5872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5922,8 +5922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -5972,8 +5972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6022,8 +6022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6072,8 +6072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6122,8 +6122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6172,8 +6172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6222,8 +6222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6272,8 +6272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6322,8 +6322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6372,8 +6372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6422,8 +6422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6472,8 +6472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6522,8 +6522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6722,8 +6722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6772,8 +6772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6822,8 +6822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6872,8 +6872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6922,8 +6922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -6972,8 +6972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7422,8 +7422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7472,8 +7472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7522,8 +7522,8 @@
                 "shadow": "Shadow: If the players control 2 or more [bi]Clue[/bi] objectives, return attacking enemy to the staging area after this attack."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7572,8 +7572,8 @@
                 "shadow": "Shadow: Discard one non-[bi]Clue[/bi] attachment you control."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7622,8 +7622,8 @@
                 "shadow": "Shadow: Attacking enemy gets +1 [attack] (+2 [attack] instead if defending character has a [bi]Clue[/bi] attachment)."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7672,8 +7672,8 @@
                 "shadow": "Shadow: Discard 1 resource from a hero you control."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7722,8 +7722,8 @@
                 "shadow": "Shadow: Attacking enemy gets +1 [attack] (+2 [attack] instead if this enemy is attacking from the staging area)"
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7772,8 +7772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7822,8 +7822,8 @@
                 "shadow": "Shadow: Resolve this card's \"when revealed\" effect."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7897,7 +7897,7 @@
         "cardid": "bdb06de0-5138-4d47-9cc5-1031f393853c",
         "cardnumber": "999",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Aldburg Plot"
     },
     "c17a232f-8e2b-4347-b540-2a7a7fbd4a4b": {
         "sides": {
@@ -7922,8 +7922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -7947,7 +7947,7 @@
         "cardid": "c17a232f-8e2b-4347-b540-2a7a7fbd4a4b",
         "cardnumber": "0.1",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "Fire on the Eastemnet"
     },
     "69f4985c-33b2-4526-b750-aa3b64335dfb": {
         "sides": {
@@ -7972,8 +7972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8022,8 +8022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8072,8 +8072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8122,8 +8122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8172,8 +8172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8222,8 +8222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8272,8 +8272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8322,8 +8322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8372,8 +8372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8422,8 +8422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8472,8 +8472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8522,8 +8522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8572,8 +8572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8622,8 +8622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8672,8 +8672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8722,8 +8722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8772,8 +8772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8822,8 +8822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8872,8 +8872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8922,8 +8922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -8972,8 +8972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9172,8 +9172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9222,8 +9222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9272,8 +9272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9322,8 +9322,8 @@
                 "shadow": "Shadow: Attacking enemy cannot take damage until the end of the phase."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9372,8 +9372,8 @@
                 "shadow": "Shadow: Return the attacking enemy to the staging area after this attack."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9422,8 +9422,8 @@
                 "shadow": "Shadow: Move a steed from the active location to the attacking enemy."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9472,8 +9472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9522,8 +9522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9572,8 +9572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9622,8 +9622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9672,8 +9672,8 @@
                 "shadow": "Shadow: The attacking enemy captures its steeds. Move a steed from Wild Steeds to that enemy."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9722,8 +9722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9772,8 +9772,8 @@
                 "shadow": "Shadow: Attacking enemy gets +1 [attack] (+2 [attack] instead if there are more Wild Steeds than Captured Steeds)."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9822,8 +9822,8 @@
                 "shadow": "Shadow: Deal 1 damage to the defending character. "
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9872,8 +9872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9922,8 +9922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -9997,7 +9997,7 @@
         "cardid": "5cc28e3a-513f-4490-aac5-86b55135bcfa",
         "cardnumber": "999",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "Fire on the Eastemnet"
     },
     "4b04fef3-d4ed-4124-85c3-4b55664b2720": {
         "sides": {
@@ -10022,8 +10022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10047,7 +10047,7 @@
         "cardid": "4b04fef3-d4ed-4124-85c3-4b55664b2720",
         "cardnumber": "0.1",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Gap of Rohan"
     },
     "980ca6a0-0bd3-45c0-b4c9-24e217339611": {
         "sides": {
@@ -10072,8 +10072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10122,8 +10122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10172,8 +10172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10222,8 +10222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10272,8 +10272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10322,8 +10322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10372,8 +10372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10422,8 +10422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10472,8 +10472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10522,8 +10522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10572,8 +10572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10622,8 +10622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10672,8 +10672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10722,8 +10722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10772,8 +10772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10822,8 +10822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10872,8 +10872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10922,8 +10922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -10972,8 +10972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11022,8 +11022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11322,8 +11322,8 @@
                 "shadow": "Shadow: Attacking enemy gets +1 [attack] for this attack (+3 [attack] instead if you control 7 or more exhausted characters)."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11372,8 +11372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11422,8 +11422,8 @@
                 "shadow": "Shadow: This attack is considered undefended. The damage from this attack may be distributed among heroes you control."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11472,8 +11472,8 @@
                 "shadow": "Shadow: Add Snow Bank to the staging area."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11522,8 +11522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11572,8 +11572,8 @@
                 "shadow": "Shadow: Remove all progress tokens from the main quest."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11622,8 +11622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11672,8 +11672,8 @@
                 "shadow": "Shadow: Search the encounter discard pile for 1 copy of Snow Bank and add it to the staging area."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11722,8 +11722,8 @@
                 "shadow": "Shadow: Treat the text box of each attachment you control as if it were blank (except for [bi]Traits[/bi]) until the end of the round."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11772,8 +11772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11822,8 +11822,8 @@
                 "shadow": "Shadow: Attacking enemy gets +X [attack] where X is the number of copies of Snow Bank in the encounter discard pile."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11872,8 +11872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11947,7 +11947,7 @@
         "cardid": "8d2596ca-4d6b-46a9-a25b-b8ac6588ca63",
         "cardnumber": "999",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Gap of Rohan"
     },
     "dac8ad9b-da4a-4a71-a6f0-37f68f209a1c": {
         "sides": {
@@ -11972,8 +11972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -11997,7 +11997,7 @@
         "cardid": "dac8ad9b-da4a-4a71-a6f0-37f68f209a1c",
         "cardnumber": "0.1",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Glittering Caves"
     },
     "0a2793ce-6229-4d4d-b29f-4409bf57e322": {
         "sides": {
@@ -12022,8 +12022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12072,8 +12072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12122,8 +12122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12172,8 +12172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12222,8 +12222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12272,8 +12272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12322,8 +12322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12372,8 +12372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12422,8 +12422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12472,8 +12472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12522,8 +12522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12572,8 +12572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12622,8 +12622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12672,8 +12672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12722,8 +12722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12772,8 +12772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12822,8 +12822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12872,8 +12872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12922,8 +12922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -12972,8 +12972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13022,8 +13022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "Search the Caves",
-                "printname": "Search the Caves",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "Quest",
                 "sphere": "",
@@ -13072,8 +13072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13122,8 +13122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13172,8 +13172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13222,8 +13222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13272,8 +13272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13322,8 +13322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13372,8 +13372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13422,8 +13422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13472,8 +13472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13522,8 +13522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13572,8 +13572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13622,8 +13622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13672,8 +13672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13722,8 +13722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13772,8 +13772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13822,8 +13822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13872,8 +13872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13922,8 +13922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -13972,8 +13972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14022,8 +14022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14072,8 +14072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14122,8 +14122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14172,8 +14172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14222,8 +14222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14272,8 +14272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14322,8 +14322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14372,8 +14372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14422,8 +14422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14472,8 +14472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14522,8 +14522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14572,8 +14572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14647,7 +14647,7 @@
         "cardid": "2b2b50ad-52af-4d8c-9445-259603f978bd",
         "cardnumber": "999",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Glittering Caves"
     },
     "0d2fb94c-b87f-4cd9-847b-c599374f0f13": {
         "sides": {
@@ -14672,8 +14672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14697,7 +14697,7 @@
         "cardid": "0d2fb94c-b87f-4cd9-847b-c599374f0f13",
         "cardnumber": "0.1",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "Mustering of the Rohirrim"
     },
     "aa0ec615-f036-496f-af1f-ed67a56c6ae7": {
         "sides": {
@@ -14722,8 +14722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14772,8 +14772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14822,8 +14822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14872,8 +14872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14922,8 +14922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -14972,8 +14972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15022,8 +15022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15072,8 +15072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15122,8 +15122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15222,8 +15222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15272,8 +15272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15322,8 +15322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15372,8 +15372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15422,8 +15422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15472,8 +15472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15522,8 +15522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15572,8 +15572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15622,8 +15622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15672,8 +15672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -15972,8 +15972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16022,8 +16022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16072,8 +16072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16122,8 +16122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16172,8 +16172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16222,8 +16222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16272,8 +16272,8 @@
                 "shadow": "Shadow: Reveal Cutthroat's Strike. Attacking enemy gets +1 Attack."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16322,8 +16322,8 @@
                 "shadow": "Shadow: Add a damage token to Massing at the Isen."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16372,8 +16372,8 @@
                 "shadow": "Shadow: Attacking enemy gets +1 [attack] for each exhausted hero controlled by the defending player."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16422,8 +16422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16472,8 +16472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16522,8 +16522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16572,8 +16572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16647,7 +16647,7 @@
         "cardid": "45cba0c7-ddef-474b-b822-1a19a178825c",
         "cardnumber": "999",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "Mustering of the Rohirrim"
     },
     "31b909b4-264d-4f18-b96b-df0762f869ae": {
         "sides": {
@@ -16672,8 +16672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16697,7 +16697,7 @@
         "cardid": "31b909b4-264d-4f18-b96b-df0762f869ae",
         "cardnumber": "0.1",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "Blood in the Isen"
     },
     "8f5e1701-9e6c-429e-bca3-a36108aaf9b5": {
         "sides": {
@@ -16722,8 +16722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16772,8 +16772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16822,8 +16822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16872,8 +16872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16922,8 +16922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -16972,8 +16972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17022,8 +17022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17072,8 +17072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17122,8 +17122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17172,8 +17172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17222,8 +17222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17272,8 +17272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17322,8 +17322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17372,8 +17372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17422,8 +17422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17472,8 +17472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17522,8 +17522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17572,8 +17572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17622,8 +17622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17672,8 +17672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17722,8 +17722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -17972,8 +17972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18022,8 +18022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18072,8 +18072,8 @@
                 "shadow": "Shadow: This enemy cannot take damage until the end of the round."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18122,8 +18122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18172,8 +18172,8 @@
                 "shadow": "Shadow: Attacking enemy gets +X [attack]. Where X is the printed cost of the highest cost card you control."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18222,8 +18222,8 @@
                 "shadow": "Shadow: Discard the attachment from the defending character with the highest printed cost."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18272,8 +18272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18322,8 +18322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18372,8 +18372,8 @@
                 "shadow": "Shadow: After this attack, raise your threat by X, where X is the damage dealt by this attack."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18422,8 +18422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18472,8 +18472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18522,8 +18522,8 @@
                 "shadow": "Shadow: Either remove one resource token from Fords of Isen or this enemy makes an additional attack after this one."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18572,8 +18572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18622,8 +18622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18697,7 +18697,7 @@
         "cardid": "3df82593-6fcd-465b-bfc2-fd81082aa4fd",
         "cardnumber": "999",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "Blood in the Isen"
     },
     "7b403c74-1d8d-42ff-b6fe-a2cb63c506df": {
         "sides": {
@@ -18722,8 +18722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18747,7 +18747,7 @@
         "cardid": "7b403c74-1d8d-42ff-b6fe-a2cb63c506df",
         "cardnumber": "0.1",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Scouring of the Shire"
     },
     "b0d6c658-9687-45db-a7aa-daa84045af1e": {
         "sides": {
@@ -18772,8 +18772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18822,8 +18822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18872,8 +18872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18922,8 +18922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -18972,8 +18972,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19022,8 +19022,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19072,8 +19072,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19122,8 +19122,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19172,8 +19172,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19222,8 +19222,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19272,8 +19272,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19322,8 +19322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19372,8 +19372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19422,8 +19422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19472,8 +19472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "player",
+                "printname": "player",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19522,8 +19522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19572,8 +19572,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19622,8 +19622,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19672,8 +19672,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19722,8 +19722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19772,8 +19772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19822,8 +19822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19872,8 +19872,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -19922,8 +19922,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20322,8 +20322,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20372,8 +20372,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20422,8 +20422,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20472,8 +20472,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20522,8 +20522,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20572,8 +20572,8 @@
                 "shadow": "Shadow: If your threat is higher than the attacking enemy's engagement cost, the attacking enemy gets +2 [attack]."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20622,8 +20622,8 @@
                 "shadow": "Shadow: If your threat is higher than the attacking enemy's engagement cost, the attacking enemy gets +2 [attack]."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20672,8 +20672,8 @@
                 "shadow": "Shadow: If the attacking enemy is a [bi]Ruffian[/bi], it makes an additional attack. The defending player may discard an ally to cancel this effect."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20722,8 +20722,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20772,8 +20772,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20822,8 +20822,8 @@
                 "shadow": ""
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20872,8 +20872,8 @@
                 "shadow": "Shadow: After this attack, if the defending character was not damaged by the attack, deal 2 damage to it."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20922,8 +20922,8 @@
                 "shadow": "Shadow: Deal 1 damage to the defending character."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -20972,8 +20972,8 @@
                 "shadow": "Shadow: Raise your threat by 1."
             },
             "B": {
-                "name": "",
-                "printname": "",
+                "name": "encounter",
+                "printname": "encounter",
                 "unique": "",
                 "type": "",
                 "sphere": "",
@@ -21297,6 +21297,6 @@
         "cardid": "e3697dd4-c139-429e-836e-c4bce6ae2443",
         "cardnumber": "999",
         "cardquantity": "1",
-        "cardencounterset": ""
+        "cardencounterset": "The Scouring of the Shire"
     }
 }
