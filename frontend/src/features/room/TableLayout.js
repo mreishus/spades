@@ -88,7 +88,8 @@ export const TableLayout = React.memo(({
     setChatHover(false);
   }
 
-  const quickViewClassName = "bg-gray-800 hover:bg-gray-600 h-1/4 w-full p-1 cursor-default"
+  const quickViewClassName = "bg-gray-800 hover:bg-gray-600 w-full p-1 cursor-default"
+  const quickViewStyle = {height: "25%"}
   const layoutInfo = LAYOUTINFO["layout" + numPlayers + layout];
   const numRows = layoutInfo.length;
   const rowHeight = `${100/numRows}%`; 
@@ -136,7 +137,7 @@ export const TableLayout = React.memo(({
             ))}
             {/* Add buttons and chat to bottom right */}
             {(rowIndex === numRows - 1) &&
-              <div className="absolute right-0 bottom-0 h-full w-1/4">
+              <div className="absolute right-0 bottom-0 h-full" style={{width:"25%"}}>
                 <div 
                   className="absolute bottom-0 right-0" 
                   style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'100%', paddingLeft:"30px", opacity: 0.7, zIndex: 1e6}}
@@ -145,20 +146,20 @@ export const TableLayout = React.memo(({
                 >
                   <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
                 </div>
-                <div className="absolute h-full text-xs text-center text-gray-400" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
-                  <div className={quickViewClassName} onClick={() => handleBrowseClick("sharedSetAside")}>
+                <div className="absolute h-full text-xs text-center text-gray-400 left-0" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
+                  <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick("sharedSetAside")}>
                     <div>SA</div>
                     <div>{groupById["sharedSetAside"].stackIds.length}</div>
                   </div>
-                  <div className={quickViewClassName} onClick={() => handleBrowseClick(observingPlayerN+"Sideboard")}>
+                  <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick(observingPlayerN+"Sideboard")}>
                     <div>SB</div>
                     <div>{groupById[observingPlayerN+"Sideboard"]?.stackIds.length}</div>
                   </div>
-                  <div className={quickViewClassName} onClick={() => handleBrowseClick("sharedQuestDeck")}>
+                  <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick("sharedQuestDeck")}>
                     <div>QD</div>
                     <div>{groupById["sharedQuestDeck"].stackIds.length}</div>
                   </div>
-                  <div className={quickViewClassName} onClick={() => handleBrowseClick("sharedEncounterDeck2")}>
+                  <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick("sharedEncounterDeck2")}>
                     <div>ED</div>
                     <div>{groupById["sharedEncounterDeck2"].stackIds.length}</div>
                   </div>
