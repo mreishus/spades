@@ -20,8 +20,6 @@ export const SpawnCardModal = React.memo(({
     const handleSpawnClick = (cardID) => {
         const cardRow = cardDB[cardID];
         if (!cardRow) return;
-        console.log("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-        console.log(cardRow)
         const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': "sharedStaging"}]
         gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
         chatBroadcast("game_update", {message: "spawned "+cardRow["sides"]["A"]["printname"]+"."});

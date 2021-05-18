@@ -49,7 +49,7 @@ export const TopBarMenu = React.memo(({
         chatBroadcast("game_update",{message: "is loading a deck from RingsDb..."});
         const ringsDbId = ringsDbIds[i];
         const ringsDbType = options["ringsDbType"];
-        const urlBase = "https://www.ringsdb.com/api/"
+        const urlBase = options["ringsDbDomain"] === "test" && 0 ? "https://www.test.ringsdb.com/api/" : "https://www.ringsdb.com/api/"
         const url = ringsDbType === "decklist" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
         fetch(url)
         .then(response => response.json())
@@ -131,6 +131,30 @@ export const TopBarMenu = React.memo(({
       chatBroadcast("game_update", {message: "reset the game."});
     } else if (data.action === "load_deck") {
       loadFileDeck();
+    } else if (data.action === "unload_my_deck") {
+      // Delete all cards you own
+      chatBroadcast("game_update",{message: "unloaded their deck."});
+      gameBroadcast("game_action", {
+        action: "action_on_matching_cards", 
+        options: {
+            criteria:[["owner", playerN]], 
+            action: "delete_card", 
+        }
+      });
+      // Set threat to 00
+      chatBroadcast("game_update",{message: "reset their deck."});
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", 0]]}});
+
+    } else if (data.action === "unload_encounter_deck") {
+      // Delete all cards from encounter
+      chatBroadcast("game_update",{message: "unloaded the encounter deck."});
+      gameBroadcast("game_action", {
+        action: "action_on_matching_cards", 
+        options: {
+            criteria:[["owner", "shared"]], 
+            action: "delete_card", 
+        }
+      });
     } else if (data.action === "spawn_card") {
       setShowSpawn(true);
     } else if (data.action === "download") {
@@ -291,6 +315,8 @@ export const TopBarMenu = React.memo(({
         </li>
         <li key={"download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
         <li key={"spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn card</a></li>
+        <li key={"unload_my_deck"}><a  onClick={() => handleMenuClick({action:"unload_my_deck"})} href="#">Unload my deck</a></li>
+        <li key={"unload_encounter_deck"}><a  onClick={() => handleMenuClick({action:"unload_encounter_deck"})} href="#">Unload encounter</a></li>
         <li key={"reset"}>
             <a href="#">Reset Game</a>
             <ul className="third-level-menu">

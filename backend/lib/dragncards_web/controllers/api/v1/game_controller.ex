@@ -16,6 +16,7 @@ defmodule DragnCardsWeb.API.V1.GameController do
       "privacyType" => _params["room"]["privacy_type"],
       "ringsDbIds" => _params["game_options"]["ringsdb_ids"],
       "ringsDbType" => _params["game_options"]["ringsdb_type"],
+      "ringsDbDomain" => _params["game_options"]["ringsdb_domain"],
     }
     IO.puts("options")
     IO.inspect(options)

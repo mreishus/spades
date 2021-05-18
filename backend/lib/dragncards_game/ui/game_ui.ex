@@ -237,6 +237,8 @@ defmodule DragnCardsGame.GameUI do
         increment_token(gameui, card_id, options["token_type"], options["increment"])
       "apply_tokens_per_round" ->
         apply_tokens_per_round(gameui, card_id)
+      "delete_card" ->
+        delete_card(gameui, card_id)
       _ ->
         gameui
     end
@@ -282,7 +284,7 @@ defmodule DragnCardsGame.GameUI do
     dest_stack = get_stack_by_index(gameui, dest_group_id, dest_stack_index)
     # Update gameui
     gameui
-    |> remove_from_stack(orig_stack["id"], card_id)
+    |> remove_from_stack(card_id)
     |> add_to_stack(dest_stack["id"], card_id, dest_card_index)
     |> update_card_state(card["id"], preserve_state, orig_group_id)
   end
@@ -433,6 +435,33 @@ defmodule DragnCardsGame.GameUI do
     end
   end
 
+  # Delete card from game
+  def delete_card(gameui, card_id) do
+    IO.puts("deleting card")
+    gameui
+    |> delete_card_from_card_by_id(card_id)
+    |> remove_from_stack(card_id)
+  end
+
+  def delete_card_from_card_by_id(gameui, card_id) do
+    old_card_by_id = gameui["game"]["cardById"]
+    new_card_by_id = Map.delete(old_card_by_id, card_id)
+    put_in(gameui["game"]["cardById"], new_card_by_id)
+  end
+
+  # Removes a card from a stack, but is stays in cardById
+  def remove_from_stack(gameui, card_id) do
+    IO.puts("remove from stack")
+    stack_id = get_stack_by_card_id(gameui, card_id)["id"]
+    old_card_ids = get_card_ids(gameui, stack_id)
+    card_index = get_card_index_by_card_id(gameui, card_id)
+    new_card_ids = List.delete_at(old_card_ids, card_index)
+    if Enum.count(new_card_ids) == 0 do
+      delete_stack(gameui, stack_id)
+    else
+      update_card_ids(gameui, stack_id, new_card_ids)
+    end
+  end
 
   def peek_card(gameui, player_n, card_id, value) do
     card = get_card(gameui, card_id)
@@ -611,17 +640,6 @@ defmodule DragnCardsGame.GameUI do
     update_stack_ids(gameui, old_group["id"], new_stack_ids)
   end
 
-  def remove_from_stack(gameui, stack_id, card_id) do
-    old_card_ids = get_card_ids(gameui, stack_id)
-    card_index = get_card_index_by_card_id(gameui, card_id)
-    new_card_ids = List.delete_at(old_card_ids, card_index)
-    if Enum.count(new_card_ids) == 0 do
-      delete_stack(gameui, stack_id)
-    else
-      update_card_ids(gameui, stack_id, new_card_ids)
-    end
-  end
-
   def add_to_stack(gameui, stack_id, card_id, card_index) do
     old_card_ids = get_card_ids(gameui, stack_id)
     new_card_ids = List.insert_at(old_card_ids, card_index, card_id)
@@ -662,6 +680,8 @@ defmodule DragnCardsGame.GameUI do
     orig_stack_index = get_stack_index_by_stack_id(gameui, stack_id)
     # If destination is negative, count backward from the end
     dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stack_ids(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
+    # If attaching to same group at higher index, dest_index will end up being 1 less
+    dest_stack_index = if orig_group_id == dest_group_id and combine and orig_stack_index < dest_stack_index do dest_stack_index - 1 else dest_stack_index end
     # Delete stack id from old group
     old_orig_stack_ids = get_stack_ids(gameui, orig_group_id)
     new_orig_stack_ids = List.delete_at(old_orig_stack_ids, orig_stack_index)
@@ -735,7 +755,7 @@ defmodule DragnCardsGame.GameUI do
     IO.puts("game_action #{action}")
     IO.inspect(options)
     player_n = get_player_n(gameui, user_id)
-    if player_n do
+    gameui = if player_n do
       case action do
         "draw_card" ->
           draw_card(gameui, options["player_n"])
@@ -790,6 +810,8 @@ defmodule DragnCardsGame.GameUI do
             gameui
       end
     end
+    # IO.inspect(gameui)
+    gameui
   end
 
   def draw_card(gameui, player_n) do

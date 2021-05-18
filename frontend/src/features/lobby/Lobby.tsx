@@ -37,6 +37,7 @@ export const Lobby: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [ringsDbIds, setRingsDbIds] = useState<Array<string>>([]);
   const [ringsDbType, setRingsDbType] = useState("");
+  const [ringsDbDomain, setRingsDbDomain] = useState("");
   const [typing, setTyping] = useState<Boolean>(false);
   const { isLoading, isError, data, setData } = useDataApi<any>(
     "/be/api/rooms",
@@ -46,13 +47,13 @@ export const Lobby: React.FC = () => {
   useEffect(() => {
     const url = window.location.href;
     if (url.includes("newroom")) {
-
-      if (url.includes("ringsdb")) {
+      if (url.includes("ringsdb") || url.includes("test")) {
         var splitUrl = url.split( '/' );
         console.log(splitUrl);
-        const ringsdbIndex = splitUrl.findIndex((e) => e === "ringsdb")
-        setRingsDbType(splitUrl[ringsdbIndex + 1])
-        var intArray = splitUrl.slice(ringsdbIndex + 2, splitUrl.length)
+        const newroomIndex = splitUrl.findIndex((e) => e === "newroom")
+        setRingsDbDomain(splitUrl[newroomIndex + 1])
+        setRingsDbType(splitUrl[newroomIndex + 2])
+        var intArray = splitUrl.slice(newroomIndex + 3, splitUrl.length)
         intArray = filterArrayForPositiveInt(intArray);
         setRingsDbIds(intArray);
       }
@@ -142,6 +143,7 @@ export const Lobby: React.FC = () => {
               closeModal={() => setShowModal(false)}
               ringsDbIds={ringsDbIds}
               ringsDbType={ringsDbType}
+              ringsDbDomain={ringsDbDomain}
             />
           </div>
         {/* <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">
