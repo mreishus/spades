@@ -150,7 +150,7 @@ export const Browse = React.memo(({
         }
       </div> 
 
-      <div className="relative h-full float-left " style={{width: "calc(100% - 430px)"}}>
+      <div className="relative h-full float-left " style={{width: "calc(100% - 550px)"}}>
         <Stacks
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
@@ -164,11 +164,11 @@ export const Browse = React.memo(({
         />
       </div>
 
-      <div className="relative h-full float-left p-3" style={{width:"300px"}}>
+      <div className="relative h-full float-left p-3" style={{width:"360px"}}>
         <table className="w-full">
           <body className="w-full">
             <tr className="w-full">
-              <td className="" style={{width:"150px"}} onChange={handleSelectClick}>
+              <td className="" style={{width:"180px"}} onChange={handleSelectClick}>
                 <select name="numFaceup" id="numFaceup">
                   <option value="" disabled selected>Look at...</option>
                   <option value="None">None</option>
@@ -177,7 +177,7 @@ export const Browse = React.memo(({
                   <option value="10">Top 10</option>
                 </select>
               </td>
-              <td className="" style={{width:"150px"}}>
+              <td className="" style={{width:"180px"}}>
                 <div className="w-full">
                   <input 
                     style={{width:"100px"}} 
@@ -211,7 +211,7 @@ export const Browse = React.memo(({
         </table> 
       </div>
 
-      <div className="relative h-full float-left p-3" style={{width:"100px"}}>
+      <div className="relative h-full float-left p-3" style={{width:"160px"}}>
         <div 
           className="text-white hover:text-red-500 select-none mr-2 border-1"
           onClick={handleCloseAndShuffleClick}>

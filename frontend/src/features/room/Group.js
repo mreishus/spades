@@ -2,11 +2,12 @@ import React from "react";
 import { useSelector } from 'react-redux';
 import { Stacks } from "./Stacks";
 import { GROUPSINFO } from "./Constants";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ContextMenuTrigger } from "react-contextmenu";
 import { GroupContextMenu } from "./GroupContextMenu";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
+import { handleBrowseTopN } from "./HandleBrowseTopN"; 
 import useLongPress from "../../hooks/useLongPress";
 
 export const Group = React.memo(({
@@ -25,13 +26,12 @@ export const Group = React.memo(({
   const storeGroup = state => state?.gameUi?.game?.groupById?.[groupId];
   const group = useSelector(storeGroup);
   const setDropdownMenu = useSetDropdownMenu();
-  
-  const onLongPress = () => {
-    console.log(group);
-  };
 
-  const onClick = () => {
-    console.log('longpress is triggered');
+  const handleEyeClick = () => {
+    handleBrowseTopN("All", group, playerN, gameBroadcast, chatBroadcast, setBrowseGroupId, setBrowseGroupTopN);
+  }
+
+  const handleBarsClick = () => {
     const dropdownMenu = {
         type: "group",
         group: group,
@@ -41,13 +41,6 @@ export const Group = React.memo(({
     }
     setDropdownMenu(dropdownMenu);
   }
-
-  const defaultOptions = {
-      shouldPreventDefault: true,
-      delay: 500,
-  };
-
-  const longPress = useLongPress(onLongPress, onClick, defaultOptions);
 
   if (!group) return null;
   const numStacks = group.stackIds.length;
@@ -63,9 +56,10 @@ export const Group = React.memo(({
               {GROUPSINFO[group.id].tablename}
             </div>
           :
-            <div {...longPress}>
-              <FontAwesomeIcon className="text-white mb-2 pl-1" icon={faBars}/>
-              {GROUPSINFO[group.id].tablename}
+            <div>
+              <FontAwesomeIcon onClick={handleEyeClick}  className="text-white mb-2 pl-1" icon={faEye}/>
+              <FontAwesomeIcon onClick={handleBarsClick}  className="text-white mb-2 pl-1" icon={faBars}/>
+              <span className="mt-1">{GROUPSINFO[group.id].tablename}</span>
             </div>
           }
         </div>
