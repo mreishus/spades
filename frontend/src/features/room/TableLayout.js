@@ -93,6 +93,7 @@ export const TableLayout = React.memo(({
   const numRows = layoutInfo.length;
   const rowHeight = `${100/numRows}%`; 
   const cardSize = CARDSCALE/numRows;
+
   return (
     layoutInfo.map((row, rowIndex) => {
       if (browseGroupId && rowIndex === numRows - 2) {
@@ -136,7 +137,15 @@ export const TableLayout = React.memo(({
             {/* Add buttons and chat to bottom right */}
             {(rowIndex === numRows - 1) &&
               <div className="absolute right-0 bottom-0 h-full w-1/4">
-                <div className="h-full text-xs text-center text-gray-400" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)"}}>
+                <div 
+                  className="absolute bottom-0 right-0" 
+                  style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'100%', paddingLeft:"30px", opacity: 0.7, zIndex: 1e6}}
+                  onMouseEnter={() => handleStartChatHover()}
+                  onMouseLeave={() => handleStopChatHover()}
+                >
+                  <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
+                </div>
+                <div className="absolute h-full text-xs text-center text-gray-400" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
                   <div className={quickViewClassName} onClick={() => handleBrowseClick("sharedSetAside")}>
                     <div>SA</div>
                     <div>{groupById["sharedSetAside"].stackIds.length}</div>
@@ -153,14 +162,6 @@ export const TableLayout = React.memo(({
                     <div>ED</div>
                     <div>{groupById["sharedEncounterDeck2"].stackIds.length}</div>
                   </div>
-                </div>
-                <div 
-                  className="absolute bottom-0 right-0" 
-                  style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'calc(100% - 30px)', opacity: 0.7, zIndex: 1e6}}
-                  onMouseEnter={() => handleStartChatHover()}
-                  onMouseLeave={() => handleStopChatHover()}
-                >
-                  <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
                 </div>
               </div>
             }
