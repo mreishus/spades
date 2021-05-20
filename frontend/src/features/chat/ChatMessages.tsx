@@ -3,10 +3,10 @@ import ChatLine from "./ChatLine";
 import { useMessages } from "../../contexts/MessagesContext";
 
 interface Props {
-  className?: string;
+  chatOnly?: boolean;
 }
 
-export const ChatMessages: React.FC<Props> = ({ className }) => {
+export const ChatMessages: React.FC<Props> = ({ chatOnly }) => {
   console.log("rendering chatmessages")
   const messages = useMessages();
 
@@ -26,7 +26,7 @@ export const ChatMessages: React.FC<Props> = ({ className }) => {
   return (
     <div>
       {messages?.map((m, i) => (
-        <ChatLine key={m.shortcode} message={m} />
+        (chatOnly && m.game_update ? null : <ChatLine key={m.shortcode} message={m} />)
       ))}
       <div ref={bottomRef} className="list-bottom"></div>
     </div>

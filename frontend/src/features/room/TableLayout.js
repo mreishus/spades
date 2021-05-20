@@ -88,8 +88,8 @@ export const TableLayout = React.memo(({
     setChatHover(false);
   }
 
-  const quickViewClassName = "bg-gray-800 hover:bg-gray-600 w-full p-1 cursor-default"
-  const quickViewStyle = {height: "25%"}
+  const quickViewClassName = "bg-gray-800 hover:bg-gray-600 w-full cursor-default"
+  const quickViewStyle = {height: "24.5%"}
   const layoutInfo = LAYOUTINFO["layout" + numPlayers + layout];
   const numRows = layoutInfo.length;
   const rowHeight = `${100/numRows}%`; 
@@ -148,20 +148,20 @@ export const TableLayout = React.memo(({
                 </div>
                 <div className="absolute h-full text-xs text-center text-gray-400 left-0" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
                   <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick("sharedSetAside")}>
-                    <div>SA</div>
-                    <div>{groupById["sharedSetAside"].stackIds.length}</div>
+                    <div style={{height: "50%"}}>SA</div>
+                    <div style={{height: "50%"}}>{groupById["sharedSetAside"].stackIds.length}</div>
                   </div>
                   <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick(observingPlayerN+"Sideboard")}>
-                    <div>SB</div>
-                    <div>{groupById[observingPlayerN+"Sideboard"]?.stackIds.length}</div>
+                    <div style={{height: "50%"}}>SB</div>
+                    <div style={{height: "50%"}}>{groupById[observingPlayerN+"Sideboard"]?.stackIds.length}</div>
                   </div>
                   <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick("sharedQuestDeck")}>
-                    <div>QD</div>
-                    <div>{groupById["sharedQuestDeck"].stackIds.length}</div>
+                    <div style={{height: "50%"}}>QD</div>
+                    <div style={{height: "50%"}}>{groupById["sharedQuestDeck"].stackIds.length}</div>
                   </div>
                   <div className={quickViewClassName} style={quickViewStyle} onClick={() => handleBrowseClick("sharedVictory")}>
-                    <div>VD</div>
-                    <div>{groupById["sharedVictory"].stackIds.length}</div>
+                    <div style={{height: "50%"}}>VD</div>
+                    <div style={{height: "50%"}}>{groupById["sharedVictory"].stackIds.length}</div>
                   </div>
                 </div>
               </div>

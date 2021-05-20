@@ -12,15 +12,31 @@ interface Props {
 
 export const Chat: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
   const isLoggedIn = useIsLoggedIn();
-  console.log("rendering chat")
+  const [chatOnly, setChatOnly] = useState(false);
+  console.log("Rendering Chat")
+
+  const handleChatOnlyClick = () => {
+    setChatOnly(!chatOnly);
+  }
+
   return (
 
     <div className="overflow-hidden h-full">
+      
       <div className="bg-gray-800 overflow-y-auto" style={{height: "calc(100% - 32px)"}}>
-        <ChatMessages/>
+        <ChatMessages chatOnly={chatOnly}/>
       </div>
       <div className="text-center" >
-        {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping} />}
+        {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping}/>}
+      </div>
+      <div className="absolute bottom-0 right-0 text-white opacity-20 p-1 hover:opacity-100 cursor-default">
+        <input
+            type="checkbox"
+            checked={chatOnly}
+            onChange={handleChatOnlyClick}
+            className="mr-1"
+          />
+          <span className="">Chat only</span>
       </div>
     </div>
   );
