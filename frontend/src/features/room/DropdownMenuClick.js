@@ -64,8 +64,16 @@ export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gam
     chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+"."})
   } else if (props.action === "makeVisible") {
     const isVisible = game.playerData[playerN].visibleHand; 
+    // Make it so future cards added to hand will be visible
     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "visibleHand", !isVisible]]}})
-    chatBroadcast("game_update",{message: "toggled their hand visibility."})
+    // Make it so all cards currently in hand are visible
+    Object.keys(game.playerData).forEach(playerI => {
+      if (playerI !== playerN) gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: game.groupById[playerN+"Hand"].stackIds, for_player_n: playerI, value: !isVisible}})  
+    });
+    if (isVisible) chatBroadcast("game_update",{message: "made their hand hidden."})
+    else chatBroadcast("game_update",{message: "made their hand visible."})
+    
+
   } else if (props.action === "chooseRandom") {
     const stackIds = group.stackIds;
     const rand = Math.floor(Math.random() * stackIds.length);

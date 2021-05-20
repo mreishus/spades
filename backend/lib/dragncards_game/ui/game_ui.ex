@@ -761,6 +761,7 @@ defmodule DragnCardsGame.GameUI do
     IO.puts("game_action #{action}")
     IO.inspect(options)
     player_n = get_player_n(gameui, user_id)
+    player_n = if options["for_player_n"] do options["for_player_n"] else player_n end
     gameui = if player_n do
       case action do
         "draw_card" ->

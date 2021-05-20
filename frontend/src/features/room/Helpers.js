@@ -61,6 +61,7 @@ export const getVisibleSide = (card, playerN) => {
   if (!card) return null;
   const currentSide = card.currentSide;
   if (currentSide === "A" || card.peeking[playerN]) return "A";
+  else if (currentSide === "A" || (card.peeking["player1"] && card.peeking["player2"] && card.peeking["player3"] && card.peeking["player4"])) return "A";
   else return "B";
 }
 

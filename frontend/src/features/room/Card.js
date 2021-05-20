@@ -14,6 +14,7 @@ import useLongPress from "../../hooks/useLongPress";
 export const Card = React.memo(({
     cardId,
     groupId,
+    groupType,
     gameBroadcast,
     chatBroadcast,
     playerN,
@@ -27,7 +28,6 @@ export const Card = React.memo(({
     const currentFace = getCurrentFace(card);
     const visibleSide = getVisibleSide(card, playerN);
     const visibleFace = getVisibleFace(card, playerN);
-    const isInMyHand = groupId === (playerN+"Hand");
     const zIndex = 1000 - cardIndex;
     console.log('Rendering Card ',visibleFace.name);
     const setActiveCard = useSetActiveCard();
@@ -108,7 +108,7 @@ export const Card = React.memo(({
                     onClick={handleClick}
                     onMouseLeave={event => handleMouseLeave(event)}
                 >
-                    {(card["peeking"][playerN] && !isInMyHand && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute bottom-0 text-2xl" icon={faEye}/>:null}
+                    {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute bottom-0 text-2xl" icon={faEye}/>:null}
                     <Target
                         cardId={cardId}
                         cardSize={cardSize}

@@ -64,6 +64,7 @@ export const Stack = React.memo(({
                 chatBroadcast={chatBroadcast} 
                 playerN={playerN}
                 groupId={groupId}
+                groupType={groupType}
                 cardId={cardId} 
                 cardIndex={cardIndex}
                 cardSize={cardSize}
