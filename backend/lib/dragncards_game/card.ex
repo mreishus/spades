@@ -6,6 +6,15 @@ defmodule DragnCardsGame.Card do
 
   @type t :: Map.t()
 
+  @spec convert_to_integer(String.t()) :: number
+  def convert_to_integer(my_string) do
+    result = Integer.parse(my_string)
+    case result do
+      {number, _} -> number
+      :error -> 0
+    end
+  end
+
   @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
   def card_from_cardrow(card_row, controller) do
     IO.puts("creating card controlled by #{controller}")
@@ -35,8 +44,8 @@ defmodule DragnCardsGame.Card do
       "cardBackOverride" => card_row["cardbackoverride"],
       "cardEncounterSet" => card_row["cardencounterset"],
       "cardDbId" => card_row["cardid"],
-      "cardNumber" => String.to_integer(card_row["cardnumber"]),
-      "cardQuantity" => String.to_integer(card_row["cardquantity"]),
+      "cardNumber" => convert_to_integer(card_row["cardnumber"]),
+      "cardQuantity" => convert_to_integer(card_row["cardquantity"]),
       "cardSetId" => card_row["cardsetid"],
       "cardPackName" => card_row["cardpackname"],
 

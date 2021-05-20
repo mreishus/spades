@@ -425,6 +425,12 @@ defmodule DragnCardsGame.GameUI do
         controller = get_group_controller(gameui, dest_group_id)
         put_in(card["peeking"][controller], true)
       else card end
+      # Entering hand that is visible. Set all peeking to true
+      card = if dest_group_type == "hand" and gameui["game"]["playerData"][dest_group["controller"]]["visibleHand"] do
+        card = set_all_peeking(card, true)
+      else
+        card
+      end
       gameui = update_card(gameui, card)
       # Update game based on card moving
       gameui = if dest_group_type == "play" do

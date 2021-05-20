@@ -17,6 +17,7 @@ defmodule DragnCardsGame.PlayerData do
       "eliminated" => false,
       "cards_drawn_during_resource" => 1,
       "arrows" => [],
+      "visibleHand" => false,
     }
   end
 

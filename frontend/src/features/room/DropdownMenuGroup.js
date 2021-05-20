@@ -67,8 +67,8 @@ export const DropdownMenuGroup = React.memo(({
           in={activeMenu === "main"}>
         <div className="menu">
           <DropdownItem action="shuffle" clickCallback={handleDropdownClick}>Shuffle</DropdownItem>
+          {menuGroup.type === "hand" ? <DropdownItem action="makeVisible" clickCallback={handleDropdownClick}>Make visible/hidden</DropdownItem> : null}
           <DropdownItem action="lookAt" topN="None" clickCallback={handleDropdownClick}>Browse</DropdownItem>
-          <DropdownItem action="lookAt" topN="All" clickCallback={handleDropdownClick}>Look at all</DropdownItem>
           <DropdownItem action="lookAt" topN="5" clickCallback={handleDropdownClick}>Look at top 5</DropdownItem>
           <DropdownItem action="lookAt" topN="10" clickCallback={handleDropdownClick}>Look at top 10</DropdownItem>
           <DropdownItem action="chooseRandom" clickCallback={handleDropdownClick}>Choose Random</DropdownItem>

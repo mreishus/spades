@@ -29,6 +29,26 @@ export const getDisplayName = (card) => {
   }
 }
 
+export const getRandomIntInclusive = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
+}
+
+function shuffle(array) {
+  var m = array.length, t, i;
+  // While there remain elements to shuffle…
+  while (m) {
+    // Pick a remaining element…
+    i = Math.floor(Math.random() * m--);
+    // And swap it with the current element.
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+  }
+  return array;
+}
+
 export const getFlippedCard = (card) => {
   return (card.currentSide === "A") ? {...card, ["currentSide"]: "B"} : {...card, ["currentSide"]: "A"};
 }
@@ -317,40 +337,64 @@ export const arrayMove = (arr, old_index, new_index) => {
 };
 
 export const processLoadList = (loadList, playerN) => {
-  const loreThurindir = isCardDbIdInLoadList(loadList, "12946b30-a231-4074-a524-960365081360")
-  const theOneRing = isCardDbIdInLoadList(loadList, "423e9efe-7908-4c04-97bd-f4a826081c9f")
   var newLoadList = [...loadList];
+  var n = newLoadList.length;
 
-  for (var i=0; i<loadList.length; i++) {
-    const item = loadList[i];
+  for (var i=0; i<n; i++) {
+    const item = newLoadList[i];
     if (item.cardRow.sides.A.type === "Contract") {
       newLoadList = arrayMove(newLoadList, i, 0); 
     }
   }
 
+  const loreThurindir = isCardDbIdInLoadList(newLoadList, "12946b30-a231-4074-a524-960365081360");
+  n = newLoadList.length;
   if (loreThurindir) {
-    for (var i=0; i<loadList.length; i++) {
-      const item = loadList[i];
+    for (var i=0; i<n; i++) {
+      const item = newLoadList[i];
       if (item.cardRow.sides.A.type == "Side Quest") {
-        newLoadList[i] = {...item, quantity: item.quantity - 1};
-        newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})
+        if (item.quantity > 0) {
+          newLoadList[i] = {...item, quantity: item.quantity - 1};
+          newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})
+        }
       }
     }  
   }
 
+  const theOneRing = isCardDbIdInLoadList(newLoadList, "423e9efe-7908-4c04-97bd-f4a826081c9f");
+  n = newLoadList.length;
   if (theOneRing) {
-    for (var i=0; i<loadList.length; i++) {
-      const item = loadList[i];
+    for (var i=0; i<n; i++) {
+      const item = newLoadList[i];
       if (item.cardRow.sides.A.traits.includes("Master.")) {
-        newLoadList[i] = {...item, quantity: item.quantity - 1};
-        newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})
+        if (item.quantity > 0) {
+          newLoadList[i] = {...item, quantity: item.quantity - 1};
+          newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})
+        }
       }      
       if (item.cardRow.id === "423e9efe-7908-4c04-97bd-f4a826081c9f") {
         newLoadList[i] = {...item, groupId: playerN+"Play2"};
       }
-
     }  
   } 
+
+  const glitteringCaves = isCardDbIdInLoadList(loadList, "03a074ce-d581-4672-b6ea-ed97b7afd415");
+  n = newLoadList.length;
+  if (glitteringCaves) {
+    const extraNum = [1,1,1,1,2,2,2,2,3,3,3,3];
+    const shuffledExtraNum = shuffle(extraNum);
+    var e = 0;
+    for (var i=0; i<n; i++) {
+      const item = newLoadList[i];
+      if (item.cardRow.cardencounterset === "Caves Map") {
+        if (e < shuffledExtraNum.length) {
+          newLoadList[i] = {...item, groupId: "sharedExtra"+shuffledExtraNum[e]};
+          e = e + 1;
+        }
+      }
+    }  
+  } 
+
   return newLoadList; 
 
 }
@@ -360,6 +404,13 @@ export const processPostLoad = (loadList, playerN, gameBroadcast, chatBroadcast)
   if (tacticsEowyn) {
     gameBroadcast("game_action", {action: "increment_threat", options: {increment: -3}})
     chatBroadcast("game_update", {message: "reduced threat by 3."});
+  }
+  const glitteringCaves = isCardDbIdInLoadList(loadList, "03a074ce-d581-4672-b6ea-ed97b7afd415");
+  if (glitteringCaves) {
+    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "layout", "extra"]]}});
+    gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: "sharedExtra1"}})
+    gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: "sharedExtra2"}})
+    gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: "sharedExtra3"}})
   }
 }
 

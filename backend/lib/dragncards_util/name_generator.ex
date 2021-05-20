@@ -2180,7 +2180,6 @@ defmodule DragnCardsUtil.NameGenerator do
       leathery
       lecherous
       leering
-      left
       legal
       legendary
       legible
@@ -6096,7 +6095,6 @@ defmodule DragnCardsUtil.NameGenerator do
       crow
       crowd
       crown
-      crucifixion
       crude
       cruelty
       cruise
@@ -9433,7 +9431,6 @@ defmodule DragnCardsUtil.NameGenerator do
       ridge
       riding
       rifle
-      right
       ring
       ringworm
       riot
