@@ -794,6 +794,8 @@ defmodule DragnCardsGame.GameUI do
           deal_all_shadows(gameui)
         "increment_threat" ->
           increment_threat(gameui, player_n, options["increment"])
+        "increment_willpower" ->
+          increment_willpower(gameui, player_n, options["increment"])
         "increment_token" ->
           increment_token(gameui, options["card_id"], options["token_type"], options["increment"])
         "increment_tokens" ->
@@ -801,7 +803,7 @@ defmodule DragnCardsGame.GameUI do
         "reset_game" ->
           reset_game(gameui)
         "load_cards" ->
-          load_cards(gameui, player_n, options["load_list"], options["for_player_n"])
+          load_cards(gameui, player_n, options["load_list"])
         "set_seat" ->
           set_seat(gameui, options["user_id"], options["player_n"])
         "target_card_ids" ->
@@ -985,8 +987,7 @@ defmodule DragnCardsGame.GameUI do
     end)
   end
 
-  def load_cards(gameui, player_n, load_list, for_player_n) do
-    player_n = if for_player_n do for_player_n else player_n end
+  def load_cards(gameui, player_n, load_list) do
     # Get deck size before load
     player_n_deck_id = player_n<>"Deck"
     deck_size_before = Enum.count(get_stack_ids(gameui, player_n_deck_id))
@@ -1143,6 +1144,12 @@ defmodule DragnCardsGame.GameUI do
   def increment_threat(gameui, player_n, increment) do
     current_threat = gameui["game"]["playerData"][player_n]["threat"];
     put_in(gameui["game"]["playerData"][player_n]["threat"], current_threat + increment)
+  end
+
+  # Increment a player's willpower
+  def increment_willpower(gameui, player_n, increment) do
+    current_willpower = gameui["game"]["playerData"][player_n]["willpower"];
+    put_in(gameui["game"]["playerData"][player_n]["willpower"], current_willpower + increment)
   end
 
 end

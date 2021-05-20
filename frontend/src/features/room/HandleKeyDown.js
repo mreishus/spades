@@ -51,6 +51,7 @@ export const HandleKeyDown = ({
 }) => {
     const gameUiStore = state => state?.gameUi;
     const gameUi = useSelector(gameUiStore);
+    const game = gameUi.game;
     const dispatch = useDispatch();
     const [drawingArrowFrom, setDrawingArrowFrom] = useState(null);
 
@@ -58,7 +59,7 @@ export const HandleKeyDown = ({
     const setActiveCardAndLoc = useSetActiveCard();
 
     const [keyBackLog, setKeyBackLog] = useState({});
-    console.log("render handlekeydown", keyBackLog)
+    console.log("Render HandleKeyDown", keyBackLog)
 
     useEffect(() => {
         const onKeyDown = (event) => {
@@ -109,76 +110,14 @@ export const HandleKeyDown = ({
 
         const isHost = playerN === leftmostNonEliminatedPlayerN(gameUi);
 
-        // General hotkeys
-        if (k === "e" || k === "E") {
-            // Check remaining cards in encounter deck
-            const encounterStackIds = gameUi.game.groupById.sharedEncounterDeck.stackIds;
-            const encounterDiscardStackIds = gameUi.game.groupById.sharedEncounterDiscard.stackIds;
-            const stacksLeft = encounterStackIds.length;
-            // If no cards, check phase of game
-            if (stacksLeft === 0) {
-                // If quest phase, shuffle encounter discard pile into deck
-                if (gameUi.game.phase === "Quest") {
-                    gameBroadcast("game_action",{action:"move_stacks", options:{orig_group_id: "sharedEncounterDiscard", dest_group_id: "sharedEncounterDeck", top_n: encounterDiscardStackIds.length, position: "s"}});
-                    chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["sharedEncounterDiscard"].name+" into "+GROUPSINFO["sharedEncounterDeck"].name+"."});
-                    return;
-                } else {
-                    // If not quest phase, give error message and break
-                    chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty and it's not the quest phase."});
-                    return;
-                }
-            }
-            // Reveal card
-            const topStackId = encounterStackIds[0];
-            if (!topStackId) {
-                chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty."});
-                return;
-            }
-            const topStack = gameUi.game.stackById[topStackId];
-            const topCardId = topStack["cardIds"][0];
-            const topCard = gameUi.game.cardById[topCardId];
-            // Was shift held down? (Deal card facedown)
-            const shiftHeld = (k === "E"); // keypress[0] === "Shift";
-            const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
-            chatBroadcast("game_update",{message: message});
-            gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
-        } else if (k === "d") {
-            // Check remaining cards in deck
-            const playerDeck = gameUi.game.groupById[playerN+"Deck"];
-            const deckStackIds = playerDeck["stackIds"];
-            const stacksLeft = deckStackIds.length;
-            // If no cards, give error message and break
-            if (stacksLeft === 0) {
-                chatBroadcast("game_update",{message: " tried to draw a card, but their deck is empty."});
-                return;
-            }
-            // const playerHand = gameUi.game.groupById[playerN+"Hand"];
-            // const handStackIds = playerHand.stackIds;
-            // const topStackId = deckStackIds[0];
-            // const topCardId = gameUi.game.stackById[topStackId].cardIds[0];
-            // const newHandStackIds = handStackIds.concat(topStackId);
-            // const updates = [
-            //     ["game","groupById",playerN+"Hand","stackIds",newHandStackIds],
-            //     ["game","cardById",topCardId,"currentSide","A"]
-            // ];
-            // dispatch(setValues({updates: updates}))
-            // Draw card
-            chatBroadcast("game_update",{message: "drew a card."});
-            gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}});
-        } else if (k === "S") {
-            // Deal all shadow cards
-            // Set phase
-            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.2"], ["game", "phase", "Combat"]]}});
-            chatBroadcast("game_update", {message: "set the round step to 6.2: Deal shadow cards."});
-            gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
-        } else if (k === "R") {
+        const hotkeyRefresh = () => {
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the token moving multiple times if players refresh at different times.
             if (isHost) {
                 // Set phase
                 gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]}});
                 chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
-                const firstPlayerN = gameUi.game.firstPlayer;
+                const firstPlayerN = game.firstPlayer;
                 const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
                 // If nextPlayerN is null then it's a solo game, so don't pass the token
                 if (nextPlayerN) {
@@ -197,10 +136,13 @@ export const HandleKeyDown = ({
                 }
             });
             // Raise your threat
-            const newThreat = gameUi.game.playerData[playerN].threat+1;
+            const newThreat = game.playerData[playerN].threat+1;
             chatBroadcast("game_update", {message: "raises threat by 1 ("+newThreat+")."});
             gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat]]}});
-        } else if (k === "N") {
+        }
+
+        const hotkeyNewRound = () => {
+            if (game.phase != "Refresh" && game.phase != "Beginning" && game.phase != "End") hotkeyRefresh();
             // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
             // This prevents, for example, the round number increasing multiple times.
             if (isHost) {
@@ -245,9 +187,77 @@ export const HandleKeyDown = ({
                     options: {updates: [["committed", false]]}
                 }
             });
+        }
+
+        // General hotkeys
+        if (k === "e" || k === "E") {
+            // Check remaining cards in encounter deck
+            const encounterStackIds = game.groupById.sharedEncounterDeck.stackIds;
+            const encounterDiscardStackIds = game.groupById.sharedEncounterDiscard.stackIds;
+            const stacksLeft = encounterStackIds.length;
+            // If no cards, check phase of game
+            if (stacksLeft === 0) {
+                // If quest phase, shuffle encounter discard pile into deck
+                if (game.phase === "Quest") {
+                    gameBroadcast("game_action",{action:"move_stacks", options:{orig_group_id: "sharedEncounterDiscard", dest_group_id: "sharedEncounterDeck", top_n: encounterDiscardStackIds.length, position: "s"}});
+                    chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["sharedEncounterDiscard"].name+" into "+GROUPSINFO["sharedEncounterDeck"].name+"."});
+                    return;
+                } else {
+                    // If not quest phase, give error message and break
+                    chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty and it's not the quest phase."});
+                    return;
+                }
+            }
+            // Reveal card
+            const topStackId = encounterStackIds[0];
+            if (!topStackId) {
+                chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty."});
+                return;
+            }
+            const topStack = game.stackById[topStackId];
+            const topCardId = topStack["cardIds"][0];
+            const topCard = game.cardById[topCardId];
+            // Was shift held down? (Deal card facedown)
+            const shiftHeld = (k === "E"); // keypress[0] === "Shift";
+            const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
+            chatBroadcast("game_update",{message: message});
+            gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
+        } else if (k === "d") {
+            // Check remaining cards in deck
+            const playerDeck = game.groupById[playerN+"Deck"];
+            const deckStackIds = playerDeck["stackIds"];
+            const stacksLeft = deckStackIds.length;
+            // If no cards, give error message and break
+            if (stacksLeft === 0) {
+                chatBroadcast("game_update",{message: " tried to draw a card, but their deck is empty."});
+                return;
+            }
+            // const playerHand = game.groupById[playerN+"Hand"];
+            // const handStackIds = playerHand.stackIds;
+            // const topStackId = deckStackIds[0];
+            // const topCardId = game.stackById[topStackId].cardIds[0];
+            // const newHandStackIds = handStackIds.concat(topStackId);
+            // const updates = [
+            //     ["game","groupById",playerN+"Hand","stackIds",newHandStackIds],
+            //     ["game","cardById",topCardId,"currentSide","A"]
+            // ];
+            // dispatch(setValues({updates: updates}))
+            // Draw card
+            chatBroadcast("game_update",{message: "drew a card."});
+            gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}});
+        } else if (k === "S") {
+            // Deal all shadow cards
+            // Set phase
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.2"], ["game", "phase", "Combat"]]}});
+            chatBroadcast("game_update", {message: "set the round step to 6.2: Deal shadow cards."});
+            gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
+        } else if (k === "R") {
+            hotkeyRefresh();
+        } else if (k === "N") {
+            hotkeyNewRound();
         } else if (k === "M") {
             if (window.confirm('Shuffle hand in deck and redraw equal number?')) {
-                const hand = gameUi.game.groupById[playerN+"Hand"];
+                const hand = game.groupById[playerN+"Hand"];
                 const handSize = hand.stackIds.length;
                 gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Hand", dest_group_id: playerN+"Deck", top_n: handSize, position: "s"}})
                 gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Deck", dest_group_id: playerN+"Hand", top_n: handSize, position: "t"}})
@@ -275,15 +285,15 @@ export const HandleKeyDown = ({
         // Card specific hotkeys
         if (activeCardAndLoc != null) {  
             const activeCardId = activeCardAndLoc.card.id; 
-            const activeCard = gameUi.game.cardById[activeCardId]
+            const activeCard = game.cardById[activeCardId]
             const activeCardFace = getCurrentFace(activeCard);
             const displayName = getDisplayName(activeCard);
             const tokens = activeCard.tokens;
-            const gsc = getGroupIdStackIndexCardIndex(gameUi.game, activeCardId);
+            const gsc = getGroupIdStackIndexCardIndex(game, activeCardId);
             const groupId = gsc.groupId;
             const stackIndex = gsc.stackIndex;
             const cardIndex = gsc.cardIndex;
-            const groupType = gameUi.game.groupById[groupId].type;
+            const groupType = game.groupById[groupId].type;
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 var tokenType = keyTokenMap[k][0];
@@ -292,7 +302,7 @@ export const HandleKeyDown = ({
                 // Top half will increase tokens, bottom half will decrease
                 const mousePosition = activeCardAndLoc.mousePosition;
                 var delta = (mousePosition === "top" ? 1 : -1)
-                const currentVal = gameUi.game.cardById[activeCardId].tokens[tokenType];
+                const currentVal = game.cardById[activeCardId].tokens[tokenType];
                 var newVal = currentVal + delta;
                 if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
 
@@ -375,11 +385,10 @@ export const HandleKeyDown = ({
             else if (k === "q" || k==="Q") {
                 // Commit to quest and exhaust
                 if (k === "q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
-                    console.log("commit to quest")
-                    // const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                    // const currentWillpower = game.playerData[playerN].willpower;
                     // const newWillpower = currentWillpower + getCardWillpower(activeCard);
                     const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
-                    const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                    const currentWillpower = game.playerData[playerN].willpower;
                     const newWillpower = currentWillpower + willpowerIncrement;
                     const updates = [
                         ["game", "cardById", activeCardId, "committed", true], 
@@ -393,9 +402,8 @@ export const HandleKeyDown = ({
                 }
                 // Commit to quest without exhausting
                 else if (k === "Q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
-                    console.log("commit to quest")
                     const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
-                    const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                    const currentWillpower = game.playerData[playerN].willpower;
                     const newWillpower = currentWillpower + willpowerIncrement;
                     const updates = [["game", "cardById", activeCardId, "committed", true], ["game", "playerData", playerN, "willpower", newWillpower]];
                     chatBroadcast("game_update", {message: "committed "+displayName+" to the quest without exhausting."});
@@ -406,7 +414,7 @@ export const HandleKeyDown = ({
                 else if (k === "q" && groupType === "play" && activeCard["committed"]) {
                     console.log("uncommit to quest")
                     const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
-                    const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                    const currentWillpower = game.playerData[playerN].willpower;
                     const newWillpower = currentWillpower - willpowerIncrement;
                     const updates = [
                         ["game", "cardById", activeCardId, "committed", false], 
@@ -423,7 +431,7 @@ export const HandleKeyDown = ({
                 else if (k === "Q" && groupType === "play" && activeCard["committed"]) {
                     console.log("uncommit to quest")
                     const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
-                    const currentWillpower = gameUi.game.playerData[playerN].willpower;
+                    const currentWillpower = game.playerData[playerN].willpower;
                     const newWillpower = currentWillpower - willpowerIncrement;
                     const updates = [["game", "cardById", activeCardId, "committed", false], ["game", "playerData", playerN, "willpower", newWillpower]];
                     chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
@@ -431,14 +439,14 @@ export const HandleKeyDown = ({
                     gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
                 }
 
-                if (isHost) {            
+                if (isHost && game.roundStep !== "3.2") {            
                     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "3.2"], ["game", "phase", "Combat"]]}});
-                    chatBroadcast("game_update", {message: "set the round step to 2.2: Commit characters to the quest."});
+                    chatBroadcast("game_update", {message: "set the round step to 3.2: Commit characters to the quest."});
                 }
             }
             // Deal shadow card
             else if (k === "s" && groupType === "play") {
-                const encounterStackIds = gameUi.game.groupById.sharedEncounterDeck.stackIds;
+                const encounterStackIds = game.groupById.sharedEncounterDeck.stackIds;
                 const stacksLeft = encounterStackIds.length;
                 // If no cards, check phase of game
                 if (stacksLeft === 0) {
@@ -472,11 +480,11 @@ export const HandleKeyDown = ({
             else if (k === "x") {
                 // If card is the parent card of a stack, discard the whole stack
                 if (cardIndex === 0) {
-                    const stack = getStackByCardId(gameUi.game.stackById, activeCardId);
+                    const stack = getStackByCardId(game.stackById, activeCardId);
                     if (!stack) return;
                     const cardIds = stack.cardIds;
                     for (var cardId of cardIds) {
-                        const cardi = gameUi.game.cardById[cardId];
+                        const cardi = game.cardById[cardId];
                         console.log("discarding ", cardi);
                         const discardGroupId = cardi["discardGroupId"];
                         chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+GROUPSINFO[discardGroupId].name+"."});
@@ -490,13 +498,13 @@ export const HandleKeyDown = ({
                 }
                 // If the card was a quest card, load the next quest card
                 if (activeCardFace.type === "Quest") {
-                    const questDeckStackIds = gameUi.game.groupById[activeCard.loadGroupId].stackIds;
+                    const questDeckStackIds = game.groupById[activeCard.loadGroupId].stackIds;
                     if (questDeckStackIds.length > 0) {
                         chatBroadcast("game_update", {message: "advanced the quest."});
                         gameBroadcast("game_action", {action: "move_stack", options: {stack_id: questDeckStackIds[0], dest_group_id: groupId, dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})
                     }
                 }
-                //dispatch(setGame(gameUi.game));
+                //dispatch(setGame(game));
             }
             // Shufle card into owner's deck
             else if (k === "h") {
@@ -515,7 +523,7 @@ export const HandleKeyDown = ({
                 // Determine if this is the start or end of the arrow
                 if (drawingArrowFrom) {
                     const drawingArrowTo = activeCardId;
-                    const oldArrows = gameUi.game.playerData[playerN].arrows;
+                    const oldArrows = game.playerData[playerN].arrows;
                     const newArrows = oldArrows.concat([[drawingArrowFrom, drawingArrowTo]]);
                     //const updates = [["game", "cardById", drawingArrowFrom, "arrowIds", newArrowIds]];
                     const updates = [["game", "playerData", playerN, "arrows", newArrows]];

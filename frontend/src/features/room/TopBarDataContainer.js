@@ -6,6 +6,7 @@ import { TopBarShared } from "./TopBarShared";
 import { GROUPSINFO, sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 
 export const TopBarDataContainer = React.memo(({
+  playerN,
   gameBroadcast,
   chatBroadcast,
   observingPlayerN,
@@ -65,6 +66,7 @@ export const TopBarDataContainer = React.memo(({
           progress={totalProgress}
         />
         <TopBarUser
+          playerN={playerN}
           playerI={"player1"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
@@ -73,6 +75,7 @@ export const TopBarDataContainer = React.memo(({
         />
         {numPlayers > 1 &&
         <TopBarUser
+          playerN={playerN}
           playerI={"player2"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
@@ -81,6 +84,7 @@ export const TopBarDataContainer = React.memo(({
         />}
         {numPlayers > 2 &&
         <TopBarUser
+          playerN={playerN}
           playerI={"player3"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
@@ -89,6 +93,7 @@ export const TopBarDataContainer = React.memo(({
         />}
         {numPlayers > 3 &&
         <TopBarUser
+          playerN={playerN}
           playerI={"player4"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}

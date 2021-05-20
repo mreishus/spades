@@ -17,11 +17,12 @@ export const SideBarRoundStep = React.memo(({
   const [hovering, setHovering] = useState(null);
   const isRoundStep = (gameRoundStep === roundStep);
   const handleButtonClick = (roundStep, roundStepText) => { 
+    if (!playerN) return;
     gameBroadcast("game_action", {action: "update_values", options:{updates: [["game", "roundStep", roundStep], ["game", "phase", phase]]}});     
     chatBroadcast("game_update", {message: "set the round step to "+roundStepText+"."})
   }
   const targetTriggers = () => { 
-
+    if (!playerN) return;
     // Remove targets from all cards you targeted
     gameBroadcast("game_action", {
         action: "action_on_matching_cards", 

@@ -19,6 +19,8 @@ export const Token = React.memo(({
 }) => {
     const tokenStore = state => state?.gameUi?.game?.cardById?.[cardId]?.tokens?.[tokenType];
     const tokenValue = useSelector(tokenStore);
+    const committedStore = state => state?.gameUi?.game?.cardById?.[cardId]?.committed;
+    const committed = useSelector(committedStore);
     const [buttonLeftVisible, setButtonLeftVisible] = useState(false);
     const [buttonRightVisible, setButtonRightVisible] = useState(false);
     const [amount, setAmount] = useState(tokenValue);
@@ -45,6 +47,7 @@ export const Token = React.memo(({
         if (delayBroadcast) clearTimeout(delayBroadcast);
         delayBroadcast = setTimeout(function() {
             gameBroadcast("game_action", {action:"update_values", options: {updates: [["game", "cardById", cardId, "tokens", tokenType, newAmount]]}});
+            if (committed) gameBroadcast("game_action", {action:"increment_willpower", options: {increment: totalDelta}});
             if (totalDelta > 0) {
                 if (totalDelta === 1) {
                     chatBroadcast("game_update",{message: "added "+totalDelta+" "+printName+" token to "+cardName+"."});

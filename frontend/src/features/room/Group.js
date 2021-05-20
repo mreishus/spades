@@ -32,6 +32,7 @@ export const Group = React.memo(({
   }
 
   const handleBarsClick = () => {
+    if (!playerN) return;
     const dropdownMenu = {
         type: "group",
         group: group,

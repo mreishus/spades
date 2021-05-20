@@ -10,6 +10,7 @@ import { getCurrentFace } from "./Helpers";
 var delayBroadcast;
 
 export const TopBarUser = React.memo(({
+  playerN,
   playerI,
   gameBroadcast,
   chatBroadcast,
@@ -156,6 +157,7 @@ export const TopBarUser = React.memo(({
             value={threatValue}
             onChange={handleThreatChange}
             type="number" min="0" step="1"
+            disabled={playerN ? false : true}
           ></input>
         </div>
 
@@ -168,7 +170,7 @@ export const TopBarUser = React.memo(({
             value={willpowerValue}
             onChange={handleWillpowerChange}
             type="number" min="0" step="1"
-            readonly
+            disabled={playerN ? false : true}
           ></input>
         </div>
       </div>

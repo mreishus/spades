@@ -30,6 +30,7 @@ export const TopBar = React.memo(({
         />
       </ul>
       <TopBarDataContainer
+        playerN={playerN}
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
