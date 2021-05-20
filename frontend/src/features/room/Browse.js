@@ -124,7 +124,7 @@ export const Browse = React.memo(({
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stackIds[s] && 
       parentCards[s]["sides"]["A"]["type"] === selectedCardType &&
-      parentCards[s]["peeking"][playerN]
+      (parentCards[s]["peeking"][playerN] || parentCards[s]["currentSide"] === "A") 
     ));
   console.log(filteredStackIndices)
   // Filter by card name
@@ -132,7 +132,7 @@ export const Browse = React.memo(({
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stackIds[s] && 
       parentCards[s]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
-      parentCards[s]["peeking"][playerN]
+      (parentCards[s]["peeking"][playerN] || parentCards[s]["currentSide"] === "A")
     ));
 
   return(

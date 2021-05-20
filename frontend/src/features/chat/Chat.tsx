@@ -29,7 +29,7 @@ export const Chat: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
       <div className="text-center" >
         {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping}/>}
       </div>
-      <div className="absolute bottom-0 right-0 text-white opacity-20 p-1 hover:opacity-100 cursor-default">
+      <div className="absolute bottom-0 right-0 text-white p-1 cursor-default" style={{ opacity: "20%" }}>
         <input
             type="checkbox"
             checked={chatOnly}
