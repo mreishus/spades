@@ -39,7 +39,9 @@ export const Browse = React.memo(({
   const [selectedCardName, setSelectedCardName] = useState('');
   const stackIds = group["stackIds"];
   const numStacks = stackIds.length;
-
+  var fontSize = "text-md"
+  if (game.numPlayers === 2) fontSize = "text-sm"
+  if (game.numPlayers > 2) fontSize = "text-xs"
     
   const onLongPress = () => {
     console.log(group);
@@ -164,7 +166,7 @@ export const Browse = React.memo(({
         />
       </div>
 
-      <div className="relative h-full float-left p-3" style={{width:"360px"}}>
+      <div className={`relative h-full float-left p-2 ${fontSize}`} style={{width:"360px"}}>
         <table className="w-full">
           <body className="w-full">
             <tr className="w-full">
