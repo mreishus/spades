@@ -1,4 +1,4 @@
-defmodule SpadesUtil.NameGenerator do
+defmodule DragnCardsUtil.NameGenerator do
   @moduledoc """
   NameGenerator: Makes random room names.
   """
