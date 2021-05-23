@@ -32,5 +32,5 @@ def prettifyGoogleSheetsJSON(data):
     return newDict
 
 cleanDict = prettifyGoogleSheetsJSON(response_dict)
-with open('cardDB_ALeP.json', 'w') as outfile:
+with open('cardDB.json', 'w') as outfile:
         json.dump(cleanDict, outfile, indent=4)

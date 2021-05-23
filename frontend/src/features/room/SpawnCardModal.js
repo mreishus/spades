@@ -1,12 +1,6 @@
 import React, {useState} from "react";
 import ReactModal from "react-modal";
-
-const cardDB_OCTGN = require('../../cardDB/cardDB.json');
-const cardDB_ALeP = require('../../cardDB/cardDB_ALeP.json');
-const cardDB = {
-  ...cardDB_OCTGN,
-  ...cardDB_ALeP,
-};
+import { cardDB } from "../../cardDB/cardDB";
 
 export const SpawnCardModal = React.memo(({
     setTyping,
