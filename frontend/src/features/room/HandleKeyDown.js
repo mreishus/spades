@@ -293,7 +293,10 @@ export const HandleKeyDown = ({
             const groupId = gsc.groupId;
             const stackIndex = gsc.stackIndex;
             const cardIndex = gsc.cardIndex;
-            const groupType = game.groupById[groupId].type;
+            const group = game.groupById[groupId];
+            const groupType = group.type;
+            const stackId = group.stackIds[stackIndex];
+
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 var tokenType = keyTokenMap[k][0];
@@ -349,17 +352,21 @@ export const HandleKeyDown = ({
             }
             // Exhaust card
             else if (k === "a" && groupType === "play") {
-                console.log("toggle exhaust")
-                var values = [true, 90];
-                if (activeCard.exhausted) {
-                    values = [false, 0];
-                    chatBroadcast("game_update", {message: "readied "+displayName+"."});
+                if (activeCardFace.type === "Location") {
+                    chatBroadcast("game_update", {message: "made "+displayName+" the active location."});
+                    gameBroadcast("game_action", {action: "move_stack", options: {stack_id: stackId, dest_group_id: "sharedActive", dest_stack_index: 0, combine: false, preserve_state: false}})
                 } else {
-                    chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+                    var values = [true, 90];
+                    if (activeCard.exhausted) {
+                        values = [false, 0];
+                        chatBroadcast("game_update", {message: "readied "+displayName+"."});
+                    } else {
+                        chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+                    }
+                    const updates = [["game", "cardById", activeCardId, "exhausted", values[0]], ["game", "cardById", activeCardId, "rotation", values[1]]];
+                    dispatch(setValues({updates: updates}));
+                    gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
                 }
-                const updates = [["game", "cardById", activeCardId, "exhausted", values[0]], ["game", "cardById", activeCardId, "rotation", values[1]]];
-                dispatch(setValues({updates: updates}));
-                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
             }
             // Flip card
             else if (k === "f") {
