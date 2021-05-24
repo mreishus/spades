@@ -115,7 +115,6 @@ export const Card = React.memo(({
                     />
                     <Tokens
                         cardName={currentFace.name}
-                        cardType={currentFace.type}
                         cardId={card.id}
                         isActive={isActive}
                         gameBroadcast={gameBroadcast}

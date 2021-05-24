@@ -90,8 +90,11 @@ export const getVisibleFaceSRC = (card, playerN) => {
   }
 }
 
-export const usesThreatToken = (cardType) => {
-  if (["Contract", "Hero", "Ally", "Attachment", "Event", "Objective Ally"].includes(cardType)) return false;
+export const usesThreatToken = (card) => {
+  const cardFace = getCurrentFace(card);
+  if (["Contract", "Hero", "Ally", "Attachment", "Event", "Objective Ally"].includes(cardFace.type)) return false;
+  if (card.controller != "shared") return false;
+  if (cardFace.willpower > 0) return false;
   return true;
 } 
 

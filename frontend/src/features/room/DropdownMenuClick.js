@@ -10,6 +10,7 @@ import {
 export const handleDropdownClickCommon = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
   if (dropdownMenu.type === "card") handleDropdownClickCard(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast)
   else if (dropdownMenu.type === "group") handleDropdownClickGroup(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast)
+  else if (dropdownMenu.type === "firstPlayer") handleDropdownClickFirstPlayer(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast)
 }
 
 export const handleDropdownClickCard = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
@@ -103,3 +104,7 @@ export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gam
   }
 }
 
+export const handleDropdownClickFirstPlayer = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
+  gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "firstPlayer", props.action]]}})
+  chatBroadcast("game_update",{message: "set first player to "+props.title+"."})
+} 

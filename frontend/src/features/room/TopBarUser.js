@@ -5,6 +5,7 @@ import useProfile from "../../hooks/useProfile";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { Link } from "react-router-dom";
 import { setValues } from "./gameUiSlice";
+import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import { getCurrentFace } from "./Helpers";
 
 var delayBroadcast;
@@ -41,6 +42,7 @@ export const TopBarUser = React.memo(({
   const [willpowerValue, setWillpowerValue] = useState(gameUiWillpower);
   const [inputRefThreat, setInputFocusThreat] = useFocus();
   const [inputRefWillpower, setInputFocusWillpower] = useFocus();
+  const setDropdownMenu = useSetDropdownMenu();
 
   useEffect(() => {    
     if (gameUiThreat !== threatValue) setThreatValue(gameUiThreat);
@@ -53,6 +55,15 @@ export const TopBarUser = React.memo(({
   if (!playerDataPlayerN) return null;
 
   const sittingUserID = playerIds[playerI];
+
+  const handleFirstPlayerClick = () => {
+    if (!playerN) return;
+    const dropdownMenu = {
+        type: "firstPlayer",
+        title: "Set first player",
+    }
+    setDropdownMenu(dropdownMenu);
+  }
   
   // If not observing anyone, observe yourself
   if (!observingPlayerN && (myUserID === sittingUserID)) setObservingPlayerN(playerI);
@@ -137,7 +148,10 @@ export const TopBarUser = React.memo(({
         <div className="h-1/2 w-full flex justify-center">
           {/* Show First player token */}
           {(firstPlayer === playerI) ? 
-            <img className="h-full mr-1 mb-1" src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}></img>
+            <img 
+              className="h-full mr-1 mb-1" 
+              src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}
+              onClick={() => handleFirstPlayerClick()}/>
             : null}
           <UserName userID={sittingUserID} defaultName="Empty seat"></UserName>
         </div>

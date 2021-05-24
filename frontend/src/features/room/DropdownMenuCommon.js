@@ -4,6 +4,7 @@ import { GROUPSINFO } from "./Constants";
 import { handleDropdownClickCommon } from "./DropdownMenuClick";
 import { DropdownMenuCard } from "./DropdownMenuCard";
 import { DropdownMenuGroup } from "./DropdownMenuGroup";
+import { DropdownMenuFirstPlayer } from "./DropdownMenuFirstPlayer";
 import { getDisplayName, tokenTitleName, getVisibleSide } from "./Helpers";
 import { faArrowUp, faArrowDown, faRandom, faReply, faChevronRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -67,6 +68,20 @@ export const DropdownMenuCommon = React.memo(({
   } else if (dropdownMenu.type === "group") {
     return (
       <DropdownMenuGroup
+        playerN={playerN}
+        mouseX={mouseX}
+        mouseY={mouseY}
+        menuHeight={menuHeight}
+        dropdownMenu={dropdownMenu}
+        handleDropdownClick={handleDropdownClick}
+        calcHeight={calcHeight}
+        activeMenu={activeMenu}
+        setIsHovering={setIsHovering}
+      />
+    )
+  } else if (dropdownMenu.type === "firstPlayer") {
+    return (
+      <DropdownMenuFirstPlayer
         playerN={playerN}
         mouseX={mouseX}
         mouseY={mouseY}
