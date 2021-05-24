@@ -440,7 +440,7 @@ export const HandleKeyDown = ({
                 }
 
                 if (isHost && game.roundStep !== "3.2") {            
-                    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "3.2"], ["game", "phase", "Combat"]]}});
+                    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "3.2"], ["game", "phase", "Quest"]]}});
                     chatBroadcast("game_update", {message: "set the round step to 3.2: Commit characters to the quest."});
                 }
             }

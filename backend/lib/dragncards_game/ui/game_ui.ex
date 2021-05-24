@@ -400,6 +400,7 @@ defmodule DragnCardsGame.GameUI do
         |> Map.put("tokensPerRound", Tokens.new())
         |> Map.put("exhausted", false)
         |> Map.put("rotation", 0)
+        |> clear_targets()
       else card end
       # Entering deck: flip card facedown, no peeking
       card = if dest_group_type == "deck" do
@@ -523,6 +524,17 @@ defmodule DragnCardsGame.GameUI do
   end
 
   ### Card helper functions
+
+  # Clear all targets from card
+  def clear_targets(card) do
+    new_targeting = %{
+      "player1" => false,
+      "player2" => false,
+      "player3" => false,
+      "player4" => false,
+    }
+    put_in(card["targeting"], new_targeting)
+  end
 
   # Obtain a value from card based on cardpath
   def get_value_from_cardpath(card, cardpath) do

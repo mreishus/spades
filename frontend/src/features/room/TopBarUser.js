@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import UserName from "../user/UserName";
 import useProfile from "../../hooks/useProfile";
@@ -8,6 +8,13 @@ import { setValues } from "./gameUiSlice";
 import { getCurrentFace } from "./Helpers";
 
 var delayBroadcast;
+
+const useFocus = () => {
+  const htmlElRef = useRef(null)
+  const setFocus = () => {htmlElRef.current &&  htmlElRef.current.blur()}
+
+  return [ htmlElRef, setFocus ] 
+}
 
 export const TopBarUser = React.memo(({
   playerN,
@@ -32,6 +39,9 @@ export const TopBarUser = React.memo(({
   const [threatValue, setThreatValue] = useState(gameUiThreat);
   const gameUiWillpower = playerDataPlayerN ? playerDataPlayerN["willpower"] : 0;
   const [willpowerValue, setWillpowerValue] = useState(gameUiWillpower);
+  const [inputRefThreat, setInputFocusThreat] = useFocus();
+  const [inputRefWillpower, setInputFocusWillpower] = useFocus();
+
   useEffect(() => {    
     if (gameUiThreat !== threatValue) setThreatValue(gameUiThreat);
   }, [gameUiThreat]);
@@ -59,6 +69,7 @@ export const TopBarUser = React.memo(({
       gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
       if (increment > 0) chatBroadcast("game_update",{message: "raises threat by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces threat by "+(-increment)+" ("+newValue+")."});
+      setInputFocusThreat();
     }, 400);
   }
 
@@ -75,6 +86,7 @@ export const TopBarUser = React.memo(({
       gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
       if (increment > 0) chatBroadcast("game_update",{message: "raises willpower by "+increment+" ("+newValue+")."});
       if (increment < 0) chatBroadcast("game_update",{message: "reduces willpower by "+(-increment)+" ("+newValue+")."});
+      setInputFocusWillpower();
     }, 400);
   }
 
@@ -158,6 +170,7 @@ export const TopBarUser = React.memo(({
             onChange={handleThreatChange}
             type="number" min="0" step="1"
             disabled={playerN ? false : true}
+            ref={inputRefThreat}
           ></input>
         </div>
 
@@ -171,6 +184,7 @@ export const TopBarUser = React.memo(({
             onChange={handleWillpowerChange}
             type="number" min="0" step="1"
             disabled={playerN ? false : true}
+            ref={inputRefWillpower}
           ></input>
         </div>
       </div>
