@@ -774,6 +774,7 @@ defmodule DragnCardsGame.GameUI do
     IO.inspect(options)
     player_n = get_player_n(gameui, user_id)
     player_n = if options["for_player_n"] do options["for_player_n"] else player_n end
+    game_old = gameui["game"]
     gameui = if player_n do
       case action do
         "draw_card" ->
@@ -820,6 +821,8 @@ defmodule DragnCardsGame.GameUI do
           set_seat(gameui, options["user_id"], options["player_n"])
         "target_card_ids" ->
           target_card_ids(gameui, options["card_ids"], player_n)
+        "undo" ->
+          undo(gameui)
         _ ->
           gameui
       end
@@ -831,8 +834,21 @@ defmodule DragnCardsGame.GameUI do
             gameui
       end
     end
-    # IO.inspect(gameui)
+    # Compare state befor and after, and add a delta (unless we are undoing a move)
+    game_new = gameui["game"]
+    gameui = if action != "undo" do
+      game_new = Game.add_delta(game_new, game_old)
+      put_in(gameui["game"], game_new)
+    else
+      gameui
+    end
+    IO.inspect(gameui["game"]["deltas"])
     gameui
+  end
+
+  def undo(gameui) do
+    prev_game = Game.undo(gameui["game"])
+    put_in(gameui["game"], prev_game)
   end
 
   def draw_card(gameui, player_n) do

@@ -251,6 +251,11 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.2"], ["game", "phase", "Combat"]]}});
             chatBroadcast("game_update", {message: "set the round step to 6.2: Deal shadow cards."});
             gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
+        } else if (k === "U") {
+            // Undo an actio
+            // Set phase
+            gameBroadcast("game_action", {action: "undo", options: {}});
+            chatBroadcast("game_update", {message: "reverts the previous action."});
         } else if (k === "R") {
             hotkeyRefresh();
         } else if (k === "N") {
