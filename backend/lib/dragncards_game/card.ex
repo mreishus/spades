@@ -19,7 +19,7 @@ defmodule DragnCardsGame.Card do
   def card_from_cardrow(card_row, controller) do
     IO.puts("creating card controlled by #{controller}")
     %{
-      "id" => Ecto.UUID.generate,
+      "id" => String.slice(Ecto.UUID.generate,24..-1),
       "rotation" => 0,
       "exhausted" => false,
       "committed" => false,

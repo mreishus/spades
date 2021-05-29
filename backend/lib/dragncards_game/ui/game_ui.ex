@@ -823,6 +823,8 @@ defmodule DragnCardsGame.GameUI do
           target_card_ids(gameui, options["card_ids"], player_n)
         "undo" ->
           undo(gameui)
+        "redo" ->
+          redo(gameui)
         _ ->
           gameui
       end
@@ -834,21 +836,25 @@ defmodule DragnCardsGame.GameUI do
             gameui
       end
     end
-    # Compare state befor and after, and add a delta (unless we are undoing a move)
+    # Compare state before and after, and add a delta (unless we are undoing a move)
     game_new = gameui["game"]
-    gameui = if action != "undo" do
+    gameui = if action != "undo" and action != "redo" do
       game_new = Game.add_delta(game_new, game_old)
       put_in(gameui["game"], game_new)
     else
       gameui
     end
-    IO.inspect(gameui["game"]["deltas"])
     gameui
   end
 
   def undo(gameui) do
     prev_game = Game.undo(gameui["game"])
     put_in(gameui["game"], prev_game)
+  end
+
+  def redo(gameui) do
+    next_game = Game.redo(gameui["game"])
+    put_in(gameui["game"], next_game)
   end
 
   def draw_card(gameui, player_n) do

@@ -9,7 +9,7 @@ defmodule DragnCardsGame.Stack do
   @spec empty_stack() :: Map.t()
   def empty_stack() do
     %{
-      "id" => Ecto.UUID.generate,
+      "id" => String.slice(Ecto.UUID.generate,24..-1),
       "cardIds" => []
     }
   end
@@ -17,7 +17,7 @@ defmodule DragnCardsGame.Stack do
   @spec stack_from_card(Card.t()) :: Map.t()
   def stack_from_card(card) do
     %{
-      "id" => Ecto.UUID.generate,
+      "id" => String.slice(Ecto.UUID.generate,24..-1),
       "cardIds" => [card["id"]]
     }
   end
@@ -27,7 +27,7 @@ defmodule DragnCardsGame.Stack do
     #IO.puts("card_row")
     #IO.inspect(card_row)
     %{
-      "id" => Ecto.UUID.generate,
+      "id" => String.slice(Ecto.UUID.generate,24..-1),
       "cardIds" => [card["id"]]
     }
   end
@@ -37,7 +37,7 @@ defmodule DragnCardsGame.Stack do
     #IO.puts("card_row")
     #IO.inspect(card_row)
     %{
-      "id" => Ecto.UUID.generate,
+      "id" => String.slice(Ecto.UUID.generate,24..-1),
       "cardIds" => [Card.card_from_cardrow(card_row, controller)]
     }
   end
