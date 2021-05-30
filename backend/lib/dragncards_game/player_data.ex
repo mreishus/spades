@@ -18,6 +18,7 @@ defmodule DragnCardsGame.PlayerData do
       "cards_drawn_during_resource" => 1,
       "arrows" => [],
       "visibleHand" => false,
+      "refreshed" => false,
     }
   end
 

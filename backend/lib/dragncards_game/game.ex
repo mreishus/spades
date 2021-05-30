@@ -15,6 +15,7 @@ defmodule DragnCardsGame.Game do
   def new(%{} = options) do
     IO.puts("game new")
     game = %{
+      "id" => Ecto.UUID.generate,
       "version" => 0.1,
       "options" => options,
       "numPlayers" => 1,

@@ -54,6 +54,7 @@ defmodule DragnCardsWeb.RoomChannel do
   ) do
     GameUIServer.game_action(room_slug, user_id, action, options)
     state = GameUIServer.state(room_slug)
+
     socket = socket |> assign(:game_ui, state)
     notify(socket)
 
@@ -105,11 +106,22 @@ defmodule DragnCardsWeb.RoomChannel do
     broadcast!(socket, "ask_for_update", %{})
   end
 
+  # Remove deltas from a gameui, as it's not needed for rendering
+  def remove_deltas(gameui) do
+    put_in(gameui["game"]["deltas"], nil)
+  end
+
   # This is what part of the state gets sent to the client.
   # It can be used to transform or hide it before they get it.
   defp client_state(socket) do
-    user_id = Map.get(socket.assigns, :user_id) || 0
-    IO.puts("client_state")
-    socket.assigns
+    if Map.has_key?(socket.assigns, :game_ui) do
+      socket.assigns
+      |> Map.put(
+        :game_ui,
+        remove_deltas(socket.assigns.game_ui)
+      )
+    else
+      socket.assigns
+    end
   end
 end

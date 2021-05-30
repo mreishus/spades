@@ -4,6 +4,7 @@ defmodule DragnCardsGame.GameUI do
   """
 
   alias DragnCardsGame.{Game, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens, CardFace, Player}
+  alias DragnCards.{Repo, Replay}
 
   @type t :: Map.t()
 
@@ -825,6 +826,8 @@ defmodule DragnCardsGame.GameUI do
           undo(gameui)
         "redo" ->
           redo(gameui)
+        "save_replay" ->
+          save_replay(gameui, user_id)
         _ ->
           gameui
       end
@@ -844,6 +847,65 @@ defmodule DragnCardsGame.GameUI do
     else
       gameui
     end
+    gameui
+  end
+
+  def get_hero_list(gameui, player_n) do
+    criteria = [["sides","A","type","Hero"], ["owner",player_n], ["groupType","play"]]
+    heroes_in_play = get_cards_matching_criteria(gameui, criteria)
+    criteria = [["sides","A","type","Hero"], ["owner",player_n], ["groupId", player_n<>"Discard"]]
+    heroes_in_discard = get_cards_matching_criteria(gameui, criteria)
+    heroes_in_play ++ heroes_in_discard
+  end
+
+  def get_hero_names(gameui, player_n) do
+    hero_list = get_hero_list(gameui, player_n)
+    Enum.reduce(hero_list, [], fn(hero, acc) ->
+      acc ++ [hero["sides"]["A"]["name"]]
+    end)
+  end
+
+  def get_encounter_name(gameui) do
+    criteria = [["sides","A","cost",1], ["sides","A","engagementCost","A"]]
+    card_1As = get_cards_matching_criteria(gameui, criteria)
+    if Enum.count(card_1As) > 0 do
+      # Pick the first quest 1A found
+      card_1A = Enum.at(card_1As, 0)
+      card_1A["cardEncounterSet"]
+    else
+      ""
+    end
+  end
+
+  def save_replay(gameui, user_id) do
+    game_uuid = gameui["game"]["id"]
+    IO.puts("replay")
+    num_players = gameui["game"]["numPlayers"]
+    hero_1_names = get_hero_names(gameui, "player1")
+    hero_2_names = get_hero_names(gameui, "player2")
+    hero_3_names = get_hero_names(gameui, "player3")
+    hero_4_names = get_hero_names(gameui, "player4")
+    encounter_name = get_encounter_name(gameui)
+    updates = %{
+      encounter: encounter_name,
+      rounds: gameui["game"]["roundNumber"],
+      num_players: gameui["game"]["numPlayers"],
+      player1_heroes: hero_1_names,
+      player2_heroes: hero_2_names,
+      player3_heroes: hero_3_names,
+      player4_heroes: hero_4_names,
+      game_json: %{}, #gameui["game"],
+    }
+
+    result =
+      case Repo.get_by(Replay, [user: user_id, uuid: game_uuid]) do
+        nil  -> %Replay{user: user_id, uuid: game_uuid} # Replay not found, we build one
+        replay -> replay  # Replay exists, let's use it
+      end
+      |> Replay.changeset(updates)
+      |> Repo.insert_or_update
+    IO.inspect(result)
+    #Repo.insert(replays)
     gameui
   end
 
@@ -1058,12 +1120,6 @@ defmodule DragnCardsGame.GameUI do
     threat = Enum.reduce(load_list, 0, fn(r, acc) ->
       sideA = r["cardRow"]["sides"]["A"]
       if sideA["type"] == "Hero" && r["groupId"] == player_n<>"Play1" do
-        IO.puts("CARD THREAT ~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        IO.inspect(sideA["name"])
-        IO.inspect(sideA["cost"])
-        IO.inspect(sideA["type"])
-        IO.inspect(sideA["quantity"])
-        IO.inspect(acc)
         acc + CardFace.convert_to_integer(sideA["cost"])*r["quantity"]
       else
         acc
@@ -1105,6 +1161,7 @@ defmodule DragnCardsGame.GameUI do
     end)
   end
 
+  # Criteria is a list like: [["sides","sideUp","type","Hero"], ["controller",playerN], ["groupType","play"]],
   def get_cards_matching_criteria(gameui, criteria) do
     flat_list = flat_list_of_cards(gameui)
     Enum.reduce(flat_list, [], fn(card, acc) ->

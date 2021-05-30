@@ -84,22 +84,17 @@ defmodule DragnCardsGame.GameUIServer do
   #####################################
 
   def init({gameName, user, options = %{}}) do
-    IO.puts("game_ui_server init a")
     gameui =
       case :ets.lookup(:game_uis, gameName) do
         [] ->
-          IO.puts("case 1")
-          IO.inspect(user)
           gameui = GameUI.new(gameName, user, options)
           :ets.insert(:game_uis, {gameName, gameui})
           gameui
 
         [{^gameName, gameui}] ->
-          IO.puts("case 2")
           gameui
       end
 
-    IO.puts("game_ui_server init b")
     GameRegistry.add(gameui["gameName"], gameui)
     {:ok, gameui, timeout(gameui)}
   end
