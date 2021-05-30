@@ -18,7 +18,7 @@ export const Profile: React.FC<Props> = () => {
   return (
     <Container>
       <div className="bg-gray-100 p-4 rounded-lg max-w-xl shadow">
-        <h1 className="font-semibold mb-4">{user.alias}</h1>
+        <h1 className="font-semibold mb-4 text-black">{user.alias}</h1>
         <div>
           <span className="font-semibold">Account created</span>:{" "}
           {insertedAbsolute} ({insertedRelative})
