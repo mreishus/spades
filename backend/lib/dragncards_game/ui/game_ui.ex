@@ -894,7 +894,7 @@ defmodule DragnCardsGame.GameUI do
       player2_heroes: hero_2_names,
       player3_heroes: hero_3_names,
       player4_heroes: hero_4_names,
-      game_json: %{}, #gameui["game"],
+      game_json: gameui["game"],
     }
 
     result =
