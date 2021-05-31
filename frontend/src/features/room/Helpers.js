@@ -1,5 +1,5 @@
 export const getCurrentFace = (card) => {
-  if (!card) return null;
+  if (!card?.currentSide) return null;
   return card.sides[card.currentSide];
 }
 
@@ -91,6 +91,7 @@ export const getVisibleFaceSRC = (card, playerN) => {
 }
 
 export const usesThreatToken = (card) => {
+  console.log("getCurrentFace", card)
   const cardFace = getCurrentFace(card);
   if (["Contract", "Hero", "Ally", "Attachment", "Event", "Objective Ally"].includes(cardFace.type)) return false;
   if (card.controller != "shared") return false;
@@ -98,8 +99,8 @@ export const usesThreatToken = (card) => {
   return true;
 } 
 
-export const processTokenType = (tokenType, cardType) => {
-  if (tokenType === "willpowerThreat") return usesThreatToken(cardType) ? "threat" : "willpower";
+export const processTokenType = (tokenType, card) => {
+  if (tokenType === "willpowerThreat") return usesThreatToken(card) ? "threat" : "willpower";
   return tokenType;
 }
 

@@ -17,7 +17,6 @@ defmodule DragnCardsGame.Card do
 
   @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
   def card_from_cardrow(card_row, controller) do
-    IO.puts("creating card controlled by #{controller}")
     %{
       "id" => String.slice(Ecto.UUID.generate,24..-1),
       "rotation" => 0,

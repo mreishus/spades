@@ -5,19 +5,33 @@ defmodule DragnCardsGame.Game do
   some toy game used to test everything around it.
   """
   alias DragnCardsGame.{Groups, Game, PlayerData}
+  alias DragnCards.{Repo, Replay}
 
   @type t :: Map.t()
 
   @doc """
+  load/1:  Create a game with specified options.
+  """
+  @spec load(Map.t()) :: Game.t()
+  def load(%{} = options) do
+    game = if options["replayId"] != "" do
+      replay = Repo.get_by(Replay, uuid: options["replayId"])
+      if replay.game_json do replay.game_json else Game.new() end
+    else
+      Game.new()
+    end
+    # Refresh id so that replay does not get overwritten
+    put_in(game["id"], Ecto.UUID.generate)
+  end
+
+  @doc """
   new/1:  Create a game with specified options.
   """
-  @spec new(Map.t()) :: Game.t()
-  def new(%{} = options) do
-    IO.puts("game new")
-    game = %{
+  @spec new() :: Game.t()
+  def new() do
+    %{
       "id" => Ecto.UUID.generate,
       "version" => 0.1,
-      "options" => options,
       "numPlayers" => 1,
       "layout" => "standard",
       "firstPlayer" => "player1",
@@ -37,7 +51,6 @@ defmodule DragnCardsGame.Game do
       "deltas" => [],
       "replayStep" => 0,
     }
-    game
   end
 
   def add_delta(game, prev_game) do
@@ -50,6 +63,17 @@ defmodule DragnCardsGame.Game do
       put_in(game["replayStep"], game["replayStep"]+1)
     else
       game
+    end
+  end
+
+  def step(game, direction) do
+    case direction do
+      "undo" ->
+        undo(game)
+      "redo" ->
+        redo(game)
+      _ ->
+        game
     end
   end
 
@@ -91,7 +115,10 @@ defmodule DragnCardsGame.Game do
       :equal ->
         nil
       :added ->
-        [:removed, diff_map[:value]]
+        [":removed", diff_map[:value]]
+      # TODO: Check that removal behaves properly
+      :removed ->
+        [diff_map[:value], ":removed"]
       :primitive_change ->
         [diff_map[:removed],diff_map[:added]]
       :map_change ->
@@ -109,17 +136,17 @@ defmodule DragnCardsGame.Game do
     end
   end
 
-  def apply_delta(map, delta, type) do
+  def apply_delta(map, delta, direction) do
     Enum.reduce(delta, map, fn({k, v}, acc) ->
       if is_map(v) do
-        put_in(acc[k], apply_delta(map[k], v, type))
+        put_in(acc[k], apply_delta(map[k], v, direction))
       else
-        new_val = if type == "undo" do
+        new_val = if direction == "undo" do
           Enum.at(v,0)
         else
           Enum.at(v,1)
         end
-        if new_val == :removed do
+        if new_val == ":removed" do
           Map.delete(acc, k)
         else
           put_in(acc[k], new_val)
@@ -128,9 +155,30 @@ defmodule DragnCardsGame.Game do
     end)
   end
 
-  def apply_delta_list(game, delta_list, type) do
+  def apply_delta_list(game, delta_list, direction) do
     Enum.reduce(delta_list, game, fn(delta, acc) ->
-      apply_delta(acc, delta, type)
+      apply_delta(acc, delta, direction)
+    end)
+  end
+
+  def apply_deltas_until_round_change(game, direction) do
+    deltas = game["deltas"]
+    round_init = game["roundNumber"]
+    Enum.reduce_while(deltas, game, fn(delta, acc) ->
+      replay_step = acc["replayStep"]
+      # Check if we run into the beginning/end
+      cond do
+        direction == "undo" and replay_step == 0 ->
+          {:halt, acc}
+        direction == "redo" and replay_step == Enum.count(deltas) ->
+          {:halt, acc}
+      # Check if round has changed
+        acc["roundNumber"] != round_init ->
+          {:halt, acc}
+      # Otherwise continue
+        true ->
+          {:cont, step(acc, direction)}
+      end
     end)
   end
 

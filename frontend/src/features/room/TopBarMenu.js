@@ -124,6 +124,8 @@ export const TopBarMenu = React.memo(({
     if (data.action === "reset_game") {
       gameBroadcast("game_action", {action: "reset_game", options: {}});
       chatBroadcast("game_update", {message: "reset the game."});
+    } else if (data.action === "close_room") {
+      gameBroadcast("close_room", {});
     } else if (data.action === "load_deck") {
       loadFileDeck();
     } else if (data.action === "unload_my_deck") {
@@ -312,12 +314,22 @@ export const TopBarMenu = React.memo(({
         <li key={"spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn card</a></li>
         <li key={"unload_my_deck"}><a  onClick={() => handleMenuClick({action:"unload_my_deck"})} href="#">Unload my deck</a></li>
         <li key={"unload_encounter_deck"}><a  onClick={() => handleMenuClick({action:"unload_encounter_deck"})} href="#">Unload encounter</a></li>
-        <li key={"reset"}>
-            <a href="#">Reset Game</a>
-            <ul className="third-level-menu">
-                <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
-            </ul>
-        </li>
+        {host &&
+          <li key={"reset"}>
+              <a href="#">Reset Game</a>
+              <ul className="third-level-menu">
+                  <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
+              </ul>
+          </li> 
+        }       
+        {host &&
+          <li key={"shut_down"}>
+              <a href="#">Close room</a>
+              <ul className="third-level-menu">
+                  <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"close_room"})} href="#">Confirm</a></li>
+              </ul>
+          </li> 
+        }
       </ul>
     </li>
   )

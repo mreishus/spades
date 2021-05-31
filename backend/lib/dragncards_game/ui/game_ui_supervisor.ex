@@ -21,7 +21,6 @@ defmodule DragnCardsGame.GameUISupervisor do
   """
   def start_game(game_name, user, %{} = options) do
     IO.puts("gameuisup: start a")
-    IO.inspect(user)
     child_spec = %{
       id: GameUIServer,
       start: {GameUIServer, :start_link, [game_name, user, options]},

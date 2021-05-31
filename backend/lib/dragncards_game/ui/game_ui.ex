@@ -12,7 +12,7 @@ defmodule DragnCardsGame.GameUI do
   def new(game_name, user, %{} = options) do
     IO.puts("game_ui new")
     gameui = %{
-      "game" => Game.new(options),
+      "game" => Game.load(options),
       "gameName" => game_name,
       "options" => options,
       "created_at" => DateTime.utc_now(),
@@ -128,8 +128,6 @@ defmodule DragnCardsGame.GameUI do
 
   def get_group_by_card_id(gameui, card_id) do
     stack = get_stack_by_card_id(gameui, card_id)
-    IO.puts("get_group_by_card_id stack")
-    IO.inspect(stack)
     get_group_by_stack_id(gameui, stack["id"])
   end
 
@@ -227,9 +225,9 @@ defmodule DragnCardsGame.GameUI do
   # Card actions                                             #
   ############################################################
   def card_action(gameui, card_id, action, options) do
-    IO.puts("card_action")
-    IO.inspect(action)
-    IO.inspect(card_id)
+    # IO.puts("card_action")
+    # IO.inspect(action)
+    # IO.inspect(card_id)
     card = get_card(gameui, card_id)
     gameui = case action do
       "update_card_values" ->
@@ -347,8 +345,6 @@ defmodule DragnCardsGame.GameUI do
     {group_id, stack_index, card_index} = gsc(gameui, card)
     stack = get_stack_by_card_id(gameui, card["id"])
     shadow_card = get_card_by_gsc(gameui, ["sharedEncounterDeck", 0, 0])
-    IO.puts("shadow_card")
-    IO.inspect(shadow_card)
     if shadow_card do
       cards_size = Enum.count(stack["cardIds"])
       gameui = move_card(gameui, shadow_card["id"], group_id, stack_index, cards_size, true, true)
@@ -445,7 +441,6 @@ defmodule DragnCardsGame.GameUI do
 
   # Delete card from game
   def delete_card(gameui, card_id) do
-    IO.puts("deleting card")
     gameui
     |> delete_card_from_card_by_id(card_id)
     |> remove_from_stack(card_id)
@@ -459,7 +454,6 @@ defmodule DragnCardsGame.GameUI do
 
   # Removes a card from a stack, but is stays in cardById
   def remove_from_stack(gameui, card_id) do
-    IO.puts("remove from stack")
     stack_id = get_stack_by_card_id(gameui, card_id)["id"]
     old_card_ids = get_card_ids(gameui, stack_id)
     card_index = get_card_index_by_card_id(gameui, card_id)
@@ -685,7 +679,6 @@ defmodule DragnCardsGame.GameUI do
       if Enum.count(card_ids)>1 && get_group_type(gameui, dest_group_id) != "play" do
         reverse_card_ids = Enum.reverse(card_ids)
         Enum.reduce(reverse_card_ids, gameui, fn(card_id, acc) ->
-          pretty_print(gameui)
           acc = detach(acc, card_id)
         end)
       else
@@ -771,8 +764,8 @@ defmodule DragnCardsGame.GameUI do
   # Game actions                                                 #
   ################################################################
   def game_action(gameui, user_id, action, options) do
-    IO.puts("game_action #{action}")
-    IO.inspect(options)
+    #IO.puts("game_action #{action}")
+    #IO.inspect(options)
     player_n = get_player_n(gameui, user_id)
     player_n = if options["for_player_n"] do options["for_player_n"] else player_n end
     game_old = gameui["game"]
@@ -822,10 +815,8 @@ defmodule DragnCardsGame.GameUI do
           set_seat(gameui, options["user_id"], options["player_n"])
         "target_card_ids" ->
           target_card_ids(gameui, options["card_ids"], player_n)
-        "undo" ->
-          undo(gameui)
-        "redo" ->
-          redo(gameui)
+        "step_through" ->
+          step_through(gameui, options["size"], options["direction"])
         "save_replay" ->
           save_replay(gameui, user_id)
         _ ->
@@ -841,7 +832,7 @@ defmodule DragnCardsGame.GameUI do
     end
     # Compare state before and after, and add a delta (unless we are undoing a move)
     game_new = gameui["game"]
-    gameui = if action != "undo" and action != "redo" do
+    gameui = if action != "step_through" do
       game_new = Game.add_delta(game_new, game_old)
       put_in(gameui["game"], game_new)
     else
@@ -866,12 +857,19 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def get_encounter_name(gameui) do
-    criteria = [["sides","A","cost",1], ["sides","A","engagementCost","A"]]
+    criteria = [["sides","A","cost",1], ["sides","A","type","Quest"]]
     card_1As = get_cards_matching_criteria(gameui, criteria)
     if Enum.count(card_1As) > 0 do
       # Pick the first quest 1A found
       card_1A = Enum.at(card_1As, 0)
-      card_1A["cardEncounterSet"]
+      encounter_name = card_1A["cardEncounterSet"]
+      criteria = [["sides","A","type","Nightmare"]]
+      card_nightmare = get_cards_matching_criteria(gameui, criteria)
+      encounter_name = if Enum.count(card_nightmare) > 0 do
+        encounter_name <> " - Nightmare"
+      else
+        encounter_name
+      end
     else
       ""
     end
@@ -896,7 +894,6 @@ defmodule DragnCardsGame.GameUI do
       player4_heroes: hero_4_names,
       game_json: gameui["game"],
     }
-
     result =
       case Repo.get_by(Replay, [user: user_id, uuid: game_uuid]) do
         nil  -> %Replay{user: user_id, uuid: game_uuid} # Replay not found, we build one
@@ -904,19 +901,22 @@ defmodule DragnCardsGame.GameUI do
       end
       |> Replay.changeset(updates)
       |> Repo.insert_or_update
-    IO.inspect(result)
+    #IO.inspect(result)
     #Repo.insert(replays)
     gameui
   end
 
-  def undo(gameui) do
-    prev_game = Game.undo(gameui["game"])
-    put_in(gameui["game"], prev_game)
-  end
-
-  def redo(gameui) do
-    next_game = Game.redo(gameui["game"])
-    put_in(gameui["game"], next_game)
+  def step_through(gameui, size, direction) do
+    game_old = gameui["game"]
+    game_new = cond do
+      size == "single" ->
+        Game.step(game_old, direction)
+      size == "round" ->
+        Game.apply_deltas_until_round_change(game_old, direction)
+      true ->
+        game_old
+    end
+    put_in(gameui["game"], game_new)
   end
 
   def draw_card(gameui, player_n) do
@@ -938,7 +938,7 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def reset_game(gameui) do
-    new_game = Game.new(gameui["options"])
+    new_game = Game.new()
     put_in(gameui["game"], new_game)
   end
 
@@ -1055,10 +1055,6 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def load_card(gameui, card_row, group_id, quantity) do
-    IO.puts("load_card")
-    IO.inspect(card_row)
-    IO.inspect(group_id)
-    IO.inspect(quantity)
     if quantity do
       Enum.reduce(1..quantity, gameui, fn(index, acc) ->
         stack_ids = get_stack_ids(gameui, group_id)
@@ -1132,7 +1128,6 @@ defmodule DragnCardsGame.GameUI do
     # If deck size has increased from 0, assume it is at start of game and a draw of 6 is needed
     round_number = gameui["game"]["roundNumber"]
     round_step = gameui["game"]["roundStep"]
-    pretty_print(gameui)
     deck_size_after = Enum.count(get_stack_ids(gameui, player_n_deck_id))
 
     # Shuffle decks with new cards

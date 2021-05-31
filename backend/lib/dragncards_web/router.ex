@@ -32,6 +32,11 @@ defmodule DragnCardsWeb.Router do
     resources("/rooms", RoomController, except: [:new, :edit])
   end
 
+  scope "/api", DragnCardsWeb do
+    pipe_through(:api)
+    resources("/replays/:user_id", ReplayController, except: [:new, :edit])
+  end
+
   scope "/api/v1", DragnCardsWeb.API.V1, as: :api_v1 do
     pipe_through(:api)
 

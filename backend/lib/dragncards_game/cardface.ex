@@ -39,16 +39,11 @@ defmodule DragnCardsGame.CardFace do
     steps = if String.match?(text, ~r/at the end of the encounter phase/i) do steps ++ ["5.4"] else steps end
     steps = if String.match?(text, ~r/at the end of the combat phase/i) do steps ++ ["6.11"] else steps end
     steps = if String.match?(text, ~r/at the end of the refresh phase/i) do steps ++ ["7.3"] else steps end
-    IO.inspect(text)
-    IO.puts("steps")
-    IO.inspect(steps)
     steps
   end
 
   @spec cardface_from_cardrowside(Map.t()) :: Map.t()
   def cardface_from_cardrowside(card_row_side) do
-    IO.puts("card_face")
-    IO.inspect(card_row_side["name"])
     type = card_row_side["type"]
     width = if(type=="Quest" || type=="Side Quest", do: 1.39, else: 1.0)
     height = if(type=="Quest" || type=="Side Quest", do: 1.0, else: 1.39)

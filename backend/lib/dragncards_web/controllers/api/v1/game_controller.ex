@@ -14,12 +14,13 @@ defmodule DragnCardsWeb.API.V1.GameController do
     user = _params["room"]["user"]
     options = %{
       "privacyType" => _params["room"]["privacy_type"],
+      "replayId" => _params["game_options"]["replay_id"],
       "ringsDbIds" => _params["game_options"]["ringsdb_ids"],
       "ringsDbType" => _params["game_options"]["ringsdb_type"],
       "ringsDbDomain" => _params["game_options"]["ringsdb_domain"],
     }
-    IO.puts("options")
-    IO.inspect(options)
+    #IO.puts("options")
+    #IO.inspect(options)
     GameUISupervisor.start_game(game_name, user, options)
     room = Rooms.get_room_by_name(game_name)
     if room do

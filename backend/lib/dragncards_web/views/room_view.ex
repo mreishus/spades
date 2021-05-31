@@ -11,8 +11,6 @@ defmodule DragnCardsWeb.RoomView do
   end
 
   def render("room.json", %{room: room}) do
-    IO.puts("room render")
-    IO.inspect(room)
     %{
       id: room.id,
       name: room.name,

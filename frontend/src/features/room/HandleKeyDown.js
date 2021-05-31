@@ -76,6 +76,7 @@ export const HandleKeyDown = ({
 
         const onKeyUp = (event) => {
             if (event.key === "Shift") setKeypress({"Shift": false});
+            if (event.key === "Control") setKeypress({"Control": false});
         }
 
         document.addEventListener('keydown', onKeyDown);
@@ -106,9 +107,9 @@ export const HandleKeyDown = ({
         console.log(k);
         // Keep track of held key
         if (k === "Shift") setKeypress({"Shift": true});
-        else setKeypress({"Shift": false});
+        //else setKeypress({"Shift": false});
         if (k === "Control") setKeypress({"Control": true});
-        else setKeypress({"Control": false});
+        //else setKeypress({"Control": false});
 
         const isHost = playerN === leftmostNonEliminatedPlayerN(gameUi);
 
@@ -197,6 +198,7 @@ export const HandleKeyDown = ({
             });
             // Save replay
             gameBroadcast("game_action", {action: "save_replay", options: {}});
+            chatBroadcast("game_update",{message: "saved the replay to their profile."});
         }
 
         // General hotkeys
@@ -266,14 +268,22 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
         } else if (k === "ArrowLeft") {
             // Undo an action
-            // Set phase
-            gameBroadcast("game_action", {action: "undo", options: {}});
-            chatBroadcast("game_update", {message: "pressed undo."});
+            if (keypress["Shift"]) {
+                gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "undo"}});
+                chatBroadcast("game_update", {message: "rewinds a round."});
+            } else {
+                gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "undo"}});
+                chatBroadcast("game_update", {message: "pressed undo."});
+            }
         } else if (k === "ArrowRight") {
             // Undo an action
-            // Set phase
-            gameBroadcast("game_action", {action: "redo", options: {}});
-            chatBroadcast("game_update", {message: "pressed redo."});
+            if (keypress["Shift"]) {
+                gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "redo"}});
+                chatBroadcast("game_update", {message: "fast-forwards a round."});
+            } else {
+                gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "redo"}});
+                chatBroadcast("game_update", {message: "pressed redo."});
+            }
         } else if (k === "R") {
             hotkeyRefresh();
         } else if (k === "N") {
@@ -323,7 +333,7 @@ export const HandleKeyDown = ({
             // Increment token 
             if (keyTokenMap[k] !== undefined && groupType === "play") {
                 var tokenType = keyTokenMap[k][0];
-                tokenType = processTokenType(tokenType, activeCardFace.type);
+                tokenType = processTokenType(tokenType, activeCard);
                 // Check if mouse is hoving over top half or bottom half of card
                 // Top half will increase tokens, bottom half will decrease
                 const mousePosition = activeCardAndLoc.mousePosition;

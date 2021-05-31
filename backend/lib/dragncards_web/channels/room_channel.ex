@@ -16,7 +16,7 @@ defmodule DragnCardsWeb.RoomChannel do
       socket
       |> assign(:room_slug, room_slug)
       |> assign(:game_ui, state)
-    IO.puts("socket")
+    #IO.puts("socket")
     #IO.inspect(socket)
     # {:ok, socket}
     {:ok, client_state(socket), socket}

@@ -35,6 +35,7 @@ export const Lobby: React.FC = () => {
   const myUserID = myUser?.id;
 
   const [showModal, setShowModal] = useState(false);
+  const [replayId, setReplayId] = useState("");
   const [ringsDbIds, setRingsDbIds] = useState<Array<string>>([]);
   const [ringsDbType, setRingsDbType] = useState("");
   const [ringsDbDomain, setRingsDbDomain] = useState("");
@@ -49,13 +50,17 @@ export const Lobby: React.FC = () => {
     if (url.includes("newroom")) {
       if (url.includes("ringsdb") || url.includes("test")) {
         var splitUrl = url.split( '/' );
-        console.log(splitUrl);
         const newroomIndex = splitUrl.findIndex((e) => e === "newroom")
         setRingsDbDomain(splitUrl[newroomIndex + 1])
         setRingsDbType(splitUrl[newroomIndex + 2])
         var intArray = splitUrl.slice(newroomIndex + 3, splitUrl.length)
         intArray = filterArrayForPositiveInt(intArray);
         setRingsDbIds(intArray);
+      }
+      if (url.includes("replay")) {
+        var splitUrl = url.split( '/' );
+        const newroomIndex = splitUrl.findIndex((e) => e === "newroom")
+        setReplayId(splitUrl[newroomIndex + 2])
       }
       setShowModal(true);
     }
@@ -141,6 +146,7 @@ export const Lobby: React.FC = () => {
               isOpen={showModal}
               isLoggedIn={isLoggedIn}
               closeModal={() => setShowModal(false)}
+              replayId={replayId}
               ringsDbIds={ringsDbIds}
               ringsDbType={ringsDbType}
               ringsDbDomain={ringsDbDomain}

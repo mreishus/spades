@@ -44,27 +44,14 @@ defmodule DragnCardsWeb.API.V1.RegistrationController do
   """
   @spec send_confirmation_email(map(), Conn.t()) :: any()
   def send_confirmation_email(user, conn) do
-    IO.puts("send confirmation")
-    IO.inspect(user)
-    IO.inspect(conn)
-    IO.puts("secret_key_base")
-    IO.inspect(conn.secret_key_base)
     url = confirmation_url(conn, user)
-    IO.puts("url")
-    IO.inspect(url)
     unconfirmed_user = %{user | email: user.unconfirmed_email || user.email}
-    IO.puts("unconfirmed_user")
-    IO.inspect(unconfirmed_user)
     email = PowEmailConfirmation.Phoenix.Mailer.email_confirmation(conn, unconfirmed_user, url)
-    IO.puts("email")
-    IO.inspect(email)
     Pow.Phoenix.Mailer.deliver(conn, email)
   end
 
   defp confirmation_url(conn, user) do
     token = PowEmailConfirmation.Plug.sign_confirmation_token(conn, user)
-    IO.puts("token")
-    IO.inspect(token)
     Application.get_env(:dragncards, DragnCardsWeb.Endpoint)[:front_end_email_confirm_url]
     |> String.replace("{token}", token)
   end
