@@ -9,7 +9,7 @@ const useAuthDataApi = (
 ) => {
   const [data, setData] = useState<any>(initialData);
   const [url, setUrl] = useState(initialUrl); // Mechanism to refetch by changing url
-  const [hash, setHash] = useState<any>(null); // Mechanism to refrech same url, by changing hash
+  const [hash, setHash] = useState<any>(null); // Mechanism to refetch same url, by changing hash
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 

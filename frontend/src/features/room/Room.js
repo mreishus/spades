@@ -67,8 +67,14 @@ export const Room = ({ slug }) => {
   if (gameName !== slug) return (<div></div>);
   else {
     return (
-        <div className="gamebackground"
-          style={{height: "97vh"}}
+        <div className="background"
+          style={{
+            height: "97vh",
+            background: `url(${myUser?.background_url ? myUser.background_url : "https://i.imgur.com/sHn4yAA.jpg"})`,
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "cover",
+            backgroundPositionY: "50%",
+          }}
         >
             <KeypressProvider value={{Shift: false}}>
               <MousePositionProvider value={null}>

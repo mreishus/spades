@@ -73,7 +73,7 @@ p {
   border-radius: 4px; padding: 8px; */
 }
 
-.card {
+/* .card {
   background: url(https://s3.amazonaws.com/hallofbeorn-resources/Images/Cards/Conflict-at-the-Carrock/Song-of-Wisdom.jpg) no-repeat center center fixed;  
   position:  absolute; 
   left: 0;
@@ -82,14 +82,7 @@ p {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
-}
-
-.gamebackground {
-  background-image: url("https://i.imgur.com/sHn4yAA.jpg");
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-}
+} */
 
 .scrolltobottom {
   height: "10px";

@@ -1,6 +1,6 @@
 defmodule DragnCardsWeb.API.V1.ProfileController do
   use DragnCardsWeb, :controller
-  alias DragnCards.Users
+  alias DragnCards.{Users, Repo}
   alias DragnCards.Users.User
   alias Plug.Conn
 
@@ -34,5 +34,29 @@ defmodule DragnCardsWeb.API.V1.ProfileController do
       _ ->
         json(conn, %{user_profile: User.to_public_profile(user)})
     end
+  end
+
+  # Update: Update profile settings.
+  @spec update(Conn.t(), map()) :: Conn.t()
+  def update(conn, %{"user" => user}) do
+    user_id = user["id"]
+    updates = %{
+      background_url: user["background_url"],
+      player_back_url: user["player_back_url"],
+      encounter_back_url: user["encounter_back_url"],
+    }
+    u = Repo.get!(User, user_id)
+    u = Ecto.Changeset.change(u, updates)
+    case Repo.update(u) do
+      {:ok, struct}       -> # Updated with success
+        conn
+        |> json(%{success: %{message: "Updated settings"}})
+      {:error, changeset} -> # Something went wrong
+        IO.puts("Failed to update settings")
+        IO.inspect(changeset)
+        conn
+        |> json(%{success: %{message: "Failed to update settings"}})
+    end
+
   end
 end

@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import { useSelector } from 'react-redux';
 import { Tokens } from './Tokens';
 import { GROUPSINFO } from "./Constants";
+import useProfile from "../../hooks/useProfile";
 import { CardMouseRegion } from "./CardMouseRegion"
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +23,7 @@ export const Card = React.memo(({
     cardSize,
     registerDivToArrowsContext
 }) => {    
+    const user = useProfile();
     const cardStore = state => state?.gameUi?.game?.cardById[cardId];
     const card = useSelector(cardStore);
     if (!card) return null;
@@ -84,7 +86,7 @@ export const Card = React.memo(({
                     key={card.id}
                     style={{
                         position: "absolute",
-                        background: `url(${getVisibleFaceSRC(card,playerN)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
+                        background: `url(${getVisibleFaceSRC(card, playerN, user)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
                         height: `${cardSize*visibleFace.height}vw`,
                         width: `${cardSize*visibleFace.width}vw`,
                         left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize/3*cardIndex}vw`,

@@ -1,9 +1,11 @@
 import React from "react";
 import { useActiveCard } from "../../contexts/ActiveCardContext";
 import { getVisibleFace, getVisibleFaceSRC } from "./Helpers";
+import useProfile from "../../hooks/useProfile";
 
 export const GiantCard = ({playerN}) => {
   console.log("Rendering GiantCard");
+  const user = useProfile();
   const activeCardAndLoc = useActiveCard();
   const activeCard = activeCardAndLoc?.card
   const visibleFace = getVisibleFace(activeCard, playerN)
@@ -11,7 +13,7 @@ export const GiantCard = ({playerN}) => {
     return (
       <img 
         className="absolute"
-        src={getVisibleFaceSRC(activeCard, playerN)}
+        src={getVisibleFaceSRC(activeCard, playerN, user)}
         style={{
           right: activeCardAndLoc?.screenPosition === "left" ? "3%" : "",
           left: activeCardAndLoc?.screenPosition === "right" ? "3%" : "",

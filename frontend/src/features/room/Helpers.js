@@ -71,22 +71,22 @@ export const getVisibleFace = (card, playerN) => {
   else return null;
 }
 
-export const getVisibleFaceSRC = (card, playerN) => {
+export const getVisibleFaceSRC = (card, playerN, user) => {
   if (!card) return "";
   const visibleSide = getVisibleSide(card, playerN);
   if (visibleSide === "A") {
-      return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.jpg';
+    return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.jpg';
   } else { // Side B logic
-      const sideBName = card.sides.B.name;
-      if (sideBName === "player") {
-          return process.env.PUBLIC_URL + '/images/cardbacks/player.jpg';
-      } else if (sideBName === "encounter") {
-          return process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg';
-      } else if (sideBName) {
-          return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.B.jpg';
-      } else {
-          return '';
-      }
+    const sideBName = card.sides.B.name;
+    if (sideBName === "player") {
+      return (user?.player_back_url ? user.player_back_url : process.env.PUBLIC_URL + '/images/cardbacks/player.jpg')
+    } else if (sideBName === "encounter") {
+        return (user?.encounter_back_url ? user.encounter_back_url : process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg')
+    } else if (sideBName) {
+        return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.B.jpg';
+    } else {
+        return '';
+    }
   }
 }
 

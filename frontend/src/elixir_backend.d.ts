@@ -98,6 +98,10 @@ declare module "elixir-backend" {
     public alias: string;
     public inserted_at: string; // Actually contains a timestamp
     public email_confirmed_at: null | string; // Actually contains a timestamp
+    public supporter_level: null | integer;
+    public background_url: null | string;
+    public player_back_url: null | string;
+    public encounter_back_url: null | string;
   }
 
   // User: Public information about other users.

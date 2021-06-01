@@ -1,10 +1,10 @@
 /* The image shown below the deck of cards*/
 
 import React from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import styled from "@emotion/styled";
-import { CARDSCALE, LAYOUTINFO, playerBackSRC, encounterBackSRC} from "./Constants"
+import { useSelector } from 'react-redux';
+import { CARDSCALE, LAYOUTINFO} from "./Constants"
 import { getCurrentFace, getVisibleFaceSRC } from "./Helpers";
+import useProfile from "../../hooks/useProfile";
 
 const CardBack = React.memo(({
     groupType,
@@ -13,6 +13,7 @@ const CardBack = React.memo(({
     isDraggingFrom,
     playerN,
 }) => {
+  const user = useProfile();
   const storeStack0 = state => state?.gameUi?.game?.stackById[stackIds[0]];
   const stack0 = useSelector(storeStack0);
   const storeStack1 = state => state?.gameUi?.game?.stackById[stackIds[1]];
@@ -33,16 +34,16 @@ const CardBack = React.memo(({
   var visibleFace;
   const groupSize = stackIds.length;
   if (groupType=="deck" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
-    visibleFaceSRC = getVisibleFaceSRC(card0, playerN)
+    visibleFaceSRC = getVisibleFaceSRC(card0, playerN, user)
     visibleFace = getCurrentFace(card0)
   } else if (groupType=="deck" && groupSize>1 && isDraggingFrom) {
-    visibleFaceSRC = getVisibleFaceSRC(card1, playerN)
+    visibleFaceSRC = getVisibleFaceSRC(card1, playerN, user)
     visibleFace = getCurrentFace(card1)
   } else if (groupType=="discard" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
-    visibleFaceSRC = getVisibleFaceSRC(card0, playerN)
+    visibleFaceSRC = getVisibleFaceSRC(card0, playerN, user)
     visibleFace = getCurrentFace(card0)
   } else if (groupType=="discard" && groupSize>1 && isDraggingFrom) {
-    visibleFaceSRC = getVisibleFaceSRC(card1, playerN)
+    visibleFaceSRC = getVisibleFaceSRC(card1, playerN, user)
     visibleFace = getCurrentFace(card1)
   }
   if (visibleFace) {

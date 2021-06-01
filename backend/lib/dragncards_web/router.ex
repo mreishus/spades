@@ -52,6 +52,7 @@ defmodule DragnCardsWeb.Router do
 
     # Profile
     get("/profile", ProfileController, :index)
+    post("/profile/update", ProfileController, :update)
     get("/profile/:id", ProfileController, :show)
 
     # Admin Contact

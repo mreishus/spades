@@ -14,6 +14,10 @@ defmodule DragnCards.Users.User do
   schema "users" do
     pow_user_fields()
     field(:alias, :string)
+    field(:supporter_level, :integer)
+    field(:background_url, :string)
+    field(:player_back_url, :string)
+    field(:encounter_back_url, :string)
 
     timestamps()
   end
@@ -40,7 +44,11 @@ defmodule DragnCards.Users.User do
       alias: user.alias,
       email: user.email,
       inserted_at: user.inserted_at,
-      email_confirmed_at: user.email_confirmed_at
+      email_confirmed_at: user.email_confirmed_at,
+      supporter_level: user.supporter_level,
+      background_url: user.background_url,
+      player_back_url: user.player_back_url,
+      encounter_back_url: user.encounter_back_url,
     }
   end
 
