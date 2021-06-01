@@ -61,6 +61,20 @@ defmodule DragnCardsWeb.RoomChannel do
     {:reply, {:ok, client_state(socket)}, socket}
   end
 
+  def handle_in(
+    "close_room",
+    %{},
+    %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket
+  ) do
+    GameUIServer.close_room(room_slug, user_id)
+    state = GameUIServer.state(room_slug)
+
+    socket = socket |> assign(:game_ui, state)
+    notify(socket)
+
+    {:reply, {:ok, client_state(socket)}, socket}
+  end
+
   @doc """
   notify_from_outside/1: Tell everyone in the channel to send a message
   asking for a state update.
@@ -81,11 +95,20 @@ defmodule DragnCardsWeb.RoomChannel do
     DragnCardsWeb.Endpoint.broadcast!("room:" <> room_slug, "ask_for_update", payload)
   end
 
+  def terminate({:normal, _payload}, socket) do
+    # Closed normally. Do nothing.
+    {:ok}
+  end
+
   def terminate({:shutdown, :left}, socket) do
     on_terminate(socket)
   end
 
   def terminate({:shutdown, :closed}, socket) do
+    on_terminate(socket)
+  end
+
+  def terminate(_reason, socket) do
     on_terminate(socket)
   end
 

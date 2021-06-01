@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
+import { useHistory } from "react-router-dom";
 import useProfile from "../../hooks/useProfile";
 import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
@@ -16,6 +17,7 @@ export const TopBarMenu = React.memo(({
 }) => {
   const myUser = useProfile();
   const myUserID = myUser?.id;
+  const history = useHistory();
 
   const createdByStore = state => state.gameUi.created_by;
   const createdBy = useSelector(createdByStore);
@@ -125,6 +127,8 @@ export const TopBarMenu = React.memo(({
       gameBroadcast("game_action", {action: "reset_game", options: {}});
       chatBroadcast("game_update", {message: "reset the game."});
     } else if (data.action === "close_room") {
+      history.push("/lobby");
+      chatBroadcast("game_update", {message: "closed the room."});
       gameBroadcast("close_room", {});
     } else if (data.action === "load_deck") {
       loadFileDeck();

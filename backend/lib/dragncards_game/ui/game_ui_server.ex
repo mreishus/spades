@@ -66,8 +66,15 @@ defmodule DragnCardsGame.GameUIServer do
   """
   @spec game_action(String.t(), integer, String.t(), Map.t()) :: GameUI.t()
   def game_action(gameName, user_id, action, options) do
-    IO.puts("game_ui_server: game_action")
     GenServer.call(via_tuple(gameName), {:game_action, user_id, action, options})
+  end
+
+  @doc """
+  close_room/2: Shut down the GenServer.
+  """
+  @spec close_room(String.t(), integer) :: GameUI.t()
+  def close_room(gameName, user_id) do
+    GenServer.call(via_tuple(gameName), {:close_room})
   end
 
   @doc """
@@ -94,7 +101,6 @@ defmodule DragnCardsGame.GameUIServer do
         [{^gameName, gameui}] ->
           gameui
       end
-
     GameRegistry.add(gameui["gameName"], gameui)
     {:ok, gameui, timeout(gameui)}
   end
@@ -113,6 +119,16 @@ defmodule DragnCardsGame.GameUIServer do
         put_in(gameui["error"],true)
     end
     |> save_and_reply()
+  end
+
+  def handle_call({:close_room}, _from, gameui) do
+    Process.send_after(self(), :close_room, 1000)
+    gameui |> save_and_reply()
+    #{:stop, :normal, gameui}
+  end
+
+  def handle_info(:close_room, state) do
+    {:stop, :normal, state}
   end
 
   defp reply(new_gameui) do
