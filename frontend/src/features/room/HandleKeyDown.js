@@ -544,6 +544,8 @@ export const HandleKeyDown = ({
                         gameBroadcast("game_action", {action: "move_stack", options: {stack_id: questDeckStackIds[0], dest_group_id: groupId, dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})
                     }
                 }
+                // Clear GiantCard
+                setActiveCardAndLoc(null);
                 //dispatch(setGame(game));
             }
             // Shufle card into owner's deck
