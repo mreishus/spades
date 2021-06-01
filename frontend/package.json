@@ -27,7 +27,7 @@
     "react-redux": "^7.2.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^3.4.1",
-    "react-scroll-to-bottom": "^2.0.0",
+    "react-scroll-to-bottom": "^4.1.2",
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "typescript": "3.9.7"
