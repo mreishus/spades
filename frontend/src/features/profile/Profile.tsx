@@ -2,9 +2,11 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables";
 import Container from "../../components/basic/Container";
+import Button from "../../components/basic/Button";
 import useProfile from "../../hooks/useProfile";
 import useDataApi from "../../hooks/useDataApi";
 import { parseISO, format, formatDistanceToNow } from "date-fns";
+import useForm from "../../hooks/useForm";
 
 const columns = [
   {
@@ -89,6 +91,9 @@ export const Profile: React.FC<Props> = () => {
     "/be/api/replays/"+user?.id,
     null
   );
+  const { inputs, handleSubmit, handleInputChange } = useForm(async () => {
+    console.log("use form")
+  });
   if (user == null) {
     return null;
   }
@@ -127,13 +132,62 @@ export const Profile: React.FC<Props> = () => {
         </div>
       </Container>
 
+      <Container>
+        <div className="bg-gray-100 p-4 rounded-lg max-w-xl shadow">
+        <form action="POST" onSubmit={handleSubmit}>
+          <fieldset disabled={isLoading} aria-busy={isLoading}>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2">
+                Background image url
+              </label>
+              <input
+                name="background_url"
+                className="form-control w-full"
+                onChange={handleInputChange}
+                value={inputs.background || ""}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2">
+                Player card back image url
+              </label>
+              <input
+                name="player_card_url"
+                className="form-control w-full"
+                onChange={handleInputChange}
+                value={inputs.player_card_url || ""}
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-bold mb-2">
+                Encounter card back image url
+              </label>
+              <input
+                name="encounter_card_url"
+                className="form-control w-full"
+                onChange={handleInputChange}
+                value={inputs.encounter_card_url || ""}
+              />
+            </div>
+            <div className="flex items-center justify-between">
+              <Button isSubmit isPrimary className="mx-2">
+                Update
+              </Button>
+            </div>
+          </fieldset>
+        </form>
+        </div>
+      </Container>
+
       {data && 
-        <MUIDataTable
-          title={"Replays"}
-          data={data.data}
-          columns={columns}
-          options={options}
-        />
+          <div className="p-4">
+          <MUIDataTable
+            title={"Replays"}
+            data={data.data}
+            columns={columns}
+            options={options}
+          />
+        </div>
       }
     </>
   );
