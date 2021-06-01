@@ -124,7 +124,6 @@ defmodule DragnCardsGame.GameUIServer do
   def handle_call({:close_room}, _from, gameui) do
     Process.send_after(self(), :close_room, 1000)
     gameui |> save_and_reply()
-    #{:stop, :normal, gameui}
   end
 
   def handle_info(:close_room, state) do
