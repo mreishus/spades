@@ -131,7 +131,11 @@ defmodule DragnCardsWeb.RoomChannel do
 
   # Remove deltas from a gameui, as it's not needed for rendering
   def remove_deltas(gameui) do
-    put_in(gameui["game"]["deltas"], nil)
+    if gameui do
+      put_in(gameui["game"]["deltas"], nil)
+    else
+      gameui
+    end
   end
 
   # This is what part of the state gets sent to the client.
