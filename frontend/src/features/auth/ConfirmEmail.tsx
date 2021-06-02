@@ -29,7 +29,7 @@ export const ConfirmEmail: React.FC<Props> = ({ match }) => {
   useEffect(() => {
     if (isConfirmed) {
       console.log("Email confirmed, clearing cache.");
-      emptyCacheStorage();
+      //emptyCacheStorage();
     }
   }, [isConfirmed]);
 
