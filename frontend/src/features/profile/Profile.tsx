@@ -110,7 +110,7 @@ export const Profile: React.FC<Props> = () => {
           Currently displaying {user.supporter_level < 3 ? "your 3 most recent games." : "all your saved games."} 
           {user.supporter_level < 3 &&             
             <Button isSubmit isPrimary className="mx-2 mt-2">
-              <img className="inline-block h-5 w-5 mr-2" src="https://upload.wikimedia.org/wikipedia/commons/9/94/Patreon_logo.svg"/>
+              <img className="inline-block mr-2" style={{height: "20px", width: "20px"}} src="https://upload.wikimedia.org/wikipedia/commons/9/94/Patreon_logo.svg"/>
               <a className="text-white no-underline" href="https://www.patreon.com/dragncards">Unlock all saved games</a>
             </Button>
           }
