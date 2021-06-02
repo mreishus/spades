@@ -127,7 +127,7 @@ export const TopBarMenu = React.memo(({
       gameBroadcast("game_action", {action: "reset_game", options: {}});
       chatBroadcast("game_update", {message: "reset the game."});
     } else if (data.action === "close_room") {
-      history.push("/lobby");
+      history.push("/profile");
       chatBroadcast("game_update", {message: "closed the room."});
       gameBroadcast("close_room", {});
     } else if (data.action === "load_deck") {

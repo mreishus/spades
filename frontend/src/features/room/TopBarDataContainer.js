@@ -43,8 +43,6 @@ export const TopBarDataContainer = React.memo(({
     const playerWillpower = {"player1": 0, "player2": 0, "player3": 0, "player4": 0};
     Object.keys(cardById).forEach((cardId) => {
       const card = cardById[cardId];
-      console.log("CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC")
-      console.log(card);
       const currentFace = getCurrentFace(card);
       const cardWillpower = currentFace.willpower || 0;
       if (card.committed) {

@@ -110,15 +110,6 @@ export const Login: React.FC<Props> = () => {
               <Button isSubmit isPrimary className="mx-2">
                 Sign In
               </Button>
-
-              <div className="align-baseline font-bold text-sm ">
-                <Link
-                  className="text-blue-500 hover:text-blue-800"
-                  to="/reset-password"
-                >
-                  Forgot Password?
-                </Link>
-              </div>
             </div>
           </fieldset>
         </form>
@@ -127,9 +118,17 @@ export const Login: React.FC<Props> = () => {
         )}
         <div className="mt-2">
           <div className="mt-4">
+            <Link
+              className="text-blue-500 hover:text-blue-800"
+              to="/reset-password"
+            >
+              Forgot Password?
+            </Link>
+          </div>
+          <div className="mt-2">
             <Link className="text-blue-300" to="/signup">
               Don't have an account?
-            </Link>
+            </Link>       
           </div>
         </div>
       </div>

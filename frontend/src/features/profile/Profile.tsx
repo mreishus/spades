@@ -5,6 +5,7 @@ import Container from "../../components/basic/Container";
 import ProfileSettings from "./ProfileSettings";
 import useProfile from "../../hooks/useProfile";
 import useDataApi from "../../hooks/useDataApi";
+import Button from "../../components/basic/Button";
 import { parseISO, format, formatDistanceToNow } from "date-fns";
 import useForm from "../../hooks/useForm";
 import axios from "axios";
@@ -19,7 +20,7 @@ const columns = [
   {name: "player3_heroes", label: "Player 3", options: { filter: false, sort: false }},
   {name: "player4_heroes", label: "Player 4", options: { filter: false, sort: false }},
   {name: "updated_at", label: "Date", options: { filter: false, sort: true }},
- ];
+ ]; //, sortDirection: "asc" as const
 
 interface Props {}
 
@@ -66,11 +67,19 @@ export const Profile: React.FC<Props> = () => {
   }
   const options: MUIDataTableOptions = {
     filterType: "checkbox",
+    selectableRows: "none",
     onRowClick: rowData => openReplay(rowData)
   };
   console.log('Rendering Profile');
   console.log(data)
   console.log(inputs)
+  var filteredData;
+  if (data) {
+    if (user.supporter_level < 3) 
+      filteredData = data.data.slice(0,3);
+    else
+      filteredData = data.data;
+  }
   return (
     <>
       <Container>
@@ -95,15 +104,27 @@ export const Profile: React.FC<Props> = () => {
       </Container>
 
       <ProfileSettings/>
-
-      {data && 
-          <div className="p-4">
-          <MUIDataTable
-            title={"Replays"}
-            data={data.data}
-            columns={columns}
-            options={options}
-          />
+      <Container>
+        <div className="bg-gray-100 p-4 rounded max-w-xl shadow">
+          <h1 className="font-semibold mb-4 text-black">Saved game settings</h1>
+          Currently displaying {user.supporter_level < 3 ? "your 3 most recent games." : "all your saved games."} 
+          {user.supporter_level < 3 &&             
+            <Button isSubmit isPrimary className="mx-2 mt-2">
+              <img className="inline-block h-5 w-5 mr-2" src="https://upload.wikimedia.org/wikipedia/commons/9/94/Patreon_logo.svg"/>
+              <a className="text-white no-underline" href="https://www.patreon.com/">Unlock all saved games</a>
+            </Button>
+          }
+        </div>
+      </Container>
+      
+      {filteredData && 
+        <div className="p-4 bg-gray-900">
+        <MUIDataTable
+          title={"Saved games (click on a row to open)"}
+          data={filteredData}
+          columns={columns}
+          options={options}
+        />
         </div>
       }
     </>

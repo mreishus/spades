@@ -1,5 +1,6 @@
 defmodule DragnCardsWeb.ReplayController do
   use DragnCardsWeb, :controller
+  import Ecto.Query
 
   alias DragnCards.{Replay, Repo}
 
@@ -9,7 +10,10 @@ defmodule DragnCardsWeb.ReplayController do
   action_fallback DragnCardsWeb.FallbackController
 
   def index(conn, params) do
-    replays = Repo.all(Replay, user: params["user_id"])
+    user_id = params["user_id"]
+    query = from(r in Replay, order_by: [desc: :updated_at], where: r.user == ^user_id)
+    replays = Repo.all(query)
+    #replays = Repo.all(Replay, user: params["user_id"])
     render(conn, "index.json", replays: replays)
   end
 

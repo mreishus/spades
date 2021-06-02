@@ -60,6 +60,7 @@ export const ProfileSettings: React.FC<Props> = () => {
   return (
     <Container>
       <div className="bg-gray-100 p-4 rounded max-w-xl shadow">
+      <h1 className="font-semibold mb-4 text-black">Customization</h1>
       <form action="POST" onSubmit={handleSubmit}>
         <fieldset>
           <div className="mb-4">
@@ -99,9 +100,16 @@ export const ProfileSettings: React.FC<Props> = () => {
             />
           </div>
           <div className="flex items-center justify-between">
-            <Button isSubmit isPrimary className="mx-2">
-              {user.supporter_level < required_support_level ? <a className="text-white" href="https://www.patreon.com/">Enable</a> : "Update"}
-            </Button>
+            {user.supporter_level < required_support_level ?
+              <Button isPrimary className="mx-2 mt-2">
+                <img className="inline-block h-5 w-5 mr-2" src="https://upload.wikimedia.org/wikipedia/commons/9/94/Patreon_logo.svg"/>
+                <a className="text-white no-underline" href="https://www.patreon.com/">Unlock</a>
+              </Button>
+              :
+              <Button isSubmit isPrimary className="mx-2">
+                Update
+              </Button>
+            }
           </div>
         </fieldset>
       </form>
