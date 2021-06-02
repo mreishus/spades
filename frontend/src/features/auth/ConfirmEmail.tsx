@@ -10,7 +10,7 @@ type TParams = { confirm_token: string };
 interface Props extends RouteComponentProps<TParams> {}
 
 export const ConfirmEmail: React.FC<Props> = ({ match }) => {
-  const { authToken } = useAuth();
+  const { authToken, logOut } = useAuth();
   const {
     params: { confirm_token },
   } = match;
@@ -28,8 +28,8 @@ export const ConfirmEmail: React.FC<Props> = ({ match }) => {
 
   useEffect(() => {
     if (isConfirmed) {
-      console.log("Email confirmed, clearing cache.");
-      //emptyCacheStorage();
+      console.log("Email confirmed, logging out.");
+      logOut();
     }
   }, [isConfirmed]);
 
