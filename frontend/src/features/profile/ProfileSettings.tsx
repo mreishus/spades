@@ -103,7 +103,7 @@ export const ProfileSettings: React.FC<Props> = () => {
             {user.supporter_level < required_support_level ?
               <Button isPrimary className="mx-2 mt-2">
                 <img className="inline-block h-5 w-5 mr-2" src="https://upload.wikimedia.org/wikipedia/commons/9/94/Patreon_logo.svg"/>
-                <a className="text-white no-underline" href="https://www.patreon.com/">Unlock</a>
+                <a className="text-white no-underline" href="https://www.patreon.com/dragncards">Unlock</a>
               </Button>
               :
               <Button isSubmit isPrimary className="mx-2">
