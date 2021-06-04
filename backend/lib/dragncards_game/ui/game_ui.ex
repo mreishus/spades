@@ -390,13 +390,21 @@ defmodule DragnCardsGame.GameUI do
       #card = put_in(card["arrowIds"], [])
       # Set new controller
       card = put_in(card["controller"], dest_group["controller"])
-      # Leaving play: clear tokens/exhaust
+      # Entering play
+      card = if dest_group_type == "play" and orig_group_type != "play" do
+        card
+        |> Map.put("roundEnteredPlay", gameui["game"]["round"])
+        |> Map.put("phaseEnteredPlay", gameui["game"]["phase"])
+      else card end
+      # Leaving play
       card = if dest_group_type != "play" do
         card
         |> Map.put("tokens", Tokens.new())
         |> Map.put("tokensPerRound", Tokens.new())
         |> Map.put("exhausted", false)
         |> Map.put("rotation", 0)
+        |> Map.put("roundEnteredPlay", nil)
+        |> Map.put("phaseEnteredPlay", nil)
         |> clear_targets()
       else card end
       # Entering deck: flip card facedown, no peeking

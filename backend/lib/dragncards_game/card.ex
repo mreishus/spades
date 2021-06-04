@@ -39,6 +39,8 @@ defmodule DragnCardsGame.Card do
       },
       "tokens" => Tokens.new(),
       "tokensPerRound" => %{},
+      "roundEnteredPlay" => nil,
+      "phaseEnteerdPlay" => nil,
 
       "cardBackOverride" => card_row["cardbackoverride"],
       "cardEncounterSet" => card_row["cardencounterset"],
