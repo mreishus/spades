@@ -1,3 +1,6 @@
+import { cardDB } from "../../cardDB/cardDB";
+import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
+
 export const getCurrentFace = (card) => {
   if (!card?.currentSide) return null;
   return card.sides[card.currentSide];
@@ -419,5 +422,34 @@ export const processPostLoad = (loadList, playerN, gameBroadcast, chatBroadcast)
   }
 }
 
-
+export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadcast) => {
+  // TODO: combine duplicate code with TopBarMenu
+  var parseString = require('xml2js').parseString;
+  parseString(xmlText, function (err, deckJSON) {
+    if (!deckJSON) return;
+    const sections = deckJSON.deck.section;
+    var loadList = [];
+    sections.forEach(section => {
+      const sectionName = section['$'].name;
+      const cards = section.card;
+      if (!cards) return;
+      cards.forEach(card => {
+        const cardDbId = card['$'].id;
+        const quantity = parseInt(card['$'].qty);
+        var cardRow = cardDB[cardDbId];
+        if (cardRow) {
+          const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
+          cardRow['loadgroupid'] = loadGroupId;
+          cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
+          loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
+        }
+      })
+    })
+    // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
+    loadList = processLoadList(loadList, playerN);
+    gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
+    chatBroadcast("game_update",{message: "loaded a deck."});
+    processPostLoad(loadList, playerN, gameBroadcast, chatBroadcast);
+  })
+}
 

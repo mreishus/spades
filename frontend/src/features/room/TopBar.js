@@ -4,7 +4,7 @@ import { TopBarView } from "./TopBarView";
 import { TopBarDataContainer } from "./TopBarDataContainer";
 
 export const TopBar = React.memo(({
-  setShowSpawn,
+  setShowModal,
   setShowHotkeys,
   handleBrowseSelect,
   gameBroadcast,
@@ -18,7 +18,7 @@ export const TopBar = React.memo(({
     <div className="h-full">
       <ul className="top-level-menu float-left">
         <TopBarMenu
-          setShowSpawn={setShowSpawn}
+          setShowModal={setShowModal}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
           playerN={playerN}

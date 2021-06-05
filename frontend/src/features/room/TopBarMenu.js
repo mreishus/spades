@@ -7,10 +7,11 @@ import store from "../../store";
 import { setGame } from "./gameUiSlice";
 import { processLoadList, processPostLoad } from "./Helpers";
 import { cardDB } from "../../cardDB/cardDB";
+import { loadDeckFromXmlText } from "./Helpers";
 
 
 export const TopBarMenu = React.memo(({
-    setShowSpawn,
+    setShowModal,
     gameBroadcast,
     chatBroadcast,
     playerN,
@@ -157,7 +158,10 @@ export const TopBarMenu = React.memo(({
         }
       });
     } else if (data.action === "spawn_card") {
-      setShowSpawn(true);
+      setShowModal("card");
+    } else if (data.action === "spawn_quest") {
+      setShowModal("quest");
+      console.log("quest");
     } else if (data.action === "download") {
       downloadGameAsJson();
     } else if (data.action === "load_game") {
@@ -219,34 +223,8 @@ export const TopBarMenu = React.memo(({
     event.preventDefault();
     const reader = new FileReader();
     reader.onload = async (event) => { 
-      const xmltext = (event.target.result)
-      var parseString = require('xml2js').parseString;
-      parseString(xmltext, function (err, deckJSON) {
-        if (!deckJSON) return;
-        const sections = deckJSON.deck.section;
-        var loadList = [];
-        sections.forEach(section => {
-          const sectionName = section['$'].name;
-          const cards = section.card;
-          if (!cards) return;
-          cards.forEach(card => {
-            const cardDbId = card['$'].id;
-            const quantity = parseInt(card['$'].qty);
-            var cardRow = cardDB[cardDbId];
-            if (cardRow) {
-              const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
-              cardRow['loadgroupid'] = loadGroupId;
-              cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
-              loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
-            }
-          })
-        })
-        // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
-        loadList = processLoadList(loadList, playerN);
-        gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
-        chatBroadcast("game_update",{message: "loaded a deck."});
-        processPostLoad(loadList, playerN, gameBroadcast, chatBroadcast);
-      })
+      const xmlText = (event.target.result)
+      loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast);
     }
     reader.readAsText(event.target.files[0]);
   }
@@ -306,6 +284,9 @@ export const TopBarMenu = React.memo(({
             </ul>
           </li>                
         }
+        <li key={"load_quest"}>
+          <a href="#" onClick={() => handleMenuClick({action:"spawn_quest"})} href="#">Load quest</a>
+        </li>
         <li key={"load_deck"}>
           <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load deck</a>
           <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck}/>

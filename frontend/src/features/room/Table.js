@@ -3,6 +3,7 @@ import { TableLayout } from "./TableLayout";
 import { GiantCard } from "./GiantCard";
 import { TopBar } from "./TopBar";
 import { SpawnCardModal } from "./SpawnCardModal";
+import { SpawnQuestModal } from "./SpawnQuestModal";
 import { SideBar } from "./SideBar";
 import { Hotkeys } from "./Hotkeys";
 import { DropdownMenu } from "./DropdownMenu";
@@ -19,7 +20,7 @@ export const Table = React.memo(({
   registerDivToArrowsContext
 }) => {
   console.log('Rendering Table');
-  const [showSpawn, setShowSpawn] = useState(false);
+  const [showModal, setShowModal] = useState(null);
   const [showHotkeys, setShowHotkeys] = useState(false);
   const [sittingPlayerN, setSittingPlayerN] = useState("");
   // Show/hide group that allows you to browse certain cards in a group
@@ -68,7 +69,7 @@ export const Table = React.memo(({
           {/* Game menu bar */}
           <div className="bg-gray-600 text-white" style={{height: "6%"}}>
             <TopBar
-              setShowSpawn={setShowSpawn}
+              setShowModal={setShowModal}
               setShowHotkeys={setShowHotkeys}
               handleBrowseSelect={handleBrowseSelect}
               gameBroadcast={gameBroadcast}
@@ -99,10 +100,19 @@ export const Table = React.memo(({
       </div>
       {/* Card hover view */}
       <GiantCard playerN={playerN}/>
-      {showSpawn && 
+      {showModal === "card" && 
         <SpawnCardModal 
           setTyping={setTyping}
-          setShowSpawn={setShowSpawn}
+          setShowModal={setShowModal}
+          gameBroadcast={gameBroadcast}
+          chatBroadcast={chatBroadcast}
+        />
+      }
+      {showModal === "quest" && 
+        <SpawnQuestModal 
+          playerN={playerN}
+          setTyping={setTyping}
+          setShowModal={setShowModal}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
         />

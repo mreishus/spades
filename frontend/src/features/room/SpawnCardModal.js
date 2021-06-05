@@ -4,7 +4,7 @@ import { cardDB } from "../../cardDB/cardDB";
 
 export const SpawnCardModal = React.memo(({
     setTyping,
-    setShowSpawn,
+    setShowModal,
     gameBroadcast,
     chatBroadcast,
 }) => {
@@ -41,15 +41,16 @@ export const SpawnCardModal = React.memo(({
       <ReactModal
         closeTimeoutMS={200}
         isOpen={true}
-        onRequestClose={() => setShowSpawn(false)}
-        contentLabel="Create New Game"
+        onRequestClose={() => setShowModal(null)}
+        contentLabel="Spawn a card"
         overlayClassName="fixed inset-0 bg-black-50 z-10000"
         className="insert-auto overflow-auto p-5 bg-gray-700 border max-w-lg mx-auto my-12 rounded-lg outline-none"
       >
         <h1 className="mb-2">Spawn a card</h1>
         <input 
+          autoFocus
           style={{width:"50%"}} 
-          type="text" 
+          type="text"
           id="name" 
           name="name" 
           className="mb-6 mt-5" 
