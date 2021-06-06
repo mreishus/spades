@@ -116,7 +116,7 @@ export const SpawnQuestModal = React.memo(({
       const filtered = []; //Object.keys(cardDB);
       for (var i=0; i<questsOCTGN.length; i++) {
         const questName = questsOCTGN[i];
-        if (isStringInQuestPath(newSearchString, questName)) filtered.push(i);
+        if (isStringInQuestPath(newSearchString, questName) && isVisible(questName, user.playtest)) filtered.push(i);
         setFilteredIndices(filtered);
       }
     }
