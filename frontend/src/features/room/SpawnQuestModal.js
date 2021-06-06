@@ -7,14 +7,15 @@ import { loadDeckFromXmlText } from "./Helpers";
 import { CYCLEORDER, CYCLEINFO } from "./Constants";
 import { calcHeightCommon, DropdownItem, GoBack } from "./DropdownMenuHelpers";
 import zIndex from "@material-ui/core/styles/zIndex";
+import useProfile from "../../hooks/useProfile";
 
 function requireAll( requireContext ) {
   return requireContext.keys().map( requireContext );
 }
 const questsOCTGN = requireAll( require.context("../../../../../Lord-of-the-Rings/o8g/Decks/Quests/", true, /.o8d$/) );
 
-const isStringInQuestName = (str, questName) => {
-  const cleanQuest = getQuestNameFromPath(questName)
+const isStringInQuestPath = (str, questPath) => {
+  const cleanQuest = getQuestNameFromPath(questPath)
   const lowerCaseString = str.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
   const lowerCaseQuestName = cleanQuest.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "");
   // const strippedString = lowerCaseString.replace(/[^A-z]/ig, "");
@@ -22,8 +23,8 @@ const isStringInQuestName = (str, questName) => {
   return lowerCaseQuestName.includes(lowerCaseString);
 }
 
-const getQuestNameFromPath = (questName) => {
-  var name = questName.split("/").pop();
+const getQuestNameFromPath = (questPath) => {
+  var name = questPath.split("/").pop();
   var mode = name.split('.').reverse()[3];
   name = name.split('.').reverse()[2];
   name = name.slice(2);
@@ -31,32 +32,32 @@ const getQuestNameFromPath = (questName) => {
   return name;
 }
 
-const getQuestIdFromPath = (questName) => {
-  const name = questName.split("/").pop();
+const getQuestIdFromPath = (questPath) => {
+  const name = questPath.split("/").pop();
   const id = name.split("-")[0];
   return id.slice(1); // Remove the "Q" in "Q01.01"
 }
 
-const getModeLetterFromPath = (questName) => {
-  const name = questName.split("/").pop();
+const getModeLetterFromPath = (questPath) => {
+  const name = questPath.split("/").pop();
   const id = name.split("-")[0];
   return id.charAt(0); // Remove the "01.01" in "Q01.01"
 }
 
-const getModeLetterQuestIdFromPath = (questName) => {
-  const name = questName.split("/").pop();
+const getModeLetterQuestIdFromPath = (questPath) => {
+  const name = questPath.split("/").pop();
   const id = name.split("-")[0];
-  return getModeLetterFromPath(questName) + getQuestIdFromPath(questName);
+  return getModeLetterFromPath(questPath) + getQuestIdFromPath(questPath);
 }
 
-const getCycleIdFromPath = (questName) => {
-  const questId = getQuestIdFromPath(questName);
+const getCycleIdFromPath = (questPath) => {
+  const questId = getQuestIdFromPath(questPath);
   return questId.slice(0,2); // Remove the ".03" in "01.03"
 }
 
-const getModeNameFromPath = (questName) => {
-  const cycleId = getCycleIdFromPath(questName);
-  const modeLetter = getModeLetterFromPath(questName);
+const getModeNameFromPath = (questPath) => {
+  const cycleId = getCycleIdFromPath(questPath);
+  const modeLetter = getModeLetterFromPath(questPath);
   return getModeNameFromModeLetter(modeLetter) + (cycleId === "0C" ? " Campaign" : "");
 }
 
@@ -66,8 +67,8 @@ const getModeNameFromModeLetter = (modeLetter) => {
   else return "Normal";
 }
 
-const getQuestNameAndModeFromPath = (questName) => {
-  return getQuestNameFromPath(questName) + " (" + getModeNameFromPath(questName) + ")";
+const getQuestNameAndModeFromPath = (questPath) => {
+  return getQuestNameFromPath(questPath) + " (" + getModeNameFromPath(questPath) + ")";
 }
 
 const getIndexFromModeAndId = (modeAndId) => { // modeAndId is "N01.01" or "Q01.01" or "E01.01"
@@ -78,6 +79,12 @@ const getIndexFromModeAndId = (modeAndId) => { // modeAndId is "N01.01" or "Q01.
   return -1;
 }
 
+const isVisible = (questPath, playtester) => {
+  const questName = getQuestNameFromPath(questPath);
+  if (questName.toLowerCase().includes("playtest") && !playtester) return false;
+  else return true;
+}
+
 export const SpawnQuestModal = React.memo(({
     playerN,
     setTyping,
@@ -85,6 +92,7 @@ export const SpawnQuestModal = React.memo(({
     gameBroadcast,
     chatBroadcast,
 }) => {
+    const user = useProfile();
     const [filteredIndices, setFilteredIndices] = useState([]);
     const [activeMenu, setActiveMenu] = useState("main");
     const [menuHeight, setMenuHeight] = useState(null);
@@ -108,14 +116,20 @@ export const SpawnQuestModal = React.memo(({
       const filtered = []; //Object.keys(cardDB);
       for (var i=0; i<questsOCTGN.length; i++) {
         const questName = questsOCTGN[i];
-        if (isStringInQuestName(newSearchString, questName)) filtered.push(i);
+        if (isStringInQuestPath(newSearchString, questName)) filtered.push(i);
         setFilteredIndices(filtered);
       }
     }
 
-    const handleDropdownClick = (props) => {
+    const handleDropdownClick = async(props) => {
       console.log(props);
-      setActiveMenu(props.goToMenu);
+      if (props.goToMenu) setActiveMenu(props.goToMenu);
+      else if (props.questIndex) {
+        const res = await fetch(questsOCTGN[props.questIndex]);
+        const xmlText = await res.text();
+        loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast);
+        setShowModal(null);
+      }
     }
 
     const calcHeight = (el) => {
@@ -174,7 +188,6 @@ export const SpawnQuestModal = React.memo(({
               </table>
           )
         }
-
         {/* Menu */}
         {searchString === "" &&
           <div 
@@ -203,7 +216,7 @@ export const SpawnQuestModal = React.memo(({
                 <div className="menu">
                   <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
                   {questsOCTGN.map((questPath, index) => {
-                    if (questPath.includes("Q"+cycleId)) return(
+                    if (questPath.includes("Q"+cycleId) && isVisible(questPath, user.playtester)) return(
                       <DropdownItem
                         rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
                         goToMenu={getQuestIdFromPath(questPath)}
@@ -230,7 +243,7 @@ export const SpawnQuestModal = React.memo(({
                     const selectedPath = questsOCTGN[selectedIndex];
                     if (selectedIndex >= 0) return(
                       <DropdownItem
-                        action={selectedIndex}
+                        questIndex={selectedIndex}
                         clickCallback={handleDropdownClick}>
                         {getModeNameFromPath(selectedPath)}
                       </DropdownItem>

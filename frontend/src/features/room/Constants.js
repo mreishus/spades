@@ -1,7 +1,7 @@
 //export const CARDSCALE = 3.;
 export const CARDSCALE = 26;
 
-export const CYCLEORDER = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "00", "99", "ALeP01"];
+export const CYCLEORDER = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "00", "99", "A1"];
 
 export const CYCLEINFO = {
   "0A": {name: "The Hobbit"},
@@ -18,7 +18,7 @@ export const CYCLEINFO = {
   "08": {name: "The Wilds of Rhovanion & Ered Mithrin"},
   "09": {name: "A Shadow in the East & Vengenace of Mordor"},
   "99": {name: "Print on Demand"},
-  "ALeP01": {name: "ALeP - Children of Eorl & Oaths of the Rohirrim"},
+  "A1": {name: "ALeP - Children of Eorl & Oaths of the Rohirrim"},
 }
 
 export const GROUPSINFO = {

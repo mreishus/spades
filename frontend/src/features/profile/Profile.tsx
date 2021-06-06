@@ -100,6 +100,11 @@ export const Profile: React.FC<Props> = () => {
           <div>
             <span className="font-semibold">Patreon supporter level</span>: {user.supporter_level ? user.supporter_level : 0}
           </div>
+          {user.playtester && 
+            <div>
+              <span className="font-semibold">Playtester</span>
+            </div>
+          }
         </div>
       </Container>
 
