@@ -284,21 +284,29 @@ export const TopBarMenu = React.memo(({
             </ul>
           </li>                
         }
-        <li key={"load_quest"}>
-          <a href="#" onClick={() => handleMenuClick({action:"spawn_quest"})} href="#">Load quest</a>
+        <li key={"load"}>
+          <a href="#">Load</a>
+          <ul className="third-level-menu">
+            <li key={"load_quest"}><a href="#" onClick={() => handleMenuClick({action:"spawn_quest"})} href="#">Load quest</a></li>
+            <li key={"load_deck"}>
+              <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load deck (.o8d)</a>
+              <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck}/>
+            </li>
+            <li key={"load_game"}>
+              <a  onClick={() => handleMenuClick({action:"load_game"})} href="#">Load game (.json)</a>
+              <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson}/>
+            </li>
+          </ul>
+        </li> 
+        <li key={"unload"}>
+          <a href="#">Unload</a>
+          <ul className="third-level-menu">        
+            <li key={"unload_my_deck"}><a  onClick={() => handleMenuClick({action:"unload_my_deck"})} href="#">Unload my deck</a></li>
+            <li key={"unload_encounter_deck"}><a  onClick={() => handleMenuClick({action:"unload_encounter_deck"})} href="#">Unload encounter</a></li>
+          </ul>
         </li>
-        <li key={"load_deck"}>
-          <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load deck</a>
-          <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck}/>
-        </li>
-        <li key={"load_game"}>
-          <a  onClick={() => handleMenuClick({action:"load_game"})} href="#">Load game</a>
-          <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson}/>
-        </li>
-        <li key={"download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
-        <li key={"spawn"}><a  onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn card</a></li>
-        <li key={"unload_my_deck"}><a  onClick={() => handleMenuClick({action:"unload_my_deck"})} href="#">Unload my deck</a></li>
-        <li key={"unload_encounter_deck"}><a  onClick={() => handleMenuClick({action:"unload_encounter_deck"})} href="#">Unload encounter</a></li>
+        <li key={"spawn"}><a onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn card</a></li>
+        <li key={"download"}><a onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
         {host &&
           <li key={"reset"}>
               <a href="#">Reset Game</a>
