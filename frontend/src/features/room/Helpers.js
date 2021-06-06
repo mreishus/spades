@@ -379,9 +379,6 @@ export const processLoadList = (loadList, playerN) => {
           newLoadList[i] = {...item, quantity: item.quantity - 1};
           newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})
         }
-      }      
-      if (item.cardRow.id === "423e9efe-7908-4c04-97bd-f4a826081c9f") {
-        newLoadList[i] = {...item, groupId: playerN+"Play2"};
       }
     }  
   } 
