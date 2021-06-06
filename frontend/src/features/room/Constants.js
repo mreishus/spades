@@ -1,5 +1,26 @@
 //export const CARDSCALE = 3.;
 export const CARDSCALE = 26;
+
+export const CYCLEORDER = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "00", "99", "ALeP01"];
+
+export const CYCLEINFO = {
+  "0A": {name: "The Hobbit"},
+  "0B": {name: "The Lord of the Rings Standalone"},
+  "0C": {name: "The Lord of the Rings Campaign"},
+  "00": {name: "Two-Player Limited-Edition Starter"},
+  "01": {name: "Core Set & Shadows of Mirkwood"},
+  "02": {name: "Khazad-dûm & Dwarrowdelf"},
+  "03": {name: "Heirs of Númenor & Against the Shadow"},
+  "04": {name: "The Voice of Isengard & The Ringmaker"},
+  "05": {name: "The Lost Realm & Angmar Awakened"},
+  "06": {name: "The Grey Havens & The Dreamchaser"},
+  "07": {name: "The Sands of Harad & The Haradrim"},
+  "08": {name: "The Wilds of Rhovanion & Ered Mithrin"},
+  "09": {name: "A Shadow in the East & Vengenace of Mordor"},
+  "99": {name: "Print on Demand"},
+  "ALeP01": {name: "ALeP - Children of Eorl & Oaths of the Rohirrim"},
+}
+
 export const GROUPSINFO = {
     "sharedEncounterDeck": {name: "Encounter Deck", tablename: "Encounter"},
     "sharedEncounterDiscard": {name: "Encounter Discard", tablename: "Discard"},

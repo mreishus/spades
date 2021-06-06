@@ -90,6 +90,18 @@
     overflow: hidden;
     transition: height var(--speed) ease;
   }
+
+  .modalmenu {
+    /* position: absolute; */
+    width: 100%;
+    /* transform: translateX(-45%); */
+    background-color: var(--bg);
+    border: var(--border);
+    border-radius: var(--border-radius);
+    padding: 10px;
+    overflow: hidden;
+    transition: height var(--speed) ease;
+  }
   
   .menu {
     width: 100%;
