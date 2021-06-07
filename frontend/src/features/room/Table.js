@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
+import { useSelector } from 'react-redux';
 import { TableLayout } from "./TableLayout";
 import { GiantCard } from "./GiantCard";
 import { TopBar } from "./TopBar";
@@ -6,6 +7,7 @@ import { SpawnCardModal } from "./SpawnCardModal";
 import { SpawnQuestModal } from "./SpawnQuestModal";
 import { SideBar } from "./SideBar";
 import { Hotkeys } from "./Hotkeys";
+import { PlayersInRoom } from "./PlayersInRoom";
 import { DropdownMenu } from "./DropdownMenu";
 
 import "../../css/custom-dropdown.css";
@@ -22,6 +24,7 @@ export const Table = React.memo(({
   console.log('Rendering Table');
   const [showModal, setShowModal] = useState(null);
   const [showHotkeys, setShowHotkeys] = useState(false);
+  const [showPlayersInRoom, setShowPlayersInRoom] = useState(false);
   const [sittingPlayerN, setSittingPlayerN] = useState("");
   // Show/hide group that allows you to browse certain cards in a group
   const [browseGroupId, setBrowseGroupId] = useState("");
@@ -56,7 +59,8 @@ export const Table = React.memo(({
         chatBroadcast={chatBroadcast}
       />
 
-      {showHotkeys && <Hotkeys setShowHotkeys={setShowHotkeys}/>}
+      {showHotkeys && <Hotkeys setShowWindow={setShowHotkeys}/>}
+      {showPlayersInRoom && <PlayersInRoom setShowWindow={setShowPlayersInRoom}/>}
       {/* Side panel */}
       <SideBar
         playerN={playerN}
@@ -71,6 +75,7 @@ export const Table = React.memo(({
             <TopBar
               setShowModal={setShowModal}
               setShowHotkeys={setShowHotkeys}
+              setShowPlayersInRoom={setShowPlayersInRoom}
               handleBrowseSelect={handleBrowseSelect}
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}

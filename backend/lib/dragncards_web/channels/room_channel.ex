@@ -7,7 +7,7 @@ defmodule DragnCardsWeb.RoomChannel do
 
   require Logger
 
-  def join("room:" <> room_slug, _payload, socket) do
+  def join("room:" <> room_slug, _payload, %{assigns: %{user_id: user_id}} = socket) do
     # if authorized?(payload) do
     IO.puts("roomchannel join a")
     state = GameUIServer.state(room_slug)
@@ -16,13 +16,26 @@ defmodule DragnCardsWeb.RoomChannel do
       socket
       |> assign(:room_slug, room_slug)
       |> assign(:game_ui, state)
-    #IO.puts("socket")
-    #IO.inspect(socket)
+
     # {:ok, socket}
+    send(self, :after_join)
     {:ok, client_state(socket), socket}
     # else
     #   {:error, %{reason: "unauthorized"}}
     # end
+  end
+
+  def handle_info(:after_join, %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket) do
+    # state = GameUIServer.state(room_slug)
+    state = GameUIServer.state(room_slug)
+
+    GameUIServer.add_player_to_room(room_slug, user_id)
+    state = GameUIServer.state(room_slug)
+    socket = socket |> assign(:game_ui, state)
+
+    notify(socket)
+
+    {:noreply, socket}
   end
 
   # Channels can be used in a request/response fashion

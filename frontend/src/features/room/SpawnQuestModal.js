@@ -116,7 +116,7 @@ export const SpawnQuestModal = React.memo(({
       const filtered = []; //Object.keys(cardDB);
       for (var i=0; i<questsOCTGN.length; i++) {
         const questName = questsOCTGN[i];
-        if (isStringInQuestPath(newSearchString, questName) && isVisible(questName, user.playtest)) filtered.push(i);
+        if (isStringInQuestPath(newSearchString, questName) && isVisible(questName, user.playtester)) filtered.push(i);
         setFilteredIndices(filtered);
       }
     }
@@ -143,10 +143,11 @@ export const SpawnQuestModal = React.memo(({
         onRequestClose={() => setShowModal(null)}
         contentLabel="Load quest"
         overlayClassName="fixed inset-0 bg-black-50 z-10000"
-        className="insert-auto overflow-scroll p-5 bg-gray-700 border max-w-lg max-h-lg mx-auto my-2 rounded-lg outline-none"
+        className="insert-auto p-5 bg-gray-700 border max-w-lg max-h-lg mx-auto my-2 rounded-lg outline-none"
         style={{
           content: {
-            maxHeight: "680px"
+            maxHeight: "95vh",
+            overflowY: "scroll",
           }
         }}
       >
@@ -198,7 +199,8 @@ export const SpawnQuestModal = React.memo(({
           {activeMenu === "main" &&
             <div className="menu">
               {CYCLEORDER.map((cycleId, index) => {
-                return(
+                if (cycleId === "QPT" && !user.playtester) return null;
+                else return(
                   <DropdownItem
                     rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
                     goToMenu={cycleId}
@@ -216,7 +218,9 @@ export const SpawnQuestModal = React.memo(({
                 <div className="menu">
                   <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
                   {questsOCTGN.map((questPath, index) => {
-                    if (questPath.includes("Q"+cycleId) && isVisible(questPath, user.playtester)) return(
+                    if ((questPath.includes("Q"+cycleId) && isVisible(questPath, user.playtester)) ||
+                      (cycleId === "PT" && questPath.includes("Playtest") && isVisible(questPath, user.playtester)
+                    )) return(
                       <DropdownItem
                         rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
                         goToMenu={getQuestIdFromPath(questPath)}

@@ -72,6 +72,7 @@ declare module "elixir-backend" {
     game_name: string;
     options: any;
     playerIds: { [id: string] : number; };
+    playersInRoom: { [id: string] : number; };
   }
 
 

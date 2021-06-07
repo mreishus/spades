@@ -50,6 +50,7 @@ defmodule DragnCardsGame.Game do
       },
       "deltas" => [],
       "replayStep" => 0,
+      "victoryState" => nil,
     }
   end
 

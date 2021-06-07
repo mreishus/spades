@@ -4,6 +4,7 @@ import { GROUPSINFO } from "./Constants";
 
 export const TopBarView = React.memo(({
   setShowHotkeys,
+  setShowPlayersInRoom,
   handleBrowseSelect,
   playerN,
 }) => {
@@ -31,6 +32,9 @@ export const TopBarView = React.memo(({
       <ul className="second-level-menu">
           <li key={"Hotkeys"}>
             <a href="#" onClick={() => setShowHotkeys(true)}>Hotkeys</a>
+          </li>
+          <li key={"PlayersInRoom"}>
+            <a href="#" onClick={() => setShowPlayersInRoom(true)}>Players in Room</a>
           </li>
           <li key={"Shared"}>
             <a href="#">Shared</a>

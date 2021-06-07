@@ -6,6 +6,7 @@ import { TopBarDataContainer } from "./TopBarDataContainer";
 export const TopBar = React.memo(({
   setShowModal,
   setShowHotkeys,
+  setShowPlayersInRoom,
   handleBrowseSelect,
   gameBroadcast,
   chatBroadcast,
@@ -25,6 +26,7 @@ export const TopBar = React.memo(({
         />
         <TopBarView
           setShowHotkeys={setShowHotkeys}
+          setShowPlayersInRoom={setShowPlayersInRoom}
           handleBrowseSelect={handleBrowseSelect}
           playerN={playerN}
         />

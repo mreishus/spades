@@ -15,13 +15,13 @@ const windowStyle = {
   right: "30px", 
   top: "200px", 
   width:"500px", 
-  height: "550px",
+  height: "600px",
 }
 const col1Class = "w-1/3";
 const col2Class = "w-2/3";
 
 export const Hotkeys = React.memo(({
-    setShowHotkeys,
+    setShowWindow,
 }) => {
   const iconImg = (tokenType) => {
     return(<img className="m-auto h-6 inline-block" src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}/>)
@@ -31,7 +31,7 @@ export const Hotkeys = React.memo(({
     <Draggable>
       <div className={windowClass} style={windowStyle}>
         <div className="w-full bg-gray-500" style={{height: "25px"}}>
-          <FontAwesomeIcon className="ml-2" icon={faTimes} onClick={() => setShowHotkeys(false)}/>
+          <FontAwesomeIcon className="ml-2" icon={faTimes} onClick={() => setShowWindow(false)}/>
         </div>
         <div className="w-full p-3 overflow-y-scroll" style={{height: "523px"}}>
           <h2 className="mb-2">Tokens</h2>

@@ -23,7 +23,8 @@ defmodule DragnCardsGame.GameUI do
         "player2" => nil,
         "player3" => nil,
         "player4" => nil,
-      }
+      },
+      "playersInRoom" => %{},
     }
     # gameui = if options["ringsDBId"] do
     #   load_ringsdb(gameui, options["ringsDbType"], options["ringsDbId"])

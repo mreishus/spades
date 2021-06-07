@@ -70,6 +70,14 @@ defmodule DragnCardsGame.GameUIServer do
   end
 
   @doc """
+  add_player_to_room/2: Add a player to the room.
+  """
+  @spec add_player_to_room(String.t(), integer) :: GameUI.t()
+  def add_player_to_room(gameName, user_id) do
+    GenServer.call(via_tuple(gameName), {:add_player_to_room, user_id})
+  end
+
+  @doc """
   close_room/2: Shut down the GenServer.
   """
   @spec close_room(String.t(), integer) :: GameUI.t()
@@ -121,6 +129,22 @@ defmodule DragnCardsGame.GameUIServer do
     |> save_and_reply()
   end
 
+  def handle_call({:add_player_to_room, user_id}, _from, gameui) do
+    if gameui["playersInRoom"] do
+      players_in_room_old = gameui["playersInRoom"]
+      number_windows_open = players_in_room_old["#{user_id}"]
+      players_in_room_new = if number_windows_open != nil do
+        put_in(players_in_room_old["#{user_id}"], number_windows_open + 1)
+      else
+        put_in(players_in_room_old["#{user_id}"], 1)
+      end
+      put_in(gameui["playersInRoom"], players_in_room_new)
+    else
+      gameui
+    end
+    |> save_and_reply()
+  end
+
   def handle_call({:close_room}, _from, gameui) do
     Process.send_after(self(), :close_room, 1000)
     gameui |> save_and_reply()
@@ -158,7 +182,14 @@ defmodule DragnCardsGame.GameUIServer do
 
   def handle_call({:leave, user_id}, _from, gameui) do
     # When a user leaves, we currently do nothing
-    gameui
+    players_in_room_old = gameui["playersInRoom"]
+    number_windows_open = players_in_room_old["#{user_id}"]
+    players_in_room_new = if number_windows_open == nil or number_windows_open == 0 do
+      players_in_room_old
+    else
+      put_in(players_in_room_old["#{user_id}"], number_windows_open - 1)
+    end
+    put_in(gameui["playersInRoom"], players_in_room_new)
     |> save_and_reply()
   end
 
