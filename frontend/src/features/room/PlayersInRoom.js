@@ -31,7 +31,6 @@ export const PlayersInRoom = React.memo(({
           <FontAwesomeIcon className="ml-2" icon={faTimes} onClick={() => setShowWindow(false)}/>
         </div>
         <div className="w-full p-3">
-          <h2 className="mb-2">Players In Room</h2>
           <table className="table-fixed rounded-lg w-full">
             <thead>
               <tr className="bg-gray-800">

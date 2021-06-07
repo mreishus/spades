@@ -199,7 +199,7 @@ export const SpawnQuestModal = React.memo(({
           {activeMenu === "main" &&
             <div className="menu">
               {CYCLEORDER.map((cycleId, index) => {
-                if (cycleId === "QPT" && !user.playtester) return null;
+                if (cycleId === "PT" && !user.playtester) return null;
                 else return(
                   <DropdownItem
                     rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
@@ -218,16 +218,28 @@ export const SpawnQuestModal = React.memo(({
                 <div className="menu">
                   <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
                   {questsOCTGN.map((questPath, index) => {
-                    if ((questPath.includes("Q"+cycleId) && isVisible(questPath, user.playtester)) ||
-                      (cycleId === "PT" && questPath.includes("Playtest") && isVisible(questPath, user.playtester)
-                    )) return(
-                      <DropdownItem
-                        rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
-                        goToMenu={getQuestIdFromPath(questPath)}
-                        clickCallback={handleDropdownClick}>
-                        {getQuestNameFromPath(questPath)}
-                      </DropdownItem>
-                    )
+                    const modeLetter = getModeLetterFromPath(questPath);
+                    if (cycleId === "PT" && questPath.toLowerCase().includes("playtest") && modeLetter !== "E") {
+                      const questId = getQuestIdFromPath(questPath);
+                      const selectedIndex = getIndexFromModeAndId(modeLetter+questId);
+                      const selectedPath = questsOCTGN[selectedIndex];
+                      if (selectedIndex >= 0) return(
+                        <DropdownItem
+                          questIndex={selectedIndex}
+                          clickCallback={handleDropdownClick}>
+                          {getQuestNameFromPath(questPath)}
+                        </DropdownItem>
+                      )
+                    } else if (questPath.includes("Q"+cycleId) && !questPath.toLowerCase().includes("playtest")) {
+                      return(
+                        <DropdownItem
+                          rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+                          goToMenu={getQuestIdFromPath(questPath)}
+                          clickCallback={handleDropdownClick}>
+                          {getQuestNameFromPath(questPath)}
+                        </DropdownItem>
+                      )
+                    }
                   })}
                 </div>
               }

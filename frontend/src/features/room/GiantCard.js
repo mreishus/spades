@@ -19,7 +19,6 @@ export const GiantCard = ({playerN}) => {
           left: activeCardAndLoc?.screenPosition === "right" ? "3%" : "",
           top: "5%",
           borderRadius: '5%',
-          backgroundColor: "red",
           MozBoxShadow: '0 0 50px 20px black',
           WebkitBoxShadow: '0 0 50px 20px black',
           boxShadow: '0 0 50px 20px black',
