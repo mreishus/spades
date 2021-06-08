@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 const options = [
   { value: 'public', label: 'Public' },
   { value: 'private', label: 'Private' },
+  { value: 'playtest', label: 'Playtest' },
 ]
 
 interface Props {
@@ -28,10 +29,17 @@ ReactModal.setAppElement("#root");
 export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModal, replayId, ringsDbIds, ringsDbType, ringsDbDomain }) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [privacyType, setPrivacyType] = useState(options[0]);
   const [roomSlugCreated, setRoomSlugCreated] = useState(null);
   const myUser = useProfile();
   const myUserID = myUser?.id;
+
+  const options = [
+    { value: 'public', label: 'Public' },
+    { value: 'private', label: 'Private' },
+  ]
+  if (myUser?.playtester) options.push({ value: 'playtest', label: 'Playtest' });
+  
+  const [privacyType, setPrivacyType] = useState(options[0]);
 
   const createRoom = async () => {
     const data = { 
@@ -72,6 +80,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
     return <Redirect push to={`/room/${roomSlugCreated}`} />;
   }
 
+
   return (
     <ReactModal
       closeTimeoutMS={200}
@@ -79,7 +88,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
       onRequestClose={closeModal}
       contentLabel="Create New Game"
       overlayClassName="fixed inset-0 bg-black-50 z-50"
-      className="insert-auto overflow-auto p-5 bg-gray-700 border mx-auto my-12 rounded-lg outline-none"
+      className="insert-auto p-5 bg-gray-700 border mx-auto my-12 rounded-lg outline-none"
       style={{
         overlay: {
         },

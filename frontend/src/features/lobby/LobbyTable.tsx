@@ -1,5 +1,6 @@
 import React from "react";
 import UserName from "../user/UserName";
+import useProfile from "../../hooks/useProfile";
 import { Link } from "react-router-dom";
 import { Room } from "elixir-backend";
 
@@ -8,20 +9,22 @@ interface Props {
 }
 
 export const LobbyTable: React.FC<Props> = ({ rooms }) => {
+  const myUser = useProfile();
   const tdClass = "p-3 border-b border-gray-400";
   const thClass = "p-3 border-b border-gray-400";
 
   let roomItems = rooms.map((room: Room) => {
-    if (room.privacy_type === "public") return (
-      <tr key={room.id}>
-        <td className={tdClass}>
-          <Link to={"/room/" + room.slug}>{room.name}</Link>
-        </td>
-        <td className={tdClass}>
-          <UserName userID={room.created_by} />
-        </td>
-      </tr>
-    )
+    if (room.privacy_type === "public" || (room.privacy_type === "playtest" && myUser?.playtester)) 
+      return (
+        <tr key={room.id}>
+          <td className={tdClass}>
+            <Link to={"/room/" + room.slug}>{room.name}</Link>
+          </td>
+          <td className={tdClass}>
+            <UserName userID={room.created_by} />
+          </td>
+        </tr>
+      )
   });
 
   if (roomItems.length === 0) {

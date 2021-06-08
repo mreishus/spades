@@ -1,12 +1,11 @@
 import React, {useState} from "react";
+import { useSelector } from 'react-redux';
 import ReactModal from "react-modal";
-import { CSSTransition } from 'react-transition-group';
-import { faArrowUp, faArrowDown, faRandom, faChevronRight, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { loadDeckFromXmlText } from "./Helpers";
 import { CYCLEORDER, CYCLEINFO } from "./Constants";
 import { calcHeightCommon, DropdownItem, GoBack } from "./DropdownMenuHelpers";
-import zIndex from "@material-ui/core/styles/zIndex";
 import useProfile from "../../hooks/useProfile";
 
 function requireAll( requireContext ) {
@@ -79,9 +78,9 @@ const getIndexFromModeAndId = (modeAndId) => { // modeAndId is "N01.01" or "Q01.
   return -1;
 }
 
-const isVisible = (questPath, playtester) => {
+const isVisible = (questPath, playtester, privacyType) => {
   const questName = getQuestNameFromPath(questPath);
-  if (questName.toLowerCase().includes("playtest") && !playtester) return false;
+  if (questName.toLowerCase().includes("playtest") && (!playtester || privacyType === "public")) return false;
   else return true;
 }
 
@@ -91,8 +90,10 @@ export const SpawnQuestModal = React.memo(({
     setShowModal,
     gameBroadcast,
     chatBroadcast,
-}) => {
-    const user = useProfile();
+}) => {  
+    const privacyTypeStore = state => state?.gameUi?.privacyType;
+    const privacyType = useSelector(privacyTypeStore);
+    const myUser = useProfile();
     const [filteredIndices, setFilteredIndices] = useState([]);
     const [activeMenu, setActiveMenu] = useState("main");
     const [menuHeight, setMenuHeight] = useState(null);
@@ -116,7 +117,7 @@ export const SpawnQuestModal = React.memo(({
       const filtered = []; //Object.keys(cardDB);
       for (var i=0; i<questsOCTGN.length; i++) {
         const questName = questsOCTGN[i];
-        if (isStringInQuestPath(newSearchString, questName) && isVisible(questName, user.playtester)) filtered.push(i);
+        if (isStringInQuestPath(newSearchString, questName) && isVisible(questName, myUser.playtester, privacyType)) filtered.push(i);
         setFilteredIndices(filtered);
       }
     }
@@ -199,7 +200,7 @@ export const SpawnQuestModal = React.memo(({
           {activeMenu === "main" &&
             <div className="menu">
               {CYCLEORDER.map((cycleId, index) => {
-                if (cycleId === "PT" && !user.playtester) return null;
+                if (cycleId === "PT" && (!myUser.playtester || privacyType === "public")) return null;
                 else return(
                   <DropdownItem
                     rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
@@ -219,7 +220,7 @@ export const SpawnQuestModal = React.memo(({
                   <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
                   {questsOCTGN.map((questPath, index) => {
                     const modeLetter = getModeLetterFromPath(questPath);
-                    if (cycleId === "PT" && questPath.toLowerCase().includes("playtest") && modeLetter !== "E") {
+                    if (cycleId === "PT" && questPath.toLowerCase().includes("playtest") && modeLetter !== "E" && privacyType !== "public") {
                       const questId = getQuestIdFromPath(questPath);
                       const selectedIndex = getIndexFromModeAndId(modeLetter+questId);
                       const selectedPath = questsOCTGN[selectedIndex];
