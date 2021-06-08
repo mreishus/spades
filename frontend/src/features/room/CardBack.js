@@ -33,16 +33,16 @@ const CardBack = React.memo(({
   var visibleFaceSRC;
   var visibleFace;
   const groupSize = stackIds.length;
-  if (groupType=="deck" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
+  if (groupType === "deck" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
     visibleFaceSRC = getVisibleFaceSRC(card0, playerN, user)
     visibleFace = getCurrentFace(card0)
-  } else if (groupType=="deck" && groupSize>1 && isDraggingFrom) {
+  } else if (groupType === "deck" && groupSize>1 && isDraggingFrom) {
     visibleFaceSRC = getVisibleFaceSRC(card1, playerN, user)
     visibleFace = getCurrentFace(card1)
-  } else if (groupType=="discard" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
+  } else if (groupType === "discard" && groupSize>0 && isDraggingOver && !isDraggingFrom) {
     visibleFaceSRC = getVisibleFaceSRC(card0, playerN, user)
     visibleFace = getCurrentFace(card0)
-  } else if (groupType=="discard" && groupSize>1 && isDraggingFrom) {
+  } else if (groupType === "discard" && groupSize>1 && isDraggingFrom) {
     visibleFaceSRC = getVisibleFaceSRC(card1, playerN, user)
     visibleFace = getCurrentFace(card1)
   }

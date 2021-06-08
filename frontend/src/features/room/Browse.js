@@ -120,7 +120,7 @@ export const Browse = React.memo(({
   var browseGroupTopNint = isNormalInteger(browseGroupTopN) ? parseInt(browseGroupTopN) : numStacks;
   var filteredStackIndices = [...Array(browseGroupTopNint).keys()];
   // Filter by selected card type
-  if (selectedCardType != "All") 
+  if (selectedCardType !== "All") 
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stackIds[s] && 
       parentCards[s]["sides"]["A"]["type"] === selectedCardType &&
@@ -128,7 +128,7 @@ export const Browse = React.memo(({
     ));
   console.log(filteredStackIndices)
   // Filter by card name
-  if (selectedCardName != "")
+  if (selectedCardName !== "")
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stackIds[s] && 
       parentCards[s]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) &&

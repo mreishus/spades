@@ -33,7 +33,7 @@ defmodule DragnCardsGame.CardFace do
     steps = if String.match?(text, ~r/at the end of the round/i) do steps ++ ["0.1"] else steps end
     steps = if String.match?(text, ~r/at the end of the resource phase/i) do steps ++ ["1.4"] else steps end
     steps = if String.match?(text, ~r/at the end of the planning phase/i) do steps ++ ["2.4"] else steps end
-    steps = if String.match?(text, ~r/at the end of the quest phase/i) do steps ++ ["3.1"] else steps end
+    steps = if String.match?(text, ~r/at the end of the quest phase/i) do steps ++ ["3.5"] else steps end
     steps = if String.match?(text, ~r/at the end of the staging step/i) do steps ++ ["3.3"] else steps end
     steps = if String.match?(text, ~r/at the end of the travel phase/i) do steps ++ ["4.3"] else steps end
     steps = if String.match?(text, ~r/at the end of the encounter phase/i) do steps ++ ["5.4"] else steps end

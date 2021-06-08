@@ -135,7 +135,7 @@ export const Lobby: React.FC = () => {
               <p className="mb-2">
                 DragnCards is a{" "}
                 <span className="font-semibold">
-                  free online multiplayer card game platfrom
+                  free online multiplayer card game platform
                 </span>, and is not affiliated with or endorsed by FFG or any other company in any way.
               </p>
               <p className="mb-2">

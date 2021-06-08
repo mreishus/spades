@@ -16,7 +16,7 @@ const Container = styled.div`
   padding-left: 0px;
   height: 100%;
   user-select: none;
-  overflow-x: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "none" : "auto"};
+  overflow-x: ${props => (props.groupType === "deck" || props.groupType === "discard") ? "none" : "auto"};
   overflow-y: hidden;
   scrollbar-color: rgba(1,1,1,0.8) rgba(1,1,1,0);
   max-height: 100%;
@@ -25,7 +25,7 @@ const Container = styled.div`
 
 const DropZone = styled.div`
   /* stop the list collapsing when empty */
-  display: ${props => (props.groupType=="deck" || props.groupType=="discard") ? "" : "flex"};
+  display: ${props => (props.groupType === "deck" || props.groupType === "discard") ? "" : "flex"};
   width: 100%;
   height: 100%;
   min-height: 100%;
@@ -92,7 +92,7 @@ export const Stacks = React.memo(({
       key={groupId}
       isDropDisabled={false}
       isCombineEnabled={isCombineEnabled}
-      direction={groupType=="deck" || groupType=="discard" ? "vertical" : "horizontal"}
+      direction={groupType === "deck" || groupType === "discard" ? "vertical" : "horizontal"}
     >
       {(dropProvided, dropSnapshot) => (
         <Container
