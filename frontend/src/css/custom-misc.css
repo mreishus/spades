@@ -1,0 +1,14 @@
+
+
+.quickviewbutton {
+  width: 100%;
+  height: 24.5%;
+  cursor: default;
+  --tw-bg-opacity: 1;
+  background-color: rgba(31, 41, 55, var(--tw-bg-opacity));
+}
+
+.quickviewbutton:hover {	
+  --tw-bg-opacity: 1;
+  background-color: rgba(75, 85, 99, var(--tw-bg-opacity));
+}
