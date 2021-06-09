@@ -25,6 +25,12 @@ export const handleDropdownClickCard = (dropdownMenu, props, playerN, game, game
   } else if (props.action === "unpeek") {
     gameBroadcast("game_action", {action: "peek_card", options: {card_id: menuCard.id, value: false}})
     chatBroadcast("game_update", {message: " stopped peeking at "+displayName+"."})
+  } else if (props.action === "lock") {
+    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "locked", true]]}})
+    chatBroadcast("game_update", {message: " locked "+displayName+"."})
+  } else if (props.action === "unlock") {
+    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "locked", false]]}})
+    chatBroadcast("game_update", {message: " unlocked "+displayName+"."})
   } else if (props.action === "moveCard") {
     const destGroupTitle = GROUPSINFO[props.destGroupId].name;
     if (props.position === "top") {

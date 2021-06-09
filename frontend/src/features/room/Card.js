@@ -48,6 +48,7 @@ export const Card = React.memo(({
             title: displayName,
             cardIndex: cardIndex,
             groupId: groupId,
+            groupType: groupType,
         }
         setDropdownMenu(dropdownMenu);
     }

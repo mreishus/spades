@@ -72,6 +72,8 @@ export const DropdownMenuCard = React.memo(({
           {(visibleSide === "B" && !menuCard?.peeking[playerN]) ? <DropdownItem action="peek" clickCallback={handleDropdownClick}>Peek</DropdownItem> : null}
           {menuCard?.peeking[playerN] ? <DropdownItem action="unpeek" clickCallback={handleDropdownClick}>Stop peeking</DropdownItem> : null}
           {dropdownMenu?.groupId === playerN+"Hand" ? <DropdownItem action="swapWithTop" clickCallback={handleDropdownClick}>Swap with top</DropdownItem> : null}
+          {(menuCard?.controller === playerN && dropdownMenu?.groupType === "play" && !menuCard?.locked) ? <DropdownItem action="lock" clickCallback={handleDropdownClick}>Prevent refresh</DropdownItem> : null}
+          {(menuCard?.controller === playerN && dropdownMenu?.groupType === "play" && menuCard?.locked) ? <DropdownItem action="unlock" clickCallback={handleDropdownClick}>Enable refresh</DropdownItem> : null}
           <DropdownItem
             rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
             goToMenu="moveTo"

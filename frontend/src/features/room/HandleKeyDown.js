@@ -137,7 +137,7 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {
                 action: "action_on_matching_cards", 
                 options: {
-                    criteria:[["controller", playerN]], 
+                    criteria:[["controller", playerN], ["locked", false]], 
                     action: "update_card_values", 
                     options: {updates: [["exhausted", false], ["rotation", 0]]}
                 }
