@@ -125,9 +125,23 @@ export const TopBarMenu = React.memo(({
       return;
     }
     if (data.action === "reset_game") {
+      // Mark status
+      chatBroadcast("game_update", {message: "marked game as "+data.state+"."});
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "victoryState", data.state]]}});
+      // Save replay
+      gameBroadcast("game_action", {action: "save_replay", options: {}});
+      chatBroadcast("game_update",{message: "saved the replay to their profile."});
+      // Reset game
       gameBroadcast("game_action", {action: "reset_game", options: {}});
       chatBroadcast("game_update", {message: "reset the game."});
     } else if (data.action === "close_room") {
+      // Mark status
+      chatBroadcast("game_update", {message: "marked game as "+data.state+"."});
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "victoryState", data.state]]}});
+      // Save replay
+      gameBroadcast("game_action", {action: "save_replay", options: {}});
+      chatBroadcast("game_update",{message: "saved the replay to their profile."});
+      // Close room
       history.push("/profile");
       chatBroadcast("game_update", {message: "closed the room."});
       gameBroadcast("close_room", {});
@@ -311,7 +325,9 @@ export const TopBarMenu = React.memo(({
           <li key={"reset"}>
               <a href="#">Reset Game</a>
               <ul className="third-level-menu">
-                  <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"reset_game"})} href="#">Confirm</a></li>
+                <li key={"reset_victory"}><a onClick={() => handleMenuClick({action:"reset_game", state: "victory"})} href="#">Mark as victory</a></li>
+                <li key={"reset_defeat"}><a onClick={() => handleMenuClick({action:"reset_game", state: "defeat"})} href="#">Mark as defeat</a></li>
+                <li key={"reset_incomplete"}><a onClick={() => handleMenuClick({action:"reset_game", state: "incomplete"})} href="#">Mark as incomplete</a></li>
               </ul>
           </li> 
         }       
@@ -319,7 +335,9 @@ export const TopBarMenu = React.memo(({
           <li key={"shut_down"}>
               <a href="#">Close room</a>
               <ul className="third-level-menu">
-                  <li key={"Confirm"}><a onClick={() => handleMenuClick({action:"close_room"})} href="#">Confirm</a></li>
+                <li key={"close_victory"}><a onClick={() => handleMenuClick({action:"close_room", state: "victory"})} href="#">Mark as victory</a></li>
+                <li key={"close_defeat"}><a onClick={() => handleMenuClick({action:"close_room", state: "defeat"})} href="#">Mark as defeat</a></li>
+                <li key={"close_incomplete"}><a onClick={() => handleMenuClick({action:"close_room", state: "incomplete"})} href="#">Mark as incomplete</a></li>
               </ul>
           </li> 
         }
