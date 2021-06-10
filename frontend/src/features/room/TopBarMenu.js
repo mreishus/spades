@@ -20,10 +20,12 @@ export const TopBarMenu = React.memo(({
   const myUserID = myUser?.id;
   const history = useHistory();
 
-  const createdByStore = state => state.gameUi.created_by;
+  const createdByStore = state => state.gameUi?.created_by;
   const createdBy = useSelector(createdByStore);
-  const optionsStore = state => state.gameUi.options;
+  const optionsStore = state => state.gameUi?.options;
   const options = useSelector(optionsStore);
+  const roundStore = state => state.gameUi?.game.roundNumber;
+  const round = useSelector(roundStore);
   const host = myUserID === createdBy;
   
   const dispatch = useDispatch();
@@ -129,8 +131,10 @@ export const TopBarMenu = React.memo(({
       chatBroadcast("game_update", {message: "marked game as "+data.state+"."});
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "victoryState", data.state]]}});
       // Save replay
-      gameBroadcast("game_action", {action: "save_replay", options: {}});
-      chatBroadcast("game_update",{message: "saved the replay to their profile."});
+      if (round > 0) {
+        gameBroadcast("game_action", {action: "save_replay", options: {}});
+        chatBroadcast("game_update",{message: "saved the replay to their profile."});
+      }
       // Reset game
       gameBroadcast("game_action", {action: "reset_game", options: {}});
       chatBroadcast("game_update", {message: "reset the game."});
@@ -139,8 +143,10 @@ export const TopBarMenu = React.memo(({
       chatBroadcast("game_update", {message: "marked game as "+data.state+"."});
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "victoryState", data.state]]}});
       // Save replay
-      gameBroadcast("game_action", {action: "save_replay", options: {}});
-      chatBroadcast("game_update",{message: "saved the replay to their profile."});
+      if (round > 0) {
+        gameBroadcast("game_action", {action: "save_replay", options: {}});
+        chatBroadcast("game_update",{message: "saved the replay to their profile."});
+      }
       // Close room
       history.push("/profile");
       chatBroadcast("game_update", {message: "closed the room."});

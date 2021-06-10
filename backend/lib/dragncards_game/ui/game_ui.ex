@@ -239,6 +239,8 @@ defmodule DragnCardsGame.GameUI do
         apply_tokens_per_round(gameui, card_id)
       "delete_card" ->
         delete_card(gameui, card_id)
+      "flip_card" ->
+        flip_card(gameui, card_id)
       _ ->
         gameui
     end
@@ -1064,12 +1066,16 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def load_card(gameui, card_row, group_id, quantity) do
-    if quantity do
+    type = card_row["sides"]["A"]["type"]
+    IO.puts("loading #{type} #{quantity}")
+    if quantity > 0 do
+      IO.puts(" loading")
       Enum.reduce(1..quantity, gameui, fn(index, acc) ->
         stack_ids = get_stack_ids(gameui, group_id)
         acc = add_card_row_to_group(acc, group_id, card_row)
       end)
     else
+      IO.puts(" not loading")
       gameui
     end
   end

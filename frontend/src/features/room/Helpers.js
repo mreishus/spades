@@ -327,6 +327,19 @@ const isCardDbIdInLoadList = (loadList, cardDbId) => {
   }  
 }
 
+const moveCardInLoadList = (loadList, cardDbId, groupId) => {
+  for (var i=0; i<loadList.length; i++) {
+    const item = loadList[i];
+    if (item.cardRow.cardid === cardDbId) {
+      if (item.quantity > 0) {
+        loadList[i] = {...item, quantity: item.quantity - 1};
+        loadList.push({...item, quantity: 1, groupId: groupId})
+        return;
+      }
+    }
+  }
+}
+
 export const arrayMove = (arr, old_index, new_index) => {
   while (old_index < 0) {
       old_index += arr.length;
@@ -343,6 +356,21 @@ export const arrayMove = (arr, old_index, new_index) => {
   arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
   return arr;
 };
+
+export const flattenLoadList = (loadList) => {
+  // Takes a load list where elements might have a quantity>1 property and splits them into elements with quantity=1
+  const n = loadList.length;
+  for (var i=0; i<n; i++) {
+    const item = loadList[i];
+    const quantity = item.quantity;
+    if (quantity > 1) {
+      for (var j=0; j<(quantity-1); j++) {
+        loadList[i] = {...item, quantity: item.quantity - 1};
+        loadList.push({...item, quantity: 1})
+      }
+    }
+  }
+}
 
 export const processLoadList = (loadList, playerN) => {
   var newLoadList = [...loadList];
@@ -399,6 +427,50 @@ export const processLoadList = (loadList, playerN) => {
       }
     }  
   } 
+  const wainriders = isCardDbIdInLoadList(loadList, "21165a65-1296-4664-a880-d85eea19a4ae");
+  if (wainriders) {
+    moveCardInLoadList(newLoadList,"b7f25c2a-b9f1-4ec7-8ab3-4843aaef4e06","sharedExtra1"); // 1
+    moveCardInLoadList(newLoadList,"21165a65-1296-4664-a880-d85eea19a4ae","sharedExtra1"); // 6
+    moveCardInLoadList(newLoadList,"727b90c5-46b3-4568-9ab9-cb7c6e662428","sharedExtra1"); // Objective
+    moveCardInLoadList(newLoadList,"c2ff668a-6174-47d4-bbab-46f9c91403eb","sharedExtra1"); // Objective
+    moveCardInLoadList(newLoadList,"4c1e8a5c-db6b-4d36-8202-bf0960870914","sharedExtra2"); // 2
+    moveCardInLoadList(newLoadList,"282bca71-ff04-4447-a4e9-a7e5f70e0083","sharedExtra2"); // 5
+    moveCardInLoadList(newLoadList,"29fd0721-10ed-4315-b415-5fadeb010051","sharedExtra3"); // 3
+    moveCardInLoadList(newLoadList,"fbfee53c-fec3-4b55-a8b4-c7329f8f973e","sharedExtra3"); // 4
+  }
+
+  const templeOfTheDeceived = isCardDbIdInLoadList(loadList, "fb7d55c5-7198-45c5-97d7-be4c6a26fa68");
+  if (templeOfTheDeceived) {
+    flattenLoadList(newLoadList);
+    n = newLoadList.length;
+    // Loop randomly over array
+    const accessOrder = shuffle([...Array(n).keys()]);
+    // Temples
+    var extraNum = [1,2,3];
+    var e = 0;
+    for (var i of accessOrder) {
+      const item = newLoadList[i];
+      if (item.cardRow.sides.A.name === "Temple of the Deceived" && item.cardRow.sides.A.type === "Location") {
+        if (e < extraNum.length) {
+          newLoadList[i] = {...item, quantity: item.quantity - 1};
+          newLoadList.push({...item, quantity: 1, groupId: "sharedExtra"+extraNum[e]})
+          e = e + 1;
+        }
+      }
+    }
+    // Lost Islands
+    extraNum = [1,1,1,1,2,2,2,2,3,3,3,3];
+    e = 0;
+    for (var i of accessOrder) {
+      const item = newLoadList[i];
+      if (item.cardRow.sides.A.name === "Lost Island" && item.cardRow.sides.A.type === "Location") {
+        if (e < extraNum.length) {
+          newLoadList[i] = {...item, groupId: "sharedExtra"+extraNum[e]};
+          e = e + 1;
+        }
+      }
+    }
+  }
 
   return newLoadList; 
 
@@ -416,6 +488,22 @@ export const processPostLoad = (loadList, playerN, gameBroadcast, chatBroadcast)
     gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: "sharedExtra1"}})
     gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: "sharedExtra2"}})
     gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: "sharedExtra3"}})
+  }
+  const wainriders = isCardDbIdInLoadList(loadList, "21165a65-1296-4664-a880-d85eea19a4ae");
+  if (wainriders) {
+    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "layout", "extra"]]}});
+  }
+  const templeOfTheDeceived = isCardDbIdInLoadList(loadList, "fb7d55c5-7198-45c5-97d7-be4c6a26fa68");
+  if (templeOfTheDeceived) {
+    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "layout", "extra"]]}});
+    gameBroadcast("game_action", {
+      action: "action_on_matching_cards",
+      options: {criteria:[["groupId", "sharedExtra1"], ["stackIndex", 0]], action: "flip_card", options: {}
+    }});
+    gameBroadcast("game_action", {
+      action: "action_on_matching_cards",
+      options: {criteria:[["groupId", "sharedExtra3"], ["stackIndex", 0]], action: "flip_card", options: {}
+    }});
   }
 }
 
