@@ -4,11 +4,12 @@ defmodule DragnCardsGame.GameUISupervisor do
   """
 
   use DynamicSupervisor
+  require Logger
 
   alias DragnCardsGame.GameUIServer
 
   def start_link(_arg) do
-    IO.puts("gameuisupervisor: start_link a")
+    Logger.debug("gameuisupervisor: start_link")
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 
@@ -20,13 +21,12 @@ defmodule DragnCardsGame.GameUISupervisor do
   Starts a `GameUIServer` process and supervises it.
   """
   def start_game(game_name, user, %{} = options) do
-    IO.puts("gameuisup: start a")
+    Logger.debug("gameuisup: start")
     child_spec = %{
       id: GameUIServer,
       start: {GameUIServer, :start_link, [game_name, user, options]},
       restart: :transient
     }
-    IO.puts("gameuisup: start b")
     DynamicSupervisor.start_child(__MODULE__, child_spec)
   end
 

@@ -50,7 +50,6 @@ defmodule DragnCardsGame.GameRegistry do
   # Convert a GameUI{} into a %{} that is suitable for
   # inserting or updating a Room.
   defp to_room_param(%{} = gameui) do
-    IO.puts("to_room_param")
     %{
       name: gameui["gameName"],
       created_by: gameui["created_by"],

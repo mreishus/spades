@@ -28,15 +28,12 @@ defmodule DragnCards.Application do
       # Starts a worker by calling: DragnCards.Worker.start_link(arg)
       # {DragnCards.Worker, arg},
     ]
-    IO.puts("dragncardsapp a")
     :ets.new(:game_uis, [:public, :named_table])
 
-    IO.puts("dragncardsapp b")
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: DragnCards.Supervisor]
 
-    IO.puts("dragncardsapp c")
     Supervisor.start_link(children, opts)
   end
 

@@ -3,6 +3,8 @@ defmodule DragnCardsGame.GameUI do
   One level on top of Game.
   """
 
+
+  require Logger
   alias DragnCardsGame.{Game, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens, CardFace, Player}
   alias DragnCards.{Repo, Replay}
 
@@ -10,7 +12,7 @@ defmodule DragnCardsGame.GameUI do
 
   @spec new(String.t(), User.t(), Map.t()) :: GameUI.t()
   def new(game_name, user, %{} = options) do
-    IO.puts("game_ui new")
+    Logger.debug("game_ui new")
     gameui = %{
       "game" => Game.load(options),
       "gameName" => game_name,
@@ -26,13 +28,6 @@ defmodule DragnCardsGame.GameUI do
       },
       "playersInRoom" => %{},
     }
-    # gameui = if options["ringsDBId"] do
-    #   load_ringsdb(gameui, options["ringsDbType"], options["ringsDbId"])
-    # else
-    #   gameui
-    # end
-    # IO.inspect(gameui)
-    # gameui
   end
 
   def pretty_print(gameui, header \\ nil) do
@@ -226,9 +221,6 @@ defmodule DragnCardsGame.GameUI do
   # Card actions                                             #
   ############################################################
   def card_action(gameui, card_id, action, options) do
-    # IO.puts("card_action")
-    # IO.inspect(action)
-    # IO.inspect(card_id)
     card = get_card(gameui, card_id)
     gameui = case action do
       "update_card_values" ->
@@ -274,7 +266,6 @@ defmodule DragnCardsGame.GameUI do
     # Get origin stack
     orig_stack = get_stack_by_index(gameui, orig_group_id, orig_stack_index)
     # Perpare destination stack
-    IO.puts("dest_group 1")
     gameui = if combine do
       gameui
     else
@@ -282,7 +273,6 @@ defmodule DragnCardsGame.GameUI do
       insert_new_stack(gameui, dest_group_id, dest_stack_index, new_stack)
     end
     # Get destination stack
-    IO.puts("dest_group 2")
     dest_stack = get_stack_by_index(gameui, dest_group_id, dest_stack_index)
     # Update gameui
     gameui
@@ -775,8 +765,8 @@ defmodule DragnCardsGame.GameUI do
   # Game actions                                                 #
   ################################################################
   def game_action(gameui, user_id, action, options) do
-    #IO.puts("game_action #{action}")
-    #IO.inspect(options)
+    Logger.debug("game_action #{action}")
+    Logger.debug(IO.inspect(options))
     player_n = get_player_n(gameui, user_id)
     player_n = if options["for_player_n"] do options["for_player_n"] else player_n end
     game_old = gameui["game"]
@@ -888,7 +878,6 @@ defmodule DragnCardsGame.GameUI do
 
   def save_replay(gameui, user_id) do
     game_uuid = gameui["game"]["id"]
-    IO.puts("replay")
     num_players = gameui["game"]["numPlayers"]
     hero_1_names = get_hero_names(gameui, "player1")
     hero_2_names = get_hero_names(gameui, "player2")
@@ -912,8 +901,6 @@ defmodule DragnCardsGame.GameUI do
       end
       |> Replay.changeset(updates)
       |> Repo.insert_or_update
-    #IO.inspect(result)
-    #Repo.insert(replays)
     gameui
   end
 
@@ -1067,15 +1054,12 @@ defmodule DragnCardsGame.GameUI do
 
   def load_card(gameui, card_row, group_id, quantity) do
     type = card_row["sides"]["A"]["type"]
-    IO.puts("loading #{type} #{quantity}")
     if quantity > 0 do
-      IO.puts(" loading")
       Enum.reduce(1..quantity, gameui, fn(index, acc) ->
         stack_ids = get_stack_ids(gameui, group_id)
         acc = add_card_row_to_group(acc, group_id, card_row)
       end)
     else
-      IO.puts(" not loading")
       gameui
     end
   end

@@ -52,8 +52,7 @@ defmodule DragnCardsWeb.API.V1.ProfileController do
         conn
         |> json(%{success: %{message: "Updated settings"}})
       {:error, changeset} -> # Something went wrong
-        IO.puts("Failed to update settings")
-        IO.inspect(changeset)
+        IO.inspect(changeset, label: "Failed to update settings")
         conn
         |> json(%{success: %{message: "Failed to update settings"}})
     end

@@ -19,8 +19,6 @@ defmodule DragnCardsWeb.API.V1.GameController do
       "ringsDbType" => _params["game_options"]["ringsdb_type"],
       "ringsDbDomain" => _params["game_options"]["ringsdb_domain"],
     }
-    #IO.puts("options")
-    #IO.inspect(options)
     GameUISupervisor.start_game(game_name, user, options)
     room = Rooms.get_room_by_name(game_name)
     if room do

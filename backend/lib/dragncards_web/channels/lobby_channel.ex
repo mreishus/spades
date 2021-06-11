@@ -33,7 +33,6 @@ defmodule DragnCardsWeb.LobbyChannel do
   end
 
   def handle_in("test_message_from_javascript", _payload, socket) do
-    # payload |> IO.inspect()
     # Can also send back "{:reply, :ok, socket}" or send back "{:noreply, socket}"
     {:reply, {:ok, socket.assigns}, socket}
   end

@@ -11,8 +11,6 @@ defmodule DragnCardsWeb.API.V1.JunkController do
       conn
       |> Pow.Plug.current_user()
 
-    # |> IO.inspect(label: "user")
-
     userid =
       case user do
         nil -> nil

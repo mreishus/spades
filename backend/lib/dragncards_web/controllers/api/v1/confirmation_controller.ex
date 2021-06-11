@@ -28,13 +28,9 @@ defmodule DragnCardsWeb.API.V1.ConfirmationController do
             |> json(%{error: %{status: 500, message: "Couldn't confirm email"}})
 
         end
-        #IO.puts("output")
-        #IO.inspect(output)
         #conn
         #|> json(%{success: %{message: "Email confirmed"}})
 
-        # IO.puts("concont conn")
-        # IO.inspect(conn)
         # conn
         # |> Pow.Plug.update_user(%{"email_confirmed_at" => DateTime.utc_now})
         # |> case do

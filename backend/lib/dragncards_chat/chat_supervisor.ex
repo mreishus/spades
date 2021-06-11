@@ -4,11 +4,12 @@ defmodule DragnCardsChat.ChatSupervisor do
   """
 
   use DynamicSupervisor
+  require Logger
 
   alias DragnCardsChat.ChatServer
 
   def start_link(_arg) do
-    IO.puts("chatsup start_link a")
+    Logger.debug("chatsup start_link")
     DynamicSupervisor.start_link(__MODULE__, :ok, name: __MODULE__)
   end
 

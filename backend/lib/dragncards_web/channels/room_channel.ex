@@ -9,7 +9,6 @@ defmodule DragnCardsWeb.RoomChannel do
 
   def join("room:" <> room_slug, _payload, %{assigns: %{user_id: user_id}} = socket) do
     # if authorized?(payload) do
-    IO.puts("roomchannel join a")
     state = GameUIServer.state(room_slug)
 
     socket =
@@ -27,14 +26,15 @@ defmodule DragnCardsWeb.RoomChannel do
 
   def handle_info(:after_join, %{assigns: %{room_slug: room_slug, user_id: user_id}} = socket) do
     # state = GameUIServer.state(room_slug)
-    state = GameUIServer.state(room_slug)
+    if GameUIServer.game_exists?(room_slug) do
+      state = GameUIServer.state(room_slug)
 
-    GameUIServer.add_player_to_room(room_slug, user_id)
-    state = GameUIServer.state(room_slug)
-    socket = socket |> assign(:game_ui, state)
+      GameUIServer.add_player_to_room(room_slug, user_id)
+      state = GameUIServer.state(room_slug)
+      socket = socket |> assign(:game_ui, state)
 
-    notify(socket)
-
+      notify(socket)
+    end
     {:noreply, socket}
   end
 

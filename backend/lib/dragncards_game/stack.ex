@@ -3,6 +3,7 @@ defmodule DragnCardsGame.Stack do
   Represents a stack of cards. Most of the time it contains just 1 card, but can have multiple attached cards.
   """
   alias DragnCardsGame.{Card}
+  require Logger
 
   @type t :: Map.t()
 
@@ -24,8 +25,6 @@ defmodule DragnCardsGame.Stack do
 
   @spec stack_from_cardrow(Card.t()) :: Map.t()
   def stack_from_cardrow(card) do
-    #IO.puts("card_row")
-    #IO.inspect(card_row)
     %{
       "id" => String.slice(Ecto.UUID.generate,24..-1),
       "cardIds" => [card["id"]]
@@ -34,8 +33,6 @@ defmodule DragnCardsGame.Stack do
 
   @spec stack_from_cardrow(Map.t(), String.t()) :: Map.t()
   def stack_from_cardrow(card_row, controller) do
-    #IO.puts("card_row")
-    #IO.inspect(card_row)
     %{
       "id" => String.slice(Ecto.UUID.generate,24..-1),
       "cardIds" => [Card.card_from_cardrow(card_row, controller)]

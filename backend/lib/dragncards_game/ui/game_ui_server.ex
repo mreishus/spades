@@ -21,24 +21,23 @@ defmodule DragnCardsGame.GameUIServer do
   start_link/3: Generates a new game server under a provided name.
   """
   @spec start_link(String.t(), User.t(), %{}) :: {:ok, pid} | {:error, any}
-  def start_link(gameName, user, %{} = options) do
-    IO.puts("gameuiserver: start_link a")
-    GenServer.start_link(__MODULE__, {gameName, user, options}, name: via_tuple(gameName))
-    IO.puts("gameuiserver: start_link b")
+  def start_link(game_name, user, %{} = options) do
+    Logger.debug("gameuiserver: start_link")
+    GenServer.start_link(__MODULE__, {game_name, user, options}, name: via_tuple(game_name))
   end
 
   @doc """
   via_tuple/1: Given a game name string, generate a via tuple for addressing the game.
   """
-  def via_tuple(gameName),
-    do: {:via, Registry, {DragnCardsGame.GameUIRegistry, {__MODULE__, gameName}}}
+  def via_tuple(game_name),
+    do: {:via, Registry, {DragnCardsGame.GameUIRegistry, {__MODULE__, game_name}}}
 
   @doc """
   gameui_pid/1: Returns the `pid` of the game server process registered
-  under the given `gameName`, or `nil` if no process is registered.
+  under the given `game_name`, or `nil` if no process is registered.
   """
-  def gameui_pid(gameName) do
-    gameName
+  def gameui_pid(game_name) do
+    game_name
     |> via_tuple()
     |> GenServer.whereis()
   end
@@ -47,42 +46,43 @@ defmodule DragnCardsGame.GameUIServer do
   state/1:  Retrieves the game state for the game under a provided name.
   """
   @spec state(String.t()) :: GameUI.t() | nil
-  def state(gameName) do
-    IO.puts("game_ui_server state")
-    # IO.inspect(GenServer.call(via_tuple(gameName), :state))
-    case gameui_pid(gameName) do
+  def state(game_name) do
+    case gameui_pid(game_name) do
       nil -> nil
-      _ -> GenServer.call(via_tuple(gameName), :state)
+      _ -> GenServer.call(via_tuple(game_name), :state)
     end
   end
 
+  @doc """
+  game_exists?/1:  Check if the game exists.
+  """
   @spec game_exists?(String.t()) :: boolean
-  def game_exists?(gameName) do
-    gameui_pid(gameName) != nil
+  def game_exists?(game_name) do
+    gameui_pid(game_name) != nil
   end
 
   @doc """
   game_action/4: Perform given action on a card.
   """
   @spec game_action(String.t(), integer, String.t(), Map.t()) :: GameUI.t()
-  def game_action(gameName, user_id, action, options) do
-    GenServer.call(via_tuple(gameName), {:game_action, user_id, action, options})
+  def game_action(game_name, user_id, action, options) do
+    game_exists?(game_name) && GenServer.call(via_tuple(game_name), {:game_action, user_id, action, options})
   end
 
   @doc """
   add_player_to_room/2: Add a player to the room.
   """
   @spec add_player_to_room(String.t(), integer) :: GameUI.t()
-  def add_player_to_room(gameName, user_id) do
-    GenServer.call(via_tuple(gameName), {:add_player_to_room, user_id})
+  def add_player_to_room(game_name, user_id) do
+    GenServer.call(via_tuple(game_name), {:add_player_to_room, user_id})
   end
 
   @doc """
   close_room/2: Shut down the GenServer.
   """
   @spec close_room(String.t(), integer) :: GameUI.t()
-  def close_room(gameName, user_id) do
-    GenServer.call(via_tuple(gameName), {:close_room})
+  def close_room(game_name, user_id) do
+    GenServer.call(via_tuple(game_name), {:close_room})
   end
 
   @doc """
@@ -92,21 +92,21 @@ defmodule DragnCardsGame.GameUIServer do
   system?
   """
   def leave(game_name, user_id) do
-    GenServer.call(via_tuple(game_name), {:leave, user_id})
+    game_exists?(game_name) && GenServer.call(via_tuple(game_name), {:leave, user_id})
   end
   #####################################
   ####### IMPLEMENTATION ##############
   #####################################
 
-  def init({gameName, user, options = %{}}) do
+  def init({game_name, user, options = %{}}) do
     gameui =
-      case :ets.lookup(:game_uis, gameName) do
+      case :ets.lookup(:game_uis, game_name) do
         [] ->
-          gameui = GameUI.new(gameName, user, options)
-          :ets.insert(:game_uis, {gameName, gameui})
+          gameui = GameUI.new(game_name, user, options)
+          :ets.insert(:game_uis, {game_name, gameui})
           gameui
 
-        [{^gameName, gameui}] ->
+        [{^game_name, gameui}] ->
           gameui
       end
     GameRegistry.add(gameui["gameName"], gameui)
