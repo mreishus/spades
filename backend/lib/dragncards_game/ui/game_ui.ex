@@ -766,7 +766,7 @@ defmodule DragnCardsGame.GameUI do
   ################################################################
   def game_action(gameui, user_id, action, options) do
     Logger.debug("game_action #{action}")
-    Logger.debug(IO.inspect(options))
+    Logger.debug(options)
     player_n = get_player_n(gameui, user_id)
     player_n = if options["for_player_n"] do options["for_player_n"] else player_n end
     game_old = gameui["game"]
@@ -835,7 +835,8 @@ defmodule DragnCardsGame.GameUI do
     game_new = gameui["game"]
     gameui = if action != "step_through" do
       game_new = Game.add_delta(game_new, game_old)
-      put_in(gameui["game"], game_new)
+      gameui = put_in(gameui["game"], game_new)
+      put_in(gameui["game"]["replayLength"], Enum.count(gameui["game"]["deltas"]))
     else
       gameui
     end

@@ -40,7 +40,7 @@ export const Group = React.memo(({
         setBrowseGroupId: setBrowseGroupId,
         setBrowseGroupTopN: setBrowseGroupTopN,
     }
-    setDropdownMenu(dropdownMenu);
+    if (playerN) setDropdownMenu(dropdownMenu);
   }
 
   if (!group) return null;

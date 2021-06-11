@@ -268,21 +268,29 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
         } else if (k === "ArrowLeft") {
             // Undo an action
-            if (keypress["Shift"]) {
-                gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "undo"}});
-                chatBroadcast("game_update", {message: "rewinds a round."});
+            if (game.replayStep <= 0) {
+                chatBroadcast("game_update", {message: "tried to undo an action, but no previous actions exist."});
             } else {
-                gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "undo"}});
-                chatBroadcast("game_update", {message: "pressed undo."});
+                if (keypress["Shift"]) {
+                    gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "undo"}});
+                    chatBroadcast("game_update", {message: "rewinds a round."});
+                } else {
+                    gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "undo"}});
+                    chatBroadcast("game_update", {message: "pressed undo."});
+                }
             }
         } else if (k === "ArrowRight") {
-            // Undo an action
-            if (keypress["Shift"]) {
-                gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "redo"}});
-                chatBroadcast("game_update", {message: "fast-forwards a round."});
+            // Redo an action
+            if (game.replayStep >= game.replayLength) {
+                chatBroadcast("game_update", {message: "tried to redo an action, but the game is current."});
             } else {
-                gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "redo"}});
-                chatBroadcast("game_update", {message: "pressed redo."});
+                if (keypress["Shift"]) {
+                    gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "redo"}});
+                    chatBroadcast("game_update", {message: "fast-forwards a round."});
+                } else {
+                    gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "redo"}});
+                    chatBroadcast("game_update", {message: "pressed redo."});
+                }
             }
         } else if (k === "R") {
             hotkeyRefresh();

@@ -145,7 +145,7 @@ defmodule DragnCardsWeb.RoomChannel do
   # Remove deltas from a gameui, as it's not needed for rendering
   def remove_deltas(gameui) do
     if gameui do
-      put_in(gameui["game"]["deltas"], nil)
+      put_in(gameui["game"]["deltas"], [])
     else
       gameui
     end

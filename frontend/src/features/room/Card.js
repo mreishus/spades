@@ -50,7 +50,7 @@ export const Card = React.memo(({
             groupId: groupId,
             groupType: groupType,
         }
-        setDropdownMenu(dropdownMenu);
+        if (playerN) setDropdownMenu(dropdownMenu);
     }
 
     const defaultOptions = {
