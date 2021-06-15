@@ -56,6 +56,7 @@
     "react-dropdown": "^1.9.2",
     "react-emotion": "^10.0.0",
     "react-fast-compare": "^3.2.0",
+    "react-hook-form": "^6.15.7",
     "react-icons": "^3.9.0",
     "react-modal": "^3.11.2",
     "react-redux": "^7.2.0",
@@ -73,7 +74,7 @@
     "tabletop": "^1.6.3",
     "tailwindcss": "^2.0.1-compat",
     "typeface-roboto": "^1.1.13",
-    "typescript": "3.8.3",
+    "typescript": "^3.8.3",
     "xml2js": "^0.4.23"
   },
   "scripts": {

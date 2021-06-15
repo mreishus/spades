@@ -150,12 +150,10 @@ defmodule DragnCardsGame.GameUI do
     Enum.find_index(card_ids, fn id -> id == card_id end)
   end
 
-  def gsc(gameui, card) do
-    card_id = card["id"]
-    card_name = card["sides"]["A"]["name"]
-    stack = get_stack_by_card_id(gameui, card["id"])
+  def gsc(gameui, card_id) do
+    stack = get_stack_by_card_id(gameui, card_id)
     stack_id = stack["id"]
-    card_index = get_card_index_by_card_id(gameui, card["id"])
+    card_index = get_card_index_by_card_id(gameui, card_id)
     stack_index = get_stack_index_by_stack_id(gameui, stack_id)
     group_id = get_group_by_stack_id(gameui, stack_id)["id"]
     {group_id, stack_index, card_index}
@@ -260,9 +258,8 @@ defmodule DragnCardsGame.GameUI do
 
   # Move a card
   def move_card(gameui, card_id, dest_group_id, dest_stack_index, dest_card_index, combine, preserve_state) do
-    card = get_card(gameui, card_id)
     # Get position of card
-    {orig_group_id, orig_stack_index, orig_card_index} = gsc(gameui, card)
+    {orig_group_id, orig_stack_index, orig_card_index} = gsc(gameui, card_id)
     # Get origin stack
     orig_stack = get_stack_by_index(gameui, orig_group_id, orig_stack_index)
     # Perpare destination stack
@@ -278,7 +275,7 @@ defmodule DragnCardsGame.GameUI do
     gameui
     |> remove_from_stack(card_id)
     |> add_to_stack(dest_stack["id"], card_id, dest_card_index)
-    |> update_card_state(card["id"], preserve_state, orig_group_id)
+    |> update_card_state(card_id, preserve_state, orig_group_id)
   end
 
   # Increment a token
@@ -322,21 +319,37 @@ defmodule DragnCardsGame.GameUI do
 
   # Flip a card
   def flip_card(gameui, card_id) do
-    card= get_card(gameui, card_id)
-    current_side = card["currentSide"]
-    new_card = if current_side == "A" do
-      put_in(card["currentSide"],"B")
+    {group_id, stack_index, card_index} = gsc(gameui, card_id)
+    group_type = get_group_type(gameui, group_id)
+    # If in play, remove triggers
+    gameui = if group_type === "play" do
+      remove_triggers(gameui, card_id)
     else
-      put_in(card["currentSide"],"A")
+      gameui
     end
-    update_card(gameui, new_card)
+    # Flip card
+    old_card = get_card(gameui, card_id)
+    current_side = old_card["currentSide"]
+    new_card = if current_side == "A" do
+      put_in(old_card["currentSide"],"B")
+    else
+      put_in(old_card["currentSide"],"A")
+    end
+    gameui = update_card(gameui, new_card)
+    # If in play, add triggers
+    if group_type === "play" do
+      IO.puts("adding triggers")
+      IO.inspect(new_card["sides"][new_card["currentSide"]]["triggers"])
+      add_triggers(gameui, card_id)
+    else
+      gameui
+    end
   end
 
   # Deal a shadow card
   def deal_shadow(gameui, card_id) do
-    card = get_card(gameui, card_id)
-    {group_id, stack_index, card_index} = gsc(gameui, card)
-    stack = get_stack_by_card_id(gameui, card["id"])
+    {group_id, stack_index, card_index} = gsc(gameui, card_id)
+    stack = get_stack_by_card_id(gameui, card_id)
     shadow_card = get_card_by_gsc(gameui, ["sharedEncounterDeck", 0, 0])
     if shadow_card do
       cards_size = Enum.count(stack["cardIds"])
@@ -359,7 +372,7 @@ defmodule DragnCardsGame.GameUI do
     end
     gameui = update_card(gameui, card)
     # Get position of card and move it next to the initial stack
-    {group_id, stack_index, card_index} = gsc(gameui, card)
+    {group_id, stack_index, card_index} = gsc(gameui, card_id)
     move_card(gameui, card_id, group_id, stack_index + 1, 0, false, true)
   end
 
@@ -778,6 +791,8 @@ defmodule DragnCardsGame.GameUI do
           peek_at(gameui, options["stack_ids"], player_n, options["value"])
         "peek_card" ->
           peek_card(gameui, player_n, options["card_id"], options["value"])
+        "flip_card" ->
+          flip_card(gameui, options["card_id"])
         "move_card" ->
           move_card(gameui, options["card_id"], options["dest_group_id"], options["dest_stack_index"], options["dest_card_index"], options["combine"], options["preserve_state"])
         "target_stack" ->
@@ -1148,7 +1163,7 @@ defmodule DragnCardsGame.GameUI do
   def flat_list_of_cards(gameui) do
     card_by_id = gameui["game"]["cardById"]
     all_cards = Enum.reduce(card_by_id, [], fn({card_id, card}, acc) ->
-      my_gsc = gsc(gameui, card)
+      my_gsc = gsc(gameui, card_id)
       {group_id, stack_index, card_index} = my_gsc
       group_type = get_group_type(gameui, group_id)
       card = Map.merge(card, %{"groupId" => group_id, "stackIndex" => stack_index, "cardIndex" => card_index, "groupType" => group_type})

@@ -4,6 +4,7 @@ import { TableLayout } from "./TableLayout";
 import { GiantCard } from "./GiantCard";
 import { TopBar } from "./TopBar";
 import { SpawnCardModal } from "./SpawnCardModal";
+import { SpawnCustomModal } from "./SpawnCustomModal";
 import { SpawnQuestModal } from "./SpawnQuestModal";
 import { SideBar } from "./SideBar";
 import { Hotkeys } from "./Hotkeys";
@@ -116,6 +117,14 @@ export const Table = React.memo(({
       {showModal === "quest" && 
         <SpawnQuestModal 
           playerN={playerN}
+          setTyping={setTyping}
+          setShowModal={setShowModal}
+          gameBroadcast={gameBroadcast}
+          chatBroadcast={chatBroadcast}
+        />
+      }
+      {showModal === "custom" && 
+        <SpawnCustomModal 
           setTyping={setTyping}
           setShowModal={setShowModal}
           gameBroadcast={gameBroadcast}

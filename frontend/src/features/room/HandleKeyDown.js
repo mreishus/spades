@@ -415,7 +415,7 @@ export const HandleKeyDown = ({
                 if (activeCard["currentSide"] === "A") newSide = "B";
                 const updates = [["game","cardById",activeCardId,"currentSide", newSide]]
                 dispatch(setValues({updates: updates}))
-                gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+                gameBroadcast("game_action", {action: "flip_card", options:{card_id: activeCardId}});
                 if (displayName==="player card" || displayName==="encounter card") {
                     chatBroadcast("game_update", {message: "flipped "+getDisplayName(activeCard)+" faceup."});
                 } else {

@@ -77,8 +77,9 @@ export const getVisibleFace = (card, playerN) => {
 export const getVisibleFaceSRC = (card, playerN, user) => {
   if (!card) return "";
   const visibleSide = getVisibleSide(card, playerN);
+  const visibleFace = getVisibleFace(card, playerN);
   if (visibleSide === "A") {
-    return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.jpg';
+    return visibleFace.customImgUrl || process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.jpg';
   } else { // Side B logic
     const sideBName = card.sides.B.name;
     if (sideBName === "player") {
@@ -86,7 +87,7 @@ export const getVisibleFaceSRC = (card, playerN, user) => {
     } else if (sideBName === "encounter") {
         return (user?.encounter_back_url ? user.encounter_back_url : process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg')
     } else if (sideBName) {
-        return process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.B.jpg';
+        return visibleFace.customImgUrl || process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.B.jpg';
     } else {
         return '';
     }
@@ -94,7 +95,6 @@ export const getVisibleFaceSRC = (card, playerN, user) => {
 }
 
 export const usesThreatToken = (card) => {
-  console.log("getCurrentFace", card)
   const cardFace = getCurrentFace(card);
   if (["Contract", "Hero", "Ally", "Attachment", "Event", "Objective Ally"].includes(cardFace.type)) return false;
   if (card.controller != "shared") return false;

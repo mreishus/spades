@@ -177,11 +177,12 @@ export const TopBarMenu = React.memo(({
             action: "delete_card", 
         }
       });
-    } else if (data.action === "spawn_card") {
+    } else if (data.action === "spawn_existing") {
       setShowModal("card");
+    } else if (data.action === "spawn_custom") {
+      setShowModal("custom");
     } else if (data.action === "spawn_quest") {
       setShowModal("quest");
-      console.log("quest");
     } else if (data.action === "download") {
       downloadGameAsJson();
     } else if (data.action === "load_game") {
@@ -326,7 +327,13 @@ export const TopBarMenu = React.memo(({
             <li key={"unload_encounter_deck"}><a  onClick={() => handleMenuClick({action:"unload_encounter_deck"})} href="#">Unload encounter</a></li>
           </ul>
         </li>
-        <li key={"spawn"}><a onClick={() => handleMenuClick({action:"spawn_card"})} href="#">Spawn card</a></li>
+        <li key={"spawn"}>
+          <a href="#">Spawn card</a>
+          <ul className="third-level-menu">
+            <li key={"spawn_existing"}><a onClick={() => handleMenuClick({action:"spawn_existing"})} href="#">Existing</a></li>
+            <li key={"spawn_custom"}><a onClick={() => handleMenuClick({action:"spawn_custom"})} href="#">Custom</a></li>
+          </ul>
+        </li> 
         <li key={"download"}><a onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
         {host &&
           <li key={"reset"}>
