@@ -112,6 +112,13 @@ export const DropdownMenuCard = React.memo(({
             clickCallback={handleDropdownClick}>
             Victory Display
           </DropdownItem>
+          <DropdownItem
+            action="moveCard"
+            destGroupId="sharedSetAside"
+            position="top"
+            clickCallback={handleDropdownClick}>
+            Set Aside
+          </DropdownItem>
         </div>
       </CSSTransition>
 

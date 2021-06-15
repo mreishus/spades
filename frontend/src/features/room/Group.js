@@ -53,14 +53,14 @@ export const Group = React.memo(({
           style={{width:"15px", writingMode:"vertical-rl"}} 
         >
           {group.type === "play" ? 
-            <div>
+            <div className="mt-1 text-xs">
               {GROUPSINFO[group.id].tablename}
             </div>
           :
             <div className="w-full h-full">
               <FontAwesomeIcon onClick={handleEyeClick}  className="hover:text-white mb-2 pl-1" icon={faEye}/>
               <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white mb-2 pl-1" icon={faBars}/>
-              <span className="mt-1">{GROUPSINFO[group.id].tablename}</span>
+              <span className="mt-1 text-xs">{GROUPSINFO[group.id].tablename + (group.type === "deck" ? " ("+numStacks+")" : "")}</span>
             </div>
           }
         </div>

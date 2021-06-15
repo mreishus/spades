@@ -279,6 +279,8 @@ export const HandleKeyDown = ({
                     chatBroadcast("game_update", {message: "pressed undo."});
                 }
             }
+            // Clear GiantCard
+            setActiveCardAndLoc(null);
         } else if (k === "ArrowRight") {
             // Redo an action
             if (game.replayStep >= game.replayLength) {
@@ -292,6 +294,8 @@ export const HandleKeyDown = ({
                     chatBroadcast("game_update", {message: "pressed redo."});
                 }
             }
+            // Clear GiantCard
+            setActiveCardAndLoc(null);
         } else if (k === "R") {
             hotkeyRefresh();
         } else if (k === "N") {
@@ -326,7 +330,8 @@ export const HandleKeyDown = ({
         // Card specific hotkeys
         if (activeCardAndLoc && activeCardAndLoc.card) {  
             const activeCardId = activeCardAndLoc.card.id; 
-            const activeCard = game.cardById[activeCardId]
+            const activeCard = game.cardById[activeCardId];
+            if (!activeCard) return;
             const activeCardFace = getCurrentFace(activeCard);
             const displayName = getDisplayName(activeCard);
             const tokens = activeCard.tokens;
@@ -533,7 +538,6 @@ export const HandleKeyDown = ({
                     const cardIds = stack.cardIds;
                     for (var cardId of cardIds) {
                         const cardi = game.cardById[cardId];
-                        console.log("discarding ", cardi);
                         const discardGroupId = cardi["discardGroupId"];
                         chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+GROUPSINFO[discardGroupId].name+"."});
                         gameBroadcast("game_action", {action: "move_card", options: {card_id: cardId, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
