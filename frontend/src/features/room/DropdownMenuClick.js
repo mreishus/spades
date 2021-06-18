@@ -3,6 +3,7 @@ import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { 
   getDisplayName, 
   getGroupIdStackIndexCardIndex,
+  getCurrentFace,
 } from "./Helpers";
 
 // dropdownMenu is an object that gets populated with infor about a card when a card is pressed, or about a group when a group is pressed.
@@ -49,6 +50,22 @@ export const handleDropdownClickCard = (dropdownMenu, props, playerN, game, game
       const tokenType = props.tokenType;
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "tokensPerRound", tokenType, increment]]}})
       chatBroadcast("game_update", {message: "added "+increment+" "+tokenType+" token(s) per round to "+displayName+"."})
+  } else if (props.action === "toggleTrigger") {
+    const stepId = props.stepId;
+    const currentFace = getCurrentFace(menuCard);
+    const triggers = [...currentFace.triggers];
+    if (triggers.includes(stepId)) {
+      const triggerIndex = triggers.indexOf(stepId);
+      if (triggerIndex !== -1) triggers.splice(triggerIndex, 1);
+      chatBroadcast("game_update", {message: "removed a step "+stepId+" trigger from "+displayName+"."})
+      gameBroadcast("game_action", {action: "card_action", options: {action: "remove_trigger", card_id: menuCard.id, options: {round_step: stepId}}})
+    } else {
+      triggers.push(stepId);
+      chatBroadcast("game_update", {message: "added a step "+stepId+" trigger to "+displayName+"."})
+      gameBroadcast("game_action", {action: "card_action", options: {action: "add_trigger", card_id: menuCard.id, options: {round_step: stepId}}})
+    }
+    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "sides", menuCard.currentSide, "triggers", triggers]]}})
+    
   } else if (props.action === "swapWithTop") {
     const gsc = getGroupIdStackIndexCardIndex(game, menuCard.id);
     const stackIndex = gsc.stackIndex;

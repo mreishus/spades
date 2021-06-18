@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { GROUPSINFO } from "./Constants";
+import { GROUPSINFO, PHASEINFO, roundStepToText } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { setValues } from "./gameUiSlice";
 import { 
@@ -123,7 +123,7 @@ export const HandleKeyDown = ({
             if (isHost) {
                 // Set phase
                 gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]}});
-                chatBroadcast("game_update", {message: "set the round step to 7.2-7.4: Ready cards, raise threat, pass P1 token."})
+                chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("7.R")+"."})
                 const firstPlayerN = game.firstPlayer;
                 const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
                 // If nextPlayerN is null then it's a solo game, so don't pass the token
@@ -157,7 +157,7 @@ export const HandleKeyDown = ({
             if (isHost) {
                 // Update phase
                 gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "phase", "Resource"], ["game", "roundStep", "1.R"]]}})
-                chatBroadcast("game_update", {message: "set the round step to 1.2 & 1.3: Gain resources and draw cards."})
+                chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("1.R")+"."})
                 // Update round number
                 const roundNumber = gameUi["game"]["roundNumber"];
                 const newRoundNumber = parseInt(roundNumber) + 1;
@@ -264,7 +264,7 @@ export const HandleKeyDown = ({
             // Deal all shadow cards
             // Set phase
             gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.2"], ["game", "phase", "Combat"]]}});
-            chatBroadcast("game_update", {message: "set the round step to 6.2: Deal shadow cards."});
+            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("6.2")+"."});
             gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
         } else if (k === "ArrowLeft") {
             // Undo an action
@@ -380,7 +380,7 @@ export const HandleKeyDown = ({
                     })
                     gameBroadcast("game_action", {action:"increment_tokens", options: {card_id: activeCardId, token_increments: newKeyBackLog}});
                     setKeyBackLog({})
-                }, 300);
+                }, 500);
             }
             // Set tokens to 0
             else if (k === "0" && groupType === "play") {
@@ -494,7 +494,7 @@ export const HandleKeyDown = ({
 
                 if (isHost && game.roundStep !== "3.2") {            
                     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "3.2"], ["game", "phase", "Quest"]]}});
-                    chatBroadcast("game_update", {message: "set the round step to 3.2: Commit characters to the quest."});
+                    chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("3.2")+"."});
                 }
             }
             // Deal shadow card

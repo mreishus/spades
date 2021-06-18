@@ -231,6 +231,10 @@ defmodule DragnCardsGame.GameUI do
         delete_card(gameui, card_id)
       "flip_card" ->
         flip_card(gameui, card_id)
+      "add_trigger" ->
+        add_trigger(gameui, card_id, options["round_step"])
+      "remove_trigger" ->
+        remove_trigger(gameui, card_id, options["round_step"])
       _ ->
         gameui
     end
@@ -835,6 +839,8 @@ defmodule DragnCardsGame.GameUI do
           step_through(gameui, options["size"], options["direction"])
         "save_replay" ->
           save_replay(gameui, user_id)
+        "card_action" ->
+          card_action(gameui, options["card_id"], options["action"], options["options"])
         _ ->
           gameui
       end

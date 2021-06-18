@@ -4,36 +4,32 @@ import { SideBarRoundStep } from "./SideBarRoundStep";
 
 export const SideBarPhase = React.memo(({
   playerN,
-  phase, 
-  text,
-  height,
   gameBroadcast,
   chatBroadcast,
   phaseInfo,
 }) => {
-  const gameRoundStepStore = state => state?.gameUi?.game?.roundStep;
-  const gameRoundStep = useSelector(gameRoundStepStore);
-  const isPhase = Object.keys(phaseInfo).includes(gameRoundStep);
+  const phaseStore = state => state?.gameUi?.game?.phase;
+  const currentPhase = useSelector(phaseStore);
+  console.log("Rendering SideBarPhase", currentPhase, phaseInfo.name);
+  const isPhase = phaseInfo.name === currentPhase;
   return (
     <div 
       className={"relative text-center select-none text-gray-100"}
-      style={{height: height, maxHeight: height, borderBottom: (phase === "End") ? "" : "1px solid"}}
+      style={{height: phaseInfo.height, maxHeight: phaseInfo.height, borderBottom: (phaseInfo.phase === "End") ? "" : "1px solid"}}
     >
       <div
         className={`absolute h-full ${isPhase ? "bg-red-800" : ""}`}
         style={{width:"24px", writingMode:"vertical-rl"}} 
       >
-        {text}
+        {phaseInfo.label}
       </div>
       <div className="w-full h-full text-sm flex flex-col float-left">
-        {Object.keys(phaseInfo).map((roundStep, index) => {
-          const roundStepText = phaseInfo[roundStep];
+        {phaseInfo.steps.map((step, _stepIndex) => {
           return (
             <SideBarRoundStep
               playerN={playerN}
-              phase={phase}
-              roundStep={roundStep}
-              roundStepText={roundStepText}
+              phase={phaseInfo.name}
+              stepInfo={step}
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}
             />

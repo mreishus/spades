@@ -1,10 +1,11 @@
 import React from "react";
 import { CSSTransition } from 'react-transition-group';
-import { tokenTitleName, getVisibleSide } from "./Helpers";
+import { tokenTitleName, getVisibleSide, getVisibleFace } from "./Helpers";
 import { faArrowUp, faArrowDown, faRandom, faChevronRight, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DropdownItem, GoBack } from "./DropdownMenuHelpers";
 import "../../css/custom-dropdown.css";
+import { PHASEINFO } from "./Constants";
 
 export const DropdownMenuCard = React.memo(({
   playerN,
@@ -20,6 +21,7 @@ export const DropdownMenuCard = React.memo(({
   const menuCard = dropdownMenu.card;
   const menuCardIndex = dropdownMenu.cardIndex;
   const visibleSide = getVisibleSide(menuCard);
+  const visibleFace = getVisibleFace(menuCard);
   
   const DropdownMoveTo = (props) => {
     return (
@@ -80,12 +82,18 @@ export const DropdownMenuCard = React.memo(({
             clickCallback={handleDropdownClick}>
             Move to
           </DropdownItem>
-          <DropdownItem
+          {dropdownMenu.groupType === "play" && <DropdownItem
             rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
             goToMenu="perRound"
             clickCallback={handleDropdownClick}>
             Per round
-          </DropdownItem>
+          </DropdownItem>}
+          {dropdownMenu.groupType === "play" && <DropdownItem
+            rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+            goToMenu="toggleTrigger"
+            clickCallback={handleDropdownClick}>
+            Toggle triggers
+          </DropdownItem>}
         </div>
       </CSSTransition>
 
@@ -161,6 +169,39 @@ export const DropdownMenuCard = React.memo(({
                 increment={increment}
                 clickCallback={handleDropdownClick}>
                 {increment}
+              </DropdownItem>
+            ))}
+          </div>
+        </CSSTransition>
+      ))}
+
+      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
+          in={activeMenu === "toggleTrigger"}>
+        <div className="menu">
+          <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
+          {PHASEINFO.map((phase, _phaseIndex) => (
+            <DropdownItem
+              rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+              goToMenu={phase.name+"ToggleTrigger"}
+              clickCallback={handleDropdownClick}>
+              {phase.name}
+            </DropdownItem>
+          ))}
+        </div>
+      </CSSTransition>
+
+      {PHASEINFO.map((phase, _phaseIndex) => (
+        <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
+        in={activeMenu === phase.name+"ToggleTrigger"}>
+          <div className="menu">
+            <GoBack goToMenu="toggleTrigger" clickCallback={handleDropdownClick}/>
+            {phase.steps.map((step, _stepIndex) => (
+              <DropdownItem
+                rightIcon={visibleFace.triggers.includes(step.id) ? <FontAwesomeIcon icon={faCheck}/> : null}
+                action={"toggleTrigger"}
+                stepId={step.id}
+                clickCallback={handleDropdownClick}>
+                <div className="text-xs">{step.text}</div>
               </DropdownItem>
             ))}
           </div>

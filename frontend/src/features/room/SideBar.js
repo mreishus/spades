@@ -12,12 +12,9 @@ export const SideBar = React.memo(({
       {PHASEINFO.map((phase, _phaseIndex) => (
         <SideBarPhase
           playerN={playerN}
-          phase={phase.name}
-          text={phase.label}
-          height={phase.height}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
-          phaseInfo={phase.steps}
+          phaseInfo={phase}
         />
       ))}
     </div>
