@@ -7,7 +7,7 @@ import store from "../../store";
 import { setGame } from "./gameUiSlice";
 import { processLoadList, processPostLoad } from "./Helpers";
 import { cardDB } from "../../cardDB/cardDB";
-import { loadDeckFromXmlText } from "./Helpers";
+import { loadDeckFromXmlText, getRandomIntInclusive } from "./Helpers";
 
 
 export const TopBarMenu = React.memo(({
@@ -177,6 +177,16 @@ export const TopBarMenu = React.memo(({
             action: "delete_card", 
         }
       });
+    } else if (data.action === "random_coin") {
+      const result = getRandomIntInclusive(0,1);
+      if (result) chatBroadcast("game_update",{message: "flipped heads."});
+      else chatBroadcast("game_update",{message: "flipped tails."});
+    } else if (data.action === "random_number") {
+      const max = parseInt(prompt("Random number between 1 and...","3"));
+      if (max>=1) {
+        const result = getRandomIntInclusive(1,max);
+        chatBroadcast("game_update",{message: "chose a random number (1-"+max+"): "+result});
+      }
     } else if (data.action === "spawn_existing") {
       setShowModal("card");
     } else if (data.action === "spawn_custom") {
@@ -332,6 +342,13 @@ export const TopBarMenu = React.memo(({
           <ul className="third-level-menu">
             <li key={"spawn_existing"}><a onClick={() => handleMenuClick({action:"spawn_existing"})} href="#">Existing</a></li>
             <li key={"spawn_custom"}><a onClick={() => handleMenuClick({action:"spawn_custom"})} href="#">Custom</a></li>
+          </ul>
+        </li> 
+        <li key={"random"}>
+          <a href="#">Random</a>
+          <ul className="third-level-menu">
+            <li key={"random_coin"}><a onClick={() => handleMenuClick({action:"random_coin"})} href="#">Coin</a></li>
+            <li key={"random_number"}><a onClick={() => handleMenuClick({action:"random_number"})} href="#">Number</a></li>
           </ul>
         </li> 
         <li key={"download"}><a onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
