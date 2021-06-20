@@ -74,17 +74,10 @@ export const HandleKeyDown = ({
             )
         }
 
-        const onKeyUp = (event) => {
-            if (event.key === "Shift") setKeypress({"Shift": false});
-            if (event.key === "Control") setKeypress({"Control": false});
-        }
-
         document.addEventListener('keydown', onKeyDown);
-        document.addEventListener('keyup', onKeyUp);
 
         return () => {
             document.removeEventListener('keydown', onKeyDown);
-            document.removeEventListener('keyup', onKeyUp);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gameUi, typing, keypress, activeCardAndLoc, keyBackLog]);

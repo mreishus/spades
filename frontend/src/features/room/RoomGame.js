@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import { HandleKeyDown } from "./HandleKeyDown";
@@ -9,6 +9,20 @@ const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
   const [typing, setTyping] = useState(false);
   const keypress = useKeypress();
   const setKeypress = useSetKeypress();
+
+  useEffect(() => {
+    const onKeyUp = (event) => {
+        if (event.key === "Shift") setKeypress({"Shift": false});
+        if (event.key === "Control") setKeypress({"Control": false});
+    }
+
+    document.addEventListener('keyup', onKeyUp);
+
+    return () => {
+        document.removeEventListener('keyup', onKeyUp);
+    }
+  }, []);
+
   return (
     <div className="h-full w-full">
       <HandleKeyDown
