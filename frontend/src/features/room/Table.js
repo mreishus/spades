@@ -88,19 +88,21 @@ export const Table = React.memo(({
             />
           </div>
           {/* Table */}
-          <div className="" style={{height: "94%"}}>
-            <TableLayout
-              observingPlayerN={observingPlayerN}
-              gameBroadcast={gameBroadcast} 
-              chatBroadcast={chatBroadcast}
-              playerN={playerN}
-              setTyping={setTyping}
-              browseGroupId={browseGroupId}
-              setBrowseGroupId={setBrowseGroupId}
-              browseGroupTopN={browseGroupTopN}
-              setBrowseGroupTopN={setBrowseGroupTopN}
-              registerDivToArrowsContext={registerDivToArrowsContext}
-            />
+          <div className="relative" style={{height: "94%"}}>
+            {/* <div className="h-full" style={{width: "90%"}}> */}
+              <TableLayout
+                observingPlayerN={observingPlayerN}
+                gameBroadcast={gameBroadcast} 
+                chatBroadcast={chatBroadcast}
+                playerN={playerN}
+                setTyping={setTyping}
+                browseGroupId={browseGroupId}
+                setBrowseGroupId={setBrowseGroupId}
+                browseGroupTopN={browseGroupTopN}
+                setBrowseGroupTopN={setBrowseGroupTopN}
+                registerDivToArrowsContext={registerDivToArrowsContext}
+              />
+            {/* </div> */}
           </div>
         </div>
       </div>

@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 import { Group } from "./Group";
+import { Stacks } from "./Stacks";
 import { Browse } from "./Browse";
-import { CARDSCALE, LAYOUTINFO } from "./Constants";
+import { GROUPSINFO, CARDSCALE, LAYOUTINFO } from "./Constants";
 import Chat from "../chat/Chat";
 import { handleBrowseTopN } from "./HandleBrowseTopN"; 
 import "../../css/custom-misc.css"; 
@@ -73,6 +74,8 @@ export const TableLayout = React.memo(({
   const layoutStore = state => state.gameUi?.game?.layout;
   const layout = useSelector(layoutStore);
   const [chatHover, setChatHover] = useState(false);
+  const [sideGroupVisible, setSideGroupVisible] = useState(false);
+  const [sideGroupId, setSideGroupId] = useState("sharedSetAside");
   if (!layout) return;
 
   const handleBrowseClick = (groupId) => {
@@ -95,80 +98,149 @@ export const TableLayout = React.memo(({
   const numRows = layoutInfo.length;
   const rowHeight = `${100/numRows}%`; 
   const cardSize = CARDSCALE/numRows;
+  var middleRowsWidth = 100;
+  if (sideGroupVisible) {
+    if (numRows >= 6) middleRowsWidth = 93;
+    else middleRowsWidth = 91;
+  }
 
   return (
-    layoutInfo.map((row, rowIndex) => {
-      if (browseGroupId && rowIndex === numRows - 2) {
-        return(
-        <div 
-          className="relative bg-gray-700 rounded-lg w-full" 
-          style={{height: rowHeight}}
-        >
-          <Browse
-            groupId={browseGroupId}
+    <>
+      {/* Top row */}
+      <div 
+        className="relative w-full" 
+        style={{height: rowHeight}}>
+        {layoutInfo[0].regions.map((region, _regionIndex) => (
+          <TableRegion
+            region={region}
             cardSize={cardSize}
-            gameBroadcast={gameBroadcast}
+            observingPlayerN={observingPlayerN}
+            gameBroadcast={gameBroadcast} 
             chatBroadcast={chatBroadcast}
             playerN={playerN}
-            browseGroupTopN={browseGroupTopN}
+            browseGroupId={browseGroupId}
             setBrowseGroupId={setBrowseGroupId}
             setBrowseGroupTopN={setBrowseGroupTopN}
-            setTyping={setTyping}
+            registerDivToArrowsContext={registerDivToArrowsContext}
           />
-          </div>
-        )} else {
-          return(
-          <div 
-            className="relative w-full" 
-            style={{height: rowHeight}}
-          >
-            {row.regions.map((region, _regionIndex) => (
-              <TableRegion
-                region={region}
+        ))}
+      </div>
+      {/* Middle rows */}
+      <div 
+        className="relative float-left"
+        style={{height: `${100-2*(100/numRows)}%`, width:`${middleRowsWidth}%`}}>
+        {layoutInfo.map((row, rowIndex) => {  
+          if (browseGroupId && rowIndex === numRows - 2) {
+            return(
+            <div 
+              className="relative bg-gray-700 rounded-lg w-full" 
+              style={{height: `${100/(numRows-2)}%`}}
+            >
+              <Browse
+                groupId={browseGroupId}
                 cardSize={cardSize}
-                observingPlayerN={observingPlayerN}
-                gameBroadcast={gameBroadcast} 
+                gameBroadcast={gameBroadcast}
                 chatBroadcast={chatBroadcast}
                 playerN={playerN}
-                browseGroupId={browseGroupId}
+                browseGroupTopN={browseGroupTopN}
                 setBrowseGroupId={setBrowseGroupId}
                 setBrowseGroupTopN={setBrowseGroupTopN}
-                registerDivToArrowsContext={registerDivToArrowsContext}
+                setTyping={setTyping}
               />
-            ))}
-            {/* Add buttons and chat to bottom right */}
-            {(rowIndex === numRows - 1) &&
-              <div className="absolute right-0 bottom-0 h-full" style={{width:"25%"}}>
-                <div 
-                  className="absolute bottom-0 right-0" 
-                  style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'100%', paddingLeft:"30px", opacity: 0.7, zIndex: 1e6}}
-                  onMouseEnter={() => handleStartChatHover()}
-                  onMouseLeave={() => handleStopChatHover()}
-                >
-                  <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
-                </div>
-                <div className="absolute h-full text-xs text-center text-gray-400 left-0" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
-                  <div className="quickviewbutton" onClick={() => handleBrowseClick("sharedSetAside")}>
-                    <div style={{height: "50%"}}>SA</div>
-                    <div style={{height: "50%"}}>{groupById["sharedSetAside"].stackIds.length}</div>
-                  </div>
-                  <div className="quickviewbutton" onClick={() => handleBrowseClick(observingPlayerN+"Sideboard")}>
-                    <div style={{height: "50%"}}>SB</div>
-                    <div style={{height: "50%"}}>{groupById[observingPlayerN+"Sideboard"]?.stackIds.length}</div>
-                  </div>
-                  <div className="quickviewbutton" onClick={() => handleBrowseClick("sharedQuestDeck")}>
-                    <div style={{height: "50%"}}>QD</div>
-                    <div style={{height: "50%"}}>{groupById["sharedQuestDeck"].stackIds.length}</div>
-                  </div>
-                  <div className="quickviewbutton" onClick={() => handleBrowseClick("sharedVictory")}>
-                    <div style={{height: "50%"}}>VD</div>
-                    <div style={{height: "50%"}}>{groupById["sharedVictory"].stackIds.length}</div>
-                  </div>
-                </div>
               </div>
-            }
+            )
+          } else if (rowIndex > 0 && rowIndex < numRows - 1) {
+            return(
+              <div 
+                className="relative w-full" 
+                style={{height: `${100/(numRows-2)}%`}}>
+                {row.regions.map((region, _regionIndex) => (
+                  <TableRegion
+                    region={region}
+                    cardSize={cardSize}
+                    observingPlayerN={observingPlayerN}
+                    gameBroadcast={gameBroadcast} 
+                    chatBroadcast={chatBroadcast}
+                    playerN={playerN}
+                    browseGroupId={browseGroupId}
+                    setBrowseGroupId={setBrowseGroupId}
+                    setBrowseGroupTopN={setBrowseGroupTopN}
+                    registerDivToArrowsContext={registerDivToArrowsContext}
+                  />
+                ))}
+              </div>
+            )
+          }
+        })}
+      </div>
+      {/* Side Group */}
+      {sideGroupVisible && browseGroupId !== sideGroupId &&
+        <div className="relative float-left" style={{height: `${100-2*(100/numRows)}%`, width:`${100-middleRowsWidth}%`}}>
+          <div className="absolute text-center w-full select-none text-gray-500">
+              <div className="mt-1 text-xs">
+                {GROUPSINFO[sideGroupId].tablename}
+            </div>
           </div>
-          )}
-        })
+          <div className="w-full h-full pt-4">
+            <Stacks
+              gameBroadcast={gameBroadcast}
+              chatBroadcast={chatBroadcast}
+              playerN={playerN}
+              groupId={sideGroupId}
+              groupType={"vertical"}
+              cardSize={cardSize}
+              registerDivToArrowsContext={registerDivToArrowsContext}
+            />
+          </div>
+        </div>
+      }
+      {/* Bottom row */}
+      <div 
+        className="relative w-full" 
+        style={{height: rowHeight}}>
+        {layoutInfo[numRows-1].regions.map((region, _regionIndex) => (
+          <TableRegion
+            region={region}
+            cardSize={cardSize}
+            observingPlayerN={observingPlayerN}
+            gameBroadcast={gameBroadcast} 
+            chatBroadcast={chatBroadcast}
+            playerN={playerN}
+            browseGroupId={browseGroupId}
+            setBrowseGroupId={setBrowseGroupId}
+            setBrowseGroupTopN={setBrowseGroupTopN}
+            registerDivToArrowsContext={registerDivToArrowsContext}
+          />
+        ))}
+      </div>
+      {/* Quickview and Chat */}
+      <div className="absolute right-0 bottom-0 h-full" style={{width:"25%", height: rowHeight}}>
+        <div 
+          className="absolute bottom-0 right-0" 
+          style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'100%', paddingLeft:"30px", opacity: 0.7, zIndex: 1e6}}
+          onMouseEnter={() => handleStartChatHover()}
+          onMouseLeave={() => handleStopChatHover()}>
+          <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
+        </div>
+        <div className="absolute h-full text-xs text-center text-gray-400 left-0" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
+          <div className={`quickviewbutton ${sideGroupVisible ? "bg-gray-700" : ""}`} onClick={() => setSideGroupVisible(!sideGroupVisible)}>
+            <div style={{height: "50%"}}>SA</div>
+            <div style={{height: "50%"}}>{groupById["sharedSetAside"].stackIds.length}</div>
+          </div>
+          <div className="quickviewbutton" onClick={() => handleBrowseClick(observingPlayerN+"Sideboard")}>
+            <div style={{height: "50%"}}>SB</div>
+            <div style={{height: "50%"}}>{groupById[observingPlayerN+"Sideboard"]?.stackIds.length}</div>
+          </div>
+          <div className="quickviewbutton" onClick={() => handleBrowseClick("sharedQuestDeck")}>
+            <div style={{height: "50%"}}>QD</div>
+            <div style={{height: "50%"}}>{groupById["sharedQuestDeck"].stackIds.length}</div>
+          </div>
+          <div className="quickviewbutton" onClick={() => handleBrowseClick("sharedVictory")}>
+            <div style={{height: "50%"}}>VD</div>
+            <div style={{height: "50%"}}>{groupById["sharedVictory"].stackIds.length}</div>
+          </div>
+        </div>
+      </div>
+    </>
   )
 })

@@ -158,10 +158,8 @@ export const Browse = React.memo(({
           chatBroadcast={chatBroadcast}
           playerN={playerN}
           groupId={groupId}
-          stackIds={stackIds}
+          groupType={groupType}
           cardSize={cardSize}
-          groupType={"hand"}
-          isCombineEnabled={false}
           selectedStackIndices={filteredStackIndices}
         />
       </div>

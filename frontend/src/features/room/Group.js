@@ -71,9 +71,7 @@ export const Group = React.memo(({
         playerN={playerN}
         groupId={group.id}
         groupType={group.type}
-        stackIds={group.stackIds}
         cardSize={cardSize}
-        isCombineEnabled={group.type === "play"}
         selectedStackIndices={[...Array(numStacks).keys()]}
         registerDivToArrowsContext={registerDivToArrowsContext}
       />

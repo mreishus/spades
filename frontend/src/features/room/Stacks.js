@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from 'react-redux';
 import styled from "@emotion/styled";
 import { Droppable, Draggable } from "react-beautiful-dnd";
 import { Stack } from "./Stack";
@@ -16,8 +17,8 @@ const Container = styled.div`
   padding-left: 0px;
   height: 100%;
   user-select: none;
-  overflow-x: ${props => (props.groupType === "deck" || props.groupType === "discard") ? "none" : "auto"};
-  overflow-y: hidden;
+  overflow-x: ${props => ["deck", "discard", "vertical"].includes(props.groupType) ? "none" : "auto"};
+  overflow-y: ${props => props.groupType === "vertical" ? "auto" : "hidden"};
   scrollbar-color: rgba(1,1,1,0.8) rgba(1,1,1,0);
   max-height: 100%;
   position: relative;
@@ -25,7 +26,7 @@ const Container = styled.div`
 
 const DropZone = styled.div`
   /* stop the list collapsing when empty */
-  display: ${props => (props.groupType === "deck" || props.groupType === "discard") ? "" : "flex"};
+  display: ${props => ["deck", "discard", "vertical"].includes(props.groupType) ? "" : "flex"};
   width: 100%;
   height: 100%;
   min-height: 100%;
@@ -78,21 +79,23 @@ export const Stacks = React.memo(({
   chatBroadcast,
   playerN,
   groupId,
-  stackIds,
   groupType,
   cardSize,
-  isCombineEnabled,
   selectedStackIndices,
   registerDivToArrowsContext
 }) => {
-  console.log("Rendering Stacks for ",groupId)
+  console.log("Rendering Stacks for ",groupId);
+  const groupStore = state => state?.gameUi?.game?.groupById?.[groupId];
+  const group = useSelector(groupStore);
+  const stackIds = group.stackIds;
+  const isCombineEnabled = (groupType === "play");
   return(
     <Droppable
       droppableId={groupId}
       key={groupId}
       isDropDisabled={false}
       isCombineEnabled={isCombineEnabled}
-      direction={groupType === "deck" || groupType === "discard" ? "vertical" : "horizontal"}
+      direction={["deck", "discard", "vertical"].includes(groupType) ? "vertical" : "horizontal"}
     >
       {(dropProvided, dropSnapshot) => (
         <Container
@@ -117,10 +120,10 @@ export const Stacks = React.memo(({
                 chatBroadcast={chatBroadcast} 
                 playerN={playerN}
                 groupId={groupId}
-                groupType={groupType} 
+                groupType={(groupType ? groupType : group.type)} 
                 cardSize={cardSize}
                 stackIds={stackIds}
-                selectedStackIndices={selectedStackIndices}
+                selectedStackIndices={(selectedStackIndices ? selectedStackIndices : [...Array(stackIds.length).keys()])}
                 registerDivToArrowsContext={registerDivToArrowsContext}
               />
               {dropProvided.placeholder}

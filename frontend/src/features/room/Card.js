@@ -97,7 +97,7 @@ export const Card = React.memo(({
                         MozBoxShadow: isActive ? '0 0 7px yellow' : '',
                         WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
                         boxShadow: isActive ? '0 0 7px yellow' : '',
-                        transform: `translate(0%,-50%) rotate(${card.rotation}deg)`,
+                        transform: `translate(0%, ${groupType === "vertical" ? "0%" : "-50%"}) rotate(${card.rotation}deg)`,
                         zIndex: zIndex,
                         cursor: "default",
                         WebkitTransitionDuration: "0.1s",

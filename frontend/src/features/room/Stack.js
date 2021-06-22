@@ -10,9 +10,7 @@ const Container = styled.div`
   padding: 0;
   min-width: ${props => props.stackWidth}vw;
   width: ${props => props.stackWidth}vw;
-  min-height: 100%;
-  height: 100%;
-  min-height: ${props => props.cardSize/0.75}vw;
+  height: ${props => (props.groupType === "vertical") ? `${props.cardSize/3}vw` : "100%"};
   display: flex;
 `;
 
@@ -51,6 +49,7 @@ export const Stack = React.memo(({
           isDragging={dragSnapshot.isDragging}
           isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
           stackWidth={stackWidth}
+          groupType={groupType}
           cardSize={cardSize}
           ref={dragProvided.innerRef}
           {...dragProvided.draggableProps}
