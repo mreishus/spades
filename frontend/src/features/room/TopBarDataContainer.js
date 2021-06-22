@@ -25,9 +25,7 @@ export const TopBarDataContainer = React.memo(({
     const playerData = useSelector(playerDataStore);
 
     // const playerDataStore = state => state?.gameUi?.game?.playerData;
-    // const playerData = useSelector(playerDataStore);  
-    const roundStore = state => state?.gameUi?.game?.roundNumber;
-    const round = useSelector(roundStore);  
+    // const playerData = useSelector(playerDataStore);
     
     if (!stagingStackIds) return;
 
@@ -61,9 +59,11 @@ export const TopBarDataContainer = React.memo(({
     return(
       <div className="h-full">
         <TopBarShared 
-          round={round}
+          playerN={playerN}
           threat={stagingThreat}
           progress={totalProgress}
+          gameBroadcast={gameBroadcast}
+          chatBroadcast={chatBroadcast}
         />
         <TopBarUser
           playerN={playerN}

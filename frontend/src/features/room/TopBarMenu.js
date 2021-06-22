@@ -27,6 +27,8 @@ export const TopBarMenu = React.memo(({
   const roundStore = state => state.gameUi?.game.roundNumber;
   const round = useSelector(roundStore);
   const host = myUserID === createdBy;
+  const cardsPerRoundStore = state => state.gameUi?.game.playerData[playerN]?.cardsDrawn;
+  const cardsPerRound = useSelector(cardsPerRoundStore);
   
   const dispatch = useDispatch();
   const inputFileDeck = useRef(null);
@@ -186,6 +188,12 @@ export const TopBarMenu = React.memo(({
       if (max>=1) {
         const result = getRandomIntInclusive(1,max);
         chatBroadcast("game_update",{message: "chose a random number (1-"+max+"): "+result});
+      }
+    } else if (data.action === "cards_per_round") {
+      const num = parseInt(prompt("Set the number of cards drawn during resource phase:",cardsPerRound));
+      if (num>=0) {
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "cardsDrawn", num]]}});
+        chatBroadcast("game_update",{message: "set the number of cards they draw during the resource phase to "+num+"."});
       }
     } else if (data.action === "spawn_existing") {
       setShowModal("card");
@@ -349,6 +357,12 @@ export const TopBarMenu = React.memo(({
           <ul className="third-level-menu">
             <li key={"random_coin"}><a onClick={() => handleMenuClick({action:"random_coin"})} href="#">Coin</a></li>
             <li key={"random_number"}><a onClick={() => handleMenuClick({action:"random_number"})} href="#">Number</a></li>
+          </ul>
+        </li> 
+        <li key={"options"}>
+          <a href="#">Options</a>
+          <ul className="third-level-menu">
+            <li key={"cards_per_round"}><a onClick={() => handleMenuClick({action:"cards_per_round"})} href="#">Cards per round</a></li>
           </ul>
         </li> 
         <li key={"download"}><a onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>

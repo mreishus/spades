@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import UserName from "../user/UserName";
 import useProfile from "../../hooks/useProfile";
+import useFocus from "../../hooks/useFocus";
 import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { Link } from "react-router-dom";
 import { setValues } from "./gameUiSlice";
@@ -9,13 +10,6 @@ import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import { getCurrentFace } from "./Helpers";
 
 var delayBroadcast;
-
-const useFocus = () => {
-  const htmlElRef = useRef(null)
-  const setFocus = () => {htmlElRef.current &&  htmlElRef.current.blur()}
-
-  return [ htmlElRef, setFocus ] 
-}
 
 export const TopBarUser = React.memo(({
   playerN,

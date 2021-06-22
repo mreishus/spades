@@ -74,7 +74,7 @@ export const TableLayout = React.memo(({
   const layoutStore = state => state.gameUi?.game?.layout;
   const layout = useSelector(layoutStore);
   const [chatHover, setChatHover] = useState(false);
-  const [sideGroupVisible, setSideGroupVisible] = useState(false);
+  const [sideGroupVisible, setSideGroupVisible] = useState(true);
   const [sideGroupId, setSideGroupId] = useState("sharedSetAside");
   if (!layout) return;
 

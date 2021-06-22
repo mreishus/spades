@@ -158,8 +158,10 @@ export const HandleKeyDown = ({
                 chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
             }
             // Draw a card
-            gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
-            chatBroadcast("game_update",{message: "drew a card."});
+            for (var i = 0; i < game.playerData[playerN].cardsDrawn; i++) {
+                gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
+                chatBroadcast("game_update",{message: "drew a card."});
+            }
             // Add a resource to each hero
             gameBroadcast("game_action", {
                 action: "action_on_matching_cards", 
