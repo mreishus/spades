@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import useFocus from "../../hooks/useFocus";
 import { setValues } from "./gameUiSlice";
@@ -17,6 +17,10 @@ export const TopBarShared = React.memo(({
   const gameUiRound = useSelector(roundStore);
   const [roundValue, setRoundValue] = useState(gameUiRound);
   const [inputRefRound, setInputFocusRound] = useFocus();
+
+  useEffect(() => {    
+    if (gameUiRound !== roundValue) setRoundValue(gameUiRound);
+  }, [gameUiRound]);
 
   const handleRoundChange = (event) => {
     const newValue = event.target.value;
