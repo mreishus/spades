@@ -10,7 +10,6 @@ import { setValues } from "./gameUiSlice";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
-import useLongPress from "../../hooks/useLongPress";
 
 const isNormalInteger = (str) => {
   var n = Math.floor(Number(str));
@@ -42,12 +41,9 @@ export const Browse = React.memo(({
   var fontSize = "text-md"
   if (game.numPlayers === 2) fontSize = "text-sm"
   if (game.numPlayers > 2) fontSize = "text-xs"
-    
-  const onLongPress = () => {
-    console.log(group);
-  };
+ 
 
-  const onClick = () => {
+  const handleBarsClick = () => {
     console.log('longpress is triggered');
     const dropdownMenu = {
         type: "group",
@@ -59,12 +55,6 @@ export const Browse = React.memo(({
     setDropdownMenu(dropdownMenu);
   }
 
-  const defaultOptions = {
-      shouldPreventDefault: true,
-      delay: 500,
-  };
-
-  const longPress = useLongPress(onLongPress, onClick, defaultOptions);
 
   // This allows the deck to be hidden instantly upon close (by hiding the top card)
   // rather than waiting to the update from the server
@@ -138,18 +128,16 @@ export const Browse = React.memo(({
   return(
     <div className="relative h-full w-full">
       <div
-        className="relative text-center h-full text-white float-left select-none opacity-40"
-        style={{width:"30px", writingMode:"vertical-rl", paddingLeft: "20px"}}>
-        {group.type === "play" ? 
-          <div>
-            {GROUPSINFO[group.id].tablename}
-          </div>
-        :
-          <div {...longPress}>
-            <FontAwesomeIcon className="text-white mb-2 pl-1" icon={faBars}/>
-            {GROUPSINFO[group.id].tablename}
-          </div>
-        }
+        className="relative text-center h-full text-gray-500 float-left select-none"
+        style={{width:"30px"}}>
+        <div>
+          {group.type !== "play" && <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white" icon={faBars}/>}
+          <span 
+            className="absolute whitespace-nowrap mt-1 text-sm" 
+            style={{top: "50%", left: "50%", transform: `translate(-50%, 0%) rotate(90deg)`}}>
+              {GROUPSINFO[group.id].tablename}
+          </span>
+        </div>
       </div> 
 
       <div className="relative h-full float-left " style={{width: "calc(100% - 550px)"}}>
@@ -204,7 +192,7 @@ export const Browse = React.memo(({
               <td><label className="text-white"><input type="radio" name="cardtype" value="Event" /> Event</label></td>
             </tr>
             <tr onChange={handleOptionClick}>
-              <td><label className="text-white"><input type="radio" name="cardtype" value="Location" /> Treachery</label></td>
+              <td><label className="text-white"><input type="radio" name="cardtype" value="Treachery" /> Treachery</label></td>
               <td><label className="text-white"><input type="radio" name="cardtype" value="Side Quest" /> Side Quest</label></td>
             </tr>
           </body>

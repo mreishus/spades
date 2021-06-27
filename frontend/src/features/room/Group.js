@@ -50,17 +50,22 @@ export const Group = React.memo(({
       {hideTitle ? null :
         <div
           className="relative text-center h-full float-left select-none text-gray-500"
-          style={{width:"15px", writingMode:"vertical-rl"}} 
+          style={{width:"15px"}} 
         >
-          {group.type === "play" ? 
-            <div className="mt-1 text-xs">
+          {group.type === "play" ?        
+            <div className="absolute whitespace-nowrap pointer-events-none mt-1 text-sm" 
+            style={{top: "50%", left: "50%", transform: "translate(-50%, -50%) rotate(90deg)"}}>
               {GROUPSINFO[group.id].tablename}
             </div>
           :
             <div className="w-full h-full">
-              <FontAwesomeIcon onClick={handleEyeClick}  className="hover:text-white mb-2 pl-1" icon={faEye}/>
-              <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white mb-2 pl-1" icon={faBars}/>
-              <span className="mt-1 text-xs">{GROUPSINFO[group.id].tablename + (group.type === "deck" ? " ("+numStacks+")" : "")}</span>
+              <FontAwesomeIcon onClick={handleEyeClick}  className="hover:text-white mt-2" icon={faEye}/>
+              <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white" icon={faBars}/>
+              <span 
+                className="absolute whitespace-nowrap pointer-events-none mt-1 text-sm" 
+                style={{top: "50%", left: "50%", transform: `translate(-50%, ${group.id === "sharedEncounterDeck" ? "80%" : "0%"}) rotate(90deg)`}}>
+                  {GROUPSINFO[group.id].tablename + (group.type === "deck" ? " ("+numStacks+")" : "")}
+              </span>
             </div>
           }
         </div>

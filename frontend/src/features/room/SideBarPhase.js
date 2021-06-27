@@ -15,13 +15,13 @@ export const SideBarPhase = React.memo(({
   return (
     <div 
       className={"relative text-center select-none text-gray-100"}
-      style={{height: phaseInfo.height, maxHeight: phaseInfo.height, borderBottom: (phaseInfo.phase === "End") ? "" : "1px solid"}}
-    >
+      style={{height: phaseInfo.height, maxHeight: phaseInfo.height, borderBottom: (phaseInfo.phase === "End") ? "" : "1px solid"}}>
       <div
-        className={`absolute h-full ${isPhase ? "bg-red-800" : ""}`}
-        style={{width:"24px", writingMode:"vertical-rl"}} 
-      >
-        {phaseInfo.label}
+        className={`absolute h-full pointer-events-none ${isPhase ? "bg-red-800" : ""}`}
+        style={{width:"24px"}}>
+        <div className="absolute" style={{top: "50%", left: "50%", transform: "translate(-50%, -50%) rotate(90deg)"}}>
+          {phaseInfo.label}
+        </div>
       </div>
       <div className="w-full h-full text-sm flex flex-col float-left">
         {phaseInfo.steps.map((step, _stepIndex) => {
@@ -31,8 +31,7 @@ export const SideBarPhase = React.memo(({
               phase={phaseInfo.name}
               stepInfo={step}
               gameBroadcast={gameBroadcast}
-              chatBroadcast={chatBroadcast}
-            />
+              chatBroadcast={chatBroadcast}/>
           )
         })}
       </div>

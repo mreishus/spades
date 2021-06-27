@@ -178,7 +178,7 @@ export const TableLayout = React.memo(({
       {Object.keys(GROUPSINFO).includes(sideGroupId) && browseGroupId !== sideGroupId &&
         <div className="relative float-left" style={{height: `${100-2*(100/numRows)}%`, width:`${100-middleRowsWidth}%`}}>
           <div className="absolute text-center w-full select-none text-gray-500">
-              <div className="mt-1 text-xs">
+              <div className="mt-1 text-sm">
                 {GROUPSINFO[sideGroupId].tablename}
             </div>
           </div>
