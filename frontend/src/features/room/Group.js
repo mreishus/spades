@@ -53,8 +53,8 @@ export const Group = React.memo(({
           style={{width:"15px"}} 
         >
           {group.type === "play" ?        
-            <div className="absolute whitespace-nowrap pointer-events-none mt-1 text-sm" 
-            style={{top: "50%", left: "50%", transform: "translate(-50%, -50%) rotate(90deg)"}}>
+            <div className="absolute pointer-events-none mt-1 text-sm" 
+            style={{top: "50%", left: "50%", transform: "translate(-50%, -50%) rotate(90deg)", whiteSpace: "nowrap"}}>
               {GROUPSINFO[group.id].tablename}
             </div>
           :
@@ -62,8 +62,8 @@ export const Group = React.memo(({
               <FontAwesomeIcon onClick={handleEyeClick}  className="hover:text-white mt-2" icon={faEye}/>
               <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white" icon={faBars}/>
               <span 
-                className="absolute whitespace-nowrap pointer-events-none mt-1 text-sm" 
-                style={{top: "50%", left: "50%", transform: `translate(-50%, ${group.id === "sharedEncounterDeck" ? "80%" : "0%"}) rotate(90deg)`}}>
+                className="absolute pointer-events-none mt-1 text-sm" 
+                style={{top: "50%", left: "50%", transform: `translate(-50%, ${group.id === "sharedEncounterDeck" ? "80%" : "0%"}) rotate(90deg)`, whiteSpace: "nowrap"}}>
                   {GROUPSINFO[group.id].tablename + (group.type === "deck" ? " ("+numStacks+")" : "")}
               </span>
             </div>

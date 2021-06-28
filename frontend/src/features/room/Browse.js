@@ -133,8 +133,8 @@ export const Browse = React.memo(({
         <div>
           {group.type !== "play" && <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white" icon={faBars}/>}
           <span 
-            className="absolute whitespace-nowrap mt-1 text-sm" 
-            style={{top: "50%", left: "50%", transform: `translate(-50%, 0%) rotate(90deg)`}}>
+            className="absolute mt-1 text-sm" 
+            style={{top: "50%", left: "50%", transform: `translate(-50%, 0%) rotate(90deg)`, whiteSpace: "nowrap"}}>
               {GROUPSINFO[group.id].tablename}
           </span>
         </div>
