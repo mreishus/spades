@@ -41,6 +41,8 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
   
   const [privacyType, setPrivacyType] = useState(options[0]);
 
+  console.log("Rendering CreateRoomModal", ringsDbIds, ringsDbType, ringsDbDomain)
+
   const createRoom = async () => {
     const data = { 
       room: { 
@@ -55,6 +57,7 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
         ringsdb_domain: ringsDbDomain,
       }
     };
+    console.log("Data", data);
     setIsLoading(true);
     setIsError(false);
     try {

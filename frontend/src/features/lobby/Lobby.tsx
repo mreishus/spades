@@ -44,7 +44,7 @@ export const Lobby: React.FC = () => {
     "/be/api/rooms",
     null
   );
-
+  console.log("Rendering Lobby", ringsDbIds, ringsDbType, ringsDbDomain)
   useEffect(() => {
     const url = window.location.href;
     if (url.includes("newroom")) {

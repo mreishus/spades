@@ -33,7 +33,7 @@ export const TopBarMenu = React.memo(({
   const dispatch = useDispatch();
   const inputFileDeck = useRef(null);
   const inputFileGame = useRef(null);
-
+  console.log("Rendering TopBarMenu", options);
   useEffect(() => {
     console.log(options);
     if (options["ringsDbIds"]) {
@@ -51,8 +51,9 @@ export const TopBarMenu = React.memo(({
         chatBroadcast("game_update",{message: "is loading a deck from RingsDb..."});
         const ringsDbId = ringsDbIds[i];
         const ringsDbType = options["ringsDbType"];
-        const urlBase = options["ringsDbDomain"] === "test" && 0 ? "https://www.test.ringsdb.com/api/" : "https://www.ringsdb.com/api/"
+        const urlBase = options["ringsDbDomain"] === "test" ? "https://www.test.ringsdb.com/api/" : "https://www.ringsdb.com/api/"
         const url = ringsDbType === "decklist" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
+        console.log("Fetching ", url);
         fetch(url)
         .then(response => response.json())
         .then((jsonData) => {
