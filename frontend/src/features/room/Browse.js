@@ -80,6 +80,7 @@ export const Browse = React.memo(({
   const handleCloseAndShuffleClick = (_event) => {
     gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: stackIds, value: false}})
     gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: groupId}})
+    chatBroadcast("game_update",{message: "stopped looking at and shuffled "+GROUPSINFO[groupId].name+"."})
     if (groupType === "deck") stopPeekingTopCard();
     setBrowseGroupId("");
   }

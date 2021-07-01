@@ -10,6 +10,7 @@ import { SideBar } from "./SideBar";
 import { Hotkeys } from "./Hotkeys";
 import { PlayersInRoom } from "./PlayersInRoom";
 import { DropdownMenu } from "./DropdownMenu";
+import { OnLoad } from "./OnLoad";
 
 import "../../css/custom-dropdown.css";
 
@@ -59,7 +60,10 @@ export const Table = React.memo(({
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
       />
-
+      <OnLoad
+        gameBroadcast={gameBroadcast}
+        chatBroadcast={chatBroadcast}
+      />
       {showHotkeys && <Hotkeys setShowWindow={setShowHotkeys}/>}
       {showPlayersInRoom && <PlayersInRoom setShowWindow={setShowPlayersInRoom}/>}
       {/* Side panel */}

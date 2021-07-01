@@ -39,6 +39,7 @@ export const Lobby: React.FC = () => {
   const [ringsDbIds, setRingsDbIds] = useState<Array<string>>([]);
   const [ringsDbType, setRingsDbType] = useState("");
   const [ringsDbDomain, setRingsDbDomain] = useState("");
+  const [loadShuffle, setLoadShuffle] = useState(false);
   const [typing, setTyping] = useState<Boolean>(false);
   const { isLoading, isError, data, setData } = useDataApi<any>(
     "/be/api/rooms",
@@ -61,6 +62,8 @@ export const Lobby: React.FC = () => {
         var splitUrl = url.split( '/' );
         const newroomIndex = splitUrl.findIndex((e) => e === "newroom")
         setReplayId(splitUrl[newroomIndex + 2])
+        if (splitUrl[newroomIndex + 3] && splitUrl[newroomIndex + 3] === "shuffle") setLoadShuffle(true);
+        else setLoadShuffle(false);
       }
       setShowModal(true);
     }
@@ -150,6 +153,7 @@ export const Lobby: React.FC = () => {
               ringsDbIds={ringsDbIds}
               ringsDbType={ringsDbType}
               ringsDbDomain={ringsDbDomain}
+              loadShuffle={loadShuffle}
             />
           </div>
         {/* <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">

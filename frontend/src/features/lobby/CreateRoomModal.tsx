@@ -22,11 +22,21 @@ interface Props {
   ringsDbIds: Array<string>;
   ringsDbType: string;
   ringsDbDomain: string;
+  loadShuffle: boolean;
 }
 
 ReactModal.setAppElement("#root");
 
-export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModal, replayId, ringsDbIds, ringsDbType, ringsDbDomain }) => {
+export const CreateRoomModal: React.FC<Props> = ({ 
+  isOpen, 
+  isLoggedIn, 
+  closeModal, 
+  replayId, 
+  ringsDbIds, 
+  ringsDbType, 
+  ringsDbDomain, 
+  loadShuffle,
+}) => {
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [roomSlugCreated, setRoomSlugCreated] = useState(null);
@@ -55,14 +65,13 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
         ringsdb_ids: ringsDbIds,
         ringsdb_type: ringsDbType,
         ringsdb_domain: ringsDbDomain,
+        load_shuffle: loadShuffle,
       }
     };
-    console.log("Data", data);
     setIsLoading(true);
     setIsError(false);
     try {
       const res = await axios.post("/be/api/v1/games", data);
-      console.log(res);
       setIsLoading(false);
       if (res.status !== 201) {
         throw new Error("Room not created");
@@ -82,7 +91,6 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
   if (roomSlugCreated != null) {
     return <Redirect push to={`/room/${roomSlugCreated}`} />;
   }
-
 
   return (
     <ReactModal
@@ -118,10 +126,10 @@ export const CreateRoomModal: React.FC<Props> = ({ isOpen, isLoggedIn, closeModa
         </div>
         :
         <span className="mt-5 p-2 text-white bg-gray-600 rounded">
-            <Link to="/login" className="mr-1 text-white">
-              Log in 
-            </Link> 
-            first, then try again
+          <Link to="/login" className="mr-1 text-white">
+            Log in 
+          </Link> 
+          first, then try again
         </span>
       }
       {isError && (
