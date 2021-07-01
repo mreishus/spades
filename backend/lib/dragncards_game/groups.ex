@@ -34,7 +34,7 @@ defmodule DragnCardsGame.Groups do
       "player1Deck"=>             Group.new("player1Deck","deck","player1"),
       "player1Discard"=>          Group.new("player1Discard","discard","player1"),
       "player1Sideboard"=>        Group.new("player1Sideboard","discard","player1"),
-      "player1Deck2"=>            Group.new("player1Sideboard","deck","player1"),
+      "player1Deck2"=>            Group.new("player1Deck2","deck","player1"),
       "player1Play1"=>            Group.new("player1Play1","play","player1"),
       "player1Play2"=>            Group.new("player1Play2","play","player1"),
       "player1Play3"=>            Group.new("player1Play3","play","player1"),

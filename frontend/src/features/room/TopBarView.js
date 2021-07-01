@@ -26,6 +26,8 @@ export const TopBarView = React.memo(({
     return [...Array(size).keys()].map(i => i + startAt);
   }
 
+  if (!groupById) return;
+
   return(
     <li>
       <div className="h-full flex text-xl items-center justify-center" href="#">View</div>
@@ -40,6 +42,8 @@ export const TopBarView = React.memo(({
             <a href="#">Shared</a>
               <ul className="third-level-menu">
                 {Object.keys(GROUPSINFO).map((groupId, _index) => {
+                  console.log("ABC", groupById, groupId);
+                  if (!groupById[groupId]) return;
                   const stackIds = groupById[groupId].stackIds;
                   const deckType = groupById[groupId].type;
                   if (deckType !== "play" && groupId.startsWith("shared"))
@@ -59,6 +63,7 @@ export const TopBarView = React.memo(({
             <a href="#">Player {N}</a>
               <ul className="third-level-menu">
                 {Object.keys(GROUPSINFO).map((groupId, _index) => {
+                  if (!groupById[groupId]) return;
                   const stackIds = groupById[groupId].stackIds;
                   const deckType = groupById[groupId].type;
                   if (deckType !== "play" && groupId.startsWith("player"+N))
