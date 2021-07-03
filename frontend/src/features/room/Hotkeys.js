@@ -179,6 +179,18 @@ export const Hotkeys = React.memo(({
               <div className={keyClass+" inline-block"} style={keyStyle}>S</div></td>
               <td className="text-center">Deal all shadow cards</td>
             </tr>
+            <tr className={"bg-gray-500"}>
+              <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+              <div className="inline-block p-1">+</div>
+              <div className={keyClass+" inline-block"} style={keyStyle}>X</div></td>
+              <td className="text-center">Discard all shadow cards</td>
+            </tr>
+            <tr className={"bg-gray-500"}>
+              <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+              <div className="inline-block p-1">+</div>
+              <div className={keyClass+" inline-block"} style={keyStyle}>P</div></td>
+              <td className="text-center">Save Game</td>
+            </tr>
             <tr className={"bg-gray-600"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Esc</div></td>
               <td className="text-center">Clear targets/arrows</td>
