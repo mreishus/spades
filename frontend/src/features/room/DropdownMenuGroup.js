@@ -78,6 +78,12 @@ export const DropdownMenuGroup = React.memo(({
             clickCallback={handleDropdownClick}>
             Move to
           </DropdownItem>
+          <DropdownItem
+            rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+            goToMenu="more"
+            clickCallback={handleDropdownClick}>
+            More
+          </DropdownItem>
         </div>
       </CSSTransition>
 
@@ -130,6 +136,15 @@ export const DropdownMenuGroup = React.memo(({
       <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
           in={activeMenu === "moveToEncounter3"}>
         <DropdownMoveTo destGroupId="sharedEncounterDeck3"/>
+      </CSSTransition>
+
+      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
+          in={activeMenu === "more"}>
+        <div className="menu">
+          <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
+          <DropdownItem action="lookAt" topN="X" clickCallback={handleDropdownClick}>Look at top X</DropdownItem>
+          <DropdownItem action="dealX" side="B" clickCallback={handleDropdownClick}>Deal top X facedown</DropdownItem>
+        </div>
       </CSSTransition>
       
     </div>

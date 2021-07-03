@@ -7,7 +7,7 @@ interface Props {
 }
 
 export const ChatMessages: React.FC<Props> = ({ chatOnly }) => {
-  console.log("rendering chatmessages")
+  console.log("Rendering ChatMessages")
   const messages = useMessages();
 
   const bottomRef = useRef<any>();

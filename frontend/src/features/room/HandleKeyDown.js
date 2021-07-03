@@ -59,7 +59,7 @@ export const HandleKeyDown = ({
     const setActiveCardAndLoc = useSetActiveCard();
 
     const [keyBackLog, setKeyBackLog] = useState({});
-    console.log("Render HandleKeyDown", keyBackLog)
+    console.log("Rendering HandleKeyDown", keyBackLog)
 
     useEffect(() => {
         const onKeyDown = (event) => {
@@ -102,6 +102,7 @@ export const HandleKeyDown = ({
         if (k === "Shift") setKeypress({"Shift": true});
         //else setKeypress({"Shift": false});
         if (k === "Control") setKeypress({"Control": true});
+        if (k === " ") setKeypress({"Space": true});
         //else setKeypress({"Control": false});
 
         const isHost = playerN === leftmostNonEliminatedPlayerN(gameUi);
@@ -261,6 +262,22 @@ export const HandleKeyDown = ({
             gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.2"], ["game", "phase", "Combat"]]}});
             chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("6.2")+"."});
             gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
+        } else if (k === "X") {
+            // Discard all shadow cards
+            // Set phase
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.11"], ["game", "phase", "Combat"]]}});
+            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("6.11")+"."});
+
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[["rotation", -30]], 
+                    action: "discard_card", 
+                    options: {}
+                }
+            });
+            chatBroadcast("game_update", {message: "discarded all shadow cards."});
+            
         } else if (k === "ArrowLeft") {
             // Undo an action
             if (game.replayStep <= 0) {

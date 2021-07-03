@@ -112,7 +112,7 @@ export const Card = React.memo(({
                     onClick={handleClick}
                     onMouseLeave={event => handleMouseLeave(event)}
                 >
-                    {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute bottom-0 text-2xl" icon={faEye}/>:null}
+                    {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute top-0 right-0 text-2xl" icon={faEye}/>:null}
                     <Target
                         cardId={cardId}
                         cardSize={cardSize}

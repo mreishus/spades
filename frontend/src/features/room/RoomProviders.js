@@ -1,0 +1,40 @@
+import React from "react";
+import { useSelector } from 'react-redux';
+import RoomGame from "./RoomGame";
+import {KeypressProvider} from '../../contexts/KeypressContext';
+import {ActiveCardProvider} from '../../contexts/ActiveCardContext';
+import {DropdownMenuProvider} from '../../contexts/DropdownMenuContext';
+import {MousePositionProvider} from '../../contexts/MousePositionContext';
+import { GetPlayerN } from "./Helpers";
+import useProfile from "../../hooks/useProfile";
+
+export const RoomProviders = ({ gameBroadcast, chatBroadcast }) => {
+  console.log("Rendering RoomProviders");
+  const storePlayerIds = state => state?.gameUi?.playerIds;
+  const playerIds = useSelector(storePlayerIds);
+  const myUser = useProfile();
+  const myUserID = myUser?.id;
+  const playerN = GetPlayerN(playerIds, myUserID);
+  return (
+      <div className="background"
+        style={{
+          height: "97vh",
+          background: `url(${myUser?.background_url ? myUser.background_url : "https://i.imgur.com/sHn4yAA.jpg"})`,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPositionY: "50%",
+        }}
+      >
+          <KeypressProvider value={{Shift: false}}>
+            <MousePositionProvider value={null}>
+              <DropdownMenuProvider value={null}>
+                <ActiveCardProvider value={null}>
+                  <RoomGame playerN={playerN} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
+                </ActiveCardProvider>
+              </DropdownMenuProvider>
+            </MousePositionProvider>
+          </KeypressProvider>
+      </div>
+  );
+};
+export default RoomProviders;

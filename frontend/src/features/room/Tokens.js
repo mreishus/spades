@@ -12,11 +12,10 @@ export const Tokens = React.memo(({
     chatBroadcast,
     zIndex,
  }) => {
-    //console.log("rendering tokens");
     const cardStore = state => state?.gameUi?.game?.cardById?.[cardId];
     const card = useSelector(cardStore);
     const keypress = useKeypress();
-    const showButtons = isActive && keypress["Shift"];
+    const showButtons = isActive && keypress["Space"];
     return(
         <div style={{width:'100%', height:'100%'}}>
             <Token tokenType="resource"  cardId={cardId} cardName={cardName} zIndex={zIndex} left={"10%"} top={"0%"}  showButtons={showButtons} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>

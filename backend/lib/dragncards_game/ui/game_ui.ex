@@ -219,6 +219,8 @@ defmodule DragnCardsGame.GameUI do
   # Card actions                                             #
   ############################################################
   def card_action(gameui, card_id, action, options) do
+    Logger.debug("card_action #{action}")
+    Logger.debug(options)
     card = get_card(gameui, card_id)
     gameui = case action do
       "update_card_values" ->
@@ -231,6 +233,8 @@ defmodule DragnCardsGame.GameUI do
         delete_card(gameui, card_id)
       "flip_card" ->
         flip_card(gameui, card_id)
+      "discard_card" ->
+        discard_card(gameui, card_id)
       "add_trigger" ->
         add_trigger(gameui, card_id, options["round_step"])
       "remove_trigger" ->
@@ -238,6 +242,12 @@ defmodule DragnCardsGame.GameUI do
       _ ->
         gameui
     end
+  end
+
+  # Discard a card
+  def discard_card(gameui, card_id) do
+    card = get_card(gameui, card_id)
+    move_card(gameui, card_id, card["discardGroupId"], 0, 0, false, false)
   end
 
   # Update a single card parameter
@@ -342,8 +352,6 @@ defmodule DragnCardsGame.GameUI do
     gameui = update_card(gameui, new_card)
     # If in play, add triggers
     if group_type === "play" do
-      IO.puts("adding triggers")
-      IO.inspect(new_card["sides"][new_card["currentSide"]]["triggers"])
       add_triggers(gameui, card_id)
     else
       gameui
@@ -709,7 +717,16 @@ defmodule DragnCardsGame.GameUI do
     orig_group_id = get_group_by_stack_id(gameui, stack_id)["id"]
     orig_stack_index = get_stack_index_by_stack_id(gameui, stack_id)
     # If destination is negative, count backward from the end
-    dest_stack_index = if dest_stack_index < 0 do Enum.count(GameUI.get_stack_ids(gameui, dest_group_id)) + 1 + dest_stack_index else dest_stack_index end
+    dest_stack_index = if dest_stack_index < 0 do
+      loop_index = Enum.count(GameUI.get_stack_ids(gameui, dest_group_id)) + dest_stack_index
+      if combine do
+        loop_index
+      else
+        loop_index + 1
+      end
+    else
+      dest_stack_index
+    end
     # If attaching to same group at higher index, dest_index will end up being 1 less
     dest_stack_index = if orig_group_id == dest_group_id and combine and orig_stack_index < dest_stack_index do dest_stack_index - 1 else dest_stack_index end
     # Delete stack id from old group

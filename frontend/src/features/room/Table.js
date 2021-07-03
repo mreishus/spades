@@ -25,6 +25,7 @@ export const Table = React.memo(({
 }) => {
   console.log('Rendering Table');
   const [showModal, setShowModal] = useState(null);
+  const [loaded, setLoaded] = useState(false);
   const [showHotkeys, setShowHotkeys] = useState(false);
   const [showPlayersInRoom, setShowPlayersInRoom] = useState(false);
   const [sittingPlayerN, setSittingPlayerN] = useState("");
@@ -60,10 +61,7 @@ export const Table = React.memo(({
         gameBroadcast={gameBroadcast}
         chatBroadcast={chatBroadcast}
       />
-      <OnLoad
-        gameBroadcast={gameBroadcast}
-        chatBroadcast={chatBroadcast}
-      />
+      {!loaded && <OnLoad setLoaded={setLoaded} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>}
       {showHotkeys && <Hotkeys setShowWindow={setShowHotkeys}/>}
       {showPlayersInRoom && <PlayersInRoom setShowWindow={setShowPlayersInRoom}/>}
       {/* Side panel */}

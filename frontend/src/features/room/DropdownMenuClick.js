@@ -114,7 +114,7 @@ export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gam
       chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[props.destGroupId].name+"."})
     }
   } else if (props.action === "lookAt") {
-    const topNstr = props.topN;
+    const topNstr = props.topN === "X" ? prompt("Enter a number",0) : props.topN;
     handleBrowseTopN(
       topNstr, 
       group,
@@ -124,6 +124,18 @@ export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gam
       dropdownMenu.setBrowseGroupId,
       dropdownMenu.setBrowseGroupTopN,
     ) 
+  } else if (props.action === "dealX") {
+    var topX = parseInt(prompt("Enter a number",0)) || 0;
+    const stackIds = group.stackIds;
+    if (topX > stackIds.length) topX = stackIds.length;
+    gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: stackIds.slice(0, topX), value: false}});
+    if (topX > 0) {
+      gameBroadcast("game_action", {action: "move_stack", options: {stack_id: stackIds[0], dest_group_id: playerN+"Play2", dest_stack_index: -1, combine: false, preserve_state: true}})
+    }
+    for (var i=1; i<topX; i++) {
+      gameBroadcast("game_action", {action: "move_stack", options: {stack_id: stackIds[i], dest_group_id: playerN+"Play2", dest_stack_index: -1, combine: true, preserve_state: true}})
+    }
+    chatBroadcast("game_update",{message: "dealt the top "+topX+" cards of "+GROUPSINFO[group.id].name+" facedown."})
   }
 }
 

@@ -14,7 +14,7 @@ export const TopBar = React.memo(({
   observingPlayerN,
   setObservingPlayerN,
 }) => {
-  console.log("rendering TopBar");
+  console.log("Rendering TopBar");
   return(
     <div className="h-full">
       <ul className="top-level-menu float-left">

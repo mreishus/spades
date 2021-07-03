@@ -28,7 +28,7 @@ export const handleBrowseTopN = (
       peekStackIds = [];
       chatBroadcast("game_update",{message: "stopped looking at "+groupName+"."})
     } else {
-      topNint = parseInt(topNstr);
+      topNint = parseInt(topNstr) || 0;
       peekStackIds = stackIds.slice(0, topNint);
       chatBroadcast("game_update",{message: "looks at top "+topNstr+" of "+groupName+"."})
     }

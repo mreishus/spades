@@ -56,7 +56,6 @@ const deepUpdate = (obj1, obj2) => {
       // Both values are arrays
       if (!arraysEqual(obj1[p],obj2[p])) {
         // Arrays are not equal, so update
-        console.log("updating property "+p);
         obj1[p] = obj2[p];
       }
     } else if (isObject(obj1[p]) && isObject(obj2[p])) {
@@ -64,7 +63,6 @@ const deepUpdate = (obj1, obj2) => {
       deepUpdate(obj1[p], obj2[p]);
     } else {
       // One of the values is not an object/array, so it's a basic type and should be updated
-      console.log("updating property "+p);
       obj1[p] = obj2[p];
     }
   }
@@ -96,7 +94,6 @@ const gameUiSlice = createSlice({
       })
     },
     setGame: (state, { payload }) => {
-      console.log("setting game");
       if (!state.game) {
         state.game = payload;
       } else {
