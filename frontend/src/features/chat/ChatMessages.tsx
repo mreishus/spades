@@ -3,10 +3,11 @@ import ChatLine from "./ChatLine";
 import { useMessages } from "../../contexts/MessagesContext";
 
 interface Props {
+  hover: boolean;
   chatOnly?: boolean;
 }
 
-export const ChatMessages: React.FC<Props> = ({ chatOnly }) => {
+export const ChatMessages: React.FC<Props> = ({ hover, chatOnly }) => {
   console.log("Rendering ChatMessages")
   const messages = useMessages();
 
@@ -21,7 +22,7 @@ export const ChatMessages: React.FC<Props> = ({ chatOnly }) => {
 
   useEffect(() => {
     scrollToBottom()
-  }, [messages])
+  }, [messages, hover])
 
   return (
     <div>

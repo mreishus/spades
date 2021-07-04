@@ -221,7 +221,7 @@ export const TableLayout = React.memo(({
           style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'100%', paddingRight:"30px", opacity: 0.7, zIndex: 1e6}}
           onMouseEnter={() => handleStartChatHover()}
           onMouseLeave={() => handleStopChatHover()}>
-          <Chat chatBroadcast={chatBroadcast} setTyping={setTyping}/>
+          <Chat hover={chatHover} chatBroadcast={chatBroadcast} setTyping={setTyping}/>
         </div>
         <div className="absolute h-full text-xs text-center text-gray-400 right-0" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
           <div className={`quickviewbutton ${sideGroupId === "sharedSetAside" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick("sharedSetAside")}>

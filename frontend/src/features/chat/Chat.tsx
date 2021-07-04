@@ -6,11 +6,12 @@ import useIsLoggedIn from "../../hooks/useIsLoggedIn";
 import { ChatMessage } from "elixir-backend";
 
 interface Props {
+  hover: boolean;
   chatBroadcast: (eventName: string, payload: object) => void;
   setTyping: React.Dispatch<React.SetStateAction<Boolean>>
 }
 
-export const Chat: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
+export const Chat: React.FC<Props> = ({ hover, chatBroadcast, setTyping }) => {
   const isLoggedIn = useIsLoggedIn();
   const [chatOnly, setChatOnly] = useState(false);
   console.log("Rendering Chat")
@@ -24,7 +25,7 @@ export const Chat: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
     <div className="overflow-hidden h-full">
       
       <div className="bg-gray-800 overflow-y-auto" style={{height: "calc(100% - 32px)"}}>
-        <ChatMessages chatOnly={chatOnly}/>
+        <ChatMessages hover={hover} chatOnly={chatOnly}/>
       </div>
       <div className="text-center" >
         {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping}/>}
