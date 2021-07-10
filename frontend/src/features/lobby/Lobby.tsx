@@ -100,7 +100,7 @@ export const Lobby: React.FC = () => {
   }
 
   return (
-      <div className="w-full" style={{fontFamily:"Roboto"}}>
+      <div className="w-full bg-gray-900" style={{fontFamily:"Roboto"}}>
         <div className="mt-4 mx-auto" style={{width: "400px"}}>
             <h1 className="mb-4 text-center">Lobby</h1>
             {isLoading && <div className="text-white text-center">Connecting to server...</div>}
