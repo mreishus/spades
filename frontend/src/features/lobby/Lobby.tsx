@@ -102,13 +102,24 @@ export const Lobby: React.FC = () => {
   return (
       <div className="w-full bg-gray-900" style={{fontFamily:"Roboto"}}>
         <div className="mt-4 mx-auto" style={{width: "400px"}}>
+            <div className="mb-6">
+              {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
+              <div className="flex justify-center" style={{width: "400px"}}>
+                <span className="p-2 text-white bg-gray-700 rounded">
+                  New to DragnCards?  
+                  <a href="https://tinyurl.com/DragnCards" className="ml-1 text-white">
+                    Watch the tutorial
+                  </a>
+                </span>
+              </div>
+            </div>
             <h1 className="mb-4 text-center">Lobby</h1>
             {isLoading && <div className="text-white text-center">Connecting to server...</div>}
             {isError && <div className="text-white text-center">Error communicating with server...</div>}
             {(!isLoading && !isError) &&
               <div className="mb-6">
                 {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
-                <div className="mx-auto w-48">
+                <div className="flex justify-center" style={{width: "400px"}}>
                   {isLoggedIn && (
                     <Button isPrimary onClick={() => handleCreateRoomClick()}>
                       Create Room
