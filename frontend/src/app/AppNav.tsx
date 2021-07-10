@@ -33,7 +33,7 @@ export const AppNav: React.FC<Props> = () => {
               alt="Logo "
             />
                 */}
-            <span>Dragn <img className="inline mb-2" style={{height: "80%"}} src={process.env.PUBLIC_URL + '/logowhite.png'}/> Cards</span>
+            <span>Dragn <img className="mb-2" style={{display:"inline", height: "80%"}} src={process.env.PUBLIC_URL + '/logowhite.png'}/> Cards</span>
           </Link>
         </div>
         <div className="sm:hidden">
