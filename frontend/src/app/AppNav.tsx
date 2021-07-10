@@ -20,11 +20,11 @@ export const AppNav: React.FC<Props> = () => {
     "mt-1 sm:mt-0 sm:ml-2 block px-2 py-1 text-white font-light hover:font-normal rounded no-underline";
   return (
     <header className="bg-gray-700 sm:flex sm:justify-between sm:items-center sm:px-4" style={{height:"3vh",fontFamily:"Roboto"}}>
-      <div className="flex items-center justify-between px-4 py-3 sm:p-0">
-        <div>
+      <div className="flex items-center justify-between px-4 py-3 sm:p-0 h-full">
+        <div className="h-full">
           <Link
             to="/"
-            className="text-white font-light text-lg tracking-tight no-underline"
+            className="text-white font-light text-lg tracking-tight no-underline h-full"
           >
             {/*
             <img
@@ -33,7 +33,7 @@ export const AppNav: React.FC<Props> = () => {
               alt="Logo "
             />
                 */}
-            Dragn <FontAwesomeIcon className="text-white" icon={faRing}/> Cards
+            <span>Dragn <img className="inline mb-2" style={{height: "80%"}} src={process.env.PUBLIC_URL + '/logowhite.png'}/> Cards</span>
           </Link>
         </div>
         <div className="sm:hidden">
