@@ -397,16 +397,26 @@ export const HandleKeyDown = ({
                 const updates = [["game","cardById",activeCardId,"tokens", tokenType, newVal]];
                 dispatch(setValues({updates: updates}))
                 if (delayBroadcast) clearTimeout(delayBroadcast);
-                chatBroadcast("game_update",{message: "added" })
                 delayBroadcast = setTimeout(function() {
                     Object.keys(newKeyBackLog).map((cardId, index) => {
                         const cardKeyBackLog = newKeyBackLog[cardId];
                         const thisDisplayName = getDisplayName(game.cardById[cardId])
-                        chatBroadcast("game_update",{message: "loop over "+thisDisplayName })
                         Object.keys(cardKeyBackLog).map((tok, index) => {
                             if (tok === "displayName") return;
                             const val = cardKeyBackLog[tok]; 
-                            chatBroadcast("game_update",{message: "added "+val+" "+tokenPrintName(tok)+" token(s) to "+thisDisplayName+"."});
+                            if (val > 0) {
+                                if (val === 1) {
+                                    chatBroadcast("game_update",{message: "added "+val+" "+tokenPrintName(tok)+" token to "+thisDisplayName+"."});
+                                } else {
+                                    chatBroadcast("game_update",{message: "added "+val+" "+tokenPrintName(tok)+" tokens to "+thisDisplayName+"."});
+                                }
+                            } else if (val < 0) {
+                                if (val === -1) {
+                                    chatBroadcast("game_update",{message: "removed "+(-val)+" "+tokenPrintName(tok)+" token from "+thisDisplayName+"."});
+                                } else {
+                                    chatBroadcast("game_update",{message: "removed "+(-val)+" "+tokenPrintName(tok)+" tokens from "+thisDisplayName+"."});
+                                }                
+                            }
                         })
                         gameBroadcast("game_action", {action:"increment_tokens", options: {card_id: cardId, token_increments: cardKeyBackLog}});
                     })
