@@ -92,7 +92,7 @@ export const Hotkeys = React.memo(({
             </tr>
             <tr className={"bg-gray-500"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>A</div></td>
-              <td className="text-center">Exhaust / ready</td>
+              <td className="text-center">Exhaust / ready. If location, make active.</td>
             </tr>
             <tr className={"bg-gray-600"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>F</div></td>
