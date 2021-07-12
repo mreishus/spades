@@ -122,7 +122,11 @@ export const Browse = React.memo(({
   if (selectedCardName !== "")
     filteredStackIndices = filteredStackIndices.filter((s,i) => (
       stackIds[s] && 
-      parentCards[s]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) &&
+      (
+        parentCards[s]["sides"]["A"]["name"].toLowerCase().includes(selectedCardName.toLowerCase()) ||
+        parentCards[s]["sides"]["A"]["keywords"].toLowerCase().includes(selectedCardName.toLowerCase()) ||
+        parentCards[s]["sides"]["A"]["text"].toLowerCase().includes(selectedCardName.toLowerCase())
+      ) &&
       (parentCards[s]["peeking"][playerN] || parentCards[s]["currentSide"] === "A")
     ));
 
@@ -173,7 +177,7 @@ export const Browse = React.memo(({
                     type="text" 
                     id="name" 
                     name="name" 
-                    placeholder="Card name..." 
+                    placeholder=" Search..." 
                     onChange={handleInputTyping}
                     onFocus={event => setTyping(true)}
                     onBlur={event => setTyping(false)}/>
