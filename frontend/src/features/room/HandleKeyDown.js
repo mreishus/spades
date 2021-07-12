@@ -369,28 +369,47 @@ export const HandleKeyDown = ({
 
                 // Increment token 
                 var newKeyBackLog;
-                if (keyBackLog[tokenType]) {
+                if (!keyBackLog[activeCardId]) {
                     newKeyBackLog = {
                         ...keyBackLog,
-                        [tokenType]: keyBackLog[tokenType] + delta
+                        [activeCardId]: {
+                            [tokenType]: delta
+                        }
+                    }
+                } else if (!keyBackLog[activeCardId][tokenType]) {
+                    newKeyBackLog = {
+                        ...keyBackLog,
+                        [activeCardId]: {
+                            ...keyBackLog[activeCardId],
+                            [tokenType]: delta
+                        }
                     }
                 } else {
                     newKeyBackLog = {
                         ...keyBackLog,
-                        [tokenType]: delta
+                        [activeCardId]: {
+                            ...keyBackLog[activeCardId],
+                            [tokenType]: keyBackLog[activeCardId][tokenType] + delta
+                        }
                     }
                 }
                 setKeyBackLog(newKeyBackLog);
                 const updates = [["game","cardById",activeCardId,"tokens", tokenType, newVal]];
                 dispatch(setValues({updates: updates}))
                 if (delayBroadcast) clearTimeout(delayBroadcast);
+                chatBroadcast("game_update",{message: "added" })
                 delayBroadcast = setTimeout(function() {
-                    Object.keys(newKeyBackLog).map((tok, index) => {
-                        const val = newKeyBackLog[tok]; 
-                        //gameBroadcast("game_action", {action:"increment_token", options: {card_id: activeCardId, token_type: tok, increment: val}});
-                        chatBroadcast("game_update",{message: "added "+val+" "+tokenPrintName(tok)+" token(s) to "+displayName+"."});
+                    Object.keys(newKeyBackLog).map((cardId, index) => {
+                        const cardKeyBackLog = newKeyBackLog[cardId];
+                        const thisDisplayName = getDisplayName(game.cardById[cardId])
+                        chatBroadcast("game_update",{message: "loop over "+thisDisplayName })
+                        Object.keys(cardKeyBackLog).map((tok, index) => {
+                            if (tok === "displayName") return;
+                            const val = cardKeyBackLog[tok]; 
+                            chatBroadcast("game_update",{message: "added "+val+" "+tokenPrintName(tok)+" token(s) to "+thisDisplayName+"."});
+                        })
+                        gameBroadcast("game_action", {action:"increment_tokens", options: {card_id: cardId, token_increments: cardKeyBackLog}});
                     })
-                    gameBroadcast("game_action", {action:"increment_tokens", options: {card_id: activeCardId, token_increments: newKeyBackLog}});
                     setKeyBackLog({})
                 }, 500);
             }
@@ -541,6 +560,8 @@ export const HandleKeyDown = ({
             else if (k === "v") {
                 chatBroadcast("game_update", {message: "added "+displayName+" to the victory display."});
                 gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: "sharedVictory", dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+                // Clear GiantCard
+                setActiveCardAndLoc(null);
             }
             // Send to appropriate discard pile
             else if (k === "x") {
@@ -584,6 +605,8 @@ export const HandleKeyDown = ({
                 gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
                 gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: destGroupId}})
                 chatBroadcast("game_update", {message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupId].name+"."})
+                // Clear GiantCard
+                setActiveCardAndLoc(null);
             }
             // Draw an arrow
             else if (k === "w") {
