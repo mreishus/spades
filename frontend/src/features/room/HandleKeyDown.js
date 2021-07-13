@@ -479,6 +479,7 @@ export const HandleKeyDown = ({
             }
             else if (k === "q" || k==="Q") {
                 const playerController = activeCard.controller;
+                if (playerController === "shared") return;
                 var questingStat = "willpower";
                 if (game.questMode === "Battle") questingStat = "attack";
                 if (game.questMode === "Siege")  questingStat = "defense";

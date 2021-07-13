@@ -29,7 +29,7 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
           <td className={tdClass}>
             {room.privacy_type}
           </td>
-          <td className={tdClass + (status === "Active" ? " text-green-600" : " text-red-700")} >
+          <td className={tdClass} style={{color: status === "Active" ? "rgb(5, 150, 105)" : "rgb(185, 28, 28)"}} >
             {status}
           </td>
         </tr>
