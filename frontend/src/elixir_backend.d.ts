@@ -6,6 +6,7 @@ declare module "elixir-backend" {
     public slug: string;
     public created_by: null | number;
     public privacy_type: string;
+    public last_update: null | number;
   }
 
 

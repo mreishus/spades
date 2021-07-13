@@ -12,9 +12,12 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
   const myUser = useProfile();
   const tdClass = "p-3 border-b border-gray-400";
   const thClass = "p-3 border-b border-gray-400";
+  const currentUnixTime = Math.floor(Date.now() / 1000);
 
   let roomItems = rooms.map((room: Room) => {
-    if (room.privacy_type === "public" || (room.privacy_type === "playtest" && myUser?.playtester)) 
+    const elapsedSeconds = (room.last_update ? currentUnixTime - room.last_update : Number.MAX_SAFE_INTEGER);
+    const status = (elapsedSeconds < 60 ? "Active" : "Idle");
+    if (room.privacy_type === "public" || (room.privacy_type === "playtest" && myUser?.playtester) || myUser?.id === room.created_by) 
       return (
         <tr key={room.id}>
           <td className={tdClass}>
@@ -22,6 +25,12 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
           </td>
           <td className={tdClass}>
             <UserName userID={room.created_by} />
+          </td>
+          <td className={tdClass}>
+            {room.privacy_type}
+          </td>
+          <td className={tdClass + (status === "Active" ? " text-green-600" : " text-red-700")} >
+            {status}
           </td>
         </tr>
       )
@@ -38,8 +47,10 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
     <table className="shadow rounded border bg-gray-100 w-full">
       <thead>
         <tr>
-          <th className={thClass}>name</th>
-          <th className={thClass}>host</th>
+          <th className={thClass}>Room</th>
+          <th className={thClass}>Host</th>
+          <th className={thClass}>Mode</th>
+          <th className={thClass}>Status</th>
         </tr>
       </thead>
       <tbody>{roomItems}</tbody>

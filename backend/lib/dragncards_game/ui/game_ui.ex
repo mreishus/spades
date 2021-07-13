@@ -7,6 +7,7 @@ defmodule DragnCardsGame.GameUI do
   require Logger
   alias DragnCardsGame.{Game, GameUI, GameUISeat, Groups, Group, Stack, Card, User, Tokens, CardFace, Player}
   alias DragnCards.{Repo, Replay}
+  alias DragnCards.Rooms.Room
 
   @type t :: Map.t()
 
@@ -27,6 +28,7 @@ defmodule DragnCardsGame.GameUI do
         "player4" => nil,
       },
       "playersInRoom" => %{},
+      "lastUpdate" => System.system_time(:second),
     }
   end
 
@@ -878,6 +880,7 @@ defmodule DragnCardsGame.GameUI do
     else
       gameui
     end
+    gameui = set_last_update(gameui)
     gameui
   end
 
@@ -941,6 +944,18 @@ defmodule DragnCardsGame.GameUI do
       |> Replay.changeset(updates)
       |> Repo.insert_or_update
     gameui
+  end
+
+  def set_last_update(gameui) do
+    timestamp = System.system_time(:second)
+    room = Repo.get_by(Room, [slug: gameui["gameName"]])
+    if room do
+      updates = %{last_update: timestamp}
+      room
+      |> Room.changeset(updates)
+      |> Repo.insert_or_update
+    end
+    put_in(gameui["lastUpdate"], timestamp)
   end
 
   def step_through(gameui, size, direction) do

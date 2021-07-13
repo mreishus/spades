@@ -59,6 +59,9 @@ defmodule DragnCardsGame.Game do
   def add_delta(game, prev_game) do
     d = get_delta(prev_game, game)
     if d do
+      # add timestamp to delta
+      timestamp = System.system_time(:millisecond)
+      d = put_in(d["unix_ms"], "#{timestamp}")
       ds = game["deltas"]
       ds = Enum.slice(ds, Enum.count(ds)-game["replayStep"]..-1)
       ds = [d | ds]
@@ -140,6 +143,9 @@ defmodule DragnCardsGame.Game do
   end
 
   def apply_delta(map, delta, direction) do
+    # Ignore timestamp
+    delta = Map.delete(delta, "unix_ms")
+    # Loop over keys in delta and apply the changes to the map
     Enum.reduce(delta, map, fn({k, v}, acc) ->
       if is_map(v) do
         put_in(acc[k], apply_delta(map[k], v, direction))

@@ -16,7 +16,6 @@ export const Room = ({ slug }) => {
   //const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
     if (!payload) return;
-    console.log("[room] Got channel message", event, payload);
     console.log("Got new game state: ", payload.response);
     if (
       event === "phx_reply" &&
@@ -33,8 +32,6 @@ export const Room = ({ slug }) => {
     }
 
   }, []);
-  
-  //const [messages, setMessages] = useState([]);
 
   const onChatMessage = useCallback((event, payload) => {
     if (

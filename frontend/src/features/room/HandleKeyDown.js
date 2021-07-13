@@ -256,6 +256,7 @@ export const HandleKeyDown = ({
             // Save replay
         } else if (k === "P") {
             gameBroadcast("game_action", {action: "save_replay", options: {}});
+            chatBroadcast("game_update", {message: "saved the replay to their profile."});
         } else if (k === "S") {
             // Deal all shadow cards
             // Set phase

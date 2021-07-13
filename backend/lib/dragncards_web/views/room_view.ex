@@ -17,6 +17,7 @@ defmodule DragnCardsWeb.RoomView do
       slug: room.slug,
       created_by: room.created_by,
       privacy_type: room.privacy_type,
+      last_update: room.last_update,
     }
   end
 end

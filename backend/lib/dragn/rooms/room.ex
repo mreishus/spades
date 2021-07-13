@@ -8,13 +8,14 @@ defmodule DragnCards.Rooms.Room do
 
   # Automatically convert to JSON when broadcasting %Room{}
   # Objects over channel messages
-  @derive {Jason.Encoder, only: [:id, :name, :slug, :created_by, :privacy_type]}
+  @derive {Jason.Encoder, only: [:id, :name, :slug, :created_by, :privacy_type, :last_update]}
 
   schema "rooms" do
     field :name, :string
     field :slug, :string
     field :created_by, :integer
     field :privacy_type, :string
+    field :last_update, :integer
 
     timestamps()
   end
@@ -22,8 +23,8 @@ defmodule DragnCards.Rooms.Room do
   @doc false
   def changeset(room, attrs) do
     room
-    |> cast(attrs, [:name, :created_by, :privacy_type])
-    |> validate_required([:name, :created_by, :privacy_type])
+    |> cast(attrs, [:name, :created_by, :privacy_type, :last_update])
+    |> validate_required([:name, :created_by, :privacy_type, :last_update])
     |> put_slug()
   end
 

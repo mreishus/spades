@@ -101,10 +101,10 @@ export const Lobby: React.FC = () => {
 
   return (
       <div className="w-full bg-gray-900" style={{fontFamily:"Roboto"}}>
-        <div className="mt-4 mx-auto" style={{width: "400px"}}>
+        <div className="mt-4 mx-auto" style={{width: "600px"}}>
             <div className="mb-6">
               {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
-              <div className="flex justify-center" style={{width: "400px"}}>
+              <div className="flex justify-center" style={{width: "600px"}}>
                 <span className="p-2 text-white bg-gray-700 rounded">
                   New to DragnCards?  
                   <a href="https://tinyurl.com/DragnCards" className="ml-1 text-white">
@@ -119,7 +119,8 @@ export const Lobby: React.FC = () => {
             {(!isLoading && !isError) &&
               <div className="mb-6">
                 {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
-                <div className="flex justify-center" style={{width: "400px"}}>
+                <div className="flex justify-center" style={{width: "600px"}}>
+                  <div style={{width: "200px"}}>
                   {isLoggedIn && (
                     <Button isPrimary onClick={() => handleCreateRoomClick()}>
                       Create Room
@@ -133,6 +134,7 @@ export const Lobby: React.FC = () => {
                       to create a room
                     </span>
                   )}
+                  </div>
                 </div>
               </div>
             }
