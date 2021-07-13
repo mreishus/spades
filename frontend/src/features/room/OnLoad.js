@@ -21,7 +21,7 @@ export const OnLoad = React.memo(({
 
     if (options["ringsDbIds"]) {
       // Turn off trigger
-      //gameBroadcast("game_action", {action: "update_values", options: {updates: [["options", "ringsDbIds", null],["options", "ringsDbType", null]]}})
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["options", "ringsDbIds", null],["options", "ringsDbType", null]]}})
       // Load ringsdb decks by ids
       const ringsDbIds = options["ringsDbIds"];
       const numDecks = ringsDbIds.length;
@@ -108,8 +108,8 @@ export const OnLoad = React.memo(({
     // Shuffle all decks if setting was set
     if (options["loadShuffle"]) {
       // Turn off trigger
-      //const updates = [["options", "loadShuffle", false]];
-      //gameBroadcast("game_action", {action: "update_values", options: {updates: updates}});
+      const updates = [["options", "loadShuffle", false]];
+      gameBroadcast("game_action", {action: "update_values", options: {updates: updates}});
       //dispatch(setValues({updates: updates}));
       Object.keys(groupById).forEach((groupId) => {
         const group = groupById[groupId];
