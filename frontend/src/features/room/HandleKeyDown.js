@@ -478,11 +478,14 @@ export const HandleKeyDown = ({
             }
             else if (k === "q" || k==="Q") {
                 const playerController = activeCard.controller;
+                var questingStat = "willpower";
+                if (game.questMode === "Battle") questingStat = "attack";
+                if (game.questMode === "Siege")  questingStat = "defense";
                 // Commit to quest and exhaust
                 if (k === "q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
                     // const currentWillpower = game.playerData[playerN].willpower;
                     // const newWillpower = currentWillpower + getCardWillpower(activeCard);
-                    const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
+                    const willpowerIncrement = activeCardFace[questingStat] + activeCard.tokens[questingStat];
                     const currentWillpower = game.playerData[playerController].willpower;
                     const newWillpower = currentWillpower + willpowerIncrement;
                     const updates = [
@@ -497,7 +500,7 @@ export const HandleKeyDown = ({
                 }
                 // Commit to quest without exhausting
                 else if (k === "Q" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"] && !keypress["Control"]) {
-                    const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
+                    const willpowerIncrement = activeCardFace[questingStat] + activeCard.tokens[questingStat];
                     const currentWillpower = game.playerData[playerController].willpower;
                     const newWillpower = currentWillpower + willpowerIncrement;
                     const updates = [["game", "cardById", activeCardId, "committed", true], ["game", "playerData", playerController, "willpower", newWillpower]];
@@ -508,7 +511,7 @@ export const HandleKeyDown = ({
                 // Uncommit to quest and ready
                 else if (k === "q" && groupType === "play" && activeCard["committed"]) {
                     console.log("uncommit to quest")
-                    const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
+                    const willpowerIncrement = activeCardFace[questingStat] + activeCard.tokens[questingStat];
                     const currentWillpower = game.playerData[playerController].willpower;
                     const newWillpower = currentWillpower - willpowerIncrement;
                     const updates = [
@@ -525,7 +528,7 @@ export const HandleKeyDown = ({
                 // Uncommit to quest without readying
                 else if (k === "Q" && groupType === "play" && activeCard["committed"]) {
                     console.log("uncommit to quest")
-                    const willpowerIncrement = activeCardFace.willpower + activeCard.tokens.willpower;
+                    const willpowerIncrement = activeCardFace[questingStat] + activeCard.tokens[questingStat];
                     const currentWillpower = game.playerData[playerController].willpower;
                     const newWillpower = currentWillpower - willpowerIncrement;
                     const updates = [["game", "cardById", activeCardId, "committed", false], ["game", "playerData", playerController, "willpower", newWillpower]];

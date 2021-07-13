@@ -123,6 +123,9 @@ export const TopBarMenu = React.memo(({
       chatBroadcast("game_update", {message: "set the number of players to: " + num});
     } else if (data.action === "layout") {
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "layout", data.value]]}});
+    } else if (data.action === "quest_mode") {
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "questMode", data.mode]]}});
+      chatBroadcast("game_update", {message: "set the quest mode to " + data.mode + "."});
     }
   }
 
@@ -274,7 +277,10 @@ export const TopBarMenu = React.memo(({
         <li key={"options"}>
           <a href="#">Options</a>
           <ul className="third-level-menu">
-            <li key={"cards_per_round"}><a onClick={() => handleMenuClick({action:"cards_per_round"})} href="#">Cards per round</a></li>
+          <li key={"cards_per_round"}><a onClick={() => handleMenuClick({action:"cards_per_round"})} href="#">Cards per round</a></li>
+            <li key={"quest_mode_battle"}><a onClick={() => handleMenuClick({action:"quest_mode", mode: "Battle"})} href="#">Battle quest</a></li>
+            <li key={"quest_mode_siege"}><a onClick={() => handleMenuClick({action:"quest_mode", mode: "Siege"})} href="#">Siege quest</a></li>
+            <li key={"quest_mode_normal"}><a onClick={() => handleMenuClick({action:"quest_mode", mode: "Normal"})} href="#">Normal quest</a></li>
           </ul>
         </li> 
         <li key={"download"}><a onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
