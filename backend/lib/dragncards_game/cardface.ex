@@ -23,7 +23,7 @@ defmodule DragnCardsGame.CardFace do
 
   @spec trigger_steps_from_text(String.t(), String.t()) :: List.t()
   def trigger_steps_from_text(keywords, text) do
-    search_string = keywords <> " " <> text
+    search_string = "#{keywords} #{text}"
     steps = []
     steps = if text do
       steps = if String.match?(search_string, ~r/at the beginning of the round/i) do steps ++ ["0.0"] else steps end
