@@ -8,7 +8,7 @@ defmodule DragnCardsGame.CardFace do
 
   @type t :: Map.t()
 
-  @spec convert_to_integer(String.t()) :: number
+  @spec convert_to_integer(String.t() | nil) :: number
   def convert_to_integer(my_string) do
     if my_string == nil do
       nil
@@ -21,7 +21,7 @@ defmodule DragnCardsGame.CardFace do
     end
   end
 
-  @spec trigger_steps_from_text(String.t(), String.t()) :: List.t()
+  @spec trigger_steps_from_text(String.t() | nil, String.t() | nil) :: List.t()
   def trigger_steps_from_text(keywords, text) do
     search_string = "#{keywords} #{text}"
     steps = []
@@ -66,25 +66,25 @@ defmodule DragnCardsGame.CardFace do
     %{
       "width"=> width,
       "height"=> height,
-      "attack" => convert_to_integer(card_row_side["attack"]),
-      "cost" => convert_to_integer(card_row_side["cost"]),
-      "defense" => convert_to_integer(card_row_side["defense"]),
-      "engagementCost" => convert_to_integer(card_row_side["engagementcost"]),
-      "hitPoints" => convert_to_integer(card_row_side["hitpoints"]),
-      "keywords" => card_row_side["keywords"],
+      "attack" => convert_to_integer(card_row_side["attack"]) || 0,
+      "cost" => convert_to_integer(card_row_side["cost"]) || 0,
+      "defense" => convert_to_integer(card_row_side["defense"]) || 0,
+      "engagementCost" => convert_to_integer(card_row_side["engagementcost"]) || 0,
+      "hitPoints" => convert_to_integer(card_row_side["hitpoints"]) || 0,
+      "keywords" => card_row_side["keywords"] || "",
       "name" => card_row_side["name"],
       "printName" => card_row_side["printname"],
-      "questPoints" => convert_to_integer(card_row_side["questpoints"]),
-      "shadow" => card_row_side["shadow"],
-      "sphere" => card_row_side["sphere"],
-      "text" => card_row_side["text"],
+      "questPoints" => convert_to_integer(card_row_side["questpoints"]) || 0,
+      "shadow" => card_row_side["shadow"] || "",
+      "sphere" => card_row_side["sphere"] || "",
+      "text" => card_row_side["text"] || "",
       "threat" => convert_to_integer(card_row_side["threat"]),
       "traits" => card_row_side["traits"],
-      "type" => card_row_side["type"],
-      "unique" => card_row_side["unique"],
+      "type" => card_row_side["type"] || "Hero",
+      "unique" => card_row_side["unique"] || false,
       "victoryPoints" => convert_to_integer(card_row_side["victorypoints"]),
-      "willpower" => convert_to_integer(card_row_side["willpower"]),
-      "triggers" => trigger_steps_from_text(card_row_side["keywords"], card_row_side["text"]),
+      "willpower" => convert_to_integer(card_row_side["willpower"]) || 0,
+      "triggers" => trigger_steps_from_text(card_row_side["keywords"], card_row_side["text"]) || [],
       "customImgUrl" => card_row_side["customimgurl"],
     }
   end

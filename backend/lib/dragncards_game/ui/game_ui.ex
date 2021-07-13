@@ -880,7 +880,7 @@ defmodule DragnCardsGame.GameUI do
     else
       gameui
     end
-    gameui = set_last_update(gameui)
+    #gameui = set_last_update(gameui)
     gameui
   end
 
