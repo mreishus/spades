@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import ReactModal from "react-modal";
 import { cardDB } from "../../cardDB/cardDB";
+import useProfile from "../../hooks/useProfile";
 
 export const SpawnCardModal = React.memo(({
     setTyping,
@@ -8,6 +9,7 @@ export const SpawnCardModal = React.memo(({
     gameBroadcast,
     chatBroadcast,
 }) => {
+    const myUser = useProfile();
 
     const [spawnFilteredIDs, setSpawnFilteredIDs] = useState(Object.keys(cardDB));
 
@@ -32,7 +34,7 @@ export const SpawnCardModal = React.memo(({
           if (
             cardName.toLowerCase().includes(filteredName.toLowerCase()) &&
             !cardPack.toLowerCase().includes("custom") &&
-            !cardPack.toLowerCase().includes("alep")
+            !(cardRow["playtest"] && !myUser.playtester)
           ) filteredIDs.push(cardID);
         })
         setSpawnFilteredIDs(filteredIDs);
