@@ -507,12 +507,31 @@ export const processPostLoad = (loadList, playerN, gameBroadcast, chatBroadcast)
   }
 }
 
-export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadcast) => {
+export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadcast, privacyType) => {
   // TODO: combine duplicate code with TopBarMenu
   var parseString = require('xml2js').parseString;
   parseString(xmlText, function (err, deckJSON) {
     if (!deckJSON) return;
     const sections = deckJSON.deck.section;
+
+    var containsPlaytest = false;
+    sections.forEach(section => {
+      const cards = section.card;
+      if (!cards) return;
+      cards.forEach(card => {
+        console.log("loadcard", card)
+        const cardDbId = card['$'].id;
+        var cardRow = cardDB[cardDbId];
+        if (cardRow && cardRow["playtest"]) {
+          containsPlaytest = true;
+        }
+      })
+    })
+    if (containsPlaytest && privacyType === "public"){
+      alert("Cannot load a deck containing playtest cards in a public room.")
+      return;
+    }
+
     var loadList = [];
     sections.forEach(section => {
       const sectionName = section['$'].name;

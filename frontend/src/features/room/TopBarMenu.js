@@ -178,7 +178,7 @@ export const TopBarMenu = React.memo(({
     const reader = new FileReader();
     reader.onload = async (event) => { 
       const xmlText = (event.target.result)
-      loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast);
+      loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast, options["privacyType"]);
     }
     reader.readAsText(event.target.files[0]);
   }
