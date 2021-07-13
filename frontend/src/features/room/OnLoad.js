@@ -57,7 +57,7 @@ export const OnLoad = React.memo(({
                   const type = slotJsonData.type_name;
                   const loadGroupId = (type === "Hero" || type === "Contract") ? playerI+"Play1" : playerI+"Deck";
                   cardRow['loadgroupid'] = loadGroupId;
-                  cardRow['discardgroupid'] = sectionToDiscardGroupId(playerI+"Discard",playerI);
+                  cardRow['discardgroupid'] = playerI+"Discard";
                   loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
                 }
               })
