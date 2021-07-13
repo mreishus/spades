@@ -105,7 +105,7 @@ export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gam
     gameBroadcast("game_action", {action: "target_stack", options: {stack_id: randStackId}})
     chatBroadcast("game_update",{message: "randomly picked a card in "+GROUPSINFO[group.id].name+"."})
   } else if (props.action === "moveStacks") {
-    gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: group.id, dest_group_id: props.destGroupId, position: props.position}})
+    gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: group.id, dest_group_id: props.destGroupId, top_n: group.stackIds.length,  position: props.position}})
     if (props.position === "top") {
       chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to top of "+GROUPSINFO[props.destGroupId].name+"."})
     } else if (props.position === "bottom") {

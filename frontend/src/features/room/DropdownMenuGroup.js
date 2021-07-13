@@ -1,7 +1,6 @@
 import React from "react";
 import { CSSTransition } from 'react-transition-group';
-import { tokenTitleName, getVisibleSide } from "./Helpers";
-import { faArrowUp, faArrowDown, faRandom, faChevronRight, faCheck } from "@fortawesome/free-solid-svg-icons";
+import { faArrowUp, faArrowDown, faRandom, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { DropdownItem, GoBack } from "./DropdownMenuHelpers";
 import "../../css/custom-dropdown.css";
@@ -27,7 +26,7 @@ export const DropdownMenuGroup = React.memo(({
           leftIcon={<FontAwesomeIcon icon={faArrowUp}/>}
           action="moveStacks"
           destGroupId={props.destGroupId}
-          position="top"
+          position="t"
           clickCallback={handleDropdownClick}>
           Top
         </DropdownItem>
@@ -35,7 +34,7 @@ export const DropdownMenuGroup = React.memo(({
           leftIcon={<FontAwesomeIcon icon={faRandom}/>}
           action="moveStacks"
           destGroupId={props.destGroupId}
-          position="shuffle"
+          position="s"
           clickCallback={handleDropdownClick}>
           Shuffle in
         </DropdownItem>
@@ -43,7 +42,7 @@ export const DropdownMenuGroup = React.memo(({
           leftIcon={<FontAwesomeIcon icon={faArrowDown}/>}
           action="moveStacks"
           destGroupId={props.destGroupId}
-          position="bottom"
+          position="b"
           clickCallback={handleDropdownClick}>
           Bottom
         </DropdownItem>
