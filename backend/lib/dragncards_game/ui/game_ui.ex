@@ -14,7 +14,6 @@ defmodule DragnCardsGame.GameUI do
   @spec new(String.t(), User.t(), Map.t()) :: GameUI.t()
   def new(game_name, user, %{} = options) do
     Logger.debug("game_ui new")
-    IO.puts(System.system_time(:second))
     gameui = %{
       "game" => Game.load(options),
       "gameName" => game_name,

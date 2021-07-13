@@ -244,7 +244,7 @@ export const TopBarMenu = React.memo(({
           <ul className="third-level-menu">
             <li key={"load_quest"}><a href="#" onClick={() => handleMenuClick({action:"spawn_quest"})} href="#">Load quest</a></li>
             <li key={"load_deck"}>
-              <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load deck (.o8d)</a>
+              <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load deck (OCTGN file)</a>
               <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck}/>
             </li>
             <li key={"load_game"}>

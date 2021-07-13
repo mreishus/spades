@@ -317,8 +317,8 @@ export const HandleKeyDown = ({
             if (window.confirm('Shuffle hand in deck and redraw equal number?')) {
                 const hand = game.groupById[playerN+"Hand"];
                 const handSize = hand.stackIds.length;
-                gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Hand", dest_group_id: playerN+"Deck", top_n: handSize, position: "s"}})
-                gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Deck", dest_group_id: playerN+"Hand", top_n: handSize, position: "t"}})
+                gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Hand", dest_group_id: playerN+"Deck", top_n: handSize, position: "shuffle"}})
+                gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Deck", dest_group_id: playerN+"Hand", top_n: handSize, position: "top"}})
                 chatBroadcast("game_update", {message: "shuffled "+handSize+" cards into their deck and redrew an equal number."})
             }
         } else if (k === "Escape") {
