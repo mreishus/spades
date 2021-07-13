@@ -107,7 +107,7 @@ export const Lobby: React.FC = () => {
               <div className="flex justify-center" style={{width: "600px"}}>
                 <span className="p-2 text-white bg-gray-700 rounded">
                   New to DragnCards?  
-                  <a href="https://tinyurl.com/DragnCards" className="ml-1 text-white">
+                  <a href="https://tinyurl.com/DragnCardsYoutube" className="ml-1 text-white">
                     Watch the tutorial
                   </a>
                 </span>
