@@ -26,7 +26,7 @@ export const DropdownMenuGroup = React.memo(({
           leftIcon={<FontAwesomeIcon icon={faArrowUp}/>}
           action="moveStacks"
           destGroupId={props.destGroupId}
-          position="t"
+          position="top"
           clickCallback={handleDropdownClick}>
           Top
         </DropdownItem>
@@ -34,7 +34,7 @@ export const DropdownMenuGroup = React.memo(({
           leftIcon={<FontAwesomeIcon icon={faRandom}/>}
           action="moveStacks"
           destGroupId={props.destGroupId}
-          position="s"
+          position="shuffle"
           clickCallback={handleDropdownClick}>
           Shuffle in
         </DropdownItem>
@@ -42,7 +42,7 @@ export const DropdownMenuGroup = React.memo(({
           leftIcon={<FontAwesomeIcon icon={faArrowDown}/>}
           action="moveStacks"
           destGroupId={props.destGroupId}
-          position="b"
+          position="bottom"
           clickCallback={handleDropdownClick}>
           Bottom
         </DropdownItem>

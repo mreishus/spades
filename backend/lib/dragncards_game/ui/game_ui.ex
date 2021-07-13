@@ -758,7 +758,7 @@ defmodule DragnCardsGame.GameUI do
   def move_stacks(gameui, orig_group_id, dest_group_id, top_n, position) do
     orig_stack_ids = get_stack_ids(gameui, orig_group_id)
     # Moving stacks to the top or the bottom of the new group?
-    dest_stack_index = if position == "b" do -1 else 0 end
+    dest_stack_index = if position == "bottom" do -1 else 0 end
     # Move stacks 1 at a time
     gameui = Enum.reduce(Enum.with_index(orig_stack_ids), gameui, fn({stack_id, index}, acc) ->
       if index < top_n do
@@ -768,7 +768,7 @@ defmodule DragnCardsGame.GameUI do
       end
     end)
     # Do we shuffle it in?
-    if position == "s" do shuffle_group(gameui, dest_group_id) else gameui end
+    if position == "shuffle" do shuffle_group(gameui, dest_group_id) else gameui end
   end
 
   def insert_card_in_stack(gameui, stack_id, card_id, index) do
