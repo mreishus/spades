@@ -197,23 +197,23 @@ export const Hotkeys = React.memo(({
             </tr>
             <tr className={"bg-gray-500"}>
               <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>←</div></td>
-              <td className="text-center">Undo action</td>
+              <td className="text-center">Undo one action</td>
             </tr>
             <tr className={"bg-gray-600"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"} style={keyStyle}>←</div></td>
-              <td className="text-center">Rewind round</td>
+              <td className="text-center">Undo until last round change</td>
             </tr>
             <tr className={"bg-gray-500"}>
               <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>→</div></td>
-              <td className="text-center">Redo action</td>
+              <td className="text-center">Redo one action</td>
             </tr>
             <tr className={"bg-gray-600"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"} style={keyStyle}>→</div></td>
-              <td className="text-center">Fast forward round</td>
+              <td className="text-center">Redo until next round change</td>
             </tr>
           </table>
         </div>
