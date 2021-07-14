@@ -82,18 +82,27 @@ export const DropdownMenuCard = React.memo(({
             clickCallback={handleDropdownClick}>
             Move to
           </DropdownItem>
-          {dropdownMenu.groupType === "play" && <DropdownItem
-            rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
-            goToMenu="perRound"
-            clickCallback={handleDropdownClick}>
-            Per round
-          </DropdownItem>}
-          {dropdownMenu.groupType === "play" && <DropdownItem
-            rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
-            goToMenu="toggleTrigger"
-            clickCallback={handleDropdownClick}>
-            Toggle triggers
-          </DropdownItem>}
+          {dropdownMenu.groupType === "play" && 
+            <DropdownItem
+              rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+              goToMenu="perRound"
+              clickCallback={handleDropdownClick}>
+              Per round
+            </DropdownItem>}
+          {dropdownMenu.groupType === "play" && 
+            <DropdownItem
+              rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+              goToMenu="toggleTrigger"
+              clickCallback={handleDropdownClick}>
+              Toggle triggers
+            </DropdownItem>}
+          {dropdownMenu.groupType === "play" && menuCard.cardDbId === "ce1cf93c-68d9-4613-af3a-a08671152358" &&
+            <DropdownItem
+              rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+              goToMenu="setRotation"
+              clickCallback={handleDropdownClick}>
+              Set rotation
+            </DropdownItem>}
         </div>
       </CSSTransition>
 
@@ -207,6 +216,23 @@ export const DropdownMenuCard = React.memo(({
           </div>
         </CSSTransition>
       ))}
+
+      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
+          in={activeMenu === "setRotation"}>
+        <div className="menu">
+          <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
+          {[0, 90, 180, 270].map((rot, _rotIndex) => (
+            <DropdownItem
+              rightIcon={menuCard.rotation===rot ? <FontAwesomeIcon icon={faCheck}/> : null}
+              action={"setRotation"}
+              rotation={rot}
+              clickCallback={handleDropdownClick}>
+              {rot}
+            </DropdownItem>
+          ))}
+        </div>
+      </CSSTransition>
+
     </div>
   );
 })

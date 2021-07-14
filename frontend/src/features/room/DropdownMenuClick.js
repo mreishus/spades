@@ -78,6 +78,9 @@ export const handleDropdownClickCard = (dropdownMenu, props, playerN, game, game
         gameBroadcast("game_action", {action: "move_card", options: {card_id: cardId0, dest_group_id: playerN+"Hand", dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})
         chatBroadcast("game_update", {message: "swapped a card in their hand with the top of their deck."})       
     }
+  } else if (props.action === "setRotation") {
+    chatBroadcast("game_update", {message: "set rotation of "+displayName+" to "+props.rotation+"."})
+    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "rotation", props.rotation]]}})
   }
 }
 
