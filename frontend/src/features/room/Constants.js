@@ -279,8 +279,8 @@ export const LAYOUTINFO = {
     {
       regions: [
         {id: "sharedMainQuest", width: "12%"},
-        {id: "sharedActive", width: "9%"},
-        {id: "sharedStaging", width: "61%", style: "shaded", boxShadow: "true"},
+        {id: "sharedActive", width: "11%"},
+        {id: "sharedStaging", width: "59%", style: "shaded", boxShadow: "true"},
         {id: "sharedEncounterDeck", width: "9%"},
         {id: "sharedEncounterDiscard", width: "9%"},
       ]
@@ -313,8 +313,8 @@ export const LAYOUTINFO = {
     {
       regions: [
         {id: "sharedMainQuest", width: "12%"},
-        {id: "sharedActive", width: "9%"},
-        {id: "sharedStaging", width: "61%", style: "shaded", boxShadow: "true"},
+        {id: "sharedActive", width: "11%"},
+        {id: "sharedStaging", width: "59%", style: "shaded", boxShadow: "true"},
         {id: "sharedEncounterDeck", width: "9%"},
         {id: "sharedEncounterDiscard", width: "9%"},
       ]
