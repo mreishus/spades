@@ -58,6 +58,7 @@ export const OnLoad = React.memo(({
                   const loadGroupId = (type === "Hero" || type === "Contract") ? playerI+"Play1" : playerI+"Deck";
                   cardRow['loadgroupid'] = loadGroupId;
                   cardRow['discardgroupid'] = playerI+"Discard";
+                  if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
                   loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
                 }
               })
@@ -79,7 +80,8 @@ export const OnLoad = React.memo(({
                   const type = slotJsonData.type_name;
                   const loadGroupId = playerI+"Sideboard";
                   cardRow['loadgroupid'] = loadGroupId;
-                  cardRow['discardgroupid'] = sectionToDiscardGroupId(playerI+"Discard",playerI);
+                  cardRow['discardgroupid'] = playerI+"Discard";
+                  if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
                   loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
                 }
               })

@@ -72,7 +72,8 @@ export const SpawnCustomModal = React.memo(({
         "cardsetid": "",
         "cardpackname": "",
         "cardid": "",
-        "cardnumber": "1"
+        "cardnumber": "1",
+        "discardgroupid": inputs.owner === "shared" || inputs.sideAkeywords.includes("Encounter") ? "sharedEncounterDiscard" : inputs.owner+"Discard",
       },
       "quantity": 1,
       "groupId": inputs.owner === "shared" ? "sharedStaging" : inputs.owner+"Play1",
@@ -80,86 +81,7 @@ export const SpawnCustomModal = React.memo(({
 
     gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
     chatBroadcast("game_update", {message: "spawned "+ loadList[0].cardRow.sides.A.printname + "."});
-    console.log(loadList);
   }
-
-    // "width"=> width,
-    // "height"=> height,
-    // "attack" => convert_to_integer(card_row_side["attack"]),
-    // "cost" => convert_to_integer(card_row_side["cost"]),
-    // "defense" => convert_to_integer(card_row_side["defense"]),
-    // "engagementCost" => convert_to_integer(card_row_side["engagementcost"]),
-    // "hitPoints" => convert_to_integer(card_row_side["hitpoints"]),
-    // "keywords" => card_row_side["keywords"],
-    // "name" => card_row_side["name"],
-    // "printName" => card_row_side["printname"],
-    // "questPoints" => convert_to_integer(card_row_side["questpoints"]),
-    // "shadow" => card_row_side["shadow"],
-    // "sphere" => card_row_side["sphere"],
-    // "text" => card_row_side["text"],
-    // "threat" => convert_to_integer(card_row_side["threat"]),
-    // "traits" => card_row_side["traits"],
-    // "type" => card_row_side["type"],
-    // "unique" => card_row_side["unique"],
-    // "victoryPoints" => convert_to_integer(card_row_side["victorypoints"]),
-    // "willpower" => convert_to_integer(card_row_side["willpower"]),
-    // "triggers" => trigger_steps_from_text(card_row_side["keywords"], card_row_side["text"]),
-    // "customImgUrl" => nil,
-
-    // const loadList = {
-    //   "cardRow": {
-    //     "cardencounterset": "",
-    //     "sides": {
-    //       "A": {
-    //         "printname": "Aragorn",
-    //         "sphere": "Tactics",
-    //         "text": "Response: After Aragorn participates in an attack that destroys an enemy, choose an enemy not engaged with you and engage that enemy.",
-    //         "willpower": "2",
-    //         "hitpoints": "5",
-    //         "shadow": "",
-    //         "engagementcost": "",
-    //         "traits": "Dunedain. Ranger. Warrior.",
-    //         "keywords": "Each enemy engaged with you gets -1 [defense].",
-    //         "type": "Hero",
-    //         "victorypoints": "",
-    //         "cost": "12",
-    //         "name": "Aragorn",
-    //         "questpoints": "",
-    //         "attack": "3",
-    //         "unique": "1",
-    //         "defense": "2",
-    //         "threat": ""
-    //       },
-    //       "B": {
-    //         "printname": "player",
-    //         "sphere": "",
-    //         "text": "",
-    //         "willpower": "",
-    //         "hitpoints": "",
-    //         "shadow": "",
-    //         "cost": "",
-    //         "traits": "",
-    //         "keywords": "",
-    //         "type": "",
-    //         "victorypoints": "",
-    //         "engagementcost": "",
-    //         "name": "player",
-    //         "questpoints": "",
-    //         "attack": "",
-    //         "unique": "",
-    //         "defense": "",
-    //         "threat": ""
-    //       }
-    //     },
-    //     "cardquantity": "1",
-    //     "cardsetid": "",
-    //     "cardpackname": "",
-    //     "cardid": "",
-    //     "cardnumber": "1"
-    //   },
-    //   "quantity": 1,
-    //   "groupId": "sharedStaging"
-    // }
 
     const lineInput = (id, title) => {
       return (

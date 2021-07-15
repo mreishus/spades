@@ -159,6 +159,7 @@ export const TopBarMenu = React.memo(({
               const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
               cardRow['loadgroupid'] = loadGroupId;
               cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
+              if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
               loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
             }
           })
@@ -263,8 +264,8 @@ export const TopBarMenu = React.memo(({
         <li key={"spawn"}>
           <a href="#">Spawn card</a>
           <ul className="third-level-menu">
-            <li key={"spawn_existing"}><a onClick={() => handleMenuClick({action:"spawn_existing"})} href="#">Existing</a></li>
-            <li key={"spawn_custom"}><a onClick={() => handleMenuClick({action:"spawn_custom"})} href="#">Custom</a></li>
+            <li key={"spawn_existing"}><a onClick={() => handleMenuClick({action:"spawn_existing"})} href="#">From the card pool</a></li>
+            <li key={"spawn_custom"}><a onClick={() => handleMenuClick({action:"spawn_custom"})} href="#">Create your own card</a></li>
           </ul>
         </li> 
         <li key={"random"}>

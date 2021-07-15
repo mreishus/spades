@@ -545,6 +545,7 @@ export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadca
           const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
           cardRow['loadgroupid'] = loadGroupId;
           cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
+          if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
           loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
         }
       })

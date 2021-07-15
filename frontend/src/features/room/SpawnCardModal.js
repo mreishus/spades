@@ -4,6 +4,7 @@ import { cardDB } from "../../cardDB/cardDB";
 import useProfile from "../../hooks/useProfile";
 
 export const SpawnCardModal = React.memo(({
+    playerN,
     setTyping,
     setShowModal,
     gameBroadcast,
@@ -15,6 +16,8 @@ export const SpawnCardModal = React.memo(({
 
     const handleSpawnClick = (cardID) => {
         const cardRow = cardDB[cardID];
+        if (cardRow['cardencounterset'] || cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
+        else cardRow['discardgroupid'] = playerN+"Discard";
         if (!cardRow) return;
         const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': "sharedStaging"}]
         console.log("spawned",loadList);
