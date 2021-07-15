@@ -230,6 +230,38 @@ export const HandleKeyDown = ({
             const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
             chatBroadcast("game_update",{message: message});
             gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
+        } else if (k === "k" || k === "K") {
+            // Check remaining cards in encounter deck
+            const encounterStackIds = game.groupById.sharedEncounterDeck2.stackIds;
+            const encounterDiscardStackIds = game.groupById.sharedEncounterDiscard2.stackIds;
+            const stacksLeft = encounterStackIds.length;
+            // If no cards, check phase of game
+            if (stacksLeft === 0) {
+                // If quest phase, shuffle encounter discard pile into deck
+                if (game.phase === "Quest") {
+                    gameBroadcast("game_action",{action:"move_stacks", options:{orig_group_id: "sharedEncounterDiscard2", dest_group_id: "sharedEncounterDeck2", top_n: encounterDiscardStackIds.length, position: "s"}});
+                    chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["sharedEncounterDiscard2"].name+" into "+GROUPSINFO["sharedEncounterDeck2"].name+"."});
+                    return;
+                } else {
+                    // If not quest phase, give error message and break
+                    chatBroadcast("game_update",{message: " tried to reveal a card from the second encounter deck, but the second encounter deck is empty and it's not the quest phase."});
+                    return;
+                }
+            }
+            // Reveal card
+            const topStackId = encounterStackIds[0];
+            if (!topStackId) {
+                chatBroadcast("game_update",{message: " tried to reveal a card from the second encounter deck, but second the encounter deck is empty."});
+                return;
+            }
+            const topStack = game.stackById[topStackId];
+            const topCardId = topStack["cardIds"][0];
+            const topCard = game.cardById[topCardId];
+            // Was shift held down? (Deal card facedown)
+            const shiftHeld = (k === "K"); // keypress[0] === "Shift";
+            const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area from the second encounter deck." : "revealed "+getDisplayNameFlipped(topCard)+" from the second encounter deck."
+            chatBroadcast("game_update",{message: message});
+            gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
         } else if (k === "d") {
             // Check remaining cards in deck
             const playerDeck = game.groupById[playerN+"Deck"];
