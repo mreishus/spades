@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO, PHASEINFO, roundStepToText } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { setValues } from "./gameUiSlice";
+import axios from "axios";
 import { 
     getDisplayName, 
     getDisplayNameFlipped, 
@@ -60,6 +61,14 @@ export const HandleKeyDown = ({
 
     const [keyBackLog, setKeyBackLog] = useState({});
     console.log("Rendering HandleKeyDown", keyBackLog)
+
+    const checkAlerts = async () => {
+        const res = await axios.get("/be/api/v1/alerts");
+        console.log("resalerts", res);
+        if (res.data && res.data.message) {
+            alert(res.data.message + " Time remaining: "+res.data.minutes_remaining + " minutes");
+        }
+    }
 
     useEffect(() => {
         const onKeyDown = (event) => {
@@ -195,6 +204,8 @@ export const HandleKeyDown = ({
             // Save replay
             gameBroadcast("game_action", {action: "save_replay", options: {}});
             chatBroadcast("game_update",{message: "saved the replay to their profile."});
+            // Check for alerts
+            checkAlerts();
         }
 
         // General hotkeys
