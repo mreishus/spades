@@ -137,43 +137,6 @@ export const TopBarMenu = React.memo(({
     inputFileGame.current.click();
   }
 
-  const loadRingsDb = async(event) => {
-    event.preventDefault();
-    const reader = new FileReader();
-    reader.onload = async (event) => { 
-      const xmltext = (event.target.result)
-      var parseString = require('xml2js').parseString;
-      parseString(xmltext, function (err, deckJSON) {
-        if (!deckJSON) return;
-        const sections = deckJSON.deck.section;
-        var loadList = [];
-        sections.forEach(section => {
-          const sectionName = section['$'].name;
-          const cards = section.card;
-          if (!cards) return;
-          cards.forEach(card => {
-            const cardDbId = card['$'].id;
-            const quantity = parseInt(card['$'].qty);
-            var cardRow = cardDB[cardDbId];
-            if (cardRow) {
-              const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
-              cardRow['loadgroupid'] = loadGroupId;
-              cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
-              if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
-              loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
-            }
-          })
-        })
-        // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
-        loadList = processLoadList(loadList, playerN);
-        gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
-        chatBroadcast("game_update",{message: "loaded a deck."});
-        processPostLoad(loadList, playerN, gameBroadcast, chatBroadcast);
-      })
-    }
-    reader.readAsText(event.target.files[0]);
-  }
-
   const loadDeck = async(event) => {
     event.preventDefault();
     const reader = new FileReader();

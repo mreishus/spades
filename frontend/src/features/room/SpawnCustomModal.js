@@ -21,6 +21,11 @@ export const SpawnCustomModal = React.memo(({
   const [backType, setBackType] = useState(backOptions[0]);
 
   const onSubmit = (inputs) => {
+    const loadGroupId = inputs.owner === "shared" ? "sharedStaging" : inputs.owner+"Play1";
+    var discardGroupId = inputs.owner+"Discard";
+    if (inputs.owner === "shared" || inputs.sideAkeywords.includes("Encounter")) discardGroupId = "sharedEncounterDiscard";
+    if (inputs.sideAtype === "Quest") discardGroupId = "sharedQuestDiscard";
+
     const loadList = [{
       "cardRow": {
         "cardencounterset": "",
@@ -73,10 +78,11 @@ export const SpawnCustomModal = React.memo(({
         "cardpackname": "",
         "cardid": "",
         "cardnumber": "1",
-        "discardgroupid": inputs.owner === "shared" || inputs.sideAkeywords.includes("Encounter") ? "sharedEncounterDiscard" : inputs.owner+"Discard",
+        "loadgroupid": loadGroupId,
+        "discardgroupid": discardGroupId,
       },
       "quantity": 1,
-      "groupId": inputs.owner === "shared" ? "sharedStaging" : inputs.owner+"Play1",
+      "groupId": loadGroupId,
     }]
 
     gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});

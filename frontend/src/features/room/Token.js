@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector } from 'react-redux';
 import { tokenPrintName } from "./Helpers";
-import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 var delayBroadcast;
@@ -90,15 +90,16 @@ export const Token = React.memo(({
                     top: "17%",
                     width: "100%",
                 }}>
-                {(tokenType==="threat" || tokenType==="willpower" || tokenType==="attack" || tokenType==="defense") && amount>0 ? "+"+amount : amount}
+                {(tokenType==="threat" || tokenType==="willpower" || tokenType==="attack" || tokenType==="defense" || tokenType==="hitPoints") && amount>0 ? "+"+amount : amount}
             </p>
 
             <div
                 className="text-center text-sm"
                 style={{
                     position: "absolute",
-                    height: "100%",
-                    width: "50%",
+                    height: "50%",
+                    width: "100%",
+                    top: "50%",
                     backgroundColor: "black",
                     opacity: buttonLeftVisible ? "65%" : "0%",
                     display: showButtons ? "block" : "none",
@@ -113,10 +114,10 @@ export const Token = React.memo(({
                     className="text-white" 
                     style={{
                         position:"absolute", 
-                        top:"25%", 
-                        left:"20%",
+                        top:"15%", 
+                        left:"30%",
                     }}  
-                    icon={faChevronLeft}
+                    icon={faChevronDown}
                 />
             </div>
 
@@ -124,9 +125,8 @@ export const Token = React.memo(({
                 className="text-center text-sm"
                 style={{
                     position: "absolute",
-                    height: "100%",
-                    width: "50%",
-                    left: "50%",
+                    height: "50%",
+                    width: "100%",
                     backgroundColor: "black",
                     opacity: buttonRightVisible ? "65%" : "0%",
                     display: showButtons ? "block" : "none",
@@ -141,10 +141,10 @@ export const Token = React.memo(({
                     className="text-white" 
                     style={{
                         position:"absolute", 
-                        top:"25%", 
+                        top:"15%", 
                         left:"30%",
                     }} 
-                    icon={faChevronRight}
+                    icon={faChevronUp}
                 />
             </div>
             <img 

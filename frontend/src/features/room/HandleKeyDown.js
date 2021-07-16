@@ -409,7 +409,7 @@ export const HandleKeyDown = ({
                 var delta = (mousePosition === "top" ? 1 : -1)
                 const currentVal = game.cardById[activeCardId].tokens[tokenType];
                 var newVal = currentVal + delta;
-                if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;
+                if (newVal < 0 && ['resource','damage','progress','time'].includes(tokenType)) return;   
 
                 // Increment token 
                 var newKeyBackLog;
@@ -463,6 +463,8 @@ export const HandleKeyDown = ({
                             }
                         })
                         gameBroadcast("game_action", {action:"increment_tokens", options: {card_id: cardId, token_increments: cardKeyBackLog}});
+                        // Adjust willpower if committed
+                        if (activeCard.committed && cardKeyBackLog["willpower"] !== null) gameBroadcast("game_action", {action:"increment_willpower", options: {increment: cardKeyBackLog["willpower"]}});
                     })
                     setKeyBackLog({})
                 }, 500);
@@ -642,8 +644,8 @@ export const HandleKeyDown = ({
                 }
                 // If the card was a quest card, load the next quest card
                 if (activeCardFace.type === "Quest") {
-                    const questDeckStackIds = game.groupById[activeCard.loadGroupId].stackIds;
-                    if (questDeckStackIds.length > 0) {
+                    const questDeckStackIds = game.groupById[activeCard.loadGroupId]?.stackIds;
+                    if (questDeckStackIds?.length > 0) {
                         chatBroadcast("game_update", {message: "advanced the quest."});
                         gameBroadcast("game_action", {action: "move_stack", options: {stack_id: questDeckStackIds[0], dest_group_id: groupId, dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})
                     }

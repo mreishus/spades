@@ -16,9 +16,11 @@ export const SpawnCardModal = React.memo(({
 
     const handleSpawnClick = (cardID) => {
         const cardRow = cardDB[cardID];
-        if (cardRow['cardencounterset'] || cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
-        else cardRow['discardgroupid'] = playerN+"Discard";
         if (!cardRow) return;
+        cardRow['loadgroupid'] = "sharedStaging";
+        if (cardRow['sides']['A']['type'] === "Quest") cardRow['discardgroupid'] = "sharedQuestDiscard";
+        else if (cardRow['cardencounterset'] || cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
+        else cardRow['discardgroupid'] = playerN+"Discard";
         const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': "sharedStaging"}]
         console.log("spawned",loadList);
         gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
