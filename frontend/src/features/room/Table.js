@@ -11,6 +11,7 @@ import { Hotkeys } from "./Hotkeys";
 import { PlayersInRoom } from "./PlayersInRoom";
 import { DropdownMenu } from "./DropdownMenu";
 import { OnLoad } from "./OnLoad";
+import { useKeypress } from "../../contexts/KeypressContext";
 
 import "../../css/custom-dropdown.css";
 
@@ -35,6 +36,7 @@ export const Table = React.memo(({
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
   const setMousePosition = useSetMousePosition();
+  const keypress = useKeypress();
 
   const handleBrowseSelect = (groupId) => {
     setBrowseGroupId(groupId);
@@ -62,7 +64,7 @@ export const Table = React.memo(({
         chatBroadcast={chatBroadcast}
       />
       {!loaded && <OnLoad setLoaded={setLoaded} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>}
-      {showHotkeys && <Hotkeys setShowWindow={setShowHotkeys}/>}
+      {(showHotkeys || keypress["Tab"]) && <Hotkeys setShowWindow={setShowHotkeys}/>}
       {showPlayersInRoom && <PlayersInRoom setShowWindow={setShowPlayersInRoom}/>}
       {/* Side panel */}
       <SideBar

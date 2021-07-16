@@ -11,7 +11,7 @@ const keyStyleXL = {width: "75px", height: "25px", borderRadius: "5px"}
 const windowClass = "insert-auto overflow-auto bg-gray-700 border max-w-lg rounded-lg outline-none text-white";
 const windowStyle = {
   position:"absolute", 
-  zIndex: 1e7, 
+  zIndex: 2e4, 
   right: "30px", 
   top: "200px", 
   width:"500px", 

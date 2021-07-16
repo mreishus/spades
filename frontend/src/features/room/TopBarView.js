@@ -3,6 +3,10 @@ import { useSelector } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
 import { TopBarViewItem } from "./TopBarViewItem";
 
+
+const keyClass = "m-auto border bg-gray-500 text-center bottom inline-block text-xs ml-2 mb-1";
+const keyStyleL = {width: "35px", height: "20px", borderRadius: "5px"}
+
 export const TopBarView = React.memo(({
   setShowHotkeys,
   setShowPlayersInRoom,
@@ -21,7 +25,7 @@ export const TopBarView = React.memo(({
       <div className="h-full flex text-xl items-center justify-center" href="#">View</div>
         <ul className="second-level-menu">
           <li key={"Hotkeys"}>
-            <a href="#" onClick={() => setShowHotkeys(true)}>Hotkeys</a>
+            <a href="#" onClick={() => setShowHotkeys(true)}>Hotkeys <div className={keyClass} style={keyStyleL}>Tab</div></a>
           </li>
           <li key={"PlayersInRoom"}>
             <a href="#" onClick={() => setShowPlayersInRoom(true)}>Players in Room</a>

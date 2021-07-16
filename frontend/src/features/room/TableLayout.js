@@ -218,7 +218,7 @@ export const TableLayout = React.memo(({
       <div className="absolute right-0 bottom-0 h-full" style={{width:"25%", height: rowHeight}}>
         <div 
           className="absolute bottom-0 left-0" 
-          style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'100%', paddingRight:"30px", opacity: 0.7, zIndex: 1e6}}
+          style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'100%', paddingRight:"30px", opacity: 0.7, zIndex: chatHover ? 1e6 : 1e3}}
           onMouseEnter={() => handleStartChatHover()}
           onMouseLeave={() => handleStopChatHover()}>
           <Chat hover={chatHover} chatBroadcast={chatBroadcast} setTyping={setTyping}/>

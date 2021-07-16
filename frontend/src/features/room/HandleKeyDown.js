@@ -72,15 +72,18 @@ export const HandleKeyDown = ({
 
     useEffect(() => {
         const onKeyDown = (event) => {
-            handleKeyDown(
-                event, 
-                playerN,
-                typing, 
-                keypress, 
-                setKeypress,
-                gameBroadcast, 
-                chatBroadcast,
-            )
+            if (typing) return;
+            else {
+                event.preventDefault();
+                handleKeyDown(
+                    event, 
+                    playerN,
+                    keypress, 
+                    setKeypress,
+                    gameBroadcast, 
+                    chatBroadcast,
+                )
+            }
         }
 
         document.addEventListener('keydown', onKeyDown);
@@ -94,13 +97,11 @@ export const HandleKeyDown = ({
     const handleKeyDown = (
         event, 
         playerN,
-        typing, 
         keypress, 
         setKeypress,
         gameBroadcast, 
         chatBroadcast,
     ) => {
-        if (typing) return;
         if (!playerN) {
             alert("Please sit down to do that.")
             return;
@@ -111,6 +112,7 @@ export const HandleKeyDown = ({
         if (k === "Shift") setKeypress({"Shift": true});
         //else setKeypress({"Shift": false});
         if (k === "Control") setKeypress({"Control": true});
+        if (k === "Tab") setKeypress({"Tab": true});
         if (k === " ") setKeypress({"Space": true});
         //else setKeypress({"Control": false});
 
