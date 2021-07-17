@@ -1288,7 +1288,11 @@ defmodule DragnCardsGame.GameUI do
   # Increment a player's willpower
   def increment_willpower(gameui, player_n, increment) do
     current_willpower = gameui["game"]["playerData"][player_n]["willpower"];
-    put_in(gameui["game"]["playerData"][player_n]["willpower"], current_willpower + increment)
+    if increment do
+      put_in(gameui["game"]["playerData"][player_n]["willpower"], current_willpower + increment)
+    else
+      gameui
+    end
   end
 
 end
