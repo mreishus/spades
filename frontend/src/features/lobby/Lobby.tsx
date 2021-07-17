@@ -113,6 +113,21 @@ export const Lobby: React.FC = () => {
                 </span>
               </div>
             </div>
+            <div className="mb-6">
+              {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
+              <div className="flex justify-center" style={{width: "600px"}}>
+                <span className="p-2 text-white bg-gray-700 rounded">
+                  Bug reports? Feature requests? Post them on   
+                  <a href="https://discord.gg/7BQv5ethUm" className="ml-1 mr-1 text-white">
+                    Discord
+                  </a> 
+                  or
+                  <a href="https://github.com/seastan/DragnCards" className="ml-1 text-white">
+                    GitHub
+                  </a>
+                </span>
+              </div>
+            </div>
             <h1 className="mb-4 text-center">Lobby</h1>
             {isLoading && <div className="text-white text-center">Connecting to server...</div>}
             {isError && <div className="text-white text-center">Error communicating with server...</div>}
@@ -152,10 +167,7 @@ export const Lobby: React.FC = () => {
                 DragnCards is a{" "}
                 <span className="font-semibold">
                   free online multiplayer card game platform
-                </span>, and is not affiliated with or endorsed by FFG or any other company in any way.
-              </p>
-              <p className="mb-2">
-                If you have any suggestions or encounter any problems, please report them on <a href="https://github.com/seastan/DragnCards">GitHub</a>.
+                </span>, and is not affiliated with or endorsed by FFG or any other company.
               </p>
             </div>
             <CreateRoomModal
