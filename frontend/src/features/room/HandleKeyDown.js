@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { GROUPSINFO, PHASEINFO, roundStepToText } from "./Constants";
+import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStepPhase } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { setValues } from "./gameUiSlice";
 import axios from "axios";
@@ -354,6 +354,13 @@ export const HandleKeyDown = ({
             }
             // Clear GiantCard
             setActiveCardAndLoc(null);
+        } else if (k === "ArrowDown") {
+            // Next phase
+            const nextStepPhase = nextRoundStepPhase(game.roundStep);
+            if (nextStepPhase) {
+                gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", nextStepPhase["roundStep"]], ["game", "phase", nextStepPhase["phase"]]]}});
+                chatBroadcast("game_update", {message: "set the round step to "+roundStepToText(nextStepPhase["roundStep"])+"."});
+            }
         } else if (k === "R") {
             hotkeyRefresh();
         } else if (k === "N") {

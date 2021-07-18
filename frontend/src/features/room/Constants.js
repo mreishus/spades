@@ -192,6 +192,18 @@ export const PHASEINFO = [
   }
 ]
 
+export const nextRoundStepPhase = (roundStep) => {
+  var stepFound = false;
+  for (var phase of PHASEINFO) {
+    const steps = phase.steps;
+    for (var step of steps) {
+      if (stepFound) return {roundStep: step.id, phase: phase.name};
+      if (step.id == roundStep) stepFound = true;
+    }
+  }
+  return null;
+}
+
 export const playerNum = (playerN) => {
   switch(playerN) {
     case 'player1':
