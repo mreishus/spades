@@ -182,7 +182,7 @@ export const TableLayout = React.memo(({
                 {GROUPSINFO[sideGroupId].tablename}
             </div>
           </div>
-          <div className="w-full h-full pt-4">
+          <div className="w-full h-full mt-4">
             <Stacks
               gameBroadcast={gameBroadcast}
               chatBroadcast={chatBroadcast}
