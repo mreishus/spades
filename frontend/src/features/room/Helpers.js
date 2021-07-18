@@ -388,7 +388,7 @@ export const processLoadList = (loadList, playerN) => {
   if (loreThurindir) {
     for (var i=0; i<n; i++) {
       const item = newLoadList[i];
-      if (item.cardRow.sides.A.type == "Side Quest") {
+      if (item.cardRow.sides.A.type == "Side Quest" && item.groupId.includes("player") && item.groupId.includes("Deck")) {
         if (item.quantity > 0) {
           newLoadList[i] = {...item, quantity: item.quantity - 1};
           newLoadList.push({...item, quantity: 1, groupId: playerN+"Play2"})
