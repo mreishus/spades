@@ -7,6 +7,7 @@ declare module "elixir-backend" {
     public created_by: null | number;
     public privacy_type: string;
     public last_update: null | number;
+    public quest: string;
   }
 
 
