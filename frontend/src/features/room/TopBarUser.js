@@ -18,6 +18,7 @@ export const TopBarUser = React.memo(({
   chatBroadcast,
   observingPlayerN,
   setObservingPlayerN,
+  setTyping,
 }) => {
   console.log("Rendering TopBarUser ", playerI);
   const dispatch = useDispatch();
@@ -178,6 +179,8 @@ export const TopBarUser = React.memo(({
             onChange={handleThreatChange}
             type="number" min="0" step="1"
             disabled={playerN ? false : true}
+            onFocus={event => setTyping(true)}
+            onBlur={event => setTyping(false)}
             ref={inputRefThreat}
           ></input>
         </div>
@@ -192,6 +195,8 @@ export const TopBarUser = React.memo(({
             onChange={handleWillpowerChange}
             type="number" min="0" step="1"
             disabled={playerN ? false : true}
+            onFocus={event => setTyping(true)}
+            onBlur={event => setTyping(false)}
             ref={inputRefWillpower}
           ></input>
         </div>

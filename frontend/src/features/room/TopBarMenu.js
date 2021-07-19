@@ -33,6 +33,7 @@ export const TopBarMenu = React.memo(({
   const dispatch = useDispatch();
   const inputFileDeck = useRef(null);
   const inputFileGame = useRef(null);
+  const inputFileCustom = useRef(null);
   console.log("Rendering TopBarMenu", options);
 
   const handleMenuClick = (data) => {
@@ -117,6 +118,8 @@ export const TopBarMenu = React.memo(({
       downloadGameAsJson();
     } else if (data.action === "load_game") {
       loadFileGame();
+    } else if (data.action === "load_custom") {
+      loadFileCustom();
     } else if (data.action === "num_players") {
       const num = data.value;
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "numPlayers", num]]}});
@@ -135,6 +138,10 @@ export const TopBarMenu = React.memo(({
 
   const loadFileGame = () => {
     inputFileGame.current.click();
+  }
+
+  const loadFileCustom = () => {
+    inputFileCustom.current.click();
   }
 
   const loadDeck = async(event) => {
@@ -162,6 +169,27 @@ export const TopBarMenu = React.memo(({
       } catch(e) {
           alert("Game must be a valid JSON file."); // error in the above string (in this case, yes)!
       }
+    }
+    reader.readAsText(event.target.files[0]);
+  }
+
+  const uploadCustomCards = async(event) => {
+    event.preventDefault();
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      //try {
+        console.log("target result", event.target.result);
+        var loadList = JSON.parse(event.target.result);
+        console.log("loadlist", loadList);
+        //if (loadList) {
+          loadList = processLoadList(loadList, playerN);
+          gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
+          chatBroadcast("game_update",{message: "loaded a deck."});
+          processPostLoad(loadList, playerN, gameBroadcast, chatBroadcast);
+        //}
+    //  } catch(e) {
+      //    alert("Custom cards must be a valid text file. Check out the tutorial on YouTube.");
+      //}
     }
     reader.readAsText(event.target.files[0]);
   }
@@ -214,6 +242,10 @@ export const TopBarMenu = React.memo(({
             <li key={"load_game"}>
               <a  onClick={() => handleMenuClick({action:"load_game"})} href="#">Load game (.json)</a>
               <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson}/>
+            </li>
+            <li key={"load_custom"}>
+              <a  onClick={() => handleMenuClick({action:"load_custom"})} href="#">Load custom cards (.txt)</a>
+              <input type='file' id='file' ref={inputFileCustom} style={{display: 'none'}} onChange={uploadCustomCards}/>
             </li>
           </ul>
         </li> 

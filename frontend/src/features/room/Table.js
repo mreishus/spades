@@ -89,6 +89,7 @@ export const Table = React.memo(({
               setSittingPlayerN={setSittingPlayerN}
               observingPlayerN={observingPlayerN}
               setObservingPlayerN={setObservingPlayerN}
+              setTyping={setTyping}
             />
           </div>
           {/* Table */}

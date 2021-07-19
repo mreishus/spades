@@ -552,6 +552,7 @@ export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadca
     })
     // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
     loadList = processLoadList(loadList, playerN);
+    console.log("loadList", loadList);
     gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
     chatBroadcast("game_update",{message: "loaded a deck."});
     processPostLoad(loadList, playerN, gameBroadcast, chatBroadcast);

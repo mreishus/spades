@@ -13,6 +13,7 @@ export const TopBar = React.memo(({
   playerN,
   observingPlayerN,
   setObservingPlayerN,
+  setTyping,
 }) => {
   console.log("Rendering TopBar");
   return(
@@ -37,6 +38,7 @@ export const TopBar = React.memo(({
         chatBroadcast={chatBroadcast}
         observingPlayerN={observingPlayerN}
         setObservingPlayerN={setObservingPlayerN}
+        setTyping={setTyping}
       />
     </div>
   )

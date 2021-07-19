@@ -11,6 +11,7 @@ export const TopBarDataContainer = React.memo(({
   chatBroadcast,
   observingPlayerN,
   setObservingPlayerN,
+  setTyping,
 }) => {
   
     const stagingStore = state => state?.gameUi?.game?.groupById?.sharedStaging.stackIds;
@@ -64,6 +65,7 @@ export const TopBarDataContainer = React.memo(({
           progress={totalProgress}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
+          setTyping={setTyping}
         />
         <TopBarUser
           playerN={playerN}
@@ -72,6 +74,7 @@ export const TopBarDataContainer = React.memo(({
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
+          setTyping={setTyping}
         />
         {numPlayers > 1 &&
         <TopBarUser
@@ -81,6 +84,7 @@ export const TopBarDataContainer = React.memo(({
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
+          setTyping={setTyping}
         />}
         {numPlayers > 2 &&
         <TopBarUser
@@ -90,6 +94,7 @@ export const TopBarDataContainer = React.memo(({
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
+          setTyping={setTyping}
         />}
         {numPlayers > 3 &&
         <TopBarUser
@@ -99,6 +104,7 @@ export const TopBarDataContainer = React.memo(({
           chatBroadcast={chatBroadcast}
           observingPlayerN={observingPlayerN}
           setObservingPlayerN={setObservingPlayerN}
+          setTyping={setTyping}
         />}
       </div>
     )

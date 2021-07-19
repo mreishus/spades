@@ -11,6 +11,7 @@ export const TopBarShared = React.memo(({
   progress,
   gameBroadcast,
   chatBroadcast,
+  setTyping,
 }) => {
   const dispatch = useDispatch();
   const roundStore = state => state?.gameUi?.game?.roundNumber
@@ -50,6 +51,8 @@ export const TopBarShared = React.memo(({
             onChange={handleRoundChange}
             type="number" min="0" step="1"
             disabled={playerN ? false : true}
+            onFocus={event => setTyping(true)}
+            onBlur={event => setTyping(false)}
             ref={inputRefRound}>
           </input>
         </div>
