@@ -4,6 +4,8 @@ import { useMousePosition } from "../../contexts/MousePositionContext";
 import { useDropdownMenu, useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 
 import "../../css/custom-dropdown.css";
+import { useTouchAction } from "../../contexts/TouchActionContext";
+import { useActiveCard } from "../../contexts/ActiveCardContext";
 
 export const DropdownMenu = React.memo(({
   playerN,
@@ -13,6 +15,8 @@ export const DropdownMenu = React.memo(({
   const mousePosition = useMousePosition();
   const dropdownMenu = useDropdownMenu();
   const setDropdownMenu = useSetDropdownMenu();
+  const touchAction = useTouchAction();
+  const activeCard = useActiveCard();
   
   const [isHovering, setIsHovering] = useState(false);
   const [mouseX, setMouseX] = useState(0);
@@ -37,7 +41,7 @@ export const DropdownMenu = React.memo(({
     return () => {
       document.removeEventListener('mousedown', handleClick);
     }
-  }, [dropdownMenu, isHovering])
+  }, [dropdownMenu, isHovering, touchAction, activeCard])
 
   if (!mousePosition) return null;
   if (!dropdownMenu) return null;

@@ -17,7 +17,7 @@ export const Tokens = React.memo(({
     const keypress = useKeypress();
     const showButtons = isActive && keypress["Space"];
     return(
-        <div style={{width:'100%', height:'100%'}}>
+        <div className="absolute" style={{width:'100%', height:'100%'}}>
             <Token tokenType="resource"  cardId={cardId} cardName={cardName} zIndex={zIndex} left={"10%"} top={"0%"}  showButtons={showButtons} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
             <Token tokenType="progress"  cardId={cardId} cardName={cardName} zIndex={zIndex} left={"10%"} top={"25%"} showButtons={showButtons} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
             <Token tokenType="damage"    cardId={cardId} cardName={cardName} zIndex={zIndex} left={"10%"} top={"50%"} showButtons={showButtons} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>

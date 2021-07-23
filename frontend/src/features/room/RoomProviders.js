@@ -5,6 +5,8 @@ import {KeypressProvider} from '../../contexts/KeypressContext';
 import {ActiveCardProvider} from '../../contexts/ActiveCardContext';
 import {DropdownMenuProvider} from '../../contexts/DropdownMenuContext';
 import {MousePositionProvider} from '../../contexts/MousePositionContext';
+import {TouchModeProvider} from '../../contexts/TouchModeContext';
+import {TouchActionProvider} from '../../contexts/TouchActionContext';
 import { GetPlayerN } from "./Helpers";
 import useProfile from "../../hooks/useProfile";
 
@@ -25,14 +27,18 @@ export const RoomProviders = ({ gameBroadcast, chatBroadcast }) => {
           backgroundPositionY: "50%",
         }}
       >
-          <KeypressProvider value={{Shift: false}}>
-            <MousePositionProvider value={null}>
-              <DropdownMenuProvider value={null}>
-                <ActiveCardProvider value={null}>
-                  <RoomGame playerN={playerN} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
-                </ActiveCardProvider>
-              </DropdownMenuProvider>
-            </MousePositionProvider>
+          <KeypressProvider value={{}}>
+            <TouchModeProvider value={true}>
+              <TouchActionProvider value={null}>
+                <MousePositionProvider value={null}>
+                  <DropdownMenuProvider value={null}>
+                    <ActiveCardProvider value={null}>
+                      <RoomGame playerN={playerN} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
+                    </ActiveCardProvider>
+                  </DropdownMenuProvider>
+                </MousePositionProvider>
+              </TouchActionProvider>
+            </TouchModeProvider>
           </KeypressProvider>
       </div>
   );

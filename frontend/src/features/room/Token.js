@@ -77,7 +77,7 @@ export const Token = React.memo(({
                 height: `25%`,
                 width: `35%`,
                 alignItems: "center",
-                zIndex: showButtons ? zIndex + 1 : zIndex,
+                zIndex: showButtons ? zIndex + 1 : "",
                 display: showButtons || amount!==0 ? "block" : "none",
             }}
         >

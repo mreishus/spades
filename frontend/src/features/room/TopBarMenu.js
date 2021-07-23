@@ -8,6 +8,7 @@ import { setGame } from "./gameUiSlice";
 import { processLoadList, processPostLoad } from "./Helpers";
 import { cardDB } from "../../cardDB/cardDB";
 import { loadDeckFromXmlText, getRandomIntInclusive } from "./Helpers";
+import { useSetTouchMode } from "../../contexts/TouchModeContext";
 
 
 export const TopBarMenu = React.memo(({
@@ -19,6 +20,7 @@ export const TopBarMenu = React.memo(({
   const myUser = useProfile();
   const myUserID = myUser?.id;
   const history = useHistory();
+  const setTouchMode = useSetTouchMode();
 
   const createdByStore = state => state.gameUi?.created_by;
   const createdBy = useSelector(createdByStore);
@@ -231,6 +233,13 @@ export const TopBarMenu = React.memo(({
             </ul>
           </li>                
         }
+        <li key={"touch_mode"}>
+          <a href="#">Touch mode</a>
+          <ul className="third-level-menu">
+              <li key={"touch_enabled"}><a onClick={() => setTouchMode(true)} href="#">Enable</a></li>
+              <li key={"touch_disabled"}><a onClick={() => setTouchMode(false)} href="#">Disable</a></li>
+          </ul>
+        </li> 
         <li key={"load"}>
           <a href="#">Load</a>
           <ul className="third-level-menu">

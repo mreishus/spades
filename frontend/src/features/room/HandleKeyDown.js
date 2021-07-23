@@ -15,9 +15,33 @@ import {
     processTokenType,
     tokenPrintName,
 } from "./Helpers";
+import { gameAction } from "./Actions";
 import { get } from "https";
 
 // const keyTokenMap: { [id: string] : Array<string | number>; } = {
+const keyGameActionMap = {
+    "d": "draw",
+    "e": "reveal",
+    "E": "reveal_facedown",
+    "k": "reveal_second",
+    "K": "reveal_second_facedown",
+    "R": "refresh",
+    "N": "new_round",
+    "P": "save",
+    "S": "shadows",
+    "X": "discard_shadows",
+    "ArrowLeft": "undo",
+    "ArrowRight": "redo",
+    "ArrowDown": "next_step",
+    "M": "mulligan",
+    "Escape": "remove_targets",
+}
+
+const shiftKeyGameActionMap = {
+    "LeftArrow": "undo_many",
+    "RightArrow": "redo_many",
+}
+
 const keyTokenMap = {
   "1": ["resource",1],
   "2": ["progress",1],
@@ -117,280 +141,11 @@ export const HandleKeyDown = ({
         //else setKeypress({"Control": false});
 
         const isHost = playerN === leftmostNonEliminatedPlayerN(gameUi);
-
-        const hotkeyRefresh = () => {
-            if (game.playerData[playerN].refreshed) {
-                chatBroadcast("game_update", {message: "tried to refresh, but they already refreshed this round."})
-                return;
-            }
-            // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
-            // This prevents, for example, the token moving multiple times if players refresh at different times.
-            if (isHost) {
-                // Set phase
-                gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "7.R"], ["game", "phase", "Refresh"]]}});
-                chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("7.R")+"."})
-                const firstPlayerN = game.firstPlayer;
-                const nextPlayerN = getNextPlayerN(gameUi, firstPlayerN);
-                // If nextPlayerN is null then it's a solo game, so don't pass the token
-                if (nextPlayerN) {
-                    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","firstPlayer", nextPlayerN]]}});    
-                    chatBroadcast("game_update",{message: "moved first player token to "+nextPlayerN+"."});
-                }
-            }
-            // Refresh all cards you control
-            chatBroadcast("game_update",{message: "refreshes."});
-            gameBroadcast("game_action", {
-                action: "action_on_matching_cards", 
-                options: {
-                    criteria:[["controller", playerN], ["locked", false]], 
-                    action: "update_card_values", 
-                    options: {updates: [["exhausted", false], ["rotation", 0]]}
-                }
-            });
-            // Raise your threat
-            const newThreat = game.playerData[playerN].threat+1;
-            chatBroadcast("game_update", {message: "raises threat by 1 ("+newThreat+")."});
-            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat], ["game", "playerData", playerN, "refreshed", true]]}});
-        }
-
-        const hotkeyNewRound = () => {
-            // Check if refresh is needed
-            if (!game.playerData[playerN].refreshed) hotkeyRefresh();
-
-            // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
-            // This prevents, for example, the round number increasing multiple times.
-            if (isHost) {
-                // Update phase
-                gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "phase", "Resource"], ["game", "roundStep", "1.R"]]}})
-                chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("1.R")+"."})
-                // Update round number
-                const roundNumber = gameUi["game"]["roundNumber"];
-                const newRoundNumber = parseInt(roundNumber) + 1;
-                gameBroadcast("game_action", {action: "update_values", options:{updates:[["game", "roundNumber", newRoundNumber]]}})
-                chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
-            }
-            // Draw a card
-            for (var i = 0; i < game.playerData[playerN].cardsDrawn; i++) {
-                gameBroadcast("game_action", {action: "draw_card", options: {player_n: playerN}})
-                chatBroadcast("game_update",{message: "drew a card."});
-            }
-            // Add a resource to each hero
-            gameBroadcast("game_action", {
-                action: "action_on_matching_cards", 
-                options: {
-                    criteria:[["sides","sideUp","type","Hero"],["controller",playerN], ["groupType","play"]], 
-                    action: "increment_token", 
-                    options: {token_type: "resource", increment: 1}
-                }
-            });
-            // Reset willpower count and refresh status
-            gameBroadcast("game_action", {action: "update_values", options:{updates:[["game", "playerData", playerN, "willpower", 0], ["game", "playerData", playerN, "refreshed", false]]}})
-            // Add custom set tokens per round
-            gameBroadcast("game_action", {
-                action: "action_on_matching_cards", 
-                options: {
-                    criteria:[["controller",playerN], ["groupType","play"]], 
-                    action: "apply_tokens_per_round", 
-                    options: {}
-                }
-            });
-            // Uncommit all characters to the quest
-            gameBroadcast("game_action", {
-                action: "action_on_matching_cards", 
-                options: {
-                    criteria:[["controller", playerN]], 
-                    action: "update_card_values", 
-                    options: {updates: [["committed", false]]}
-                }
-            });
-            // Save replay
-            gameBroadcast("game_action", {action: "save_replay", options: {}});
-            chatBroadcast("game_update",{message: "saved the replay to their profile."});
-            // Check for alerts
-            checkAlerts();
-        }
+        const props = {gameUi, playerN, gameBroadcast, chatBroadcast, setActiveCardAndLoc};
 
         // General hotkeys
-        if (k === "e" || k === "E") {
-            // Check remaining cards in encounter deck
-            const encounterStackIds = game.groupById.sharedEncounterDeck.stackIds;
-            const encounterDiscardStackIds = game.groupById.sharedEncounterDiscard.stackIds;
-            const stacksLeft = encounterStackIds.length;
-            // If no cards, check phase of game
-            if (stacksLeft === 0) {
-                // If quest phase, shuffle encounter discard pile into deck
-                if (game.phase === "Quest") {
-                    gameBroadcast("game_action",{action:"move_stacks", options:{orig_group_id: "sharedEncounterDiscard", dest_group_id: "sharedEncounterDeck", top_n: encounterDiscardStackIds.length, position: "s"}});
-                    chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["sharedEncounterDiscard"].name+" into "+GROUPSINFO["sharedEncounterDeck"].name+"."});
-                    return;
-                } else {
-                    // If not quest phase, give error message and break
-                    chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty and it's not the quest phase."});
-                    return;
-                }
-            }
-            // Reveal card
-            const topStackId = encounterStackIds[0];
-            if (!topStackId) {
-                chatBroadcast("game_update",{message: " tried to reveal a card, but the encounter deck is empty."});
-                return;
-            }
-            const topStack = game.stackById[topStackId];
-            const topCardId = topStack["cardIds"][0];
-            const topCard = game.cardById[topCardId];
-            // Was shift held down? (Deal card facedown)
-            const shiftHeld = (k === "E"); // keypress[0] === "Shift";
-            const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
-            chatBroadcast("game_update",{message: message});
-            gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
-        } else if (k === "k" || k === "K") {
-            // Check remaining cards in encounter deck
-            const encounterStackIds = game.groupById.sharedEncounterDeck2.stackIds;
-            const encounterDiscardStackIds = game.groupById.sharedEncounterDiscard2.stackIds;
-            const stacksLeft = encounterStackIds.length;
-            // If no cards, check phase of game
-            if (stacksLeft === 0) {
-                // If quest phase, shuffle encounter discard pile into deck
-                if (game.phase === "Quest") {
-                    gameBroadcast("game_action",{action:"move_stacks", options:{orig_group_id: "sharedEncounterDiscard2", dest_group_id: "sharedEncounterDeck2", top_n: encounterDiscardStackIds.length, position: "s"}});
-                    chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO["sharedEncounterDiscard2"].name+" into "+GROUPSINFO["sharedEncounterDeck2"].name+"."});
-                    return;
-                } else {
-                    // If not quest phase, give error message and break
-                    chatBroadcast("game_update",{message: " tried to reveal a card from the second encounter deck, but the second encounter deck is empty and it's not the quest phase."});
-                    return;
-                }
-            }
-            // Reveal card
-            const topStackId = encounterStackIds[0];
-            if (!topStackId) {
-                chatBroadcast("game_update",{message: " tried to reveal a card from the second encounter deck, but second the encounter deck is empty."});
-                return;
-            }
-            const topStack = game.stackById[topStackId];
-            const topCardId = topStack["cardIds"][0];
-            const topCard = game.cardById[topCardId];
-            // Was shift held down? (Deal card facedown)
-            const shiftHeld = (k === "K"); // keypress[0] === "Shift";
-            const message = shiftHeld ? "added facedown "+getDisplayName(topCard)+" to the staging area from the second encounter deck." : "revealed "+getDisplayNameFlipped(topCard)+" from the second encounter deck."
-            chatBroadcast("game_update",{message: message});
-            gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: shiftHeld}})
-        } else if (k === "d") {
-            // Check remaining cards in deck
-            const playerDeck = game.groupById[playerN+"Deck"];
-            const deckStackIds = playerDeck["stackIds"];
-            const stacksLeft = deckStackIds.length;
-            // If no cards, give error message and break
-            if (stacksLeft === 0) {
-                chatBroadcast("game_update",{message: " tried to draw a card, but their deck is empty."});
-                return;
-            }
-            // const playerHand = game.groupById[playerN+"Hand"];
-            // const handStackIds = playerHand.stackIds;
-            // const topStackId = deckStackIds[0];
-            // const topCardId = game.stackById[topStackId].cardIds[0];
-            // const newHandStackIds = handStackIds.concat(topStackId);
-            // const updates = [
-            //     ["game","groupById",playerN+"Hand","stackIds",newHandStackIds],
-            //     ["game","cardById",topCardId,"currentSide","A"]
-            // ];
-            // dispatch(setValues({updates: updates}))
-            // Draw card
-            chatBroadcast("game_update",{message: "drew a card."});
-            gameBroadcast("game_action",{action: "draw_card", options: {player_n: playerN}});
-            // Save replay
-        } else if (k === "P") {
-            gameBroadcast("game_action", {action: "save_replay", options: {}});
-            chatBroadcast("game_update", {message: "saved the replay to their profile."});
-        } else if (k === "S") {
-            // Deal all shadow cards
-            // Set phase
-            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.2"], ["game", "phase", "Combat"]]}});
-            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("6.2")+"."});
-            gameBroadcast("game_action", {action: "deal_all_shadows", options: {}});
-        } else if (k === "X") {
-            // Discard all shadow cards
-            // Set phase
-            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "6.11"], ["game", "phase", "Combat"]]}});
-            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("6.11")+"."});
-
-            gameBroadcast("game_action", {
-                action: "action_on_matching_cards", 
-                options: {
-                    criteria:[["rotation", -30]], 
-                    action: "discard_card", 
-                    options: {}
-                }
-            });
-            chatBroadcast("game_update", {message: "discarded all shadow cards."});
-            
-        } else if (k === "ArrowLeft") {
-            // Undo an action
-            if (game.replayStep <= 0) {
-                chatBroadcast("game_update", {message: "tried to undo an action, but no previous actions exist."});
-            } else {
-                if (keypress["Shift"]) {
-                    gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "undo"}});
-                    chatBroadcast("game_update", {message: "rewinds a round."});
-                } else {
-                    gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "undo"}});
-                    chatBroadcast("game_update", {message: "pressed undo."});
-                }
-            }
-            // Clear GiantCard
-            setActiveCardAndLoc(null);
-        } else if (k === "ArrowRight") {
-            // Redo an action
-            if (game.replayStep >= game.replayLength) {
-                chatBroadcast("game_update", {message: "tried to redo an action, but the game is current."});
-            } else {
-                if (keypress["Shift"]) {
-                    gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "redo"}});
-                    chatBroadcast("game_update", {message: "fast-forwards a round."});
-                } else {
-                    gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "redo"}});
-                    chatBroadcast("game_update", {message: "pressed redo."});
-                }
-            }
-            // Clear GiantCard
-            setActiveCardAndLoc(null);
-        } else if (k === "ArrowDown") {
-            // Next phase
-            const nextStepPhase = nextRoundStepPhase(game.roundStep);
-            if (nextStepPhase) {
-                gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", nextStepPhase["roundStep"]], ["game", "phase", nextStepPhase["phase"]]]}});
-                chatBroadcast("game_update", {message: "set the round step to "+roundStepToText(nextStepPhase["roundStep"])+"."});
-            }
-        } else if (k === "R") {
-            hotkeyRefresh();
-        } else if (k === "N") {
-            hotkeyNewRound();
-        } else if (k === "M") {
-            if (window.confirm('Shuffle hand in deck and redraw equal number?')) {
-                const hand = game.groupById[playerN+"Hand"];
-                const handSize = hand.stackIds.length;
-                gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Hand", dest_group_id: playerN+"Deck", top_n: handSize, position: "shuffle"}})
-                gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: playerN+"Deck", dest_group_id: playerN+"Hand", top_n: handSize, position: "top"}})
-                chatBroadcast("game_update", {message: "shuffled "+handSize+" cards into their deck and redrew an equal number."})
-            }
-        } else if (k === "Escape") {
-            // Remove targets from all cards you targeted
-            chatBroadcast("game_update",{message: "removes all targets."});
-            gameBroadcast("game_action", {
-                action: "action_on_matching_cards", 
-                options: {
-                    criteria:[["targeting", playerN, true]], 
-                    action: "update_card_values", 
-                    options: {updates: [["targeting", playerN, false]]}
-                }
-            });
-            gameBroadcast("game_action", {
-                action: "update_values", 
-                options: {
-                    updates:[["game", "playerData", playerN, "arrows", []]], 
-                }
-            });
-        }
+        if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], props);
+        else if (Object.keys(keyGameActionMap).includes(k)) gameAction(keyGameActionMap[k], props);
 
         // Card specific hotkeys
         if (activeCardAndLoc && activeCardAndLoc.card) {  
@@ -409,7 +164,7 @@ export const HandleKeyDown = ({
             const stackId = group.stackIds[stackIndex];
 
             // Increment token 
-            if (keyTokenMap[k] !== undefined && groupType === "play") {
+            if (keyTokenMap[k] !== undefined) {
                 var tokenType = keyTokenMap[k][0];
                 tokenType = processTokenType(tokenType, activeCard);
                 // Check if mouse is hoving over top half or bottom half of card

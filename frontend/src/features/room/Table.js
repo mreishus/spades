@@ -11,7 +11,9 @@ import { Hotkeys } from "./Hotkeys";
 import { PlayersInRoom } from "./PlayersInRoom";
 import { DropdownMenu } from "./DropdownMenu";
 import { OnLoad } from "./OnLoad";
+import { TouchBarBottom } from "./TouchBarBottom";
 import { useKeypress } from "../../contexts/KeypressContext";
+import { useTouchMode } from "../../contexts/TouchModeContext";
 
 import "../../css/custom-dropdown.css";
 
@@ -37,6 +39,7 @@ export const Table = React.memo(({
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
   const setMousePosition = useSetMousePosition();
   const keypress = useKeypress();
+  const touchMode = useTouchMode();
 
   const handleBrowseSelect = (groupId) => {
     setBrowseGroupId(groupId);
@@ -93,7 +96,7 @@ export const Table = React.memo(({
             />
           </div>
           {/* Table */}
-          <div className="relative" style={{height: "94%"}}>
+          <div className="relative" style={{height: touchMode ? "82%" : "94%"}}>
             {/* <div className="h-full" style={{width: "90%"}}> */}
               <TableLayout
                 observingPlayerN={observingPlayerN}
@@ -109,6 +112,10 @@ export const Table = React.memo(({
               />
             {/* </div> */}
           </div>
+          {/* Table */}
+          {touchMode && <div className="relative bg-red-500" style={{height: "12%"}}>
+              <TouchBarBottom/>
+          </div>}
         </div>
       </div>
       {/* Card hover view */}

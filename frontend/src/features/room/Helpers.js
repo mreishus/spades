@@ -1,5 +1,6 @@
 import { cardDB } from "../../cardDB/cardDB";
 import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
+import axios from "axios";
 
 export const getCurrentFace = (card) => {
   if (!card?.currentSide) return null;
@@ -559,3 +560,9 @@ export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadca
   })
 }
 
+export const checkAlerts = async () => {
+  const res = await axios.get("/be/api/v1/alerts");
+  if (res.data && res.data.message) {
+      alert(res.data.message + " Time remaining: "+res.data.minutes_remaining + " minutes");
+  }
+}

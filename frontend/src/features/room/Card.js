@@ -3,7 +3,8 @@ import { useSelector } from 'react-redux';
 import { Tokens } from './Tokens';
 import { GROUPSINFO } from "./Constants";
 import useProfile from "../../hooks/useProfile";
-import { CardMouseRegion } from "./CardMouseRegion"
+import { CardMouseRegion } from "./CardMouseRegion";
+import { CardTapRegion } from "./CardTapRegion";
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,6 +12,10 @@ import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getV
 import { Target } from "./Target";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import useLongPress from "../../hooks/useLongPress";
+import { useTouchMode } from "../../contexts/TouchModeContext";
+import { useTouchAction } from "../../contexts/TouchActionContext";
+
+var clickTimeout;
 
 export const Card = React.memo(({
     cardId,
@@ -36,23 +41,15 @@ export const Card = React.memo(({
     const setDropdownMenu = useSetDropdownMenu();
     const [isActive, setIsActive] = useState(false);
     const displayName = getDisplayName(card);
+    const touchMode = useTouchMode();
+    const recentClick = useState(false);
+    const touchAction = useTouchAction();
 
     const onLongPress = () => {
         console.log(card);
     };
 
-    const handleClick = () => {
-        console.log(card);
-        const dropdownMenu = {
-            type: "card",
-            card: card,
-            title: displayName,
-            cardIndex: cardIndex,
-            groupId: groupId,
-            groupType: groupType,
-        }
-        if (playerN) setDropdownMenu(dropdownMenu);
-    }
+
 
     const defaultOptions = {
         shouldPreventDefault: true,
@@ -109,21 +106,15 @@ export const Card = React.memo(({
                         OTransitionProperty: "-o-transform",
                         transitionProperty: "transform",
                     }}
-                    onClick={handleClick}
-                    onMouseLeave={event => handleMouseLeave(event)}
+                    onMouseLeave={handleMouseLeave}
+                    //onClick={handleClick}
+                    // onDoubleClick={handleDoubleClick}
+                    //onTouchStart={handleClick}
                 >
                     {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute top-0 right-0 text-2xl" icon={faEye}/>:null}
                     <Target
                         cardId={cardId}
                         cardSize={cardSize}
-                    />
-                    <Tokens
-                        cardName={currentFace.name}
-                        cardId={card.id}
-                        isActive={isActive}
-                        gameBroadcast={gameBroadcast}
-                        chatBroadcast={chatBroadcast}
-                        zIndex={zIndex}
                     />
                     <CardMouseRegion 
                         position={"top"}
@@ -131,12 +122,43 @@ export const Card = React.memo(({
                         card={card}
                         setIsActive={setIsActive}
                         zIndex={zIndex}
+                        cardIndex={cardIndex}
+                        groupId={groupId}
+                        groupType={groupType}
+                        playerN={playerN}
+                        gameBroadcast={gameBroadcast}
+                        chatBroadcast={chatBroadcast}
                     />
                     <CardMouseRegion 
                         position={"bottom"}
                         top={"50%"}
                         card={card}
                         setIsActive={setIsActive}
+                        zIndex={zIndex}
+                        cardIndex={cardIndex}
+                        groupId={groupId}
+                        groupType={groupType}
+                        playerN={playerN}
+                        gameBroadcast={gameBroadcast}
+                        chatBroadcast={chatBroadcast}
+                    />
+                    {/* <CardTapRegion 
+                        card={card}
+                        playerN={playerN}
+                        setIsActive={setIsActive}
+                        zIndex={zIndex}
+                        cardIndex={cardIndex}
+                        groupId={groupId}
+                        groupType={groupType}
+                        gameBroadcast={gameBroadcast}
+                        chatBroadcast={chatBroadcast}
+                    /> */}
+                    <Tokens
+                        cardName={currentFace.name}
+                        cardId={card.id}
+                        isActive={isActive}
+                        gameBroadcast={gameBroadcast}
+                        chatBroadcast={chatBroadcast}
                         zIndex={zIndex}
                     />
                     <div 
