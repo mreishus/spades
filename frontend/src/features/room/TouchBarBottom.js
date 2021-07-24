@@ -14,7 +14,8 @@ export const TouchButton = React.memo(({
     touchAction?.action === "increment_token" && 
     (touchAction?.options.tokenType !== action.options.tokenType)
   ) selected = false;
-  const bgColor = selected ? " bg-red-700" : " bg-gray-600";
+  var bgColor = selected ? " bg-green-700" : " bg-gray-600";
+  if (selected && touchAction?.options?.increment === -1) bgColor = " bg-red-700"
   const hoverColor = selected ? "" : " hover:bg-gray-500"
   const handleClick = () => {
     if (selected) {
@@ -45,15 +46,21 @@ export const TouchButton = React.memo(({
 
 export const TouchBarBottom = React.memo(({}) => {
   const iconImg = (tokenType) => {
+    var transform = `translate(0%, 0%)`;
+    if (tokenType === "willpower") transform = `translate(-25%, 0%)`;
+    if (tokenType === "threat") transform = `translate(25%, 0%)`;
+
     return(
-      <img className="relative text-center pointer-events-none m-auto h-6" style={{opacity:"50%"}} src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}/>
+      <div className={"absolute flex pointer-events-none h-full w-full top-0 items-center justify-center"}>
+        <img className="" style={{opacity:"50%", height: "30px", width: "30px", transform: transform}} src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}/>
+      </div>
     )
   }
   const containerClass = "relative text-center";
   const containerStyle = {};
   
   return (
-    <table className="table-fixed w-full h-full text-white text-xs">
+    <table className="table-fixed w-full h-full text-white text-xs select-none">
       <tr className={"bg-gray-700"} style={{height: "50%", maxHeight: "50%"}}>
         <td className={containerClass} style={containerStyle}>
           <TouchButton
@@ -89,7 +96,7 @@ export const TouchBarBottom = React.memo(({}) => {
           )
         })}
       </tr>
-      <tr className={"bg-gray-700"} style={{height: "50%"}}>
+      <tr className={"bg-gray-700"} style={{height: "50%", maxHeight: "50%"}}>
         {[["Draw", "draw"], 
           ["Reveal", "reveal"], 
           ["Reveal #2", "reveal_from_second"], 
