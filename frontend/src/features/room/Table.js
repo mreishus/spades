@@ -113,7 +113,7 @@ export const Table = React.memo(({
             {/* </div> */}
           </div>
           {/* Table */}
-          {touchMode && <div className="relative bg-red-500" style={{height: "12%"}}>
+          {touchMode && <div className="relative bg-gray-700" style={{height: "12%"}}>
               <TouchBarBottom/>
           </div>}
         </div>

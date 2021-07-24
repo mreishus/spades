@@ -67,8 +67,7 @@ export const DropdownMenuCard = React.memo(({
       >
         <div className="menu-title">{dropdownMenu.title}</div>
 
-        <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "main"}>
+        {activeMenu === "main" &&
         <div className="menu">
           {menuCardIndex>0 ? <DropdownItem action="detach" clickCallback={handleDropdownClick}>Detach</DropdownItem> : null}
           {(visibleSide === "B" && !menuCard?.peeking[playerN]) ? <DropdownItem action="peek" clickCallback={handleDropdownClick}>Peek</DropdownItem> : null}
@@ -103,11 +102,9 @@ export const DropdownMenuCard = React.memo(({
               clickCallback={handleDropdownClick}>
               Set rotation
             </DropdownItem>}
-        </div>
-      </CSSTransition>
-
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveTo"}>
+        </div>}
+        
+        {activeMenu === "moveTo" &&
         <div className="menu">
           <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
           <DropdownItem
@@ -136,21 +133,15 @@ export const DropdownMenuCard = React.memo(({
             clickCallback={handleDropdownClick}>
             Set Aside
           </DropdownItem>
-        </div>
-      </CSSTransition>
+        </div>}
 
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveToEncounter"}>
-        <DropdownMoveTo destGroupId="sharedEncounterDeck"/>
-      </CSSTransition>
+        {activeMenu === "moveToEncounter" &&
+        <DropdownMoveTo destGroupId="sharedEncounterDeck"/>}
 
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveToOwner"}>
-        <DropdownMoveTo destGroupId={playerN+"Deck"}/>
-      </CSSTransition>
+        {activeMenu === "moveToOwner" &&
+        <DropdownMoveTo destGroupId={playerN+"Deck"}/>}
 
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "perRound"}>
+        {activeMenu === "perRound" &&
         <div className="menu">
           <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
           {["resource", "progress", "damage"].map((tokenType, _tokenIndex) => (
@@ -162,12 +153,11 @@ export const DropdownMenuCard = React.memo(({
               {tokenTitleName(tokenType)}
             </DropdownItem>
           ))}
-        </div>
-      </CSSTransition>
+        </div>}
 
-      {["resource", "progress", "damage"].map((tokenType, _tokenIndex) => (
-        <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-        in={activeMenu === tokenType+"PerRound"}>
+      {["resource", "progress", "damage"].map((tokenType, _tokenIndex) => {
+        const visible = activeMenu === tokenType+"PerRound";
+        if (visible) return(
           <div className="menu">
             <GoBack goToMenu="perRound" clickCallback={handleDropdownClick}/>
             {[-3,-2,-1,0,1,2,3].map((increment, _tokenIndex) => (
@@ -180,12 +170,10 @@ export const DropdownMenuCard = React.memo(({
                 {increment}
               </DropdownItem>
             ))}
-          </div>
-        </CSSTransition>
-      ))}
+          </div>)
+        })}
 
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "toggleTrigger"}>
+        {activeMenu === "toggleTrigger" &&
         <div className="menu">
           <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
           {PHASEINFO.map((phase, _phaseIndex) => (
@@ -196,12 +184,13 @@ export const DropdownMenuCard = React.memo(({
               {phase.name}
             </DropdownItem>
           ))}
-        </div>
-      </CSSTransition>
+        </div>}
 
-      {PHASEINFO.map((phase, _phaseIndex) => (
-        <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-        in={activeMenu === phase.name+"ToggleTrigger"}>
+      {PHASEINFO.map((phase, _phaseIndex) => {
+        const visible = activeMenu === phase.name+"ToggleTrigger"
+        if (visible) return(
+        // <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
+        // in={activeMenu === phase.name+"ToggleTrigger"}>
           <div className="menu">
             <GoBack goToMenu="toggleTrigger" clickCallback={handleDropdownClick}/>
             {phase.steps.map((step, _stepIndex) => (
@@ -213,12 +202,11 @@ export const DropdownMenuCard = React.memo(({
                 <div className="text-xs">{step.text}</div>
               </DropdownItem>
             ))}
-          </div>
-        </CSSTransition>
-      ))}
+          </div>)
+      })}
 
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "setRotation"}>
+
+      {activeMenu === "setRotation" &&
         <div className="menu">
           <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
           {[0, 90, 180, 270].map((rot, _rotIndex) => (
@@ -230,8 +218,7 @@ export const DropdownMenuCard = React.memo(({
               {rot}
             </DropdownItem>
           ))}
-        </div>
-      </CSSTransition>
+        </div>}
 
     </div>
   );

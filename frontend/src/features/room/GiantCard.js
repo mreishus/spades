@@ -1,15 +1,17 @@
 import React from "react";
 import { useActiveCard } from "../../contexts/ActiveCardContext";
+import { useTouchAction } from "../../contexts/TouchActionContext";
 import { getVisibleFace, getVisibleFaceSRC } from "./Helpers";
 import useProfile from "../../hooks/useProfile";
 
-export const GiantCard = ({playerN}) => {
+export const GiantCard = React.memo(({playerN}) => {
   console.log("Rendering GiantCard");
   const user = useProfile();
+  const touchAction = useTouchAction();
   const activeCardAndLoc = useActiveCard();
   const activeCard = activeCardAndLoc?.card
   const visibleFace = getVisibleFace(activeCard, playerN)
-  if (activeCard) {
+  if (activeCard && !touchAction) {
     return (
       <img 
         className="absolute"
@@ -30,6 +32,6 @@ export const GiantCard = ({playerN}) => {
   } else {
     return(null)
   }
-}
+})
 
 export default GiantCard;

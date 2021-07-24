@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import { HandleKeyDown } from "./HandleKeyDown";
 import { DragContainer } from "./DragContainer";
-import { HandleTouchButtonGame } from "./HandleTouchButtonGame";
+import { HandleTouchActions } from "./HandleTouchActions";
 
 const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
   console.log('Rendering RoomGame');
@@ -36,7 +36,7 @@ const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
       />      
-      <HandleTouchButtonGame
+      <HandleTouchActions
         playerN={playerN}
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}

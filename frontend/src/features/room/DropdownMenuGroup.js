@@ -62,8 +62,7 @@ export const DropdownMenuGroup = React.memo(({
       >
         <div className="menu-title">{dropdownMenu.title}</div>
 
-        <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "main"}>
+        {activeMenu === "main" &&
         <div className="menu">
           <DropdownItem action="shuffle" clickCallback={handleDropdownClick}>Shuffle</DropdownItem>
           {menuGroup.id === playerN+"Hand" ? <DropdownItem action="makeVisible" clickCallback={handleDropdownClick}>Make visible/hidden</DropdownItem> : null}
@@ -83,11 +82,9 @@ export const DropdownMenuGroup = React.memo(({
             clickCallback={handleDropdownClick}>
             More
           </DropdownItem>
-        </div>
-      </CSSTransition>
+        </div>}
 
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveTo"}>
+        {activeMenu === "moveTo" &&
         <div className="menu">
           <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
           <DropdownItem
@@ -114,38 +111,21 @@ export const DropdownMenuGroup = React.memo(({
             clickCallback={handleDropdownClick}>
             Encounter Deck 3
           </DropdownItem>
-        </div>
-      </CSSTransition>
-
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveToMy"}>
-        <DropdownMoveTo destGroupId={playerN+"Deck"}/>
-      </CSSTransition>
-
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveToEncounter1"}>
-        <DropdownMoveTo destGroupId="sharedEncounterDeck"/>
-      </CSSTransition>
-
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveToEncounter2"}>
-        <DropdownMoveTo destGroupId="sharedEncounterDeck2"/>
-      </CSSTransition>
-
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "moveToEncounter3"}>
-        <DropdownMoveTo destGroupId="sharedEncounterDeck3"/>
-      </CSSTransition>
-
-      <CSSTransition onEnter={calcHeight} timeout={500} classNames="menu-primary" unmountOnExit
-          in={activeMenu === "more"}>
+        </div>}
+        {activeMenu === "moveToMy" &&
+        <DropdownMoveTo destGroupId={playerN+"Deck"}/>}
+        {activeMenu === "moveToEncounter1" &&
+        <DropdownMoveTo destGroupId="sharedEncounterDeck"/>}
+        {activeMenu === "moveToEncounter2" &&
+        <DropdownMoveTo destGroupId="sharedEncounterDeck2"/>}
+        {activeMenu === "moveToEncounter3" &&
+        <DropdownMoveTo destGroupId="sharedEncounterDeck3"/>}
+        {activeMenu === "more" &&
         <div className="menu">
           <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
           <DropdownItem action="lookAt" topN="X" clickCallback={handleDropdownClick}>Look at top X</DropdownItem>
           <DropdownItem action="dealX" side="B" clickCallback={handleDropdownClick}>Deal top X facedown</DropdownItem>
-        </div>
-      </CSSTransition>
-      
+        </div>}
     </div>
   );
 })

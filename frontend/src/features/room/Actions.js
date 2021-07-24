@@ -11,6 +11,7 @@ import {
   tokenPrintName,
   checkAlerts,
 } from "./Helpers";
+import { setValues } from "./gameUiSlice";
 import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStepPhase } from "./Constants";
 
 const reveal = (game, deckGroupId, discardGroupId, gameBroadcast, chatBroadcast, facedown) => {
@@ -46,7 +47,7 @@ const reveal = (game, deckGroupId, discardGroupId, gameBroadcast, chatBroadcast,
 }
 
 export const gameAction = (action, props) => {
-    const {gameUi, playerN, gameBroadcast, chatBroadcast, setActiveCardAndLoc} = props;
+    const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;
     if (!gameUi || !playerN) return;
     const game = gameUi.game;
     const isHost = playerN === leftmostNonEliminatedPlayerN(gameUi);
@@ -294,6 +295,240 @@ export const gameAction = (action, props) => {
             }
         });
     }
+}
 
 
+export const cardAction = (action, props) => {
+    const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;
+    if (!gameUi || !playerN || !activeCardAndLoc || !activeCardAndLoc.card) return;
+    const game = gameUi.game;
+    const isHost = playerN === leftmostNonEliminatedPlayerN(gameUi);
+    const activeCardId = activeCardAndLoc.card.id; 
+    const activeCard = game.cardById[activeCardId];
+    if (!activeCard) return;
+    const activeCardFace = getCurrentFace(activeCard);
+    const displayName = getDisplayName(activeCard);
+    const tokens = activeCard.tokens;
+    const gsc = getGroupIdStackIndexCardIndex(game, activeCardId);
+    const groupId = gsc.groupId;
+    const stackIndex = gsc.stackIndex;
+    const cardIndex = gsc.cardIndex;
+    const group = game.groupById[groupId];
+    const groupType = group.type;
+    const stackId = group.stackIds[stackIndex];
+
+    // Set tokens to 0
+    if (action === "zero_tokens") {
+        var newTokens = tokens;
+        for (var tokenType in newTokens) {
+            if (newTokens.hasOwnProperty(tokenType)) {
+                newTokens = {...newTokens, [tokenType]: 0};
+                //newTokens[tokenType] = 0; 
+            }
+        }
+        const updates = [["game","cardById",activeCardId,"tokens", newTokens]];
+        dispatch(setValues({updates: updates}))
+        gameBroadcast("game_action", {action:"update_values", options:{updates: updates}});
+        chatBroadcast("game_update", {message: "cleared all tokens from "+displayName+"."});
+    }
+    // Exhaust card
+    else if (action === "toggle_exhaust" && groupType === "play") {
+        console.log("trace action toggle")
+        if (activeCardFace.type === "Location") {
+            chatBroadcast("game_update", {message: "made "+displayName+" the active location."});
+            gameBroadcast("game_action", {action: "move_stack", options: {stack_id: stackId, dest_group_id: "sharedActive", dest_stack_index: 0, combine: false, preserve_state: false}})
+        } else {
+            var values = [true, 90];
+            if (activeCard.exhausted) {
+                values = [false, 0];
+                chatBroadcast("game_update", {message: "readied "+displayName+"."});
+            } else {
+                chatBroadcast("game_update", {message: "exhausted "+displayName+"."});
+            }
+            const updates = [["game", "cardById", activeCardId, "exhausted", values[0]], ["game", "cardById", activeCardId, "rotation", values[1]]];
+            dispatch(setValues({updates: updates}));
+            gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+        }
+    }
+    // Flip card
+    else if (action === "flip") {
+        var newSide = "A";
+        if (activeCard["currentSide"] === "A") newSide = "B";
+        const updates = [["game","cardById",activeCardId,"currentSide", newSide]]
+        dispatch(setValues({updates: updates}))
+        gameBroadcast("game_action", {action: "flip_card", options:{card_id: activeCardId}});
+        if (displayName==="player card" || displayName==="encounter card") {
+            chatBroadcast("game_update", {message: "flipped "+getDisplayName(activeCard)+" faceup."});
+        } else {
+            chatBroadcast("game_update", {message: "flipped "+displayName+" over."});
+        }
+        // Force refresh of GiantCard
+        setActiveCardAndLoc({
+            ...activeCardAndLoc,
+            card: {
+                ...activeCardAndLoc.card,
+                currentSide: newSide
+            }
+        });
+    }
+    else if (action === "commit" || action === "commit_without_exhausting") {
+        const playerController = activeCard.controller;
+        if (playerController === "shared") return;
+        var questingStat = "willpower";
+        if (game.questMode === "Battle") questingStat = "attack";
+        if (game.questMode === "Siege")  questingStat = "defense";
+        // Commit to quest and exhaust
+        if (action === "commit" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"]) {
+            // const currentWillpower = game.playerData[playerN].willpower;
+            // const newWillpower = currentWillpower + getCardWillpower(activeCard);
+            const willpowerIncrement = activeCardFace[questingStat] + activeCard.tokens[questingStat];
+            const currentWillpower = game.playerData[playerController].willpower;
+            const newWillpower = currentWillpower + willpowerIncrement;
+            const updates = [
+                ["game", "cardById", activeCardId, "committed", true], 
+                ["game", "cardById", activeCardId, "exhausted", true], 
+                ["game", "cardById", activeCardId, "rotation", 90],
+                ["game", "playerData", playerController, "willpower", newWillpower],
+            ];
+            chatBroadcast("game_update", {message: "committed "+displayName+" to the quest."});
+            dispatch(setValues({updates: updates}));
+            gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+        }
+        // Commit to quest without exhausting
+        else if (action === "commit_without_exhausting" && groupType === "play" && !activeCard["committed"] && !activeCard["exhausted"]) {
+            const willpowerIncrement = activeCardFace[questingStat] + activeCard.tokens[questingStat];
+            const currentWillpower = game.playerData[playerController].willpower;
+            const newWillpower = currentWillpower + willpowerIncrement;
+            const updates = [["game", "cardById", activeCardId, "committed", true], ["game", "playerData", playerController, "willpower", newWillpower]];
+            chatBroadcast("game_update", {message: "committed "+displayName+" to the quest without exhausting."});
+            dispatch(setValues({updates: updates}));
+            gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+        }
+        // Uncommit to quest and ready
+        else if (action === "commit" && groupType === "play" && activeCard["committed"]) {
+            const willpowerIncrement = activeCardFace[questingStat] + activeCard.tokens[questingStat];
+            const currentWillpower = game.playerData[playerController].willpower;
+            const newWillpower = currentWillpower - willpowerIncrement;
+            const updates = [
+                ["game", "cardById", activeCardId, "committed", false], 
+                ["game", "cardById", activeCardId, "exhausted", false], 
+                ["game", "cardById", activeCardId, "rotation", 0],
+                ["game", "playerData", playerController, "willpower", newWillpower]
+            ];
+            chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
+            if (activeCard["exhausted"]) chatBroadcast("game_update", {message: "readied "+displayName+"."});
+            dispatch(setValues({updates: updates}));
+            gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+        }
+        // Uncommit to quest without readying
+        else if (action === "commit_without_exhausting" && groupType === "play" && activeCard["committed"]) {
+            const willpowerIncrement = activeCardFace[questingStat] + activeCard.tokens[questingStat];
+            const currentWillpower = game.playerData[playerController].willpower;
+            const newWillpower = currentWillpower - willpowerIncrement;
+            const updates = [["game", "cardById", activeCardId, "committed", false], ["game", "playerData", playerController, "willpower", newWillpower]];
+            chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
+            dispatch(setValues({updates: updates}));
+            gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+        }
+
+        if (isHost && game.roundStep !== "3.2") {            
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", "3.2"], ["game", "phase", "Quest"]]}});
+            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("3.2")+"."});
+        }
+    }
+    // Deal shadow card
+    else if (action === "deal_shadow" && groupType === "play") {
+        const encounterStackIds = game.groupById.sharedEncounterDeck.stackIds;
+        const stacksLeft = encounterStackIds.length;
+        // If no cards, check phase of game
+        if (stacksLeft === 0) {
+            chatBroadcast("game_update",{message: " tried to deal a shadow card, but the encounter deck is empty."});
+        } else {
+            gameBroadcast("game_action", {action: "deal_shadow", options:{card_id: activeCardId}});
+            chatBroadcast("game_update", {message: "dealt a shadow card to "+displayName+"."});
+        }
+    }
+    // Add target to card
+    else if (action === "target") {
+        const targetingPlayerN = activeCard.targeting[playerN];
+        var values = [true];
+        if (targetingPlayerN) {
+            values = [false]
+            chatBroadcast("game_update", {message: "removed target from "+displayName+"."});
+        } else {
+            values = [true]
+            chatBroadcast("game_update", {message: "targeted "+displayName+"."});
+        }
+        const updates = [["game", "cardById", activeCardId, "targeting", playerN, values[0]]];
+        dispatch(setValues({updates: updates}));
+        gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+    }
+    // Send to victory display
+    else if (action === "victory") {
+        chatBroadcast("game_update", {message: "added "+displayName+" to the victory display."});
+        gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: "sharedVictory", dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+        // Clear GiantCard
+        setActiveCardAndLoc(null);
+    }
+    // Send to appropriate discard pile
+    else if (action === "discard") {
+        // If card is the parent card of a stack, discard the whole stack
+        if (cardIndex === 0) {
+            const stack = getStackByCardId(game.stackById, activeCardId);
+            if (!stack) return;
+            const cardIds = stack.cardIds;
+            for (var cardId of cardIds) {
+                const cardi = game.cardById[cardId];
+                const discardGroupId = cardi["discardGroupId"];
+                chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+GROUPSINFO[discardGroupId].name+"."});
+                gameBroadcast("game_action", {action: "move_card", options: {card_id: cardId, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+            }
+        // If the card is a child card in a stack, just discard that card
+        } else {
+            const discardGroupId = activeCard["discardGroupId"]
+            chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupId].name+"."});
+            gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+        }
+        // If the card was a quest card, load the next quest card
+        if (activeCardFace.type === "Quest") {
+            const questDeckStackIds = game.groupById[activeCard.loadGroupId]?.stackIds;
+            if (questDeckStackIds?.length > 0) {
+                chatBroadcast("game_update", {message: "advanced the quest."});
+                gameBroadcast("game_action", {action: "move_stack", options: {stack_id: questDeckStackIds[0], dest_group_id: groupId, dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})
+            }
+        }
+        // Clear GiantCard
+        setActiveCardAndLoc(null);
+        //dispatch(setGame(game));
+    }
+    // Shufle card into owner's deck
+    else if (action === "shuffle_into_deck") {
+        // determine destination groupId
+        var destGroupId = "sharedEncounterDeck";
+        if (activeCard.owner === "player1") destGroupId = "player1Deck";
+        else if (activeCard.owner === "player2") destGroupId = "gPlayer2Deck";
+        else if (activeCard.owner === "player3") destGroupId = "gPlayer3Deck";
+        else if (activeCard.owner === "player4") destGroupId = "gPlayer4Deck";
+        gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+        gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: destGroupId}})
+        chatBroadcast("game_update", {message: "shuffled "+displayName+" from "+GROUPSINFO[groupId].name+" into "+GROUPSINFO[destGroupId].name+"."})
+        // Clear GiantCard
+        setActiveCardAndLoc(null);
+    }
+    // Draw an arrow
+    else if (action === "draw_arrow") {
+        // Determine if this is the start or end of the arrow
+        const drawingArrowFrom = keypress["w"];
+        if (drawingArrowFrom) {
+            const drawingArrowTo = activeCardId;
+            const oldArrows = game.playerData[playerN].arrows;
+            const newArrows = oldArrows.concat([[drawingArrowFrom, drawingArrowTo]]);
+            const updates = [["game", "playerData", playerN, "arrows", newArrows]];
+            dispatch(setValues({updates: updates}));
+            gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
+            setKeypress({"w": false});
+        } else {
+            setKeypress({"w": activeCardId});
+        }
+    }
 }

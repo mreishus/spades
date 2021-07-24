@@ -27,7 +27,7 @@ export const DropdownMenu = React.memo(({
   useEffect(() => {
 
     const handleClick = (event) => {
-      if (!isOpen) return;
+      if (!isOpen || dropdownMenu?.visible === false) return;
       // Menu is open
       if (!isHovering || playerN === null) {
         setIsOpen(false);
@@ -41,10 +41,12 @@ export const DropdownMenu = React.memo(({
     return () => {
       document.removeEventListener('mousedown', handleClick);
     }
-  }, [dropdownMenu, isHovering, touchAction, activeCard])
+  }, [dropdownMenu, isHovering, activeCard])
 
   if (!mousePosition) return null;
   if (!dropdownMenu) return null;
+  if (dropdownMenu.visible === false) return null;
+  if (touchAction) return null;
 
   if (!isOpen) {
     setMouseX(mousePosition.x);
