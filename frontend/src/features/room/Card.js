@@ -42,8 +42,6 @@ export const Card = React.memo(({
     const [isActive, setIsActive] = useState(false);
     const displayName = getDisplayName(card);
     const touchMode = useTouchMode();
-    const recentClick = useState(false);
-    const touchAction = useTouchAction();
 
     const onLongPress = () => {
         console.log(card);
@@ -106,7 +104,7 @@ export const Card = React.memo(({
                         OTransitionProperty: "-o-transform",
                         transitionProperty: "transform",
                     }}
-                    onMouseLeave={handleMouseLeave}
+                    onMouseLeave={event => !touchMode && handleMouseLeave(event)}
                     //onClick={handleClick}
                     // onDoubleClick={handleDoubleClick}
                     //onTouchStart={handleClick}

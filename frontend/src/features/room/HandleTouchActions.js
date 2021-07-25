@@ -48,7 +48,7 @@ export const HandleTouchActions = ({
             }
             setActiveCardAndLoc(null);
         }
-    }, [touchAction, activeCardAndLoc, gameUi, playerN]);
+    }, [activeCardAndLoc, touchAction, gameUi, playerN]);
 
     useEffect(() => {
         if (dropdownMenu?.visible === false && dropdownMenu?.card?.id === currentDropdownMenuCardId) {

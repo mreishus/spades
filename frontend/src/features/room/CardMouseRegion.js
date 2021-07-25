@@ -51,6 +51,8 @@ export const CardMouseRegion = React.memo(({
     }
 
     const handleClick = (event,position) => {
+        console.log("regionclick stopprop")
+        event.stopPropagation();
         //setDropdownMenu(null);
         // Open the menu
         handleSetDropDownMenu();
@@ -69,8 +71,9 @@ export const CardMouseRegion = React.memo(({
                 zIndex: zIndex,
             }}
             onMouseOver={event => !touchMode && makeActive(event,position)}
-            onMouseUp={event => handleClick(event,position)}
-            onTouchStart={event => handleClick(event,position)}
+            // onMouseUp={event => !touchMode && handleClick(event,position)}
+            // onTouchStart={event => handleClick(event,position)}
+            onClick={event => handleClick(event,position)}
         />
     )
 })

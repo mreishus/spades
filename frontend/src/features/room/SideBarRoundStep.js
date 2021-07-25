@@ -54,7 +54,7 @@ export const SideBarRoundStep = React.memo(({
       </div>
       {numTriggers > 0 &&
         <div 
-          class="absolute flex items-center justify-center bg-red-800 hover:bg-red-600 border"
+          className="absolute flex items-center justify-center bg-red-800 hover:bg-red-600 border"
           style={{height:"20px", width:"20px", right:"-17px", borderRadius: "15px"}}
           onClick={(event) => targetTriggers(event)}
         >

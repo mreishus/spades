@@ -18,6 +18,9 @@ import { useTouchMode } from "../../contexts/TouchModeContext";
 import "../../css/custom-dropdown.css";
 
 import { useSetMousePosition } from "../../contexts/MousePositionContext";
+import { useSetTouchAction } from "../../contexts/TouchActionContext";
+import { useSetActiveCard } from "../../contexts/ActiveCardContext";
+import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 
 export const Table = React.memo(({
   playerN,
@@ -38,12 +41,21 @@ export const Table = React.memo(({
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
   const setMousePosition = useSetMousePosition();
+  const setActiveCard = useSetActiveCard();
+  const setTouchAction = useSetTouchAction();
+  const setDropdownMenu = useSetDropdownMenu();
   const keypress = useKeypress();
   const touchMode = useTouchMode();
 
   const handleBrowseSelect = (groupId) => {
     setBrowseGroupId(groupId);
     setBrowseGroupTopN("All");
+  }
+
+  const handleTableClick = (_event) => {
+    setTouchAction(null);
+    setActiveCard(null);
+    setDropdownMenu(null);
   }
 
   useEffect(() => {
@@ -60,7 +72,9 @@ export const Table = React.memo(({
   })
 
   return (
-    <div className="h-full flex">
+    <div className="h-full flex" 
+      //onTouchStart={(event) => handleTableClick(event)} onMouseUp={(event) => handleTableClick(event)}
+      onClick={(event) => handleTableClick(event)}>
       <DropdownMenu
         playerN={playerN}
         gameBroadcast={gameBroadcast}

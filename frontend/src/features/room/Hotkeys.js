@@ -31,7 +31,7 @@ export const Hotkeys = React.memo(({
     <Draggable>
       <div className={windowClass} style={windowStyle}>
         <div className="w-full bg-gray-500" style={{height: "25px"}}>
-          <FontAwesomeIcon className="ml-2" icon={faTimes} onClick={() => setShowWindow(false)}/>
+          <FontAwesomeIcon className="ml-2" icon={faTimes} onMouseUp={() => setShowWindow(false)} onTouchStart={() => setShowWindow(false)}/>
         </div>
         <div className="w-full p-3 overflow-y-scroll" style={{height: "523px"}}>
           <h2 className="mb-2">Tokens</h2>
@@ -224,6 +224,10 @@ export const Hotkeys = React.memo(({
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"} style={keyStyle}>→</div></td>
               <td className="text-center">Redo until next round change</td>
+            </tr>
+            <tr className={"bg-gray-500"}>
+              <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>↓</div></td>
+              <td className="text-center">Advance to next game step</td>
             </tr>
           </table>
         </div>

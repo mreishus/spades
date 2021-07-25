@@ -24,24 +24,24 @@ export const DropdownMenu = React.memo(({
   const [isOpen, setIsOpen] = useState(false);  
   console.log("Rendering DropdownMenu ", isHovering, playerN);
 
-  useEffect(() => {
+  // useEffect(() => {
 
-    const handleClick = (event) => {
-      if (!isOpen || dropdownMenu?.visible === false) return;
-      // Menu is open
-      if (!isHovering || playerN === null) {
-        setIsOpen(false);
-        setDropdownMenu(null);
-        return;
-      }
-    }
+  //   const handleClick = (event) => {
+  //     if (!isOpen || dropdownMenu?.visible === false) return;
+  //     // Menu is open
+  //     if (!isHovering || playerN === null) {
+  //       setIsOpen(false);
+  //       setDropdownMenu(null);
+  //       return;
+  //     }
+  //   }
 
-    document.addEventListener('mousedown', handleClick);
+  //   document.addEventListener('mousedown', handleClick);
 
-    return () => {
-      document.removeEventListener('mousedown', handleClick);
-    }
-  }, [dropdownMenu, isHovering, activeCard])
+  //   return () => {
+  //     document.removeEventListener('mousedown', handleClick);
+  //   }
+  // }, [dropdownMenu, isHovering, activeCard])
 
   if (!mousePosition) return null;
   if (!dropdownMenu) return null;

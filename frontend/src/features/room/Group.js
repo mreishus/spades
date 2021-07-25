@@ -27,11 +27,13 @@ export const Group = React.memo(({
   const group = useSelector(storeGroup);
   const setDropdownMenu = useSetDropdownMenu();
 
-  const handleEyeClick = () => {
+  const handleEyeClick = (event) => {
+    event.stopPropagation();
     handleBrowseTopN("All", group, playerN, gameBroadcast, chatBroadcast, setBrowseGroupId, setBrowseGroupTopN);
   }
 
-  const handleBarsClick = () => {
+  const handleBarsClick = (event) => {
+    event.stopPropagation();
     if (!playerN) return;
     const dropdownMenu = {
         type: "group",
@@ -59,8 +61,8 @@ export const Group = React.memo(({
             </div>
           :
             <div className="w-full h-full">
-              <FontAwesomeIcon onClick={handleEyeClick}  className="hover:text-white mt-2" icon={faEye}/>
-              <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white" icon={faBars}/>
+              <FontAwesomeIcon onClick={(event) => handleEyeClick(event)}  className="hover:text-white mt-2" icon={faEye}/>
+              <FontAwesomeIcon onClick={(event) => handleBarsClick(event)}  className="hover:text-white" icon={faBars}/>
               <span 
                 className="absolute pointer-events-none mt-1 text-sm" 
                 style={{top: "50%", left: "50%", transform: `translate(-50%, ${group.id === "sharedEncounterDeck" ? "80%" : "0%"}) rotate(90deg)`, whiteSpace: "nowrap"}}>

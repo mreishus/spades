@@ -28,7 +28,7 @@ export const PlayersInRoom = React.memo(({
     <Draggable>
       <div className={windowClass} style={windowStyle}>
         <div className="w-full bg-gray-500" style={{height: "25px"}}>
-          <FontAwesomeIcon className="ml-2" icon={faTimes} onClick={() => setShowWindow(false)}/>
+          <FontAwesomeIcon className="ml-2" icon={faTimes} onMouseUp={() => setShowWindow(false)} onTouchStart={() => setShowWindow(false)}/>
         </div>
         <div className="w-full p-3">
           <table className="table-fixed rounded-lg w-full">

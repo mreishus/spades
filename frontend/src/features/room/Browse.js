@@ -43,7 +43,8 @@ export const Browse = React.memo(({
   if (game.numPlayers > 2) fontSize = "text-xs"
  
 
-  const handleBarsClick = () => {
+  const handleBarsClick = (event) => {
+    event.stopPropagation();
     console.log('longpress is triggered');
     const dropdownMenu = {
         type: "group",
@@ -136,7 +137,7 @@ export const Browse = React.memo(({
         className="relative text-center h-full text-gray-500 float-left select-none"
         style={{width:"30px"}}>
         <div>
-          {group.type !== "play" && <FontAwesomeIcon onClick={handleBarsClick}  className="hover:text-white" icon={faBars}/>}
+          {group.type !== "play" && <FontAwesomeIcon onClick={(event) => handleBarsClick(event)}  className="hover:text-white" icon={faBars}/>}
           <span 
             className="absolute mt-1 text-sm" 
             style={{top: "50%", left: "50%", transform: `translate(-50%, 0%) rotate(90deg)`, whiteSpace: "nowrap"}}>
