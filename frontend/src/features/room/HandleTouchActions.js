@@ -40,9 +40,17 @@ export const HandleTouchActions = ({
                 const options = touchAction.options;
                 const tokenType = processTokenType(options.tokenType, activeCard);
                 const increment = options.increment;
+                const hasToken = activeCard.tokens[tokenType] > 0;
                 gameBroadcast("game_action", {action:"increment_token", options: {card_id: activeCard.id, token_type: tokenType, increment: increment}});
                 if (increment > 0) chatBroadcast("game_update",{message: "added "+increment+" "+tokenPrintName(tokenType)+" token to "+getDisplayName(activeCard)+"."});
-                if (increment < 0) chatBroadcast("game_update",{message: "removed "+increment+" "+tokenPrintName(tokenType)+" token from "+getDisplayName(activeCard)+"."});
+                if (increment < 0 && hasToken) chatBroadcast("game_update",{message: "removed "+increment+" "+tokenPrintName(tokenType)+" token from "+getDisplayName(activeCard)+"."});
+                const tokensLeft = touchAction.options?.tokensLeft;
+                if (tokensLeft >= 0) {
+                    if (tokensLeft <= 1) setTouchAction(null);
+                    else if (hasToken) {
+                        setTouchAction({...touchAction, options: {...options, tokensLeft: tokensLeft - 1}})
+                    }
+                }
             } else {
                 cardAction(action, {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress})
             }
@@ -57,6 +65,11 @@ export const HandleTouchActions = ({
             setCurrentDropdownMenuCardId(dropdownMenu?.card?.id);
         }
     }, [dropdownMenu]);
+
+    useEffect(() => {
+        setActiveCardAndLoc(null);
+        setDropdownMenu(null);
+    }, [touchAction])
 
     return null;
 }

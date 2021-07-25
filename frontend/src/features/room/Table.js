@@ -41,7 +41,7 @@ export const Table = React.memo(({
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
   const setMousePosition = useSetMousePosition();
-  const setActiveCard = useSetActiveCard();
+  const setActiveCardAndLoc = useSetActiveCard();
   const setTouchAction = useSetTouchAction();
   const setDropdownMenu = useSetDropdownMenu();
   const keypress = useKeypress();
@@ -53,9 +53,9 @@ export const Table = React.memo(({
   }
 
   const handleTableClick = (_event) => {
-    setTouchAction(null);
-    setActiveCard(null);
+    setActiveCardAndLoc(null);
     setDropdownMenu(null);
+    setTouchAction(null);
   }
 
   useEffect(() => {
