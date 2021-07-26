@@ -33,46 +33,17 @@ export const Card = React.memo(({
     const card = useSelector(cardStore);
     if (!card) return null;
     const currentFace = getCurrentFace(card);
-    const visibleSide = getVisibleSide(card, playerN);
     const visibleFace = getVisibleFace(card, playerN);
     const zIndex = 1000 - cardIndex;
     console.log('Rendering Card ',visibleFace.name);
     const setActiveCard = useSetActiveCard();
-    const setDropdownMenu = useSetDropdownMenu();
     const [isActive, setIsActive] = useState(false);
-    const displayName = getDisplayName(card);
     const touchMode = useTouchMode();
     const touchModeSpacingFactor = touchMode ? 1.5 : 1;
-
-    const onLongPress = () => {
-        console.log(card);
-    };
-
-
-
-    const defaultOptions = {
-        shouldPreventDefault: true,
-        delay: 500,
-    };
-    
-    //const longPress = useLongPress(onLongPress, onClick, defaultOptions);
 
     const handleMouseLeave = (_event) => {
         setIsActive(false);
         setActiveCard(null);
-    }
-
-    const arrowRelationList = () => {
-        const relationList = [];
-        for (var id of card.arrowIds) {
-            const relation = {
-                targetId: "archer-"+id,
-                targetAnchor: 'top',
-                sourceAnchor: 'bottom',
-            }
-            relationList.push(relation);
-        }
-        return relationList;
     }
 
     return (

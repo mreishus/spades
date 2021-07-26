@@ -55,7 +55,7 @@ export const HandleTouchActions = ({
                     }
                 }
             } else {
-                cardAction(action, {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress})
+                cardAction(action, activeCard?.id, {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress})
             }
             setActiveCardAndLoc(null);
         }
@@ -74,16 +74,16 @@ export const HandleTouchActions = ({
         setDropdownMenu(null);
     }, [touchAction])
 
-    useEffect(() => {
-        if (!activeCardAndLoc?.card) return;
-        const activeCard = activeCardAndLoc.card;
-        if (touchMode && !touchAction) {
-            if (activeCard.rotation === -30) {
-                setTouchAction({action: "flip", options: {}, type: "card"});
-                //setTouchAction(null);
-            }
-        }
-    }, [activeCardAndLoc])
+    // useEffect(() => {
+    //     if (!activeCardAndLoc?.card) return;
+    //     const activeCard = activeCardAndLoc.card;
+    //     if (touchMode && !touchAction) {
+    //         if (activeCard.rotation === -30) {
+    //             setTouchAction({action: "flip", options: {}, type: "card"});
+    //             //setTouchAction(null);
+    //         }
+    //     }
+    // }, [activeCardAndLoc])
 
     return null;
 }

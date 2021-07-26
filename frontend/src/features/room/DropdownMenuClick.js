@@ -1,3 +1,4 @@
+import { cardAction } from "./Actions";
 import { GROUPSINFO } from "./Constants";
 import { handleBrowseTopN } from "./HandleBrowseTopN";
 import { 
@@ -6,52 +7,61 @@ import {
   getCurrentFace,
 } from "./Helpers";
 
+
 // dropdownMenu is an object that gets populated with infor about a card when a card is pressed, or about a group when a group is pressed.
 
-export const handleDropdownClickCommon = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
-  if (dropdownMenu.type === "card") handleDropdownClickCard(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast)
-  else if (dropdownMenu.type === "group") handleDropdownClickGroup(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast)
-  else if (dropdownMenu.type === "firstPlayer") handleDropdownClickFirstPlayer(dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast)
+export const handleDropdownClickCommon = (dropdownProps) => {
+  const type = dropdownProps.dropdownMenu.type;
+  if (type === "card") handleDropdownClickCard(dropdownProps);
+  else if (type === "group") handleDropdownClickGroup(dropdownProps);
+  else if (type === "firstPlayer") handleDropdownClickFirstPlayer(dropdownProps);
 }
 
-export const handleDropdownClickCard = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
+export const handleDropdownClickCard = (dropdownProps) => {
+  const {dropdownOptions, dropdownMenu, gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = dropdownProps;
+  const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+  const game = gameUi.game;
   const menuCard = dropdownMenu.card;
   const displayName = getDisplayName(menuCard);
-  if (props.action === "detach") {
+  if (dropdownOptions.action === "toggle_exhaust") {
+    cardAction("toggle_exhaust", menuCard?.id, actionProps);
+  } else if (dropdownOptions.action === "flip") {
+    cardAction("flip", menuCard?.id, actionProps);
+  } else if (dropdownOptions.action === "detach") {
     gameBroadcast("game_action", {action: "detach", options: {card_id: menuCard.id}})
     chatBroadcast("game_update", {message: "detached "+displayName+"."})
-  } else if (props.action === "peek") {
+  } else if (dropdownOptions.action === "peek") {
     gameBroadcast("game_action", {action: "peek_card", options: {card_id: menuCard.id, value: true}})
     chatBroadcast("game_update", {message: "peeked at "+displayName+"."})
-  } else if (props.action === "unpeek") {
+  } else if (dropdownOptions.action === "unpeek") {
     gameBroadcast("game_action", {action: "peek_card", options: {card_id: menuCard.id, value: false}})
     chatBroadcast("game_update", {message: " stopped peeking at "+displayName+"."})
-  } else if (props.action === "lock") {
+  } else if (dropdownOptions.action === "lock") {
     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "locked", true]]}})
     chatBroadcast("game_update", {message: " locked "+displayName+"."})
-  } else if (props.action === "unlock") {
+  } else if (dropdownOptions.action === "unlock") {
     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "locked", false]]}})
     chatBroadcast("game_update", {message: " unlocked "+displayName+"."})
-  } else if (props.action === "moveCard") {
-    const destGroupTitle = GROUPSINFO[props.destGroupId].name;
-    if (props.position === "top") {
-      gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: props.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+  } else if (dropdownOptions.action === "moveCard") {
+    const destGroupTitle = GROUPSINFO[dropdownOptions.destGroupId].name;
+    if (dropdownOptions.position === "top") {
+      gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: dropdownOptions.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
       chatBroadcast("game_update",{message: "moved "+displayName+" to top of "+destGroupTitle+"."})
-    } else if (props.position === "bottom") {
-      gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: props.destGroupId, dest_stack_index: -1, dest_card_index: 0, combine: false, preserve_state: false}})
+    } else if (dropdownOptions.position === "bottom") {
+      gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: dropdownOptions.destGroupId, dest_stack_index: -1, dest_card_index: 0, combine: false, preserve_state: false}})
       chatBroadcast("game_update", {message: "moved "+displayName+" to bottom of "+destGroupTitle+"."})
-    } else if (props.position === "shuffle") {
-      gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: props.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
-      gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: props.destGroupId}})
+    } else if (dropdownOptions.position === "shuffle") {
+      gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: dropdownOptions.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
+      gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: dropdownOptions.destGroupId}})
       chatBroadcast("game_update", {message: "shuffled "+displayName+" into "+destGroupTitle+"."})
     }
-  } else if (props.action === "incrementTokenPerRound") {
-      const increment = props.increment;
-      const tokenType = props.tokenType;
+  } else if (dropdownOptions.action === "incrementTokenPerRound") {
+      const increment = dropdownOptions.increment;
+      const tokenType = dropdownOptions.tokenType;
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "tokensPerRound", tokenType, increment]]}})
       chatBroadcast("game_update", {message: "added "+increment+" "+tokenType+" token(s) per round to "+displayName+"."})
-  } else if (props.action === "toggleTrigger") {
-    const stepId = props.stepId;
+  } else if (dropdownOptions.action === "toggleTrigger") {
+    const stepId = dropdownOptions.stepId;
     const currentFace = getCurrentFace(menuCard);
     const triggers = [...currentFace.triggers];
     if (triggers.includes(stepId)) {
@@ -66,7 +76,7 @@ export const handleDropdownClickCard = (dropdownMenu, props, playerN, game, game
     }
     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "sides", menuCard.currentSide, "triggers", triggers]]}})
     
-  } else if (props.action === "swapWithTop") {
+  } else if (dropdownOptions.action === "swapWithTop") {
     const gsc = getGroupIdStackIndexCardIndex(game, menuCard.id);
     const stackIndex = gsc.stackIndex;
     const deckStackIds = game.groupById[playerN+"Deck"].stackIds;
@@ -78,18 +88,20 @@ export const handleDropdownClickCard = (dropdownMenu, props, playerN, game, game
         gameBroadcast("game_action", {action: "move_card", options: {card_id: cardId0, dest_group_id: playerN+"Hand", dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})
         chatBroadcast("game_update", {message: "swapped a card in their hand with the top of their deck."})       
     }
-  } else if (props.action === "setRotation") {
-    chatBroadcast("game_update", {message: "set rotation of "+displayName+" to "+props.rotation+"."})
-    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "rotation", props.rotation]]}})
+  } else if (dropdownOptions.action === "setRotation") {
+    chatBroadcast("game_update", {message: "set rotation of "+displayName+" to "+dropdownOptions.rotation+"."})
+    gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "rotation", dropdownOptions.rotation]]}})
   }
 }
 
-export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
+export const handleDropdownClickGroup = (dropdownProps) => {
+  const {dropdownOptions, dropdownMenu, gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = dropdownProps;
+  const game = gameUi.game;
   const group = dropdownMenu.group;
-  if (props.action === "shuffle") {
+  if (dropdownOptions.action === "shuffle") {
     gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: group.id}})
     chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+"."})
-  } else if (props.action === "makeVisible") {
+  } else if (dropdownOptions.action === "makeVisible") {
     const isVisible = game.playerData[playerN].visibleHand; 
     // Make it so future cards added to hand will be visible
     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "visibleHand", !isVisible]]}})
@@ -101,23 +113,23 @@ export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gam
     else chatBroadcast("game_update",{message: "made their hand visible."})
     
 
-  } else if (props.action === "chooseRandom") {
+  } else if (dropdownOptions.action === "chooseRandom") {
     const stackIds = group.stackIds;
     const rand = Math.floor(Math.random() * stackIds.length);
     const randStackId = stackIds[rand];
     gameBroadcast("game_action", {action: "target_stack", options: {stack_id: randStackId}})
     chatBroadcast("game_update",{message: "randomly picked a card in "+GROUPSINFO[group.id].name+"."})
-  } else if (props.action === "moveStacks") {
-    gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: group.id, dest_group_id: props.destGroupId, top_n: group.stackIds.length,  position: props.position}})
-    if (props.position === "top") {
-      chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to top of "+GROUPSINFO[props.destGroupId].name+"."})
-    } else if (props.position === "bottom") {
-      chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to bottom of "+GROUPSINFO[props.destGroupId].name+"."})
-    } else if (props.position === "shuffle") {
-      chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[props.destGroupId].name+"."})
+  } else if (dropdownOptions.action === "moveStacks") {
+    gameBroadcast("game_action", {action: "move_stacks", options: {orig_group_id: group.id, dest_group_id: dropdownOptions.destGroupId, top_n: group.stackIds.length,  position: dropdownOptions.position}})
+    if (dropdownOptions.position === "top") {
+      chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to top of "+GROUPSINFO[dropdownOptions.destGroupId].name+"."})
+    } else if (dropdownOptions.position === "bottom") {
+      chatBroadcast("game_update",{message: "moved "+GROUPSINFO[group.id].name+" to bottom of "+GROUPSINFO[dropdownOptions.destGroupId].name+"."})
+    } else if (dropdownOptions.position === "shuffle") {
+      chatBroadcast("game_update",{message: "shuffled "+GROUPSINFO[group.id].name+" into "+GROUPSINFO[dropdownOptions.destGroupId].name+"."})
     }
-  } else if (props.action === "lookAt") {
-    const topNstr = props.topN === "X" ? prompt("Enter a number",0) : props.topN;
+  } else if (dropdownOptions.action === "lookAt") {
+    const topNstr = dropdownOptions.topN === "X" ? prompt("Enter a number",0) : dropdownOptions.topN;
     handleBrowseTopN(
       topNstr, 
       group,
@@ -127,7 +139,7 @@ export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gam
       dropdownMenu.setBrowseGroupId,
       dropdownMenu.setBrowseGroupTopN,
     ) 
-  } else if (props.action === "dealX") {
+  } else if (dropdownOptions.action === "dealX") {
     var topX = parseInt(prompt("Enter a number",0)) || 0;
     const stackIds = group.stackIds;
     if (topX > stackIds.length) topX = stackIds.length;
@@ -142,7 +154,8 @@ export const handleDropdownClickGroup = (dropdownMenu, props, playerN, game, gam
   }
 }
 
-export const handleDropdownClickFirstPlayer = (dropdownMenu, props, playerN, game, gameBroadcast, chatBroadcast) => {
-  gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "firstPlayer", props.action]]}})
-  chatBroadcast("game_update",{message: "set first player to "+props.title+"."})
+export const handleDropdownClickFirstPlayer = (dropdownProps) => {
+  const {dropdownOptions, dropdownMenu, gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = dropdownProps;
+  gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "firstPlayer", dropdownOptions.action]]}})
+  chatBroadcast("game_update",{message: "set first player to "+dropdownOptions.title+"."})
 } 
