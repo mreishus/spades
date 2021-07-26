@@ -45,7 +45,6 @@ export const Browse = React.memo(({
 
   const handleBarsClick = (event) => {
     event.stopPropagation();
-    console.log('longpress is triggered');
     const dropdownMenu = {
         type: "group",
         group: group,

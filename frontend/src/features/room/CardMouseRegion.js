@@ -5,6 +5,8 @@ import { useSetTouchAction, useTouchAction } from "../../contexts/TouchActionCon
 import { useTouchMode } from "../../contexts/TouchModeContext";
 import { getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
+import { gameAction } from "./Actions";
+import useLongPress from "../../hooks/useLongPress";
 
 var clickTimeout;
 
@@ -45,24 +47,36 @@ export const CardMouseRegion = React.memo(({
             cardIndex: cardIndex,
             groupId: groupId,
             groupType: groupType,
-            visible: (touchMode ? false : true),
+            visible: true,
         }
         if (playerN) setDropdownMenu(dropdownMenu);
     }
 
-    const handleClick = (event,position) => {
-        console.log("regionclick stopprop")
+    const handleClick = (event) => {
         event.stopPropagation();
         //setDropdownMenu(null);
         // Open the menu
-        handleSetDropDownMenu();
+        //handleSetDropDownMenu();
         // Make the card active (since there was no mouseover)
         // The listener in HandleTouchButton will see the active card change and perform the touch action
         makeActive(event,position);
     }
 
+    const onLongPress = (event) => {
+        event.preventDefault();
+        handleSetDropDownMenu();
+    };
+
+    const defaultOptions = {
+        shouldPreventDefault: true,
+        delay: 500,
+    };
+
+    const longPress = useLongPress(onLongPress, handleClick, defaultOptions);
+
     return(
         <div 
+            {...longPress}
             style={{
                 position: 'absolute',
                 top: top,
@@ -73,7 +87,7 @@ export const CardMouseRegion = React.memo(({
             onMouseOver={event => !touchMode && makeActive(event,position)}
             // onMouseUp={event => !touchMode && handleClick(event,position)}
             // onTouchStart={event => handleClick(event,position)}
-            onClick={event => handleClick(event,position)}
+            //onClick={event => handleClick(event,position)}
         />
     )
 })

@@ -42,6 +42,7 @@ export const Card = React.memo(({
     const [isActive, setIsActive] = useState(false);
     const displayName = getDisplayName(card);
     const touchMode = useTouchMode();
+    const touchModeSpacingFactor = touchMode ? 1.5 : 1;
 
     const onLongPress = () => {
         console.log(card);
@@ -86,7 +87,7 @@ export const Card = React.memo(({
                         background: `url(${getVisibleFaceSRC(card, playerN, user)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
                         height: `${cardSize*visibleFace.height}vw`,
                         width: `${cardSize*visibleFace.width}vw`,
-                        left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize/3*cardIndex}vw`,
+                        left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize*touchModeSpacingFactor/3*cardIndex}vw`,
                         top: "50%",
                         borderRadius: '8px',
                         MozBoxShadow: isActive ? '0 0 7px yellow' : '',

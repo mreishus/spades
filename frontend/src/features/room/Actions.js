@@ -485,7 +485,7 @@ export const cardAction = (action, props) => {
             }
         // If the card is a child card in a stack, just discard that card
         } else {
-            const discardGroupId = activeCard["discardGroupId"]
+            const discardGroupId = activeCard["discardGroupId"];
             chatBroadcast("game_update", {message: "discarded "+displayName+" to "+GROUPSINFO[discardGroupId].name+"."});
             gameBroadcast("game_action", {action: "move_card", options: {card_id: activeCardId, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
         }

@@ -7,6 +7,7 @@ import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContex
 import { useKeypress, useSetKeypress } from "../../contexts/KeypressContext";
 import { getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
 import { useDropdownMenu, useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
+import { useTouchMode } from "../../contexts/TouchModeContext";
 
 
 export const HandleTouchActions = ({
@@ -16,6 +17,7 @@ export const HandleTouchActions = ({
 }) => {
     const gameUiStore = state => state?.gameUi;
     const gameUi = useSelector(gameUiStore);
+    const touchMode = useTouchMode();
     const touchAction = useTouchAction();
     const setTouchAction = useSetTouchAction();
     const activeCardAndLoc = useActiveCard();
@@ -46,7 +48,8 @@ export const HandleTouchActions = ({
                 if (increment < 0 && hasToken) chatBroadcast("game_update",{message: "removed "+increment+" "+tokenPrintName(tokenType)+" token from "+getDisplayName(activeCard)+"."});
                 const tokensLeft = touchAction.options?.tokensLeft;
                 if (tokensLeft >= 0) {
-                    if (tokensLeft <= 1) setTouchAction(null);
+                    if (tokensLeft === 0) setTouchAction(null);
+                    else if (tokensLeft === 1 && hasToken)  setTouchAction(null);
                     else if (hasToken) {
                         setTouchAction({...touchAction, options: {...options, tokensLeft: tokensLeft - 1}})
                     }
@@ -70,6 +73,17 @@ export const HandleTouchActions = ({
         setActiveCardAndLoc(null);
         setDropdownMenu(null);
     }, [touchAction])
+
+    useEffect(() => {
+        if (!activeCardAndLoc?.card) return;
+        const activeCard = activeCardAndLoc.card;
+        if (touchMode && !touchAction) {
+            if (activeCard.rotation === -30) {
+                setTouchAction({action: "flip", options: {}, type: "card"});
+                //setTouchAction(null);
+            }
+        }
+    }, [activeCardAndLoc])
 
     return null;
 }

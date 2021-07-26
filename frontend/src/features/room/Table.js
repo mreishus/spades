@@ -52,7 +52,7 @@ export const Table = React.memo(({
     setBrowseGroupTopN("All");
   }
 
-  const handleTableClick = (_event) => {
+  const handleTableClick = (event) => {
     setActiveCardAndLoc(null);
     setDropdownMenu(null);
     setTouchAction(null);

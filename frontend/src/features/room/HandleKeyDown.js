@@ -52,8 +52,8 @@ const keyGameActionMap = {
 }
 
 const shiftKeyGameActionMap = {
-    "LeftArrow": "undo_many",
-    "RightArrow": "redo_many",
+    "ArrowLeft": "undo_many",
+    "ArrowRight": "redo_many",
 }
 
 const keyTokenMap = {
@@ -225,7 +225,6 @@ export const HandleKeyDown = ({
         console.log(k);
         // Keep track of held key
         if (k === "Shift") setKeypress({"Shift": true});
-        //else setKeypress({"Shift": false});
         if (k === "Control") setKeypress({"Control": true});
         if (k === "Tab") setKeypress({"Tab": true});
         if (k === " ") setKeypress({"Space": true});
