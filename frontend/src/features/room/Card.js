@@ -48,9 +48,7 @@ export const Card = React.memo(({
 
     return (
         <div id={card.id}>
-            {/* <ContextMenuTrigger id={"context-"+card.id} holdToDisplay={500}> */}
                 <div 
-                // {...longPress}
                     className={isActive ? 'isActive' : ''}
                     key={card.id}
                     style={{
@@ -81,6 +79,7 @@ export const Card = React.memo(({
                     // onDoubleClick={handleDoubleClick}
                     //onTouchStart={handleClick}
                 >
+                    <div className="absolute w-full bg-green-400 rounded" style={{height:"20px", transform: "translate(0, 0px)",zIndex: zIndex+1}}></div>
                     {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute top-0 right-0 text-2xl" icon={faEye}/>:null}
                     <Target
                         cardId={cardId}

@@ -16,7 +16,6 @@ export const DropdownMenuCard = React.memo(({
   handleDropdownClick,
   calcHeight,
   activeMenu,
-  setIsHovering,
 }) => {
   const menuCard = dropdownMenu.card;
   const menuCardIndex = dropdownMenu.cardIndex;
@@ -55,15 +54,13 @@ export const DropdownMenuCard = React.memo(({
     )
   }
 
-  const left = mouseX < (window.innerWidth/2)  ? mouseX : mouseX -300;
+  const left = mouseX < (window.innerWidth/2)  ? mouseX + 10 : mouseX -310;
   const top = mouseY < (window.innerHeight/2) ? mouseY : mouseY -150;
 
   return (
     <div 
       className="dropdown" 
       style={{ height: menuHeight, zIndex: 1e7, top: top, left: left }}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
       >
         <div className="menu-title">{dropdownMenu.title}</div>
 

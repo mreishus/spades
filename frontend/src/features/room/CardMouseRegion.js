@@ -23,7 +23,7 @@ export const CardMouseRegion = React.memo(({
     gameBroadcast,
     chatBroadcast,
 }) => {
-    const setActiveCard = useSetActiveCard();
+    const setActiveCardAndLoc = useSetActiveCard();
     const setTouchAction = useSetTouchAction();
     const touchMode = useTouchMode();
     const displayName = getDisplayName(card);
@@ -31,10 +31,11 @@ export const CardMouseRegion = React.memo(({
 
     const makeActive = (event, mousePosition) => {
         const screenPosition = event.clientX > (window.innerWidth/2) ? "right" : "left";
-        setActiveCard({
+        setActiveCardAndLoc({
             card: card,
             mousePosition: mousePosition, 
             screenPosition: screenPosition,
+            clicked: true,
         });
         if (!touchMode) setIsActive(true);
     }

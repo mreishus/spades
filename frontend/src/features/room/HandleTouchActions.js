@@ -5,7 +5,7 @@ import { useSetTouchAction, useTouchAction } from "../../contexts/TouchActionCon
 import { gameAction, cardAction } from "./Actions";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { useKeypress, useSetKeypress } from "../../contexts/KeypressContext";
-import { getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
+import { getCurrentFace, getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
 import { useDropdownMenu, useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import { useTouchMode } from "../../contexts/TouchModeContext";
 
@@ -21,19 +21,23 @@ export const HandleTouchActions = ({
     const touchAction = useTouchAction();
     const setTouchAction = useSetTouchAction();
     const activeCardAndLoc = useActiveCard();
+    var activeCardGameUi = null;
+    if (activeCardAndLoc?.card) activeCardGameUi = gameUi.game.cardById[activeCardAndLoc.card.id];
     const setActiveCardAndLoc = useSetActiveCard();
     const dropdownMenu = useDropdownMenu();
     const setDropdownMenu = useSetDropdownMenu();
     const [currentDropdownMenuCardId, setCurrentDropdownMenuCardId] = useState(null);
     const keypress = useKeypress();
     const setKeypress = useSetKeypress();
+    const [prevActive, setPrevActive] = useState(null);
     const dispatch = useDispatch();
+    const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+    console.log("Rendering HandleTouchActions")
 
     useEffect(() => {
-        console.log("trace action handletouch");
         if (touchAction?.type === "game") {
             const action = touchAction?.action;
-            gameAction(action, {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress})
+            gameAction(action, actionProps)
             setTouchAction(null);
         } else if (touchAction?.type === "card" && activeCardAndLoc?.card) {
             const action = touchAction.action;
@@ -55,7 +59,7 @@ export const HandleTouchActions = ({
                     }
                 }
             } else {
-                cardAction(action, activeCard?.id, {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress})
+                cardAction(action, activeCard?.id, actionProps);
             }
             setActiveCardAndLoc(null);
         }
@@ -74,16 +78,33 @@ export const HandleTouchActions = ({
         setDropdownMenu(null);
     }, [touchAction])
 
+    // Tapping on an already active card makes it perform the default action
+    useEffect(() => {
+        if (!touchMode) return;
+        if (activeCardAndLoc?.card?.id && activeCardAndLoc?.card?.id === prevActive && activeCardAndLoc?.clicked) {
+            const activeCard = activeCardAndLoc.card;
+            const activeFace = getCurrentFace(activeCard);
+            const type = activeFace.type;
+            if (activeCard.rotation === -30 && activeCard.currentSide === "B") {
+                cardAction("flip", activeCard.id, actionProps);
+            } else if (activeCard.rotation === -30 && activeCard.currentSide === "A") {
+                cardAction("discard", activeCard.id, actionProps);
+            } else if (type === "enemy") {
+                gameBroadcast("game_action", {action:"increment_token", options: {card_id: activeCard.id, token_type: "damage", increment: 1}});
+                chatBroadcast("game_update",{message: "added 1 damage token to "+getDisplayName(activeCard)+"."});
+            } else if (type === "treachery") {
+                cardAction("discard", activeCard.id, actionProps);
+            } else {
+                cardAction("toggle_exhaust", activeCard.id, actionProps);
+            } 
+        } else {
+            setPrevActive(activeCardAndLoc?.card?.id)
+        }
+    }, [activeCardAndLoc, touchMode])
+
     // useEffect(() => {
-    //     if (!activeCardAndLoc?.card) return;
-    //     const activeCard = activeCardAndLoc.card;
-    //     if (touchMode && !touchAction) {
-    //         if (activeCard.rotation === -30) {
-    //             setTouchAction({action: "flip", options: {}, type: "card"});
-    //             //setTouchAction(null);
-    //         }
-    //     }
-    // }, [activeCardAndLoc])
+    //     setActiveCardAndLoc({...activeCardAndLoc, card: activeCardGameUi})
+    // }, [activeCardGameUi])
 
     return null;
 }

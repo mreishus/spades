@@ -47,7 +47,6 @@ const reveal = (game, deckGroupId, discardGroupId, gameBroadcast, chatBroadcast,
 }
 
 export const gameAction = (action, props) => {
-    alert(action)
     const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;
     if (!gameUi || !playerN) return;
     const game = gameUi.game;
@@ -336,6 +335,7 @@ export const cardAction = (action, cardId, props) => {
         if (cardFace.type === "Location") {
             chatBroadcast("game_update", {message: "made "+displayName+" the active location."});
             gameBroadcast("game_action", {action: "move_stack", options: {stack_id: stackId, dest_group_id: "sharedActive", dest_stack_index: 0, combine: false, preserve_state: false}})
+            setActiveCardAndLoc(null);
         } else {
             var values = [true, 90];
             if (card.exhausted) {
@@ -355,6 +355,7 @@ export const cardAction = (action, cardId, props) => {
         if (card["currentSide"] === "A") newSide = "B";
         const updates = [["game","cardById",cardId,"currentSide", newSide]]
         dispatch(setValues({updates: updates}))
+        setActiveCardAndLoc({...activeCardAndLoc, card: {...card, currentSide: newSide}, clicked: false})
         gameBroadcast("game_action", {action: "flip_card", options:{card_id: cardId}});
         if (displayName==="player card" || displayName==="encounter card") {
             chatBroadcast("game_update", {message: "flipped "+getDisplayName(card)+" faceup."});
@@ -522,14 +523,4 @@ export const cardAction = (action, cardId, props) => {
             setKeypress({"w": cardId});
         }
     }
-    // // Force refresh of activeCard
-    // if (card.id === activeCardAndLoc?.card.id) {
-    //     setActiveCardAndLoc({
-    //         ...activeCardAndLoc,
-    //         card: {
-    //             ...activeCardAndLoc.card,
-    //             currentSide: newSide
-    //         }
-    //     });
-    // }
 }

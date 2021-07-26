@@ -22,7 +22,6 @@ export const DropdownMenuCommon = React.memo(({
   mouseY,
   dropdownMenu,
   setDropdownMenu,
-  setIsHovering,
 }) => {
   
   const gameUiStore = state => state?.gameUi;
@@ -57,7 +56,6 @@ export const DropdownMenuCommon = React.memo(({
     const dropdownProps = {dropdownOptions, dropdownMenu, gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
     handleDropdownClickCommon(dropdownProps);
     setActiveMenu("main");
-    setIsHovering(false);
     setDropdownMenu(null);
     setMenuHeight(null);
   }
@@ -73,7 +71,6 @@ export const DropdownMenuCommon = React.memo(({
         handleDropdownClick={handleDropdownClick}
         calcHeight={calcHeight}
         activeMenu={activeMenu}
-        setIsHovering={setIsHovering}
       />
     )
   } else if (dropdownMenu.type === "group") {
@@ -87,7 +84,6 @@ export const DropdownMenuCommon = React.memo(({
         handleDropdownClick={handleDropdownClick}
         calcHeight={calcHeight}
         activeMenu={activeMenu}
-        setIsHovering={setIsHovering}
       />
     )
   } else if (dropdownMenu.type === "firstPlayer") {
@@ -101,7 +97,6 @@ export const DropdownMenuCommon = React.memo(({
         handleDropdownClick={handleDropdownClick}
         calcHeight={calcHeight}
         activeMenu={activeMenu}
-        setIsHovering={setIsHovering}
       />
     )
   } else return null;

@@ -98,7 +98,7 @@ export const HandleKeyDown = ({
     const setActiveCardAndLoc = useSetActiveCard();
 
     const [keyBackLog, setKeyBackLog] = useState({});
-    console.log("Rendering HandleKeyDown", keyBackLog)
+    console.log("Rendering HandleKeyDown")
 
     const keyTokenAction = (rawTokenType, props) => {
         const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;       
