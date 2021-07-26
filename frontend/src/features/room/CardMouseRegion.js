@@ -56,7 +56,7 @@ export const CardMouseRegion = React.memo(({
         event.stopPropagation();
         //setDropdownMenu(null);
         // Open the menu
-        //handleSetDropDownMenu();
+        if (!touchMode) handleSetDropDownMenu();
         // Make the card active (since there was no mouseover)
         // The listener in HandleTouchButton will see the active card change and perform the touch action
         makeActive(event,position);
@@ -73,21 +73,28 @@ export const CardMouseRegion = React.memo(({
     };
 
     const longPress = useLongPress(onLongPress, handleClick, defaultOptions);
+    const regionStyle = {
+        position: 'absolute',
+        top: top,
+        width: '100%',
+        height: '50%',
+        zIndex: zIndex,
+    }
 
-    return(
-        <div 
-            {...longPress}
-            style={{
-                position: 'absolute',
-                top: top,
-                width: '100%',
-                height: '50%',
-                zIndex: zIndex,
-            }}
-            onMouseOver={event => !touchMode && makeActive(event,position)}
+    if (touchMode) {
+        return(
+            <div 
+                {...longPress}
+                style={regionStyle}
+                onMouseOver={event => !touchMode && makeActive(event,position)}
+            />
+    )} else return (
+            <div 
+                style={regionStyle}
+                onMouseOver={event => !touchMode && makeActive(event,position)}
+                onClick={event => handleClick(event,position)}
+            />
             // onMouseUp={event => !touchMode && handleClick(event,position)}
-            // onTouchStart={event => handleClick(event,position)}
-            //onClick={event => handleClick(event,position)}
-        />
+            // onTouchStart={event => handleClick(event,position)}      
     )
 })
