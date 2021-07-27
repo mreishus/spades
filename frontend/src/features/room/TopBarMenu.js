@@ -238,7 +238,7 @@ export const TopBarMenu = React.memo(({
         <li key={"touch_mode"}>
           <a href="#">Touch mode</a>
           <ul className="third-level-menu">
-              <li key={"touch_enabled"}><a onClick={() => setTouchMode(true)} href="#">Enable</a></li>
+              <li key={"touch_enabled"}><a onClick={() => setTouchMode(true)} href="#">Enable (experimental)</a></li>
               <li key={"touch_disabled"}><a onClick={() => {setTouchMode(false) && setTouchAction(null)}} href="#">Disable</a></li>
           </ul>
         </li> 
