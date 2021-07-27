@@ -1,10 +1,11 @@
 module.exports = {
   purge: [
-    './src/**/*.html',
+      './src/**/*.html',
+      "./src/features/room/*.js",
+    './src/**/*.ts',
+    './src/**/*.tsx',
     './src/**/*.js',
     './src/**/*.jsx',
-    './src/**/*.tsx',
-    './src/**/*.tsx',
   ],
   theme: {
     maxWidth: {
