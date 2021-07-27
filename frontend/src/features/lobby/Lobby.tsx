@@ -106,15 +106,80 @@ export const Lobby: React.FC = () => {
               {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
               <div className="flex justify-center" style={{width: "600px"}}>
                 <span className="p-2 text-white bg-gray-700 rounded">
-                  Down for maintenence
-                  {/* New to DragnCards?  
+                  New to DragnCards?  
                   <a href="https://tinyurl.com/DragnCardsYoutube" className="ml-1 text-white">
                     Watch the tutorial
-                  </a> */}
+                  </a>
                 </span>
               </div>
             </div>
-           
+            <div className="mb-6">
+              {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
+              <div className="flex justify-center" style={{width: "600px"}}>
+                <span className="p-2 text-white bg-gray-700 rounded">
+                  Bug reports? Feature requests? Post them on   
+                  <a href="https://discord.gg/7BQv5ethUm" className="ml-1 mr-1 text-white">
+                    Discord
+                  </a> 
+                  or
+                  <a href="https://github.com/seastan/DragnCards" className="ml-1 text-white">
+                    GitHub
+                  </a>
+                </span>
+              </div>
+            </div>
+            <h1 className="mb-4 text-center">Lobby</h1>
+            {isLoading && <div className="text-white text-center">Connecting to server...</div>}
+            {isError && <div className="text-white text-center">Error communicating with server...</div>}
+            {(!isLoading && !isError) &&
+              <div className="mb-6">
+                {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
+                <div className="flex justify-center" style={{width: "600px"}}>
+                  <div style={{width: "200px"}}>
+                  {isLoggedIn && (
+                    <Button isPrimary onClick={() => handleCreateRoomClick()}>
+                      Create Room
+                    </Button>
+                  )}
+                  {!isLoggedIn && (
+                    <span className="p-2 text-white bg-gray-700 rounded">
+                      <Link to="/login" className="mr-1 text-white">
+                        Log In
+                      </Link>
+                      to create a room
+                    </span>
+                  )}
+                  </div>
+                </div>
+              </div>
+            }
+            {(!isLoading && !isError) &&
+              <div className="mb-6 w-full">
+                <h3 className="mb-2 font-semibold text-center">Current Games</h3>
+                <div className="mb-4 w-full">
+                  <LobbyTable rooms={rooms} />
+                </div>
+              </div>
+            }
+            <h3 className="mt-6 font-semibold text-center">About</h3>
+            <div className="max-w-none">
+              <p className="mb-2">
+                DragnCards is a{" "}
+                <span className="font-semibold">
+                  free online multiplayer card game platform
+                </span>, and is not affiliated with or endorsed by FFG or any other company.
+              </p>
+            </div>
+            <CreateRoomModal
+              isOpen={showModal}
+              isLoggedIn={isLoggedIn}
+              closeModal={() => setShowModal(false)}
+              replayId={replayId}
+              ringsDbIds={ringsDbIds}
+              ringsDbType={ringsDbType}
+              ringsDbDomain={ringsDbDomain}
+              loadShuffle={loadShuffle}
+            />
           </div>
         {/* <div className="w-full mb-4 lg:w-1/4 xl:w-2/6">
           <div className="flex items-end h-full">
@@ -125,72 +190,3 @@ export const Lobby: React.FC = () => {
   );
 };
 export default Lobby;
-
-
-// <div className="mb-6">
-// {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
-// <div className="flex justify-center" style={{width: "600px"}}>
-//   <span className="p-2 text-white bg-gray-700 rounded">
-//     Bug reports? Feature requests? Post them on   
-//     <a href="https://discord.gg/7BQv5ethUm" className="ml-1 mr-1 text-white">
-//       Discord
-//     </a> 
-//     or
-//     <a href="https://github.com/seastan/DragnCards" className="ml-1 text-white">
-//       GitHub
-//     </a>
-//   </span>
-// </div>
-// </div>
-// <h1 className="mb-4 text-center">Lobby</h1>
-// {isLoading && <div className="text-white text-center">Connecting to server...</div>}
-// {isError && <div className="text-white text-center">Error communicating with server...</div>}
-// {(!isLoading && !isError) &&
-// <div className="mb-6">
-//   {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
-//   <div className="flex justify-center" style={{width: "600px"}}>
-//     <div style={{width: "200px"}}>
-//     {isLoggedIn && (
-//       <Button isPrimary onClick={() => handleCreateRoomClick()}>
-//         Create Room
-//       </Button>
-//     )}
-//     {!isLoggedIn && (
-//       <span className="p-2 text-white bg-gray-700 rounded">
-//         <Link to="/login" className="mr-1 text-white">
-//           Log In
-//         </Link>
-//         to create a room
-//       </span>
-//     )}
-//     </div>
-//   </div>
-// </div>
-// }
-// {(!isLoading && !isError) &&
-// <div className="mb-6 w-full">
-//   <h3 className="mb-2 font-semibold text-center">Current Games</h3>
-//   <div className="mb-4 w-full">
-//     <LobbyTable rooms={rooms} />
-//   </div>
-// </div>
-// }
-// <h3 className="mt-6 font-semibold text-center">About</h3>
-// <div className="max-w-none">
-// <p className="mb-2">
-//   DragnCards is a{" "}
-//   <span className="font-semibold">
-//     free online multiplayer card game platform
-//   </span>, and is not affiliated with or endorsed by FFG or any other company.
-// </p>
-// </div>
-// <CreateRoomModal
-// isOpen={showModal}
-// isLoggedIn={isLoggedIn}
-// closeModal={() => setShowModal(false)}
-// replayId={replayId}
-// ringsDbIds={ringsDbIds}
-// ringsDbType={ringsDbType}
-// ringsDbDomain={ringsDbDomain}
-// loadShuffle={loadShuffle}
-// />
