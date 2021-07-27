@@ -44,6 +44,8 @@ const keyGameActionMap = {
     "P": "save",
     "S": "shadows",
     "X": "discard_shadows",
+    "A": "caps_lock_A",
+    "n": "caps_lock_n",
     "ArrowLeft": "undo",
     "ArrowRight": "redo",
     "ArrowDown": "next_step",

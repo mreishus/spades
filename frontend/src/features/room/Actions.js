@@ -294,6 +294,12 @@ export const gameAction = (action, props) => {
                 updates:[["game", "playerData", playerN, "arrows", []]], 
             }
         });
+    }    
+    else if (action === "caps_lock_A") {
+        chatBroadcast("game_update",{message: "pressed Shift-A instead of A. Is caps lock on?"});
+    }    
+    else if (action === "caps_lock_n") {
+        chatBroadcast("game_update",{message: "pressed N instead of Shift-N. Is caps lock on?"});
     }
 }
 
