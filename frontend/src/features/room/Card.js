@@ -4,7 +4,6 @@ import { Tokens } from './Tokens';
 import { GROUPSINFO } from "./Constants";
 import useProfile from "../../hooks/useProfile";
 import { CardMouseRegion } from "./CardMouseRegion";
-import { CardTapRegion } from "./CardTapRegion";
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
