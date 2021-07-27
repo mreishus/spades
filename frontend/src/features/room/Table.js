@@ -90,7 +90,7 @@ export const Table = React.memo(({
         chatBroadcast={chatBroadcast}
       />
       {/* Main panel */}
-      <div className="flex w-full">
+      <div className="w-full">
         <div className="w-full h-full">
           {/* Game menu bar */}
           <div className="bg-gray-600 text-white w-full" style={{height: "6%"}}>
