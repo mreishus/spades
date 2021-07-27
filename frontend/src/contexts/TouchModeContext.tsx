@@ -5,7 +5,7 @@ const SetTouchModeContext = React.createContext<any | null>(null)
 
 
 function TouchModeProvider({children} : any) {
-  const [touchMode, setTouchMode] = useState<any | null>(true);
+  const [touchMode, setTouchMode] = useState<any | null>(false);
   return (
     <TouchModeContext.Provider value={touchMode}>
       <SetTouchModeContext.Provider value={setTouchMode}>

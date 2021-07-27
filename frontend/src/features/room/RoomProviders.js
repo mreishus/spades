@@ -28,7 +28,7 @@ export const RoomProviders = ({ gameBroadcast, chatBroadcast }) => {
         }}
       >
           <KeypressProvider value={{}}>
-            <TouchModeProvider value={true}>
+            <TouchModeProvider value={false}>
               <TouchActionProvider value={null}>
                 <MousePositionProvider value={null}>
                   <DropdownMenuProvider value={null}>

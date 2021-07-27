@@ -138,7 +138,7 @@ export const DragContainer = React.memo(({
       dispatch(setGroupById(newGroupById));
       gameBroadcast("game_action", {action:"move_stack", options:{stack_id: origStackId, dest_group_id: destGroupId, dest_stack_index: dest.index, combine: false, preserve_state: (keypress["Shift"] || destGroupId === origGroupId)}})
     }
-    if (origGroup.type === "hand" && destGroup.type === "play") {
+    if (touchMode && origGroup.type === "hand" && destGroup.type === "play") {
       const cost = topOfOrigStackCard.sides.A.cost;
       if (cost) setTouchAction({action: "increment_token", options:{tokenType: "resource", "increment": -1, tokensLeft: cost}, type: "card"});
     }

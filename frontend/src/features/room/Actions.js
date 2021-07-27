@@ -298,7 +298,7 @@ export const gameAction = (action, props) => {
 }
 
 
-export const cardAction = (action, cardId, props) => {
+export const cardAction = (action, cardId, options, props) => {
     const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;
     if (!gameUi || !playerN || !cardId) return;
     const game = gameUi.game;
@@ -522,5 +522,22 @@ export const cardAction = (action, cardId, props) => {
         } else {
             setKeypress({"w": cardId});
         }
+    }
+    else if (action === "detach") {
+        gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
+        chatBroadcast("game_update", {message: "detached "+displayName+"."})
+    }
+    // Increment token
+    else if (action === "increment_token") {
+        const tokenType = processTokenType(options.tokenType, card);
+        const increment = options.increment;
+        if (increment === 0) return;
+        var words;
+        if (increment === 1) words  = ["added", "token", "to"];
+        if (increment >= 1) words   = ["added", "tokens", "to"];
+        if (increment === -1) words = ["removed", "token", "from"];
+        if (increment <= -1) words  = ["removed", "tokens", "from"];
+        gameBroadcast("game_action", {action:"increment_token", options: {card_id: card.id, token_type: tokenType, increment: increment}});
+        chatBroadcast("game_update",{message: words[0]+" "+Math.abs(increment)+" "+tokenPrintName(tokenType)+" "+words[1]+" "+words[2]+displayName+"."});
     }
 }

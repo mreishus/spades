@@ -79,7 +79,7 @@ export const CardMouseRegion = React.memo(({
 
     const defaultOptions = {
         shouldPreventDefault: true,
-        delay: 500,
+        delay: 800,
     };
 
     const longPress = useLongPress(onLongPress, handleClick, defaultOptions);

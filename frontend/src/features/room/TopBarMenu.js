@@ -214,10 +214,10 @@ export const TopBarMenu = React.memo(({
 
   return(
     <li key={"Menu"}><div className="h-full flex text-xl items-center justify-center" href="#">Menu</div>
-      <ul className="second-level-menu">
+      <ul className="second-level-menu text-xs xl:text-base">
         {host &&
           <li key={"numPlayers"}>
-            <a href="#">Number of Players</a>
+            <a href="#">Player count</a>
             <ul className="third-level-menu">
                 <li key={"numPlayers1"}><a onClick={() => handleMenuClick({action:"num_players", value: 1})} href="#">1</a></li>
                 <li key={"numPlayers2"}><a onClick={() => handleMenuClick({action:"num_players", value: 2})} href="#">2</a></li>

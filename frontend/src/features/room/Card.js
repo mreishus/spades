@@ -40,6 +40,7 @@ export const Card = React.memo(({
     const [isActive, setIsActive] = useState(false);
     const touchMode = useTouchMode();
     const touchModeSpacingFactor = touchMode ? 1.5 : 1;
+    const defaultAction = getDefault(card, groupId, groupType, cardIndex)
 
     const handleMouseLeave = (_event) => {
         setIsActive(false);
@@ -79,12 +80,12 @@ export const Card = React.memo(({
                     // onDoubleClick={handleDoubleClick}
                     //onTouchStart={handleClick}
                 >
-                    {isActive && touchMode && 
+                    {isActive && touchMode && defaultAction &&
                         <div 
-                            className={"absolute w-full pointer-events-none bg-green-700 font-black rounded text-white text-sm text-center" + (card.rotation === -30 ? " bottom-0" : "")}
+                            className={"absolute w-full pointer-events-none bg-green-700 font-bold rounded text-white text-xs text-center" + (card.rotation === -30 ? " bottom-0" : "")}
                             style={{height:"40px", opacity: "80%"}}>
-                                <div>Tap again to</div>
-                                {getDefault(card, groupId, groupType, cardIndex).title}
+                                <div>Tap to</div>
+                                {defaultAction.title}
                         </div>}
                     {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute top-0 right-0 text-2xl" icon={faEye}/>:null}
                     <Target

@@ -68,8 +68,8 @@ export const DropdownMenuCard = React.memo(({
         <div className="menu">
           {menuCardIndex>0 ? <DropdownItem action="detach" clickCallback={handleDropdownClick}>Detach</DropdownItem> : null}
           <DropdownItem action="flip" clickCallback={handleDropdownClick}>Flip</DropdownItem>
-          {(menuCard?.exhausted) ? <DropdownItem action="toggle_exhaust" clickCallback={handleDropdownClick}>Ready</DropdownItem> : null}
-          {(!menuCard?.exhausted) ? <DropdownItem action="toggle_exhaust" clickCallback={handleDropdownClick}>Exhaust</DropdownItem> : null}
+          {(menuCard?.exhausted && dropdownMenu?.groupType === "play") ? <DropdownItem action="toggle_exhaust" clickCallback={handleDropdownClick}>Ready</DropdownItem> : null}
+          {(!menuCard?.exhausted && dropdownMenu?.groupType === "play") ? <DropdownItem action="toggle_exhaust" clickCallback={handleDropdownClick}>Exhaust</DropdownItem> : null}
           {(visibleSide === "B" && !menuCard?.peeking[playerN]) ? <DropdownItem action="peek" clickCallback={handleDropdownClick}>Peek</DropdownItem> : null}
           {menuCard?.peeking[playerN] ? <DropdownItem action="unpeek" clickCallback={handleDropdownClick}>Stop peeking</DropdownItem> : null}
           {dropdownMenu?.groupId === playerN+"Hand" ? <DropdownItem action="swapWithTop" clickCallback={handleDropdownClick}>Swap with top</DropdownItem> : null}

@@ -72,7 +72,7 @@ export const Table = React.memo(({
   })
 
   return (
-    <div className="h-full flex" 
+    <div className="h-full flex text-xs md:text-sm xl:text-base"
       //onTouchStart={(event) => handleTableClick(event)} onMouseUp={(event) => handleTableClick(event)}
       onClick={(event) => handleTableClick(event)}>
       <DropdownMenu

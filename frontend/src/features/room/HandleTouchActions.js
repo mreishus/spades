@@ -49,7 +49,7 @@ export const HandleTouchActions = ({
                 const hasToken = activeCard.tokens[tokenType] > 0;
                 gameBroadcast("game_action", {action:"increment_token", options: {card_id: activeCard.id, token_type: tokenType, increment: increment}});
                 if (increment > 0) chatBroadcast("game_update",{message: "added "+increment+" "+tokenPrintName(tokenType)+" token to "+getDisplayName(activeCard)+"."});
-                if (increment < 0 && hasToken) chatBroadcast("game_update",{message: "removed "+increment+" "+tokenPrintName(tokenType)+" token from "+getDisplayName(activeCard)+"."});
+                if (increment < 0 && hasToken) chatBroadcast("game_update",{message: "removed "+Math.abs(increment)+" "+tokenPrintName(tokenType)+" token from "+getDisplayName(activeCard)+"."});
                 const tokensLeft = touchAction.options?.tokensLeft;
                 if (tokensLeft >= 0) {
                     if (tokensLeft === 0) setTouchAction(null);
@@ -59,7 +59,7 @@ export const HandleTouchActions = ({
                     }
                 }
             } else {
-                cardAction(action, activeCard?.id, actionProps);
+                cardAction(action, activeCard?.id, touchAction.options, actionProps);
             }
             setActiveCardAndLoc(null);
         }
@@ -89,7 +89,7 @@ export const HandleTouchActions = ({
         if (sameAsPrev && activeCardAndLoc?.clicked) {
             const activeCard = activeCardAndLoc.card;
             const defaultAction = getDefault(activeCard, activeCardAndLoc.groupId, activeCardAndLoc.groupType, activeCardAndLoc.cardIndex);
-            cardAction(defaultAction.action, activeCard.id, actionProps);
+            cardAction(defaultAction.action, activeCard.id, defaultAction.options, actionProps);
         } else {
             setPrevActive(activeCardAndLoc)
         }

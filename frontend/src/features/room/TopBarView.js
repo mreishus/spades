@@ -23,12 +23,12 @@ export const TopBarView = React.memo(({
   return(
     <li>
       <div className="h-full flex text-xl items-center justify-center" href="#">View</div>
-        <ul className="second-level-menu">
+        <ul className="second-level-menu text-xs xl:text-base">
           <li key={"Hotkeys"}>
             <a href="#" onClick={() => setShowHotkeys(true)}>Hotkeys <div className={keyClass} style={keyStyleL}>Tab</div></a>
           </li>
           <li key={"PlayersInRoom"}>
-            <a href="#" onClick={() => setShowPlayersInRoom(true)}>Players in Room</a>
+            <a href="#" onClick={() => setShowPlayersInRoom(true)}>Spectators</a>
           </li>
           <li key={"Shared"}>
             <a href="#">Shared</a>

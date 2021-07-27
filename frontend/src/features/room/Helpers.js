@@ -572,20 +572,34 @@ export const getDefault = (card, groupId, groupType, cardIndex) => {
   if (!card) return;
   const face = getCurrentFace(card);
   const type = face.type;
-  if (card.rotation === -30 && card.currentSide === "B") {
+  if (groupType === "hand") {
+    return;
+  } else if (card.rotation === -30 && card.currentSide === "B") {
     return {title: "flip", action: "flip"};
   } else if (card.rotation === -30 && card.currentSide === "A") {
     return {title: "discard", action: "discard"};
-  } else if (card.currentSide === "B" && groupType === "play") {
-    return {title: "flip", action: "flip"};
   } else if (groupType === "deck") {
     return {title: "shuffle", action: "shuffle_into_deck"};
-  } else if (type === "Enemy") {
-    return {title: "deal damage", action: "increment_token", options: {tokenType: "damage", increment: 1}};
+  } else if (type === "Quest" && card.currentSide === "A") {
+    return {title: "flip", action: "flip"};
+  } else if (type === "Quest" && card.tokens.progress < face.questPoints) {
+    return {title: "progress", action: "increment_token", options: {tokenType: "progress", increment: 1}};
+  } else if (type === "Quest" && card.tokens.progress >= face.questPoints) {
+    return {title: "discard", action: "discard"};
+  } else if (card.currentSide === "B" && groupType === "play") {
+    return {title: "flip", action: "flip"};
+  } else if (type === "Enemy" && card.tokens.damage < face.hitPoints) {
+    return {title: "damage", action: "increment_token", options: {tokenType: "damage", increment: 1}};
+  } else if (type === "Enemy" && card.tokens.damage >= face.hitPoints) {
+    return {title: "discard", action: "discard"};
   } else if (type === "Treachery") {
     return {title: "discard", action: "discard"};
-  } else if (type === "Location") {
-    return {title: "add progress", action: "increment_token", options: {tokenType: "progress", increment: 1}};;
+  } else if (type === "Location" && card.tokens.progress < face.questPoints) {
+    return {title: "progress", action: "increment_token", options: {tokenType: "progress", increment: 1}};
+  } else if (type === "Location" && card.tokens.progress >= face.questPoints) {
+    return {title: "discard", action: "discard"};
+  } else if (type === "Event") {
+    return {title: "discard", action: "discard"};
   } else if (card.exhausted) {
     return {title: "ready", action: "toggle_exhaust"};
   } else if (!card.exhausted) {

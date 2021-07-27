@@ -24,12 +24,11 @@ export const handleDropdownClickCard = (dropdownProps) => {
   const menuCard = dropdownMenu.card;
   const displayName = getDisplayName(menuCard);
   if (dropdownOptions.action === "toggle_exhaust") {
-    cardAction("toggle_exhaust", menuCard?.id, actionProps);
+    cardAction("toggle_exhaust", menuCard?.id, null, actionProps);
   } else if (dropdownOptions.action === "flip") {
-    cardAction("flip", menuCard?.id, actionProps);
+    cardAction("flip", menuCard?.id, null, actionProps);
   } else if (dropdownOptions.action === "detach") {
-    gameBroadcast("game_action", {action: "detach", options: {card_id: menuCard.id}})
-    chatBroadcast("game_update", {message: "detached "+displayName+"."})
+    cardAction("detach", menuCard?.id, null, actionProps);
   } else if (dropdownOptions.action === "peek") {
     gameBroadcast("game_action", {action: "peek_card", options: {card_id: menuCard.id, value: true}})
     chatBroadcast("game_update", {message: "peeked at "+displayName+"."})
