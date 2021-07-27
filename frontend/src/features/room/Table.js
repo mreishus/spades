@@ -91,9 +91,9 @@ export const Table = React.memo(({
       />
       {/* Main panel */}
       <div className="flex w-full">
-        <div className="flex flex-col w-full h-full">
+        <div className="w-full h-full">
           {/* Game menu bar */}
-          <div className="bg-gray-600 text-white" style={{height: "6%"}}>
+          <div className="bg-gray-600 text-white w-full" style={{height: "6%"}}>
             <TopBar
               setShowModal={setShowModal}
               setShowHotkeys={setShowHotkeys}
@@ -110,7 +110,7 @@ export const Table = React.memo(({
             />
           </div>
           {/* Table */}
-          <div className="relative" style={{height: touchMode ? "82%" : "94%"}}>
+          <div className="relative w-full" style={{height: touchMode ? "82%" : "94%"}}>
             {/* <div className="h-full" style={{width: "90%"}}> */}
               <TableLayout
                 observingPlayerN={observingPlayerN}
@@ -127,7 +127,7 @@ export const Table = React.memo(({
             {/* </div> */}
           </div>
           {/* Table */}
-          {touchMode && <div className="relative bg-gray-700" style={{height: "12%"}}>
+          {touchMode && <div className="relative bg-gray-700 w-full" style={{height: "12%"}}>
               <TouchBarBottom/>
           </div>}
         </div>
