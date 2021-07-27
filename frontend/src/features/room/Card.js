@@ -8,7 +8,7 @@ import { CardTapRegion } from "./CardTapRegion";
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getVisibleSide } from "./Helpers";
+import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getVisibleSide, getDefault } from "./Helpers";
 import { Target } from "./Target";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import useLongPress from "../../hooks/useLongPress";
@@ -79,7 +79,13 @@ export const Card = React.memo(({
                     // onDoubleClick={handleDoubleClick}
                     //onTouchStart={handleClick}
                 >
-                    <div className="absolute w-full bg-green-400 rounded" style={{height:"20px", transform: "translate(0, 0px)",zIndex: zIndex+1}}></div>
+                    {isActive && touchMode && 
+                        <div 
+                            className={"absolute w-full pointer-events-none bg-green-700 font-black rounded text-white text-sm text-center" + (card.rotation === -30 ? " bottom-0" : "")}
+                            style={{height:"40px", opacity: "80%"}}>
+                                <div>Tap again to</div>
+                                {getDefault(card, groupId, groupType, cardIndex).title}
+                        </div>}
                     {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute top-0 right-0 text-2xl" icon={faEye}/>:null}
                     <Target
                         cardId={cardId}

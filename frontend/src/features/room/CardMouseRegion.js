@@ -29,15 +29,19 @@ export const CardMouseRegion = React.memo(({
     const displayName = getDisplayName(card);
     const setDropdownMenu = useSetDropdownMenu();
 
-    const makeActive = (event, mousePosition) => {
+    const makeActive = (event) => {
         const screenPosition = event.clientX > (window.innerWidth/2) ? "right" : "left";
         setActiveCardAndLoc({
             card: card,
-            mousePosition: mousePosition, 
+            mousePosition: position, 
             screenPosition: screenPosition,
             clicked: true,
+            setIsActive: setIsActive,
+            groupId: groupId,
+            groupType: groupType,
+            cardIndex: cardIndex,
         });
-        if (!touchMode) setIsActive(true);
+        //setIsActive(true);
     }
 
     const handleSetDropDownMenu = () => {
@@ -55,12 +59,17 @@ export const CardMouseRegion = React.memo(({
 
     const handleClick = (event) => {
         event.stopPropagation();
-        //setDropdownMenu(null);
         // Open the menu
         if (!touchMode) handleSetDropDownMenu();
         // Make the card active (since there was no mouseover)
         // The listener in HandleTouchButton will see the active card change and perform the touch action
         makeActive(event,position);
+    }
+    
+    const handleMouseOver = (event) => {
+        event.stopPropagation();
+        makeActive(event,position);
+        setIsActive(true);
     }
 
     const onLongPress = (event) => {
@@ -87,15 +96,13 @@ export const CardMouseRegion = React.memo(({
             <div 
                 {...longPress}
                 style={regionStyle}
-                onMouseOver={event => !touchMode && makeActive(event,position)}
+                onMouseOver={event => !touchMode && makeActive(event)}
             />
     )} else return (
             <div 
                 style={regionStyle}
-                onMouseOver={event => !touchMode && makeActive(event,position)}
-                onClick={event => handleClick(event,position)}
-            />
-            // onMouseUp={event => !touchMode && handleClick(event,position)}
-            // onTouchStart={event => handleClick(event,position)}      
+                onMouseOver={event =>  handleMouseOver(event)}
+                onClick={event => handleClick(event)}
+            />  
     )
 })

@@ -106,16 +106,6 @@ export const HandleKeyDown = ({
         const activeCardId = activeCardAndLoc.card.id; 
         const activeCard = game.cardById[activeCardId];
         if (!activeCard) return;
-        const activeCardFace = getCurrentFace(activeCard);
-        const displayName = getDisplayName(activeCard);
-        const tokens = activeCard.tokens;
-        const gsc = getGroupIdStackIndexCardIndex(game, activeCardId);
-        const groupId = gsc.groupId;
-        const stackIndex = gsc.stackIndex;
-        const cardIndex = gsc.cardIndex;
-        const group = game.groupById[groupId];
-        const groupType = group.type;
-        const stackId = group.stackIds[stackIndex];
     
         const tokenType = processTokenType(rawTokenType, activeCard);
         // Check if mouse is hoving over top half or bottom half of card

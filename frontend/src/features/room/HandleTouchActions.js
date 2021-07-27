@@ -5,7 +5,7 @@ import { useSetTouchAction, useTouchAction } from "../../contexts/TouchActionCon
 import { gameAction, cardAction } from "./Actions";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { useKeypress, useSetKeypress } from "../../contexts/KeypressContext";
-import { getCurrentFace, getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
+import { getCurrentFace, getDefault, getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
 import { useDropdownMenu, useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import { useTouchMode } from "../../contexts/TouchModeContext";
 
@@ -80,25 +80,24 @@ export const HandleTouchActions = ({
 
     // Tapping on an already active card makes it perform the default action
     useEffect(() => {
+        // If there is no active card, also make sure previous active card is blanked
+        if (!activeCardAndLoc && prevActive?.setIsActive) prevActive.setIsActive(false);
+        // Make sure touch mode is on before doing default actions 
         if (!touchMode) return;
-        if (activeCardAndLoc?.card?.id && activeCardAndLoc?.card?.id === prevActive && activeCardAndLoc?.clicked) {
+        const sameAsPrev = activeCardAndLoc?.card?.id && activeCardAndLoc?.card?.id === prevActive?.card?.id;
+        // If card was already active, perform default function
+        if (sameAsPrev && activeCardAndLoc?.clicked) {
             const activeCard = activeCardAndLoc.card;
-            const activeFace = getCurrentFace(activeCard);
-            const type = activeFace.type;
-            if (activeCard.rotation === -30 && activeCard.currentSide === "B") {
-                cardAction("flip", activeCard.id, actionProps);
-            } else if (activeCard.rotation === -30 && activeCard.currentSide === "A") {
-                cardAction("discard", activeCard.id, actionProps);
-            } else if (type === "enemy") {
-                gameBroadcast("game_action", {action:"increment_token", options: {card_id: activeCard.id, token_type: "damage", increment: 1}});
-                chatBroadcast("game_update",{message: "added 1 damage token to "+getDisplayName(activeCard)+"."});
-            } else if (type === "treachery") {
-                cardAction("discard", activeCard.id, actionProps);
-            } else {
-                cardAction("toggle_exhaust", activeCard.id, actionProps);
-            } 
+            const defaultAction = getDefault(activeCard, activeCardAndLoc.groupId, activeCardAndLoc.groupType, activeCardAndLoc.cardIndex);
+            cardAction(defaultAction.action, activeCard.id, actionProps);
         } else {
-            setPrevActive(activeCardAndLoc?.card?.id)
+            setPrevActive(activeCardAndLoc)
+        }
+
+        // Add card highlight if no touch action is selected
+        if (!touchAction) {
+            if (activeCardAndLoc?.setIsActive) activeCardAndLoc.setIsActive(true);
+            if (!sameAsPrev && prevActive?.setIsActive) prevActive.setIsActive(false);
         }
     }, [activeCardAndLoc, touchMode])
 
