@@ -1,15 +1,10 @@
 module.exports = {
   purge: [
-      './src/**/*.html',
-      "./src/features/room/*.js",
+    './src/**/*.html',
     './src/**/*.ts',
     './src/**/*.tsx',
     './src/**/*.js',
     './src/**/*.jsx',
-<<<<<<< HEAD
-=======
-    './src/**/*.tsx',
->>>>>>> 3d14fbb403340482bb3454b6d9eeb10a4e9adfed
   ],
   theme: {
     extend: {
