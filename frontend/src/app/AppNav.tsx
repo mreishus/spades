@@ -29,6 +29,11 @@ export const AppNav: React.FC<Props> = () => {
           </Link>
         </div>
       </div>
+      <div className="bg-green-600 h-full" style={{width:"200px"}}>
+        <div className="bg-red-600 h-full w-1/27">
+          
+        </div>
+      </div>
       <div
         className={cx({
           "px-2 pt-2 pb-4 flex p-0": true,

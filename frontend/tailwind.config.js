@@ -1,4 +1,11 @@
 module.exports = {
+  purge: [
+    './src/**/*.html',
+    './src/**/*.js',
+    './src/**/*.jsx',
+    './src/**/*.tsx',
+    './src/**/*.tsx',
+  ],
   theme: {
     maxWidth: {
      '1/4': '25%',
@@ -9,6 +16,7 @@ module.exports = {
      '1/4': '25%',
      '1/2': '50%',
      '3/4': '75%',
+     '1/27': '50%'
     },
     zIndex: {
       '0': 0,
