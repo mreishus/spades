@@ -1,16 +1,14 @@
 const purgecss = require("@fullhuman/postcss-purgecss")({
   content: [
     "./src/**/*.jsx",
-      "./src/**/*.js",
-      "./src/features/room/*.js",
+    "./src/**/*.js",
     "./src/**/*.tsx",
-      "./src/**/*.ts",
-      
+    "./src/**/*.ts",      
     "./public/index.html"
   ],
   css: ["./src/css/tailwind.compiled.css"],
   // Include any special characters you're using in this regular expression
-  defaultExtractor: content => content.match(/[\w-/:]+(?<!:)/g) || []
+  defaultExtractor: content => content.match(/[\w-./:]+(?<!:)/g) || []
 });
 module.exports = {
   plugins: [
