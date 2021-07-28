@@ -53,6 +53,18 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
     }
   }
 
+  const compare = ( a : any, b : any ) => {
+    if ( a.host < b.host ){
+      return -1;
+    }
+    if ( a.host > b.host ){
+      return 1;
+    }
+    return 0;
+  }
+  
+  filteredRooms.sort( compare );
+
   if (filteredRooms.length === 0) {
     return (
       <div className="p-3 text-white rounded bg-gray-700 w-full">
