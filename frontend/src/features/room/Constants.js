@@ -1,5 +1,5 @@
 //export const CARDSCALE = 3.;
-export const CARDSCALE = 26;
+export const CARDSCALE = 55;
 
 export const CYCLEORDER = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "00", "99", "A1", "PT"];
 

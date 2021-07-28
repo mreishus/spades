@@ -56,9 +56,9 @@ const CardBack = React.memo(({
                 borderRadius: '6px',
                 borderColor: 'transparent',
                 position: "absolute",
-                width: `${cardSize*visibleFace.width}vw`,
-                height: `${cardSize*visibleFace.height}vw`,
-                left: `${0.2 + (1.39-visibleFace.width)*cardSize/2}vw`,
+                width: `${cardSize*visibleFace.width}vh`,
+                height: `${cardSize*visibleFace.height}vh`,
+                left: `${0.2 + (1.39-visibleFace.width)*cardSize/2}vh`,
                 top: "50%", //`${0.2 + (1.39-currentFace.height)*cardSize/2}vw`,
                 transform: "translate(0%,-50%)",
             }}

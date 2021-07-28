@@ -7,6 +7,7 @@ import { GROUPSINFO, CARDSCALE, LAYOUTINFO } from "./Constants";
 import Chat from "../chat/Chat";
 import { handleBrowseTopN } from "./HandleBrowseTopN"; 
 import "../../css/custom-misc.css"; 
+import useWindowDimensions from "../../hooks/useWindowDimensions";
 
 var delayBroadcast;
 
@@ -75,6 +76,9 @@ export const TableLayout = React.memo(({
   const layout = useSelector(layoutStore);
   const [chatHover, setChatHover] = useState(false);
   const [sideGroupId, setSideGroupId] = useState("sharedSetAside");
+  const { height, width } = useWindowDimensions();
+  const aspectRatio = width/height;
+  //alert(aspectRatio);
   if (!layout) return;
 
   const handleQuickViewClick = (groupId) => {
@@ -98,7 +102,9 @@ export const TableLayout = React.memo(({
   const layoutInfo = LAYOUTINFO["layout" + numPlayers + layout];
   const numRows = layoutInfo.length;
   const rowHeight = `${100/numRows}%`; 
-  const cardSize = CARDSCALE/numRows;
+  var cardSize = CARDSCALE/numRows;
+  if (aspectRatio < 1.9) cardSize = cardSize*(1-0.75*(1.9-aspectRatio));
+
   var middleRowsWidth = 100;
   if (sideGroupId !== "") {
     if (numRows >= 6) middleRowsWidth = 93;

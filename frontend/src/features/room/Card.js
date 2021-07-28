@@ -54,9 +54,9 @@ export const Card = React.memo(({
                     style={{
                         position: "absolute",
                         background: `url(${getVisibleFaceSRC(card, playerN, user)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
-                        height: `${cardSize*visibleFace.height}vw`,
-                        width: `${cardSize*visibleFace.width}vw`,
-                        left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize*touchModeSpacingFactor/3*cardIndex}vw`,
+                        height: `${cardSize*visibleFace.height}vh`,
+                        width: `${cardSize*visibleFace.width}vh`,
+                        left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize*touchModeSpacingFactor/3*cardIndex}vh`,
                         top: "50%",
                         borderRadius: '8px',
                         MozBoxShadow: isActive ? '0 0 7px yellow' : '',

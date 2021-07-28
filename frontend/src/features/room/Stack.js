@@ -9,9 +9,9 @@ const Container = styled.div`
   position: relative;
   userSelect: none;
   padding: 0;
-  min-width: ${props => props.stackWidth}vw;
-  width: ${props => props.stackWidth}vw;
-  height: ${props => (props.groupType === "vertical") ? `${props.cardSize/3}vw` : "100%"};
+  min-width: ${props => props.stackWidth}vh;
+  width: ${props => props.stackWidth}vh;
+  height: ${props => (props.groupType === "vertical") ? `${props.cardSize/3}vh` : "100%"};
   display: flex;
 `;
 
