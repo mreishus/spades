@@ -6,7 +6,7 @@ import Draggable from 'react-draggable';
 const keyClass = "m-auto border bg-gray-500 text-center bottom inline-block";
 const keyClassLong = "m-auto border bg-gray-500 text-center bottom inline-block";
 const keyStyle = {width: "25px", height: "25px", borderRadius: "5px"}
-const keyStyleL = {width: "50px", height: "25px", borderRadius: "5px"}
+const keyStyleL = {width: "60px", height: "25px", borderRadius: "5px"}
 const keyStyleXL = {width: "75px", height: "25px", borderRadius: "5px"}
 const windowClass = "insert-auto overflow-auto bg-gray-700 border max-w-lg rounded-lg outline-none text-white";
 const windowStyle = {

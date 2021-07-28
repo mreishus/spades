@@ -22,7 +22,8 @@ export const AppNav: React.FC<Props> = () => {
         <div className="h-full">
           <Link
             to="/"
-            className="text-white font-light text-lg tracking-tight no-underline h-full"
+            className="absolute text-white no-underline h-full top-0"
+            style={{fontSize: "2vh"}}
           >
             {/*
             <img
@@ -31,16 +32,12 @@ export const AppNav: React.FC<Props> = () => {
               alt="Logo "
             />
                 */}
-            <span style={{fontSize: "2vh"}}>Dragn <img className="mb-2" style={{display:"inline", height: "80%"}} src={process.env.PUBLIC_URL + '/logosvg.svg'}/> Cards</span>
+            Dragn <img className="mb-1" style={{display:"inline", height: "2vh"}} src={process.env.PUBLIC_URL + '/logosvg.svg'}/> Cards
           </Link>
         </div>
       </div>
       <div
-        className={cx({
-          "px-2 pt-2 pb-4 flex p-0": true,
-          block: true,
-          // hidden: !isOpen,
-        })}
+        className="flex"
         style={{fontSize: "2vh"}}
       >
         <ProfileLink className={headerLinkClass} />

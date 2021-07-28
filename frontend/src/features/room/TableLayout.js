@@ -78,7 +78,7 @@ export const TableLayout = React.memo(({
   const [sideGroupId, setSideGroupId] = useState("sharedSetAside");
   const { height, width } = useWindowDimensions();
   const aspectRatio = width/height;
-  //alert(aspectRatio);
+
   if (!layout) return;
 
   const handleQuickViewClick = (groupId) => {
