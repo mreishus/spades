@@ -43,13 +43,14 @@ export const SideBarRoundStep = React.memo(({
       className={`flex flex-1 items-center`} 
       style={{
         width: hovering ? "375px" : "100%",
+        fontSize: "1.7vh",
       }}
       onClick={() => handleButtonClick(stepInfo.id, stepInfo.text)}
       onMouseEnter={() => setHovering(stepInfo.id)}
       onMouseLeave={() => setHovering(null)}
     >
-      <div className="flex justify-center" style={{width:"24px"}}/>
-      <div className={`flex h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"}`} style={{width:"24px"}}>
+      <div className="flex justify-center" style={{width:"3vh"}}/>
+      <div className={`flex h-full items-center justify-center ${isRoundStep ? "bg-red-800" : "bg-gray-500"}`} style={{width:"3vh"}}>
         {stepInfo.id}
       </div>
       {numTriggers > 0 &&

@@ -8,7 +8,7 @@ export const SideBar = React.memo(({
   chatBroadcast,
 }) => {
   return(
-    <div className="bg-gray-500" style={{width:"48px", zIndex: 1e6}}>
+    <div className="bg-gray-500" style={{width:"6vh", zIndex: 1e6}}>
       {PHASEINFO.map((phase, _phaseIndex) => (
         <SideBarPhase
           playerN={playerN}

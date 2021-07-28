@@ -25,7 +25,7 @@ export const GiantCard = React.memo(({playerN}) => {
           WebkitBoxShadow: '0 0 50px 20px black',
           boxShadow: '0 0 50px 20px black',
           zIndex: 1e6,
-          width: visibleFace.height >= visibleFace.width ? "25%" : "35%",
+          height: visibleFace.height >= visibleFace.width ? "70vh" : "50vh",
         }}
       />
     )

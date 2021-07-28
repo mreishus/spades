@@ -51,21 +51,21 @@ export const Group = React.memo(({
     <div className="h-full w-full">
       {hideTitle ? null :
         <div
-          className="relative text-center h-full float-left select-none text-gray-500"
+          className="relative h-full float-left select-none text-gray-500"
           style={{width:"15px"}} 
         >
           {group.type === "play" ?        
-            <div className="absolute pointer-events-none mt-1 text-sm" 
+            <div className="absolute pointer-events-none mt-1" 
             style={{top: "50%", left: "50%", transform: "translate(-50%, -50%) rotate(90deg)", whiteSpace: "nowrap"}}>
               {GROUPSINFO[group.id].tablename}
             </div>
           :
-            <div className="w-full h-full">
-              <FontAwesomeIcon onClick={(event) => handleEyeClick(event)}  className="hover:text-white mt-2" icon={faEye}/>
-              <FontAwesomeIcon onClick={(event) => handleBarsClick(event)}  className="hover:text-white" icon={faBars}/>
+            <div className="relative w-full h-full">
               <span 
-                className="absolute pointer-events-none mt-1 text-sm" 
-                style={{top: "50%", left: "50%", transform: `translate(-50%, ${group.id === "sharedEncounterDeck" ? "80%" : "0%"}) rotate(90deg)`, whiteSpace: "nowrap"}}>
+                className="absolute mt-1" 
+                style={{fontSize:"1.7vh", top: "50%", left: "50%", transform: `translate(-50%, -40%) rotate(90deg)`, whiteSpace: "nowrap"}}>
+                <FontAwesomeIcon onClick={(event) => handleEyeClick(event)}  className="hover:text-white mr-2" style={{transform: `rotate(-90deg)`}} icon={faEye}/>
+                <FontAwesomeIcon onClick={(event) => handleBarsClick(event)}  className="hover:text-white mr-2" style={{transform: `rotate(-90deg)`}} icon={faBars}/>
                   {GROUPSINFO[group.id].tablename + (group.type === "deck" ? " ("+numStacks+")" : "")}
               </span>
             </div>

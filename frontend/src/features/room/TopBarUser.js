@@ -51,7 +51,8 @@ export const TopBarUser = React.memo(({
 
   const sittingUserID = playerIds[playerI];
 
-  const handleFirstPlayerClick = () => {
+  const handleFirstPlayerClick = (event) => {
+    event.stopPropagation();
     if (!playerN) return;
     const dropdownMenu = {
         type: "firstPlayer",
@@ -146,7 +147,7 @@ export const TopBarUser = React.memo(({
             <img 
               className="h-full mr-1 mb-1" 
               src={process.env.PUBLIC_URL + '/images/tokens/firstplayer.png'}
-              onClick={() => handleFirstPlayerClick()}/>
+              onClick={(event) => handleFirstPlayerClick(event)}/>
             : null}
           <UserName userID={sittingUserID} defaultName="Empty seat"></UserName>
         </div>

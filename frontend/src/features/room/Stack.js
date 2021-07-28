@@ -4,14 +4,15 @@ import styled from "@emotion/styled";
 import { Card } from "./Card";
 import { Draggable } from "react-beautiful-dnd";
 import { useTouchMode } from "../../contexts/TouchModeContext";
+import { CARDSCALE } from "./Constants";
 
 const Container = styled.div`
   position: relative;
   userSelect: none;
   padding: 0;
-  min-width: ${props => props.stackWidth}vw;
-  width: ${props => props.stackWidth}vw;
-  height: ${props => (props.groupType === "vertical") ? `${props.cardSize/3}vw` : "100%"};
+  min-width: ${props => props.stackWidth}vh;
+  width: ${props => props.stackWidth}vh;
+  height: ${props => (props.groupType === "vertical") ? `${props.cardSize/3}vh` : "100%"};
   display: flex;
 `;
 
@@ -36,7 +37,7 @@ export const Stack = React.memo(({
   const cardIds = stack.cardIds;
   // Calculate size of stack for proper spacing. Changes base on group type and number of stack in group.
   const numStacksNonZero = numStacks > 0 ? numStacks : 1;
-  var handSpacing = 45/(numStacksNonZero);
+  var handSpacing = 1.8*CARDSCALE/(numStacksNonZero);
   if (handSpacing > cardSize) handSpacing = cardSize;
   const stackWidth = groupType === "hand" ? handSpacing : cardSize/0.72 + cardSize*touchModeSpacingFactor/3*(cardIds.length-1);
   //const stackWidth = cardSize/0.72 + cardSize/3*(stack.cards.length-1);
