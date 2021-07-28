@@ -25,7 +25,7 @@ export const ChatInput: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
         type="text"
         name="chat"
         placeholder="your message.."
-        className="form-control w-full bg-gray-900 text-white border-0"
+        className="form-control w-full bg-gray-900 text-white border-0 h-full"
         onFocus={event => setTyping(true)}
         onBlur={event => setTyping(false)}
         onChange={handleInputChange}
