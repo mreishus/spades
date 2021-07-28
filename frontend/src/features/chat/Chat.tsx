@@ -22,10 +22,10 @@ export const Chat: React.FC<Props> = ({ hover, chatBroadcast, setTyping }) => {
 
   return (
     <div className="overflow-hidden h-full">
-      <div className="bg-gray-800 overflow-y-auto" style={{height: "calc(100% - 3vh)"}}>
+      <div className="bg-gray-800 overflow-y-auto" style={{height: "calc(100% - 4vh)"}}>
         <ChatMessages hover={hover} chatOnly={chatOnly}/>
       </div>
-      <div className="text-center"  style={{height: "3vh"}}>
+      <div className="text-center"  style={{height: "4vh"}}>
         {isLoggedIn && <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping}/>}
       </div>
       <div className="absolute bottom-0 right-0 text-white p-1 cursor-default" style={{ opacity: "35%", paddingRight: "50px"}}>
