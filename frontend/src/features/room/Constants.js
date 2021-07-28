@@ -292,9 +292,9 @@ export const LAYOUTINFO = {
       regions: [
         {id: "sharedMainQuest", width: "12%"},
         {id: "sharedActive", width: "11%"},
-        {id: "sharedStaging", width: "59%", style: "shaded", boxShadow: "true"},
-        {id: "sharedEncounterDeck", width: "9%"},
-        {id: "sharedEncounterDiscard", width: "9%"},
+        {id: "sharedStaging", width: "58%", style: "shaded", boxShadow: "true"},
+        {id: "sharedEncounterDeck", width: "9.5%"},
+        {id: "sharedEncounterDiscard", width: "9.5%"},
       ]
     },
     {
@@ -315,9 +315,9 @@ export const LAYOUTINFO = {
     },
     {
       regions: [
-        {id: "Hand", width: "57%", style: "shaded"},
-        {id: "Deck", width: "9%", style: "shaded"},
-        {id: "Discard", width: "9%", style: "shaded"},
+        {id: "Hand", width: "56%", style: "shaded"},
+        {id: "Deck", width: "9.5%", style: "shaded"},
+        {id: "Discard", width: "9.5%", style: "shaded"},
       ]
     },
   ],
@@ -326,9 +326,9 @@ export const LAYOUTINFO = {
       regions: [
         {id: "sharedMainQuest", width: "12%"},
         {id: "sharedActive", width: "11%"},
-        {id: "sharedStaging", width: "59%", style: "shaded", boxShadow: "true"},
-        {id: "sharedEncounterDeck", width: "9%"},
-        {id: "sharedEncounterDiscard", width: "9%"},
+        {id: "sharedStaging", width: "58%", style: "shaded", boxShadow: "true"},
+        {id: "sharedEncounterDeck", width: "9.5%"},
+        {id: "sharedEncounterDiscard", width: "9.5%"},
       ]
     },
     {
@@ -352,9 +352,9 @@ export const LAYOUTINFO = {
     },
     {
       regions: [
-        {id: "Hand", width: "57%", style: "shaded"},
-        {id: "Deck", width: "9%", style: "shaded"},
-        {id: "Discard", width: "9%", style: "shaded"},
+        {id: "Hand", width: "56%", style: "shaded"},
+        {id: "Deck", width: "9.5%", style: "shaded"},
+        {id: "Discard", width: "9.5%", style: "shaded"},
       ]
     },
   ],
