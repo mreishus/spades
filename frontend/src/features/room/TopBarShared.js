@@ -38,7 +38,7 @@ export const TopBarShared = React.memo(({
   }
 
   return(
-    <div className="float-left h-full bg-gray-600" style={{width: "16%", borderLeft: "1px solid lightgrey"}}>
+    <div className="float-left h-full bg-gray-600" style={{fontSize: "1.7vh", width: "16%", borderLeft: "1px solid lightgrey"}}>
       <div className="float-left h-full w-1/3">
         <div className="h-1/2 w-full flex justify-center">
           Round

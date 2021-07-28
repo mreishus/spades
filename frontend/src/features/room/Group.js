@@ -60,7 +60,7 @@ export const Group = React.memo(({
               {GROUPSINFO[group.id].tablename}
             </div>
           :
-            <div className="relative w-full h-full overflow-hidden">
+            <div className="relative w-full h-full">
               <span 
                 className="absolute mt-1" 
                 style={{fontSize:"1.7vh", top: "50%", left: "50%", transform: `translate(-50%, -40%) rotate(90deg)`, whiteSpace: "nowrap"}}>
