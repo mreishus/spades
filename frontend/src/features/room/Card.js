@@ -58,7 +58,7 @@ export const Card = React.memo(({
                         width: `${cardSize*visibleFace.width}vh`,
                         left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize*touchModeSpacingFactor/3*cardIndex}vh`,
                         top: "50%",
-                        borderRadius: '8px',
+                        borderRadius: '0.6vh',
                         MozBoxShadow: isActive ? '0 0 7px yellow' : '',
                         WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
                         boxShadow: isActive ? '0 0 7px yellow' : '',

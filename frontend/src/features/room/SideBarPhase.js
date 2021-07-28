@@ -23,7 +23,7 @@ export const SideBarPhase = React.memo(({
           {phaseInfo.label}
         </div>
       </div>
-      <div className="w-full h-full text-sm flex flex-col float-left">
+      <div className="w-full h-full flex flex-col float-left">
         {phaseInfo.steps.map((step, _stepIndex) => {
           return (
             <SideBarRoundStep

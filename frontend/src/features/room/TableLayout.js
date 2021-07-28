@@ -97,8 +97,6 @@ export const TableLayout = React.memo(({
     setChatHover(false);
   }
 
-  const quickViewClassName = "w-full cursor-default quickviewbutton"
-  const quickViewStyle = {height: "24.5%"}
   const layoutInfo = LAYOUTINFO["layout" + numPlayers + layout];
   const numRows = layoutInfo.length;
   const rowHeight = `${100/numRows}%`; 
@@ -184,7 +182,7 @@ export const TableLayout = React.memo(({
       {Object.keys(GROUPSINFO).includes(sideGroupId) && browseGroupId !== sideGroupId &&
         <div className="relative float-left" style={{height: `${100-2*(100/numRows)}%`, width:`${100-middleRowsWidth}%`}}>
           <div className="absolute text-center w-full select-none text-gray-500">
-              <div className="mt-1 text-sm">
+              <div className="mt-1">
                 {GROUPSINFO[sideGroupId].tablename}
             </div>
           </div>
@@ -221,7 +219,7 @@ export const TableLayout = React.memo(({
         ))}
       </div>
       {/* Quickview and Chat */}
-      <div className="absolute right-0 bottom-0 h-full" style={{width:"25%", height: rowHeight}}>
+      {0 && <div className="absolute right-0 bottom-0 h-full" style={{width:"25%", height: rowHeight}}>
         <div 
           className="absolute bottom-0 left-0" 
           style={{height: chatHover ? `${numRows*100}%` : `100%`, width:'100%', paddingRight:"30px", opacity: 0.7, zIndex: chatHover ? 1e6 : 1e3}}
@@ -229,7 +227,7 @@ export const TableLayout = React.memo(({
           onMouseLeave={() => handleStopChatHover()}>
           <Chat hover={chatHover} chatBroadcast={chatBroadcast} setTyping={setTyping}/>
         </div>
-        <div className="absolute h-full text-xs text-center text-gray-400 right-0" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
+        <div className="absolute h-full text-center text-gray-400 right-0" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
           <div className={`quickviewbutton ${sideGroupId === "sharedSetAside" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick("sharedSetAside")}>
             <div style={{height: "50%"}}>SA</div>
             <div style={{height: "50%"}}>{groupById["sharedSetAside"].stackIds.length}</div>
@@ -247,7 +245,7 @@ export const TableLayout = React.memo(({
             <div style={{height: "50%"}}>{groupById["sharedVictory"].stackIds.length}</div>
           </div>
         </div>
-      </div>
+      </div>}
     </>
   )
 })

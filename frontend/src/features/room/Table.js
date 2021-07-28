@@ -72,7 +72,7 @@ export const Table = React.memo(({
   })
 
   return (
-    <div className="h-full flex text-xs md:text-sm xl:text-base"
+    <div className="h-full flex" style={{fontSize: "2vh"}}
       //onTouchStart={(event) => handleTableClick(event)} onMouseUp={(event) => handleTableClick(event)}
       onClick={(event) => handleTableClick(event)}>
       <DropdownMenu
@@ -126,7 +126,7 @@ export const Table = React.memo(({
               />
             {/* </div> */}
           </div>
-          {/* Table */}
+          {/* Touch Bar */}
           {touchMode && <div className="relative bg-gray-700 w-full" style={{height: "12%"}}>
               <TouchBarBottom/>
           </div>}

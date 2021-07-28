@@ -38,10 +38,6 @@ export const Browse = React.memo(({
   const [selectedCardName, setSelectedCardName] = useState('');
   const stackIds = group["stackIds"];
   const numStacks = stackIds.length;
-  var fontSize = "text-md"
-  if (game.numPlayers === 2) fontSize = "text-sm"
-  if (game.numPlayers > 2) fontSize = "text-xs"
- 
 
   const handleBarsClick = (event) => {
     event.stopPropagation();
@@ -138,7 +134,7 @@ export const Browse = React.memo(({
         <div>
           {group.type !== "play" && <FontAwesomeIcon onClick={(event) => handleBarsClick(event)}  className="hover:text-white" icon={faBars}/>}
           <span 
-            className="absolute mt-1 text-sm" 
+            className="absolute mt-1" 
             style={{top: "50%", left: "50%", transform: `translate(-50%, 0%) rotate(90deg)`, whiteSpace: "nowrap"}}>
               {GROUPSINFO[group.id].tablename}
           </span>
@@ -157,7 +153,7 @@ export const Browse = React.memo(({
         />
       </div>
 
-      <div className={`relative h-full float-left p-2 ${fontSize}`} style={{width:"360px"}}>
+      <div className={`relative h-full float-left p-2`} style={{width:"360px"}}>
         <table className="w-full">
           <body className="w-full">
             <tr className="w-full">

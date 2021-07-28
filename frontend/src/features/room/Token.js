@@ -70,26 +70,24 @@ export const Token = React.memo(({
 
     return(
         <div
-        
             style={{
                 position: "absolute",
                 left: `${left}`,
                 top: `${top}`,
                 height: `25%`,
                 zIndex: showButtons ? zIndex + 1 : "",
-                display: showButtons || amount!==0 ? "block" : "none",
-            }}>
+                display: showButtons || amount!==0 ? "block" : "none"}}>
             <div
                 className="flex absolute text-white text-center w-full h-full items-center justify-center"
                 style={{
                     textShadow: "rgb(0, 0, 0) 2px 0px 0px, rgb(0, 0, 0) 1.75517px 0.958851px 0px, rgb(0, 0, 0) 1.0806px 1.68294px 0px, rgb(0, 0, 0) 0.141474px 1.99499px 0px, rgb(0, 0, 0) -0.832294px 1.81859px 0px, rgb(0, 0, 0) -1.60229px 1.19694px 0px, rgb(0, 0, 0) -1.97999px 0.28224px 0px, rgb(0, 0, 0) -1.87291px -0.701566px 0px, rgb(0, 0, 0) -1.30729px -1.51361px 0px, rgb(0, 0, 0) -0.421592px -1.95506px 0px, rgb(0, 0, 0) 0.567324px -1.91785px 0px, rgb(0, 0, 0) 1.41734px -1.41108px 0px, rgb(0, 0, 0) 1.92034px -0.558831px 0px",
-                    fontSize: "2vh"
+                    //fontSize: "2vh"
                 }}>
                 {(tokenType==="threat" || tokenType==="willpower" || tokenType==="attack" || tokenType==="defense" || tokenType==="hitPoints") && amount>0 ? "+"+amount : amount}
             </div>
 
             <div
-                className="text-center text-sm"
+                className="text-center"
                 style={{
                     position: "absolute",
                     height: "50%",
@@ -103,8 +101,7 @@ export const Token = React.memo(({
                 onMouseOver={() => setButtonLeftVisible(true)}
                 onMouseLeave={() => setButtonLeftVisible(false)}
                 onClick={(event) => clickArrow(event,-1)}
-                onDoubleClick={(event) => handleDoubleClick(event)}
-            >
+                onDoubleClick={(event) => handleDoubleClick(event)}>
                 <FontAwesomeIcon 
                     className="text-white" 
                     style={{
@@ -112,12 +109,11 @@ export const Token = React.memo(({
                         top:"15%", 
                         left:"30%",
                     }}  
-                    icon={faChevronDown}
-                />
+                    icon={faChevronDown}/>
             </div>
 
             <div
-                className="text-center text-sm"
+                className="text-center"
                 style={{
                     position: "absolute",
                     height: "50%",
@@ -130,8 +126,7 @@ export const Token = React.memo(({
                 onMouseOver={() => setButtonRightVisible(true)}
                 onMouseLeave={() => setButtonRightVisible(false)}
                 onClick={(event) => clickArrow(event,1)}
-                onDoubleClick={(event) => handleDoubleClick(event)}
-            >
+                onDoubleClick={(event) => handleDoubleClick(event)}>
                 <FontAwesomeIcon 
                     className="text-white" 
                     style={{
@@ -144,8 +139,7 @@ export const Token = React.memo(({
             </div>
             <img 
                 className="block h-full"
-                src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}
-            />
+                src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}/>
         </div>
     )
 })
