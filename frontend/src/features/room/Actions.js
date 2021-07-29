@@ -10,6 +10,7 @@ import {
   processTokenType,
   tokenPrintName,
   checkAlerts,
+  getScore,
 } from "./Helpers";
 import { setValues } from "./gameUiSlice";
 import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStepPhase } from "./Constants";
@@ -297,9 +298,13 @@ export const gameAction = (action, props) => {
     }    
     else if (action === "caps_lock_A") {
         chatBroadcast("game_update",{message: "pressed Shift-A instead of A. Is caps lock on?"});
-    }    
+    }
     else if (action === "caps_lock_n") {
         chatBroadcast("game_update",{message: "pressed N instead of Shift-N. Is caps lock on?"});
+    }
+    else if (action === "score") {
+        const score = getScore(gameUi, gameBroadcast, chatBroadcast)
+        chatBroadcast("game_update",{message: "calculated score: "+score});
     }
 }
 
@@ -530,8 +535,10 @@ export const cardAction = (action, cardId, options, props) => {
         }
     }
     else if (action === "detach") {
-        gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
-        chatBroadcast("game_update", {message: "detached "+displayName+"."})
+        if (cardIndex > 0) {
+            gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
+            chatBroadcast("game_update", {message: "detached "+displayName+"."})
+        }
     }
     // Increment token
     else if (action === "increment_token") {

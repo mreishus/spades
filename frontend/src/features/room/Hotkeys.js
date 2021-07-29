@@ -95,41 +95,45 @@ export const Hotkeys = React.memo(({
               <td className="text-center">Exhaust / ready. If location, make active.</td>
             </tr>
             <tr className={"bg-gray-600"}>
+              <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>C</div></td>
+              <td className="text-center">Detach</td>
+            </tr>
+            <tr className={"bg-gray-500"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>F</div></td>
               <td className="text-center">Flip</td>
             </tr>
-            <tr className={"bg-gray-500"}>
+            <tr className={"bg-gray-600"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>H</div></td>
               <td className="text-center">Shuffle into owner's deck</td>
             </tr>
-            <tr className={"bg-gray-600"}>
+            <tr className={"bg-gray-500"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>Q</div></td>
               <td className="text-center">Commit / uncommit from quest</td>
             </tr>
-            <tr className={"bg-gray-500"}>
+            <tr className={"bg-gray-600"}>
               <td className="p-1 text-center">
                 <div className={keyClass} style={keyStyleL}>Shift</div>
                 <div className="inline-block p-1">+</div>
                 <div className={keyClass} style={keyStyle}>Q</div></td>
               <td className="text-center">Commit / uncommit from quest without exhausting / readying</td>
             </tr>
-            <tr className={"bg-gray-600"}>
+            <tr className={"bg-gray-500"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>S</div></td>
               <td className="text-center">Deal shadow card</td>
             </tr>
-            <tr className={"bg-gray-500"}>
+            <tr className={"bg-gray-600"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>T</div></td>
               <td className="text-center">Target card</td>
             </tr>
-            <tr className={"bg-gray-600"}>
+            <tr className={"bg-gray-500"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>V</div></td>
               <td className="text-center">Add to victory display</td>
             </tr>
-            <tr className={"bg-gray-500"}>
+            <tr className={"bg-gray-600"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>W</div></td>
               <td className="text-center">Start/stop drawing arrow</td>
             </tr>
-            <tr className={"bg-gray-600"}>
+            <tr className={"bg-gray-500"}>
               <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>X</div></td>
               <td className="text-center">Discard</td>
             </tr>

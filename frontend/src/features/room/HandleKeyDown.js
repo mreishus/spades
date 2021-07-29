@@ -31,6 +31,7 @@ const keyCardActionMap = {
     "t": "target",
     "v": "victory",
     "x": "discard",
+    "c": "detach",
 }
 
 const keyGameActionMap = {
@@ -51,6 +52,7 @@ const keyGameActionMap = {
     "ArrowDown": "next_step",
     "M": "mulligan",
     "Escape": "clear_targets",
+    "O": "score",
 }
 
 const shiftKeyGameActionMap = {

@@ -213,48 +213,26 @@ export const flatListOfCards = (game) => {
   return allCards;
 }
 
+export const passesCriterion = (card, obj, criterion) => {
+  if (card === null || obj === null || criterion === null) return false;
+  if (criterion.length === 0) return false;
+  if (criterion.length === 1) return obj === criterion[0];
+  var par = criterion[0];
+  if (par === "sideUp") par = card["currentSide"];
+  if (par === "sideDown") par = card["currentSide"] === "A" ? "B" : "A";
+  if (criterion.length > 1) return passesCriterion(card, obj[par], criterion.slice(1))
+  return false;
+}
+
 export const passesCriteria = (card, criteria) => {
   for (var criterion of criteria) {
-    var objectToCheck = card;
-    console.log("crit 0 ",criterion[0]);
-    switch(criterion[0]) {
-      case "sideA":
-        console.log("A");
-        objectToCheck = card["sides"]["A"];
-        break;
-      case "sideB":
-        console.log("B");
-        objectToCheck = card["sides"]["B"];
-        break;
-      case "sideUp":
-        console.log("up");
-        objectToCheck = getCurrentFace(card);
-        break;
-      case "sideDown":
-        console.log("dwn");
-        if (card["currentSide"] === "A") objectToCheck = card["sides"]["B"];
-        else objectToCheck = card["sides"]["A"];
-        break;
-      case "tokens":
-        console.log("tok");
-        objectToCheck = card["tokens"];
-        break;
-      case "peeking":
-        console.log("peek");
-        objectToCheck = card["peeking"];
-        break;
-    }
-    const property = criterion[1];
-    const value = criterion[2];
-    const passed_criterion = objectToCheck[property] === value;
-    console.log("checking if ",objectToCheck,property,objectToCheck[property],value, passed_criterion   );
-    if (!passed_criterion) return false;
+    if (!passesCriterion(card, card, criterion)) return false;
   }
   return true;
 }
 
 const listOfMatchingCards = (gameUi, criteria) => {
-  const allCards = flatListOfCards(gameUi);
+  const allCards = flatListOfCards(gameUi.game);
   const matchingCards = [];
   for (var card of allCards) {
     if (passesCriteria(card, criteria)) {
@@ -605,4 +583,29 @@ export const getDefault = (card, groupId, groupType, cardIndex) => {
   } else if (!card.exhausted) {
     return {title: "exhaust", action: "toggle_exhaust"};
   } 
+}
+
+export const getScore = (gameUi, gameBroadcast, chatBroadcast) => {
+  var heroCards = [];
+  heroCards = heroCards.concat(listOfMatchingCards(gameUi, [["sides","A","type","Hero"], ["groupId","player1Discard"]]))
+  heroCards = heroCards.concat(listOfMatchingCards(gameUi, [["sides","A","type","Hero"], ["groupId","player2Discard"]]))
+  heroCards = heroCards.concat(listOfMatchingCards(gameUi, [["sides","A","type","Hero"], ["groupId","player3Discard"]]))
+  heroCards = heroCards.concat(listOfMatchingCards(gameUi, [["sides","A","type","Hero"], ["groupId","player4Discard"]]))
+  var fallenHeroCost = 0;
+  for (var card of heroCards) {
+    fallenHeroCost += card.sides.A.cost;
+  }
+  chatBroadcast("game_update",{message: "calculated cost of fallen heroes: " + fallenHeroCost});
+  const playerData = gameUi.game.playerData;
+  const sumThreat = playerData.player1.threat + playerData.player2.threat + playerData.player3.threat + playerData.player4.threat;
+  chatBroadcast("game_update",{message: "calculated sum of threat: " + sumThreat});
+  const numRounds = gameUi.game.roundNumber;
+  chatBroadcast("game_update",{message: "calculated number of completed rounds: " + numRounds});
+  var victoryPoints = 0;
+  const victoryCards = listOfMatchingCards(gameUi, [["groupId","sharedVictory"]])
+  for (var card of victoryCards) {
+    victoryPoints += card.sides.A.victoryPoints;
+  }
+  chatBroadcast("game_update",{message: "calculated total victory points: " + victoryPoints});
+  return fallenHeroCost + sumThreat + numRounds*10 - victoryPoints;
 }
