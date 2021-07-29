@@ -125,7 +125,7 @@ export const SpawnQuestModal = React.memo(({
     const handleDropdownClick = async(props) => {
       console.log(props);
       if (props.goToMenu) setActiveMenu(props.goToMenu);
-      else if (props.questIndex) {
+      else if (props.questIndex !== null) {
         const res = await fetch(questsOCTGN[props.questIndex]);
         const xmlText = await res.text();
         loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast);

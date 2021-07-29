@@ -35,6 +35,7 @@ export const HandleTouchActions = ({
     console.log("Rendering HandleTouchActions")
 
     useEffect(() => {
+        if (!playerN) return;
         if (touchAction?.type === "game") {
             const action = touchAction?.action;
             gameAction(action, actionProps)

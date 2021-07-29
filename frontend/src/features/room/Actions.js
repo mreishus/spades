@@ -10,9 +10,10 @@ import {
   processTokenType,
   tokenPrintName,
   checkAlerts,
+  getScore,
 } from "./Helpers";
 import { setValues } from "./gameUiSlice";
-import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStepPhase } from "./Constants";
+import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStep, prevRoundStep, nextPhase, prevPhase } from "./Constants";
 
 const reveal = (game, deckGroupId, discardGroupId, gameBroadcast, chatBroadcast, facedown) => {
     // Check remaining cards in encounter deck
@@ -258,14 +259,23 @@ export const gameAction = (action, props) => {
         }
     }
     
-    else if (action === "next_step") {
-        // Next step
-        const nextStepPhase = nextRoundStepPhase(game.roundStep);
-        if (nextStepPhase) {
-            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", nextStepPhase["roundStep"]], ["game", "phase", nextStepPhase["phase"]]]}});
-            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText(nextStepPhase["roundStep"])+"."});
+    else if (action === "next_step" || action === "prev_step") {
+        // Next/prev step
+        const stepPhase = action === "next_step" ? nextRoundStep(game.roundStep) : prevRoundStep(game.roundStep);
+        if (stepPhase) {
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", stepPhase["roundStep"]], ["game", "phase", stepPhase["phase"]]]}});
+            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText(stepPhase["roundStep"])+"."});
         }
-    } 
+    }
+
+    else if (action === "next_phase" || action === "prev_phase") {
+        // Next/prev phase
+        const stepPhase = action === "next_phase" ? nextPhase(game.phase) : prevPhase(game.phase);
+        if (stepPhase) {
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", stepPhase["roundStep"]], ["game", "phase", stepPhase["phase"]]]}});
+            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText(stepPhase["roundStep"])+"."});
+        }
+    }
 
     else if (action === "mulligan") {
         if (window.confirm('Shuffle hand in deck and redraw equal number?')) {
@@ -297,9 +307,13 @@ export const gameAction = (action, props) => {
     }    
     else if (action === "caps_lock_A") {
         chatBroadcast("game_update",{message: "pressed Shift-A instead of A. Is caps lock on?"});
-    }    
+    }
     else if (action === "caps_lock_n") {
         chatBroadcast("game_update",{message: "pressed N instead of Shift-N. Is caps lock on?"});
+    }
+    else if (action === "score") {
+        const score = getScore(gameUi, gameBroadcast, chatBroadcast)
+        chatBroadcast("game_update",{message: "calculated score: "+score});
     }
 }
 
@@ -530,8 +544,10 @@ export const cardAction = (action, cardId, options, props) => {
         }
     }
     else if (action === "detach") {
-        gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
-        chatBroadcast("game_update", {message: "detached "+displayName+"."})
+        if (cardIndex > 0) {
+            gameBroadcast("game_action", {action: "detach", options: {card_id: card.id}})
+            chatBroadcast("game_update", {message: "detached "+displayName+"."})
+        }
     }
     // Increment token
     else if (action === "increment_token") {
