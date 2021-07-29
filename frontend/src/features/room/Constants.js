@@ -192,13 +192,49 @@ export const PHASEINFO = [
   }
 ]
 
-export const nextRoundStepPhase = (roundStep) => {
+export const nextRoundStep = (roundStep) => {
   var stepFound = false;
   for (var phase of PHASEINFO) {
     const steps = phase.steps;
     for (var step of steps) {
       if (stepFound) return {roundStep: step.id, phase: phase.name};
       if (step.id == roundStep) stepFound = true;
+    }
+  }
+  return null;
+}
+
+export const prevRoundStep = (roundStep) => {
+  var prev = null;
+  for (var phase of PHASEINFO) {
+    const steps = phase.steps;
+    for (var step of steps) {
+      if (step.id == roundStep) return prev;
+      prev = {roundStep: step.id, phase: phase.name};
+    }
+  }
+  return null;
+}
+
+export const nextPhase = (currPhase) => {
+  var phaseFound = false;
+  for (var phase of PHASEINFO) {
+    const steps = phase.steps;
+    for (var step of steps) {
+      if (phaseFound && phase.name !== currPhase) return {roundStep: step.id, phase: phase.name};
+      if (phase.name == currPhase) phaseFound = true;
+    }
+  }
+  return null;
+}
+
+export const prevPhase = (currPhase) => {
+  var prev = null;
+  for (var phase of PHASEINFO) {
+    const steps = phase.steps;
+    for (var step of steps) {
+      if (phase.name === currPhase) return prev;
+      if (prev?.phase !== phase.name ) prev = {roundStep: step.id, phase: phase.name};
     }
   }
   return null;
