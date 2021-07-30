@@ -135,6 +135,7 @@ export const Card = React.memo(({
                         gameBroadcast={gameBroadcast}
                         chatBroadcast={chatBroadcast}
                         zIndex={zIndex}
+                        aspectRatio={visibleFace.width/visibleFace.height}
                     />
                     <div 
                         ref={registerDivToArrowsContext ? (div) => registerDivToArrowsContext({ id: "arrow-"+card.id, div }) : null} 
