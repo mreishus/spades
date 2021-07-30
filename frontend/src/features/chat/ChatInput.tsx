@@ -20,7 +20,7 @@ export const ChatInput: React.FC<Props> = ({ chatBroadcast, setTyping }) => {
     }
   );
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="h-full" onSubmit={handleSubmit}>
       <input
         type="text"
         name="chat"

@@ -110,7 +110,9 @@ export const Stacks = React.memo(({
               groupType={groupType} 
               stackIds={stackIds} 
               isDraggingOver={dropSnapshot.isDraggingOver} 
-              isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}>
+              isDraggingFrom={Boolean(dropSnapshot.draggingFromThisWith)}
+              playerN={playerN}
+              cardSize={cardSize}>
             </CardBack>
             <DropZone ref={dropProvided.innerRef} groupType={groupType}>
               <StacksList
