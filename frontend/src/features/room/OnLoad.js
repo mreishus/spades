@@ -60,6 +60,8 @@ export const OnLoad = React.memo(({
                   cardRow['discardgroupid'] = playerI+"Discard";
                   if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
                   loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+                } else {
+                  alert("Encountered unknown card ID for "+slotJsonData.name)
                 }
               })
               .catch((error) => {
@@ -83,6 +85,8 @@ export const OnLoad = React.memo(({
                   cardRow['discardgroupid'] = playerI+"Discard";
                   if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
                   loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+                } else {
+                  alert("Encountered unknown card ID for "+slotJsonData.name)
                 }
               })
               .catch((error) => {
