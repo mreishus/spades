@@ -37,10 +37,9 @@ export const Lobby: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [replayId, setReplayId] = useState("");
   const [ringsDbIds, setRingsDbIds] = useState<Array<string>>([]);
-  const [ringsDbType, setRingsDbType] = useState("");
+  const [ringsDbType, setRingsDbType] = useState<Array<string>>([]);
   const [ringsDbDomain, setRingsDbDomain] = useState("");
   const [loadShuffle, setLoadShuffle] = useState(false);
-  const [typing, setTyping] = useState<Boolean>(false);
   const { isLoading, isError, data, setData } = useDataApi<any>(
     "/be/api/rooms",
     null
@@ -53,10 +52,14 @@ export const Lobby: React.FC = () => {
         var splitUrl = url.split( '/' );
         const newroomIndex = splitUrl.findIndex((e) => e === "newroom")
         setRingsDbDomain(splitUrl[newroomIndex + 1])
-        setRingsDbType(splitUrl[newroomIndex + 2])
-        var intArray = splitUrl.slice(newroomIndex + 3, splitUrl.length)
-        intArray = filterArrayForPositiveInt(intArray);
-        setRingsDbIds(intArray);
+        const idArray = [];
+        const typeArray = [];
+        for (var i = newroomIndex + 2; i<splitUrl.length-1; i += 2 ) {
+          typeArray.push(splitUrl[i]);
+          idArray.push(splitUrl[i+1]);
+        }
+        setRingsDbType(typeArray);
+        setRingsDbIds(idArray);
       }
       if (url.includes("replay")) {
         var splitUrl = url.split( '/' );
