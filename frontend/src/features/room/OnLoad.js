@@ -23,17 +23,18 @@ export const OnLoad = React.memo(({
       // Turn off trigger
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["options", "ringsDbIds", null],["options", "ringsDbType", null]]}})
       // Load ringsdb decks by ids
-      const ringsDbIds = options["ringsDbIds"];
-      const numDecks = ringsDbIds.length;
+      const idArray = options["ringsDbIds"];
+      const typeArray = options["ringsDbType"];
+      const numDecks = idArray.length;
       if (numDecks>1 && numDecks<=4) {
         gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "numPlayers", numDecks]]}});
         chatBroadcast("game_update", {message: "set the number of players to: " + numDecks});
       }
-      for (var i=0; i<numDecks; i++) {
+      for (var i=0; i<Math.min(numDecks,4); i++) {
         const playerI = "player"+(i+1);
         chatBroadcast("game_update",{message: "is loading a deck from RingsDb..."});
-        const ringsDbId = ringsDbIds[i];
-        const ringsDbType = options["ringsDbType"];
+        const ringsDbId = idArray[i];
+        const ringsDbType = typeArray[i];
         const urlBase = options["ringsDbDomain"] === "test" ? "https://www.test.ringsdb.com/api/" : "https://www.ringsdb.com/api/"
         const url = ringsDbType === "decklist" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
         console.log("Fetching ", url);
@@ -60,6 +61,8 @@ export const OnLoad = React.memo(({
                   cardRow['discardgroupid'] = playerI+"Discard";
                   if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
                   loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+                } else {
+                  alert("Encountered unknown card ID for "+slotJsonData.name)
                 }
               })
               .catch((error) => {
@@ -83,6 +86,8 @@ export const OnLoad = React.memo(({
                   cardRow['discardgroupid'] = playerI+"Discard";
                   if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
                   loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+                } else {
+                  alert("Encountered unknown card ID for "+slotJsonData.name)
                 }
               })
               .catch((error) => {

@@ -20,7 +20,7 @@ interface Props {
   closeModal: () => void;
   replayId: string;
   ringsDbIds: Array<string>;
-  ringsDbType: string;
+  ringsDbType: Array<string>;
   ringsDbDomain: string;
   loadShuffle: boolean;
 }
@@ -106,8 +106,7 @@ export const CreateRoomModal: React.FC<Props> = ({
         content: {
           width: '300px',
         }
-      }}
-    >
+      }}>
 
       <h1 className="mb-2">Create Room</h1>
       {isLoggedIn ?
