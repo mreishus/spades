@@ -83,7 +83,7 @@ export const Table = React.memo(({
         chatBroadcast={chatBroadcast}
       />
       {!loaded && <OnLoad setLoaded={setLoaded} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>}
-      {(showHotkeys || keypress["Tab"]) && <Hotkeys setShowWindow={setShowHotkeys}/>}
+      {(showHotkeys || keypress["Tab"]) && <Hotkeys tabMode={keypress["Tab"]} setShowWindow={setShowHotkeys}/>}
       {showPlayersInRoom && <PlayersInRoom setShowWindow={setShowPlayersInRoom}/>}
       {/* Side panel */}
       <SideBar
