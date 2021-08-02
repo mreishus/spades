@@ -8,7 +8,6 @@ import { HandleTouchActions } from "./HandleTouchActions";
 const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
   console.log('Rendering RoomGame');
   const [typing, setTyping] = useState(false);
-  const keypress = useKeypress();
   const setKeypress = useSetKeypress();
 
   useEffect(() => {
@@ -31,8 +30,6 @@ const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
       <HandleKeyDown
         playerN={playerN}
         typing={typing}
-        keypress={keypress}
-        setKeypress={setKeypress}
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
       />      

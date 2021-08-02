@@ -35,7 +35,7 @@ export const TopBarView = React.memo(({
               <ul className="third-level-menu">
                 {Object.keys(GROUPSINFO).map((groupId, _index) => {
                   if (groupId.startsWith("shared")) return (
-                    <TopBarViewItem groupId={groupId} handleBrowseSelect={handleBrowseSelect} playerN={playerN}/>
+                    <TopBarViewItem key={groupId} groupId={groupId} handleBrowseSelect={handleBrowseSelect} playerN={playerN}/>
                   )
                 })}
             </ul>
@@ -46,7 +46,7 @@ export const TopBarView = React.memo(({
               <ul className="third-level-menu">
                 {Object.keys(GROUPSINFO).map((groupId, _index) => {
                   if (groupId.startsWith("player"+N)) return (
-                    <TopBarViewItem groupId={groupId} handleBrowseSelect={handleBrowseSelect} playerN={playerN}/>
+                    <TopBarViewItem key={groupId} groupId={groupId} handleBrowseSelect={handleBrowseSelect} playerN={playerN}/>
                   )
                 })}
             </ul>

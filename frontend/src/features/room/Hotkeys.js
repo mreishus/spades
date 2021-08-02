@@ -5,9 +5,9 @@ import Draggable from 'react-draggable';
 
 const keyClass = "m-auto border bg-gray-500 text-center bottom inline-block";
 const keyClassLong = "m-auto border bg-gray-500 text-center bottom inline-block";
-const keyStyle = {width: "25px", height: "25px", borderRadius: "5px"}
-const keyStyleL = {width: "60px", height: "25px", borderRadius: "5px"}
-const keyStyleXL = {width: "75px", height: "25px", borderRadius: "5px"}
+const keyStyle = {width: "3vh", height: "3vh", borderRadius: "0.5vh"}
+const keyStyleL = {width: "7vh", height: "3vh", borderRadius: "0.5vh"}
+const keyStyleXL = {width: "9vh", height: "3vh", borderRadius: "0.5vh"}
 const windowClass = "insert-auto overflow-auto bg-gray-700 border max-w-lg rounded-lg outline-none text-white";
 const windowStyle = {
   position:"absolute", 
@@ -254,6 +254,14 @@ export const Hotkeys = React.memo(({
               <div className="inline-block p-1">+</div>
               <div className={keyClass+" inline-block"} style={keyStyle}>↓</div></td>
               <td className="text-center">Move to next phase</td>
+            </tr>
+            <tr className={"bg-gray-600"}>
+              <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>+</div></td>
+              <td className="text-center">Increase card size (for your screen only)</td>
+            </tr>
+            <tr className={"bg-gray-500"}>
+              <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>-</div></td>
+              <td className="text-center">Decrease card size (for your screen only)</td>
             </tr>
           </table>
         </div>

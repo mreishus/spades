@@ -461,6 +461,11 @@ export const processPostLoad = (loadList, playerN, gameBroadcast, chatBroadcast)
     gameBroadcast("game_action", {action: "increment_threat", options: {increment: -3}})
     chatBroadcast("game_update", {message: "reduced threat by 3."});
   }
+  const loreFatty = isCardDbIdInLoadList(loadList, "151ba48a-1efd-451e-bba0-b49fa0566596")
+  if (loreFatty) {
+    gameBroadcast("game_action", {action: "increment_threat", options: {increment: -2}})
+    chatBroadcast("game_update", {message: "reduced threat by 2."});
+  }
   const glitteringCaves = isCardDbIdInLoadList(loadList, "03a074ce-d581-4672-b6ea-ed97b7afd415");
   if (glitteringCaves) {
     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "layout", "extra"]]}});

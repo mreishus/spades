@@ -27,6 +27,7 @@ export const SideBarPhase = React.memo(({
         {phaseInfo.steps.map((step, _stepIndex) => {
           return (
             <SideBarRoundStep
+              key={step.id}
               playerN={playerN}
               phase={phaseInfo.name}
               stepInfo={step}
