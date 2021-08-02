@@ -49,6 +49,10 @@ const reveal = (game, deckGroupId, discardGroupId, gameBroadcast, chatBroadcast,
 
 export const gameAction = (action, props) => {
     const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;
+    if (!playerN) {
+        alert("Please sit down to do that.")
+        return;
+    }
     if (!gameUi || !playerN) return;
     const game = gameUi.game;
     const isHost = playerN === leftmostNonEliminatedPlayerN(gameUi);
@@ -320,6 +324,10 @@ export const gameAction = (action, props) => {
 
 export const cardAction = (action, cardId, options, props) => {
     const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;
+    if (!playerN) {
+        alert("Please sit down to do that.")
+        return;
+    }
     if (!gameUi || !playerN || !cardId) return;
     const game = gameUi.game;
     const card = game.cardById[cardId];
@@ -490,7 +498,7 @@ export const cardAction = (action, cardId, options, props) => {
             if (!stack) return;
             const cardIds = stack.cardIds;
             for (var id of cardIds) {
-                const cardi = game.cardById[cardId];
+                const cardi = game.cardById[id];
                 const discardGroupId = cardi["discardGroupId"];
                 chatBroadcast("game_update", {message: "discarded "+getDisplayName(cardi)+" to "+GROUPSINFO[discardGroupId].name+"."});
                 gameBroadcast("game_action", {action: "move_card", options: {card_id: id, dest_group_id: discardGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})

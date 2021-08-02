@@ -21,6 +21,7 @@ import { useSetMousePosition } from "../../contexts/MousePositionContext";
 import { useSetTouchAction } from "../../contexts/TouchActionContext";
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
+import { useCardSizeFactor } from "../../contexts/CardSizeFactorContext";
 
 export const Table = React.memo(({
   playerN,
@@ -44,7 +45,8 @@ export const Table = React.memo(({
   const setActiveCardAndLoc = useSetActiveCard();
   const setTouchAction = useSetTouchAction();
   const setDropdownMenu = useSetDropdownMenu();
-  const keypress = useKeypress();
+  const keypress = useKeypress();    
+  const cardSizeFactor = useCardSizeFactor();
   const touchMode = useTouchMode();
 
   const handleBrowseSelect = (groupId) => {
@@ -106,25 +108,23 @@ export const Table = React.memo(({
               setSittingPlayerN={setSittingPlayerN}
               observingPlayerN={observingPlayerN}
               setObservingPlayerN={setObservingPlayerN}
-              setTyping={setTyping}
-            />
+              setTyping={setTyping}/>
           </div>
           {/* Table */}
           <div className="relative w-full" style={{height: touchMode ? "82%" : "94%"}}>
-            {/* <div className="h-full" style={{width: "90%"}}> */}
-              <TableLayout
-                observingPlayerN={observingPlayerN}
-                gameBroadcast={gameBroadcast} 
-                chatBroadcast={chatBroadcast}
-                playerN={playerN}
-                setTyping={setTyping}
-                browseGroupId={browseGroupId}
-                setBrowseGroupId={setBrowseGroupId}
-                browseGroupTopN={browseGroupTopN}
-                setBrowseGroupTopN={setBrowseGroupTopN}
-                registerDivToArrowsContext={registerDivToArrowsContext}
-              />
-            {/* </div> */}
+            <TableLayout
+              observingPlayerN={observingPlayerN}
+              gameBroadcast={gameBroadcast} 
+              chatBroadcast={chatBroadcast}
+              playerN={playerN}
+              setTyping={setTyping}
+              browseGroupId={browseGroupId}
+              setBrowseGroupId={setBrowseGroupId}
+              browseGroupTopN={browseGroupTopN}
+              setBrowseGroupTopN={setBrowseGroupTopN}
+              registerDivToArrowsContext={registerDivToArrowsContext}
+              cardSizeFactor={cardSizeFactor}
+            />
           </div>
           {/* Touch Bar */}
           {touchMode && <div className="relative bg-gray-700 w-full" style={{height: "12%"}}>

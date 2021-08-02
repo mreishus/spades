@@ -10,6 +10,7 @@ import { cardDB } from "../../cardDB/cardDB";
 import { loadDeckFromXmlText, getRandomIntInclusive } from "./Helpers";
 import { useSetTouchMode } from "../../contexts/TouchModeContext";
 import { useSetTouchAction } from "../../contexts/TouchActionContext";
+import { useCardSizeFactor, useSetCardSizeFactor } from "../../contexts/CardSizeFactorContext";
 
 
 export const TopBarMenu = React.memo(({
@@ -23,6 +24,8 @@ export const TopBarMenu = React.memo(({
   const history = useHistory();
   const setTouchMode = useSetTouchMode();
   const setTouchAction = useSetTouchAction();
+  const cardSizeFactor = useCardSizeFactor();
+  const setCardSizeFactor = useSetCardSizeFactor();
 
   const createdByStore = state => state.gameUi?.created_by;
   const createdBy = useSelector(createdByStore);
@@ -111,6 +114,11 @@ export const TopBarMenu = React.memo(({
       if (num>=0) {
         gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "cardsDrawn", num]]}});
         chatBroadcast("game_update",{message: "set the number of cards they draw during the resource phase to "+num+"."});
+      }
+    } else if (data.action === "adjust_card_size") {
+      const num = parseInt(prompt("Adjust the apparent card size for yourself only (10-1000):",Math.round(cardSizeFactor)));
+      if (num>=10 && num<=1000) {
+        setCardSizeFactor(num);
       }
     } else if (data.action === "spawn_existing") {
       setShowModal("card");
@@ -284,7 +292,8 @@ export const TopBarMenu = React.memo(({
         <li key={"options"}>
           <a href="#">Options</a>
           <ul className="third-level-menu">
-          <li key={"cards_per_round"}><a onClick={() => handleMenuClick({action:"cards_per_round"})} href="#">Cards per round</a></li>
+            <li key={"adjust_card_size"}><a onClick={() => handleMenuClick({action:"adjust_card_size"})} href="#">Adjust card size</a></li>
+            <li key={"cards_per_round"}><a onClick={() => handleMenuClick({action:"cards_per_round"})} href="#">Cards per round</a></li>
             <li key={"quest_mode_battle"}><a onClick={() => handleMenuClick({action:"quest_mode", mode: "Battle"})} href="#">Battle quest</a></li>
             <li key={"quest_mode_siege"}><a onClick={() => handleMenuClick({action:"quest_mode", mode: "Siege"})} href="#">Siege quest</a></li>
             <li key={"quest_mode_normal"}><a onClick={() => handleMenuClick({action:"quest_mode", mode: "Normal"})} href="#">Normal quest</a></li>

@@ -3,22 +3,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStepPhase } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { setValues } from "./gameUiSlice";
-import axios from "axios";
 import { 
-    getDisplayName, 
-    getDisplayNameFlipped, 
-    getNextPlayerN, 
-    leftmostNonEliminatedPlayerN, 
-    getGroupIdStackIndexCardIndex,
-    getStackByCardId,
-    getCurrentFace,
+    getDisplayName,
     processTokenType,
     tokenPrintName,
 } from "./Helpers";
 import { gameAction, cardAction } from "./Actions";
 import { get } from "https";
+import { useKeypress, useSetKeypress } from "../../contexts/KeypressContext";
+import { useCardSizeFactor, useSetCardSizeFactor } from "../../contexts/CardSizeFactorContext";
 
 // const keyTokenMap: { [id: string] : Array<string | number>; } = {
+const keyUiMap = {
+    "+": "increase_card_size",
+    "-": "decrease_card_size",
+}
+
 const keyCardActionMap = {
     "0": "zero_tokens",
     "a": "toggle_exhaust",
@@ -89,9 +89,7 @@ var delayBroadcast;
 
 export const HandleKeyDown = ({
     playerN,
-    typing, 
-    keypress,
-    setKeypress, 
+    typing,
     gameBroadcast, 
     chatBroadcast
 }) => {
@@ -100,6 +98,11 @@ export const HandleKeyDown = ({
     const game = gameUi.game;
     const dispatch = useDispatch();
     const [drawingArrowFrom, setDrawingArrowFrom] = useState(null);
+    const keypress = useKeypress();
+    const setKeypress = useSetKeypress();
+
+    const cardSizeFactor = useCardSizeFactor();
+    const setCardSizeFactor = useSetCardSizeFactor();
 
     const activeCardAndLoc = useActiveCard();
     const setActiveCardAndLoc = useSetActiveCard();
@@ -107,8 +110,21 @@ export const HandleKeyDown = ({
     const [keyBackLog, setKeyBackLog] = useState({});
     console.log("Rendering HandleKeyDown")
 
+    const keyUiAction = (action) => {
+        if (action === "increase_card_size") {
+            setCardSizeFactor(cardSizeFactor*1.1);
+        }
+        else if (action === "decrease_card_size") {
+            setCardSizeFactor(cardSizeFactor/1.1);
+        }
+    }
+
     const keyTokenAction = (rawTokenType, props) => {
         const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;       
+        if (!playerN) {
+            alert("Please sit down to do that.")
+            return;
+        }
         if (!gameUi || !playerN || !activeCardAndLoc || !activeCardAndLoc.card) return; 
         const activeCardId = activeCardAndLoc.card.id; 
         const activeCard = game.cardById[activeCardId];
@@ -204,7 +220,7 @@ export const HandleKeyDown = ({
             document.removeEventListener('keydown', onKeyDown);
         }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [gameUi, typing, keypress, activeCardAndLoc, keyBackLog]);
+    }, [gameUi, typing, keypress, cardSizeFactor, activeCardAndLoc, keyBackLog]);
 
     const handleKeyDown = (
         event, 
@@ -214,10 +230,7 @@ export const HandleKeyDown = ({
         gameBroadcast, 
         chatBroadcast,
     ) => {
-        if (!playerN) {
-            alert("Please sit down to do that.")
-            return;
-        }
+
         const k = event.key;
         console.log(k);
         // Keep track of held key
@@ -227,12 +240,14 @@ export const HandleKeyDown = ({
         if (k === " ") setKeypress({"Space": true});
         //else setKeypress({"Control": false});
         const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+        const uiProps = {cardSizeFactor, setCardSizeFactor};
 
         // Hotkeys
         if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], actionProps);
         else if (Object.keys(keyGameActionMap).includes(k)) gameAction(keyGameActionMap[k], actionProps);
         else if (Object.keys(keyCardActionMap).includes(k)) cardAction(keyCardActionMap[k], activeCardAndLoc?.card.id, {}, actionProps);
         else if (Object.keys(keyTokenMap).includes(k)) keyTokenAction(keyTokenMap[k], actionProps);
+        else if (Object.keys(keyUiMap).includes(k)) keyUiAction(keyUiMap[k], uiProps);
 
     }
 

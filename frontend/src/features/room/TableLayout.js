@@ -65,7 +65,8 @@ export const TableLayout = React.memo(({
   setBrowseGroupId,
   browseGroupTopN,
   setBrowseGroupTopN,
-  registerDivToArrowsContext
+  registerDivToArrowsContext,
+  cardSizeFactor,
 }) => {
   console.log("Rendering TableLayout");
   const numPlayersStore = state => state.gameUi.game.numPlayers;
@@ -102,6 +103,8 @@ export const TableLayout = React.memo(({
   const rowHeight = `${100/numRows}%`; 
   var cardSize = CARDSCALE/numRows;
   if (aspectRatio < 1.9) cardSize = cardSize*(1-0.75*(1.9-aspectRatio));
+
+  cardSize = cardSize*cardSizeFactor/100;
 
   var middleRowsWidth = 100;
   if (sideGroupId !== "") {
