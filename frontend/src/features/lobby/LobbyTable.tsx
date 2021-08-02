@@ -54,10 +54,10 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
   }
 
   const compare = ( a : any, b : any ) => {
-    if ( a.host < b.host ){
+    if ( a.name < b.name ){
       return -1;
     }
-    if ( a.host > b.host ){
+    if ( a.name > b.name ){
       return 1;
     }
     return 0;
