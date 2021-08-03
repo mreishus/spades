@@ -124,6 +124,14 @@ export const getCardWillpower = (card) => {
   return currentFace.willpower + card.tokens.willpower;
 }
 
+export const getCardRowCategory = (cardRow) => {
+  if (cardRow.sides.A.type === "Quest") return "Quest";
+  if (cardRow.sides.B.name === "encounter") return "Encounter";
+  if (cardRow.sides.B.name === "player") return "Player";
+  if (cardRow.cardencounterset) return "Encounter";
+  return "Player";
+}
+
 export const GetPlayerN = (playerIDs, id) => {
   if (!playerIDs) return null;
   var playerN = null;
@@ -607,7 +615,7 @@ export const getScore = (gameUi, gameBroadcast, chatBroadcast) => {
   const playerData = gameUi.game.playerData;
   const sumThreat = playerData.player1.threat + playerData.player2.threat + playerData.player3.threat + playerData.player4.threat;
   chatBroadcast("game_update",{message: "calculated sum of threat: " + sumThreat});
-  const numRounds = gameUi.game.roundNumber;
+  const numRounds = Math.max(gameUi.game.roundNumber-1,0);
   chatBroadcast("game_update",{message: "calculated number of completed rounds: " + numRounds});
   var victoryPoints = 0;
   const victoryCards = listOfMatchingCards(gameUi, [["groupId","sharedVictory"]])
