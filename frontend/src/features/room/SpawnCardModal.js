@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import ReactModal from "react-modal";
 import { cardDB } from "../../cardDB/cardDB";
 import useProfile from "../../hooks/useProfile";
+import { getCardRowCategory } from "./Helpers";
 
 export const SpawnCardModal = React.memo(({
     playerN,
@@ -16,13 +17,14 @@ export const SpawnCardModal = React.memo(({
 
     const handleSpawnClick = (cardID) => {
         const cardRow = cardDB[cardID];
-        if (!cardRow) return;
-        cardRow['loadgroupid'] = "sharedStaging";
-        if (cardRow['sides']['A']['type'] === "Quest") cardRow['discardgroupid'] = "sharedQuestDiscard";
-        else if (cardRow['cardencounterset'] || cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
+        if (!cardRow || !playerN) return;
+        const cardRowCategory = getCardRowCategory(cardRow);
+        const loadGroupId = cardRowCategory === "Player" ? playerN + "Play2" : "sharedStaging";
+        cardRow['loadgroupid'] = loadGroupId;
+        if (cardRowCategory === "Quest") cardRow['discardgroupid'] = "sharedQuestDiscard";
+        else if (cardRowCategory === "Encounter") cardRow['discardgroupid'] = "sharedEncounterDiscard";
         else cardRow['discardgroupid'] = playerN+"Discard";
-        const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': "sharedStaging"}]
-        console.log("spawned",loadList);
+        const loadList = [{'cardRow': cardRow, 'quantity': 1, 'groupId': loadGroupId}]
         gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
         chatBroadcast("game_update", {message: "spawned "+cardRow["sides"]["A"]["printname"]+"."});
     }
