@@ -156,7 +156,7 @@ export const gameAction = (action, props) => {
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
-                chatBroadcast("game_update",{message: "presses Shift+N for "+playerI});
+                chatBroadcast("game_update",{message: "presses Shift+N for player "+i});
                 const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
                 gameAction("new_round", actionProps);
             }
@@ -167,7 +167,7 @@ export const gameAction = (action, props) => {
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
-                chatBroadcast("game_update",{message: "presses Shift+R for "+playerI});
+                chatBroadcast("game_update",{message: "presses Shift+R for player"+i});
                 const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
                 gameAction("refresh", actionProps);
             }

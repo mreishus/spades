@@ -248,7 +248,6 @@ export const HandleKeyDown = ({
         const uiProps = {cardSizeFactor, setCardSizeFactor};
 
         // Hotkeys
-        console.log("XYZ ", keypress, k, Object.keys(ctrlKeyGameActionMap).includes(k))
         if (keypress["Control"] && Object.keys(ctrlKeyGameActionMap).includes(k)) gameAction(ctrlKeyGameActionMap[k], actionProps);
         else if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], actionProps);
         else if (Object.keys(keyGameActionMap).includes(k)) gameAction(keyGameActionMap[k], actionProps);
