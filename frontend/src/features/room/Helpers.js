@@ -636,3 +636,81 @@ export const getScore = (gameUi, gameBroadcast, chatBroadcast) => {
   chatBroadcast("game_update",{message: "calculated total victory points: " + victoryPoints});
   return fallenHeroCost + totalDamage + sumThreat + numRounds*10 - victoryPoints;
 }
+
+
+export const loadRingsDb = (playerI, ringsDbDomain, ringsDbType, ringsDbId, gameBroadcast, chatBroadcast) => {
+  chatBroadcast("game_update",{message: "is loading a deck from RingsDb..."});
+  const urlBase = ringsDbDomain === "test" ? "https://www.test.ringsdb.com/api/" : "https://www.ringsdb.com/api/"
+  const url = ringsDbType === "decklist" ? urlBase+"public/decklist/"+ringsDbId+".json" : urlBase+"oauth2/deck/load/"+ringsDbId;
+  console.log("Fetching ", url);
+  fetch(url)
+  .then(response => response.json())
+  .then((jsonData) => {
+    // jsonData is parsed json object received from url
+    const slots = jsonData.slots;
+    const sideslots = jsonData.sideslots;
+    var loadList = [];
+    var fetches = [];
+    Object.keys(slots).forEach((slot, slotIndex) => {
+      const quantity = slots[slot];
+      const slotUrl = urlBase+"public/card/"+slot+".json"
+      fetches.push(fetch(slotUrl)
+        .then(response => response.json())
+        .then((slotJsonData) => {
+          // jsonData is parsed json object received from url
+          var cardRow = cardDB[slotJsonData.octgnid];
+          if (cardRow && !slotJsonData.name.includes("MotK")) {
+            const type = slotJsonData.type_name;
+            const loadGroupId = (type === "Hero" || type === "Contract") ? playerI+"Play1" : playerI+"Deck";
+            cardRow['loadgroupid'] = loadGroupId;
+            cardRow['discardgroupid'] = playerI+"Discard";
+            if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
+            loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+          } else {
+            alert("Encountered unknown card ID for "+slotJsonData.name)
+          }
+        })
+        .catch((error) => {
+          // handle your errors here
+          console.error("Could not find card", slot);
+        })
+      )
+    })
+    Object.keys(sideslots).forEach((slot, slotIndex) => {
+      const quantity = sideslots[slot];
+      const slotUrl = urlBase+"public/card/"+slot+".json"
+      fetches.push(fetch(slotUrl)
+        .then(response => response.json())
+        .then((slotJsonData) => {
+          // jsonData is parsed json object received from url
+          var cardRow = cardDB[slotJsonData.octgnid];
+          if (cardRow) {
+            const type = slotJsonData.type_name;
+            const loadGroupId = playerI+"Sideboard";
+            cardRow['loadgroupid'] = loadGroupId;
+            cardRow['discardgroupid'] = playerI+"Discard";
+            if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
+            loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
+          } else {
+            alert("Encountered unknown card ID for "+slotJsonData.name)
+          }
+        })
+        .catch((error) => {
+          // handle your errors here
+          console.error("Could not find card", slot);
+        })
+      )
+    })
+    Promise.all(fetches).then(function() {
+      // Automate certain things after you load a deck, like Eowyn, Thurindir, etc.
+      loadList = processLoadList(loadList, playerI);
+      gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList, for_player_n: playerI}});
+      chatBroadcast("game_update",{message: "loaded a deck."});
+      processPostLoad(loadList, playerI, gameBroadcast, chatBroadcast);
+    });
+  })
+  .catch((error) => {
+    // handle your errors here
+    alert("Error loading deck. If you are attempting to load an unpublished deck, make sure you have link sharing turned on in your RingsDB profile settings.")
+  })
+}

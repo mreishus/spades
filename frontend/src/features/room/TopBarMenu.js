@@ -5,7 +5,7 @@ import useProfile from "../../hooks/useProfile";
 import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
-import { processLoadList, processPostLoad } from "./Helpers";
+import { loadRingsDb, processLoadList, processPostLoad } from "./Helpers";
 import { cardDB } from "../../cardDB/cardDB";
 import { loadDeckFromXmlText, getRandomIntInclusive } from "./Helpers";
 import { useSetTouchMode } from "../../contexts/TouchModeContext";
@@ -75,6 +75,30 @@ export const TopBarMenu = React.memo(({
       gameBroadcast("close_room", {});
     } else if (data.action === "load_deck") {
       loadFileDeck();
+    } else if (data.action === "load_ringsdb") {
+      const ringsDbUrl = prompt("Paste full RingsDB URL","");
+      if (ringsDbUrl.includes("/fellowship/")) {
+        alert("Fellowship import not yet supported.");
+        return;
+      }
+      const ringsDbDomain = ringsDbUrl.includes("test.ringsdb.com") ? "test" : "ringsdb";
+      var ringsDbType;
+      if (ringsDbUrl.includes("/decklist/")) ringsDbType = "decklist";
+      else if (ringsDbUrl.includes("/deck/")) ringsDbType = "deck";
+      if (!ringsDbType) {
+        alert("Invalid URL");
+        return;
+      }
+      var splitUrl = ringsDbUrl.split( '/' );
+      const typeIndex = splitUrl.findIndex((e) => e === ringsDbType)
+      if (splitUrl.length <= typeIndex + 2) {
+        alert("Invalid URL");
+        return;
+      }
+      const ringsDbId = splitUrl[typeIndex + 2];
+
+      loadRingsDb(playerN, ringsDbDomain, ringsDbType, ringsDbId, gameBroadcast, chatBroadcast);
+      
     } else if (data.action === "unload_my_deck") {
       // Delete all cards you own
       chatBroadcast("game_update",{message: "unloaded their deck."});
@@ -257,6 +281,9 @@ export const TopBarMenu = React.memo(({
             <li key={"load_deck"}>
               <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load deck (OCTGN file)</a>
               <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck} accept=".o8d"/>
+            </li>
+            <li key={"load_ringsdb"}>
+              <a href="#" onClick={() => handleMenuClick({action:"load_ringsdb"})} href="#">Load deck (RingsDB URL)</a>
             </li>
             <li key={"load_game"}>
               <a  onClick={() => handleMenuClick({action:"load_game"})} href="#">Load game (.json)</a>
