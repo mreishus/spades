@@ -152,6 +152,28 @@ export const gameAction = (action, props) => {
         checkAlerts();
     }
 
+    else if (action === "new_round_all") {
+        for (var i=1; i<=game.numPlayers; i++) {
+            const playerI = "player"+i;
+            if (!game.playerData[playerI].eliminated) {
+                chatBroadcast("game_update",{message: "presses Shift+N for "+playerI});
+                const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+                gameAction("new_round", actionProps);
+            }
+        }
+    }
+
+    else if (action === "refresh_all") {
+        for (var i=1; i<=game.numPlayers; i++) {
+            const playerI = "player"+i;
+            if (!game.playerData[playerI].eliminated) {
+                chatBroadcast("game_update",{message: "presses Shift+R for "+playerI});
+                const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+                gameAction("refresh", actionProps);
+            }
+        }
+    }
+
     else if (action === "reveal") {
         reveal(game, "sharedEncounterDeck", "sharedEncounterDiscard", gameBroadcast, chatBroadcast, false);
     } 

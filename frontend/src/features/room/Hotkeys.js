@@ -190,16 +190,30 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Draw card and gain resources. If host, increment round.</td>
         </tr>
         <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
+          <div className="inline-block p-1">+</div><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className="inline-block p-1">+</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>N</div></td>
+          <td className="text-center">Press Ctrl+N for all players.</td>
+        </tr>
+        <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>O</div></td>
           <td className="text-center">Calculate score</td>
         </tr>
-        <tr className={"bg-gray-500"}>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
           <td className="text-center">Refresh and raise threat. If host, move 1st player token.</td>
+        </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
+          <div className="inline-block p-1">+</div><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className="inline-block p-1">+</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
+          <td className="text-center">Press Shift+R for all players.</td>
         </tr>
         <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>

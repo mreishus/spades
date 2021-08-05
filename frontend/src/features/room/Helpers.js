@@ -602,6 +602,7 @@ export const getDefault = (card, groupId, groupType, cardIndex) => {
 }
 
 export const getScore = (gameUi, gameBroadcast, chatBroadcast) => {
+  // Fallen heroes
   var heroCards = [];
   heroCards = heroCards.concat(listOfMatchingCards(gameUi, [["sides","A","type","Hero"], ["groupId","player1Discard"]]))
   heroCards = heroCards.concat(listOfMatchingCards(gameUi, [["sides","A","type","Hero"], ["groupId","player2Discard"]]))
@@ -612,9 +613,18 @@ export const getScore = (gameUi, gameBroadcast, chatBroadcast) => {
     fallenHeroCost += card.sides.A.cost;
   }
   chatBroadcast("game_update",{message: "calculated cost of fallen heroes: " + fallenHeroCost});
+  // Damage on heroes
+  heroCards = listOfMatchingCards(gameUi, [["sides","A","type","Hero"], ["groupType","play"]]);
+  var totalDamage = 0;
+  for (var card of heroCards) {
+    totalDamage += card.tokens.damage;
+  }
+  chatBroadcast("game_update",{message: "calculated total damage on heroes: " + totalDamage});
+  // Sum of threat
   const playerData = gameUi.game.playerData;
   const sumThreat = playerData.player1.threat + playerData.player2.threat + playerData.player3.threat + playerData.player4.threat;
   chatBroadcast("game_update",{message: "calculated sum of threat: " + sumThreat});
+  // Number of rounds
   const numRounds = Math.max(gameUi.game.roundNumber-1,0);
   chatBroadcast("game_update",{message: "calculated number of completed rounds: " + numRounds});
   var victoryPoints = 0;
@@ -622,6 +632,7 @@ export const getScore = (gameUi, gameBroadcast, chatBroadcast) => {
   for (var card of victoryCards) {
     victoryPoints += card.sides.A.victoryPoints;
   }
+  // Total
   chatBroadcast("game_update",{message: "calculated total victory points: " + victoryPoints});
-  return fallenHeroCost + sumThreat + numRounds*10 - victoryPoints;
+  return fallenHeroCost + totalDamage + sumThreat + numRounds*10 - victoryPoints;
 }

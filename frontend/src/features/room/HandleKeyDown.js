@@ -63,6 +63,11 @@ const shiftKeyGameActionMap = {
     "ArrowDown": "next_phase",
 }
 
+const ctrlKeyGameActionMap = {
+    "R": "refresh_all",
+    "N": "new_round_all",
+}
+
 const keyTokenMap = {
   "1": "resource",
   "2": "progress",
@@ -121,7 +126,7 @@ export const HandleKeyDown = ({
 
     const keyTokenAction = (rawTokenType, props) => {
         const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;       
-        if (!playerN) {
+                if (!playerN) {
             alert("Please sit down to do that.")
             return;
         }
@@ -234,16 +239,18 @@ export const HandleKeyDown = ({
         const k = event.key;
         console.log(k);
         // Keep track of held key
-        if (k === "Shift") setKeypress({"Shift": true});
-        if (k === "Control") setKeypress({"Control": true});
-        if (k === "Tab") setKeypress({"Tab": true});
-        if (k === " ") setKeypress({"Space": true});
+        if (k === "Shift") setKeypress({...keypress, "Shift": true});
+        if (k === "Control") setKeypress({...keypress, "Control": true});
+        if (k === "Tab") setKeypress({...keypress, "Tab": true});
+        if (k === " ") setKeypress({...keypress, "Space": true});
         //else setKeypress({"Control": false});
         const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
         const uiProps = {cardSizeFactor, setCardSizeFactor};
 
         // Hotkeys
-        if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], actionProps);
+        console.log("XYZ ", keypress, k, Object.keys(ctrlKeyGameActionMap).includes(k))
+        if (keypress["Control"] && Object.keys(ctrlKeyGameActionMap).includes(k)) gameAction(ctrlKeyGameActionMap[k], actionProps);
+        else if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], actionProps);
         else if (Object.keys(keyGameActionMap).includes(k)) gameAction(keyGameActionMap[k], actionProps);
         else if (Object.keys(keyCardActionMap).includes(k)) cardAction(keyCardActionMap[k], activeCardAndLoc?.card.id, {}, actionProps);
         else if (Object.keys(keyTokenMap).includes(k)) keyTokenAction(keyTokenMap[k], actionProps);
