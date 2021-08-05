@@ -256,15 +256,15 @@ export const TopBarMenu = React.memo(({
             <li key={"load_quest"}><a href="#" onClick={() => handleMenuClick({action:"spawn_quest"})} href="#">Load quest</a></li>
             <li key={"load_deck"}>
               <a href="#" onClick={() => handleMenuClick({action:"load_deck"})} href="#">Load deck (OCTGN file)</a>
-              <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck}/>
+              <input type='file' id='file' ref={inputFileDeck} style={{display: 'none'}} onChange={loadDeck} accept=".o8d"/>
             </li>
             <li key={"load_game"}>
               <a  onClick={() => handleMenuClick({action:"load_game"})} href="#">Load game (.json)</a>
-              <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson}/>
+              <input type='file' id='file' ref={inputFileGame} style={{display: 'none'}} onChange={uploadGameAsJson} accept=".json"/>
             </li>
             <li key={"load_custom"}>
               <a  onClick={() => handleMenuClick({action:"load_custom"})} href="#">Load custom cards (.txt)</a>
-              <input type='file' id='file' ref={inputFileCustom} style={{display: 'none'}} onChange={uploadCustomCards}/>
+              <input type='file' id='file' ref={inputFileCustom} style={{display: 'none'}} onChange={uploadCustomCards} accept=".txt"/>
             </li>
           </ul>
         </li> 
