@@ -68,6 +68,10 @@ const ctrlKeyGameActionMap = {
     "N": "new_round_all",
 }
 
+const altKeyGameActionMap = {
+    "N": "new_round_all",
+}
+
 const keyTokenMap = {
   "1": "resource",
   "2": "progress",
@@ -241,6 +245,7 @@ export const HandleKeyDown = ({
         // Keep track of held key
         if (k === "Shift") setKeypress({...keypress, "Shift": true});
         if (k === "Control") setKeypress({...keypress, "Control": true});
+        if (k === "Alt") setKeypress({...keypress, "Alt": true});
         if (k === "Tab") setKeypress({...keypress, "Tab": true});
         if (k === " ") setKeypress({...keypress, "Space": true});
         //else setKeypress({"Control": false});
@@ -249,6 +254,7 @@ export const HandleKeyDown = ({
 
         // Hotkeys
         if (keypress["Control"] && Object.keys(ctrlKeyGameActionMap).includes(k)) gameAction(ctrlKeyGameActionMap[k], actionProps);
+        else if (keypress["Alt"] && Object.keys(altKeyGameActionMap).includes(k)) gameAction(altKeyGameActionMap[k], actionProps);
         else if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], actionProps);
         else if (Object.keys(keyGameActionMap).includes(k)) gameAction(keyGameActionMap[k], actionProps);
         else if (Object.keys(keyCardActionMap).includes(k)) cardAction(keyCardActionMap[k], activeCardAndLoc?.card.id, {}, actionProps);
