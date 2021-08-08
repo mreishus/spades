@@ -6,7 +6,7 @@ import { CardMouseRegion } from "./CardMouseRegion";
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getCurrentFace, getVisibleFace, getVisibleFaceSRC, getDefault } from "./Helpers";
+import { getCurrentFace, getVisibleFace, getVisibleFaceSrc, getDefault } from "./Helpers";
 import { Target } from "./Target";
 import { useTouchMode } from "../../contexts/TouchModeContext";
 
@@ -27,6 +27,7 @@ export const Card = React.memo(({
     if (!card) return null;
     const currentFace = getCurrentFace(card);
     const visibleFace = getVisibleFace(card, playerN);
+    const visibleFaceSrc = getVisibleFaceSrc(card, playerN, user);
     const zIndex = 1000 - cardIndex;
     console.log('Rendering Card ',visibleFace.name);
     const setActiveCard = useSetActiveCard();
@@ -47,7 +48,7 @@ export const Card = React.memo(({
                 key={card.id}
                 style={{
                     position: "absolute",
-                    background: `url(${getVisibleFaceSRC(card, playerN, user)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
+                    //background: `url(${getVisibleFaceSRC(card, playerN, user)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
                     height: `${cardSize*visibleFace.height}vh`,
                     width: `${cardSize*visibleFace.width}vh`,
                     left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize*touchModeSpacingFactor/3*cardIndex}vh`,
@@ -66,6 +67,8 @@ export const Card = React.memo(({
                     transitionProperty: "transform",
                 }}
                 onMouseLeave={event => !touchMode && handleMouseLeave(event)}>
+                <img className="absolute w-full h-full" style={{borderRadius: '0.6vh'}} src={visibleFaceSrc.src} onerror={`this.onerror=null; this.src=${visibleFaceSrc.default}`} />
+
                 {isActive && touchMode && defaultAction &&
                     <div 
                         className={"absolute w-full pointer-events-none bg-green-700 font-bold rounded text-white text-xs text-center" + (card.rotation === -30 ? " bottom-0" : "")}

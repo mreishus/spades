@@ -1,3 +1,5 @@
+// ImageWithFallback.tsx
+import React, { useState } from 'react'
 import { cardDB } from "../../cardDB/cardDB";
 import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import axios from "axios";
@@ -75,22 +77,35 @@ export const getVisibleFace = (card, playerN) => {
   else return null;
 }
 
-export const getVisibleFaceSRC = (card, playerN, user) => {
+export const getVisibleFaceSrc = (card, playerN, user) => {
   if (!card) return "";
   const visibleSide = getVisibleSide(card, playerN);
   const visibleFace = getVisibleFace(card, playerN);
+  const language = user.language || "English";
   if (visibleSide === "A") {
-    return visibleFace.customImgUrl || process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.jpg';
+    return {
+      src: visibleFace.customImgUrl || process.env.PUBLIC_URL + '/images/cards/' + language + '/' + card['cardDbId'] + '.jpg',
+      default: visibleFace.customImgUrl ? "image not found" : process.env.PUBLIC_URL + '/images/cards/English' + card['cardDbId'] + '.jpg',
+    }
   } else { // Side B logic
     const sideBName = card.sides.B.name;
     if (sideBName === "player") {
-      return (user?.player_back_url ? user.player_back_url : process.env.PUBLIC_URL + '/images/cardbacks/player.jpg')
+      return {
+        src: (user?.player_back_url ? user.player_back_url : process.env.PUBLIC_URL + '/images/cardbacks/player.jpg'),
+        default: process.env.PUBLIC_URL + '/images/cardbacks/player.jpg',
+      }
     } else if (sideBName === "encounter") {
-        return (user?.encounter_back_url ? user.encounter_back_url : process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg')
+      return {
+        src: (user?.encounter_back_url ? user.encounter_back_url : process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg'),
+        default: process.env.PUBLIC_URL + '/images/cardbacks/encounter.jpg',
+      }
     } else if (sideBName) {
-        return visibleFace.customImgUrl || process.env.PUBLIC_URL + '/images/cards/' + card['cardDbId'] + '.B.jpg';
+      return {
+        src: visibleFace.customImgUrl || process.env.PUBLIC_URL + '/images/cards/' + language + '/' + card['cardDbId'] + '.B.jpg',
+        default: visibleFace.customImgUrl ? "image not found" : process.env.PUBLIC_URL + '/images/cards/English/' + card['cardDbId'] + '.B.jpg',
+      }
     } else {
-        return '';
+      return {src: "image not found", default: "image not found"};
     }
   }
 }
@@ -367,6 +382,16 @@ export const processLoadList = (loadList, playerN) => {
     const item = newLoadList[i];
     if (item.cardRow.sides.A.type === "Contract") {
       newLoadList = arrayMove(newLoadList, i, 0); 
+    }
+  }
+
+  for (var i=0; i<n; i++) {
+    const item = newLoadList[i];
+    if (item.cardRow.loadgroupid.includes("playerN")) {
+      item.cardRow.loadgroupid = item.cardRow.loadgroupid.replace("playerN", playerN);
+    }
+    if (item.groupId.includes("playerN")) {
+      item.groupId = item.groupId.replace("playerN", playerN);
     }
   }
 
