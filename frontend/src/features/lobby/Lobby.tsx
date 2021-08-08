@@ -32,7 +32,7 @@ const filterArrayForPositiveInt = (arr: Array<string>) => {
 export const Lobby: React.FC = () => {
   const isLoggedIn = useIsLoggedIn();
   const myUser = useProfile();
-  const myUserID = myUser?.id;
+  const myUserId = myUser?.id;
 
   const [showModal, setShowModal] = useState(false);
   const [replayId, setReplayId] = useState("");
@@ -81,20 +81,7 @@ export const Lobby: React.FC = () => {
     [setData]
   );
 
-  const [messages, setMessages] = useState<Array<ChatMessage>>([]);
-  const onChatMessage = useCallback((event, payload) => {
-    if (
-      event === "phx_reply" &&
-      payload.response != null &&
-      payload.response.messages != null
-    ) {
-      setMessages(payload.response.messages);
-    }
-  }, []);
-  const chatBroadcast = useChannel(`chat:Lobby`, onChatMessage);
-
-
-  useChannel("lobby:lobby", onChannelMessage);
+  useChannel("lobby:lobby", onChannelMessage, myUserId);
   const rooms = data != null && data.data != null ? data.data : [];
 
   const handleCreateRoomClick = () => {

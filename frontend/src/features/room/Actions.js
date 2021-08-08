@@ -432,7 +432,7 @@ export const cardAction = (action, cardId, options, props) => {
                 ["game", "playerData", playerController, "willpower", newWillpower],
             ];
             chatBroadcast("game_update", {message: "committed "+displayName+" to the quest."});
-            dispatch(setValues({updates: updates}));
+            //dispatch(setValues({updates: updates}));
             gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
         }
         // Commit to quest without exhausting
@@ -442,7 +442,7 @@ export const cardAction = (action, cardId, options, props) => {
             const newWillpower = currentWillpower + willpowerIncrement;
             const updates = [["game", "cardById", cardId, "committed", true], ["game", "playerData", playerController, "willpower", newWillpower]];
             chatBroadcast("game_update", {message: "committed "+displayName+" to the quest without exhausting."});
-            dispatch(setValues({updates: updates}));
+            //dispatch(setValues({updates: updates}));
             gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
         }
         // Uncommit to quest and ready
@@ -458,7 +458,7 @@ export const cardAction = (action, cardId, options, props) => {
             ];
             chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
             if (card["exhausted"]) chatBroadcast("game_update", {message: "readied "+displayName+"."});
-            dispatch(setValues({updates: updates}));
+            //dispatch(setValues({updates: updates}));
             gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
         }
         // Uncommit to quest without readying
@@ -468,7 +468,7 @@ export const cardAction = (action, cardId, options, props) => {
             const newWillpower = currentWillpower - willpowerIncrement;
             const updates = [["game", "cardById", cardId, "committed", false], ["game", "playerData", playerController, "willpower", newWillpower]];
             chatBroadcast("game_update", {message: "uncommitted "+displayName+" to the quest."});
-            dispatch(setValues({updates: updates}));
+            //dispatch(setValues({updates: updates}));
             gameBroadcast("game_action", {action: "update_values", options:{updates: updates}});
         }
 

@@ -77,6 +77,10 @@ export const TopBarMenu = React.memo(({
       loadFileDeck();
     } else if (data.action === "load_ringsdb") {
       const ringsDbUrl = prompt("Paste full RingsDB URL","");
+      if (!ringsDbUrl) {
+        alert("Invalid URL");
+        return;
+      }
       if (ringsDbUrl.includes("/fellowship/")) {
         alert("Fellowship import not yet supported.");
         return;
@@ -91,7 +95,7 @@ export const TopBarMenu = React.memo(({
       }
       var splitUrl = ringsDbUrl.split( '/' );
       const typeIndex = splitUrl.findIndex((e) => e === ringsDbType)
-      if (splitUrl.length <= typeIndex + 2) {
+      if (splitUrl && splitUrl.length <= typeIndex + 2) {
         alert("Invalid URL");
         return;
       }
