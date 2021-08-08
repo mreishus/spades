@@ -106,7 +106,6 @@ export const HandleKeyDown = ({
     const gameUi = useSelector(gameUiStore);
     const game = gameUi.game;
     const dispatch = useDispatch();
-    const [drawingArrowFrom, setDrawingArrowFrom] = useState(null);
     const keypress = useKeypress();
     const setKeypress = useSetKeypress();
 

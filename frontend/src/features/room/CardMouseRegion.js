@@ -1,14 +1,11 @@
 
 import React from "react";
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
-import { useSetTouchAction, useTouchAction } from "../../contexts/TouchActionContext";
 import { useTouchMode } from "../../contexts/TouchModeContext";
-import { getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
+import { getDisplayName } from "./Helpers";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
-import { gameAction } from "./Actions";
 import useLongPress from "../../hooks/useLongPress";
 
-var clickTimeout;
 
 export const CardMouseRegion = React.memo(({
     position,
@@ -20,11 +17,8 @@ export const CardMouseRegion = React.memo(({
     groupId,
     groupType,
     playerN,
-    gameBroadcast,
-    chatBroadcast,
 }) => {
     const setActiveCardAndLoc = useSetActiveCard();
-    const setTouchAction = useSetTouchAction();
     const touchMode = useTouchMode();
     const displayName = getDisplayName(card);
     const setDropdownMenu = useSetDropdownMenu();
@@ -41,7 +35,6 @@ export const CardMouseRegion = React.memo(({
             groupType: groupType,
             cardIndex: cardIndex,
         });
-        //setIsActive(true);
     }
 
     const handleSetDropDownMenu = () => {

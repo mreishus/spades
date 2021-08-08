@@ -381,7 +381,6 @@ export const cardAction = (action, cardId, options, props) => {
     }
     // Exhaust card
     else if (action === "toggle_exhaust" && groupType === "play") {
-        console.log("trace action toggle", card, cardFace);
         if (cardFace.type === "Location") {
             chatBroadcast("game_update", {message: "made "+displayName+" the active location."});
             gameBroadcast("game_action", {action: "move_stack", options: {stack_id: stackId, dest_group_id: "sharedActive", dest_stack_index: 0, combine: false, preserve_state: false}})
@@ -541,7 +540,6 @@ export const cardAction = (action, cardId, options, props) => {
         }
         // Clear GiantCard
         setActiveCardAndLoc(null);
-        //dispatch(setGame(game));
     }
     // Shufle card into owner's deck
     else if (action === "shuffle_into_deck") {

@@ -41,7 +41,7 @@ export const TopBarMenu = React.memo(({
   const inputFileDeck = useRef(null);
   const inputFileGame = useRef(null);
   const inputFileCustom = useRef(null);
-  console.log("Rendering TopBarMenu", options);
+  console.log("Rendering TopBarMenu");
 
   const handleMenuClick = (data) => {
     if (!playerN) {
