@@ -56,16 +56,13 @@ const keyGameActionMap = {
     "O": "score",
 }
 
-const shiftKeyGameActionMap = {
+const ctrlKeyGameActionMap = {
+    "R": "refresh_all",
+    "N": "new_round_all",
     "ArrowLeft": "undo_many",
     "ArrowRight": "redo_many",
     "ArrowUp": "prev_phase",
     "ArrowDown": "next_phase",
-}
-
-const ctrlKeyGameActionMap = {
-    "R": "refresh_all",
-    "N": "new_round_all",
 }
 
 const altKeyGameActionMap = {
@@ -242,7 +239,7 @@ export const HandleKeyDown = ({
         const k = event.key;
         console.log(k);
         // Keep track of held key
-        if (k === "Shift") setKeypress({...keypress, "Shift": true});
+        //if (k === "Shift") setKeypress({...keypress, "Shift": true});
         if (k === "Control") setKeypress({...keypress, "Control": true});
         if (k === "Alt") setKeypress({...keypress, "Alt": true});
         if (k === "Tab") setKeypress({...keypress, "Tab": true});
@@ -254,7 +251,7 @@ export const HandleKeyDown = ({
         // Hotkeys
         if (keypress["Control"] && Object.keys(ctrlKeyGameActionMap).includes(k)) gameAction(ctrlKeyGameActionMap[k], actionProps);
         else if (keypress["Alt"] && Object.keys(altKeyGameActionMap).includes(k)) gameAction(altKeyGameActionMap[k], actionProps);
-        else if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], actionProps);
+        // else if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], actionProps);
         else if (Object.keys(keyGameActionMap).includes(k)) gameAction(keyGameActionMap[k], actionProps);
         else if (Object.keys(keyCardActionMap).includes(k)) cardAction(keyCardActionMap[k], activeCardAndLoc?.card.id, {}, actionProps);
         else if (Object.keys(keyTokenMap).includes(k)) keyTokenAction(keyTokenMap[k], actionProps);

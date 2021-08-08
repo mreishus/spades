@@ -15,7 +15,6 @@ const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
   useEffect(() => {
     const onKeyUp = (event) => {
       if (event.key === "Alt") setKeypress({"Alt": false});
-      if (event.key === "Shift") setKeypress({"Shift": false});
       if (event.key === " ") setKeypress({"Space": false});
       if (event.key === "Control") setKeypress({"Control": false});
       if (event.key === "Tab") setKeypress({"Tab": false});

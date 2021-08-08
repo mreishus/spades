@@ -43,7 +43,7 @@ export const Card = React.memo(({
     return (
         <div id={card.id}>
             <div 
-                className={"hover:shadow-yellow"}
+                className={isActive ? "shadow-yellow" : ""}
                 key={card.id}
                 style={{
                     position: "absolute",
