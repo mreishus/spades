@@ -19,7 +19,6 @@ const Container = styled.div`
   user-select: none;
   overflow-x: ${props => ["deck", "discard", "vertical"].includes(props.groupType) ? "none" : "auto"};
   overflow-y: ${props => props.groupType === "vertical" ? "auto" : "hidden"};
-  scrollbar-color: rgba(1,1,1,0.8) rgba(1,1,1,0);
   max-height: 100%;
   position: relative;
 `;

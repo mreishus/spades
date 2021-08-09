@@ -47,6 +47,7 @@ export const Group = React.memo(({
 
   if (!group) return null;
   const numStacks = group.stackIds.length;
+  const tablename = GROUPSINFO[group.id].tablename;
   return(
     <div className="h-full w-full">
       {hideTitle ? null :
@@ -57,16 +58,16 @@ export const Group = React.memo(({
           {group.type === "play" ?        
             <div className="absolute pointer-events-none mt-1" 
             style={{top: "50%", left: "50%", transform: "translate(-50%, -50%) rotate(90deg)", whiteSpace: "nowrap"}}>
-              {GROUPSINFO[group.id].tablename}
+              {tablename}
             </div>
           :
             <div className="relative w-full h-full">
               <span 
                 className="absolute mt-1" 
-                style={{fontSize:"1.7vh", top: "50%", left: "50%", transform: `translate(-50%, -40%) rotate(90deg)`, whiteSpace: "nowrap"}}>
+                style={{fontSize: "1.7vh", top: tablename == "Encounter" ? "55%" : "50%", left: "50%", transform: `translate(-50%, -40%) rotate(90deg)`, whiteSpace: "nowrap"}}>
                 <FontAwesomeIcon onClick={(event) => handleEyeClick(event)}  className="hover:text-white mr-2" style={{transform: `rotate(-90deg)`}} icon={faEye}/>
                 <FontAwesomeIcon onClick={(event) => handleBarsClick(event)}  className="hover:text-white mr-2" style={{transform: `rotate(-90deg)`}} icon={faBars}/>
-                  {GROUPSINFO[group.id].tablename + (group.type === "deck" ? " ("+numStacks+")" : "")}
+                  {tablename + (group.type === "deck" ? " ("+numStacks+")" : "")}
               </span>
             </div>
           }
