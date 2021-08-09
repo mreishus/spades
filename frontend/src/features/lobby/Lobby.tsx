@@ -91,7 +91,7 @@ export const Lobby: React.FC = () => {
 
   return (
       <div className="w-full bg-gray-900" style={{fontFamily:"Roboto"}}>
-        {1 ? 
+        {0 ? 
         <div className="mt-4 mx-auto" style={{width: "600px"}}>
           <div className="mb-6">
             {/* <h3 className="mb-2 font-semibold text-center">New Game</h3> */}
