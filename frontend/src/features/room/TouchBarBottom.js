@@ -128,6 +128,8 @@ export const TouchBarBottom = React.memo(({}) => {
           ["Undo many", "undo_many"],
           ["Redo", "redo_many"],
           ["Next step", "next_step"],
+          ["Raise threat", "increase_threat"],
+          ["Reduce threat", "decrease_threat"],
           ["Save", "save"],
           ].map((titleAction, _index) => {
             return (

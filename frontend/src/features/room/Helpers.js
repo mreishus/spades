@@ -8,6 +8,10 @@ export const getCurrentFace = (card) => {
   if (!card?.currentSide) return null;
   return card.sides[card.currentSide];
 }
+ 
+export const playerNToPlayerSpaceN = (playerN) => {
+  return "Player " + playerN.slice(6,7);
+}
 
 export const getDisplayName = (card) => {
   if (!card) return;
@@ -81,7 +85,7 @@ export const getVisibleFaceSrc = (card, playerN, user) => {
   if (!card) return "";
   const visibleSide = getVisibleSide(card, playerN);
   const visibleFace = getVisibleFace(card, playerN);
-  const language = user.language || "English";
+  const language = user?.language || "English";
   if (visibleSide === "A") {
     return {
       src: visibleFace.customImgUrl || process.env.PUBLIC_URL + '/images/cards/' + language + '/' + card['cardDbId'] + '.jpg',

@@ -11,6 +11,7 @@ import {
   tokenPrintName,
   checkAlerts,
   getScore,
+  playerNToPlayerSpaceN,
 } from "./Helpers";
 import { setValues } from "./gameUiSlice";
 import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStep, prevRoundStep, nextPhase, prevPhase } from "./Constants";
@@ -156,7 +157,7 @@ export const gameAction = (action, props) => {
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
-                chatBroadcast("game_update",{message: "presses Shift+N for player "+i});
+                chatBroadcast("game_update",{message: "presses Shift+N for "+playerNToPlayerSpaceN(playerI)});
                 const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
                 gameAction("new_round", actionProps);
             }
@@ -167,7 +168,7 @@ export const gameAction = (action, props) => {
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
-                chatBroadcast("game_update",{message: "presses Shift+R for player"+i});
+                chatBroadcast("game_update",{message: "presses Shift+R for "+playerNToPlayerSpaceN(playerI)});
                 const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
                 gameAction("refresh", actionProps);
             }
@@ -340,6 +341,37 @@ export const gameAction = (action, props) => {
     else if (action === "score") {
         const score = getScore(gameUi, gameBroadcast, chatBroadcast)
         chatBroadcast("game_update",{message: "calculated score: "+score});
+    }
+    else if (action === "increase_threat") {
+        // Raise your threat
+        const newThreat = game.playerData[playerN].threat + 1;
+        chatBroadcast("game_update", {message: "raises "+playerNToPlayerSpaceN(playerN)+"'s threat by 1 ("+newThreat+")."});
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat], ["game", "playerData", playerN, "refreshed", true]]}});
+    }
+    else if (action === "increase_threat_all") {
+        for (var i=1; i<=game.numPlayers; i++) {
+            const playerI = "player"+i;
+            if (!game.playerData[playerI].eliminated) {
+                const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+                gameAction("increase_threat", actionProps);
+            }
+        }
+    }
+    else if (action === "decrease_threat") {
+        // Raise your threat
+        var newThreat = game.playerData[playerN].threat - 1;
+        newThreat = newThreat < 0 ? 0 : newThreat; 
+        chatBroadcast("game_update", {message: "reduces "+playerNToPlayerSpaceN(playerN)+"'s threat by 1 ("+newThreat+")."});
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat], ["game", "playerData", playerN, "refreshed", true]]}});
+    }
+    else if (action === "decrease_threat_all") {
+        for (var i=1; i<=game.numPlayers; i++) {
+            const playerI = "player"+i;
+            if (!game.playerData[playerI].eliminated) {
+                const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+                gameAction("decrease_threat", actionProps);
+            }
+        }
     }
 }
 

@@ -54,6 +54,10 @@ const keyGameActionMap = {
     "M": "mulligan",
     "Escape": "clear_targets",
     "O": "score",
+    "u": "increase_threat",
+    "j": "decrease_threat",
+    "U": "increase_threat_all",
+    "J": "decrease_threat_all",
 }
 
 const ctrlKeyGameActionMap = {

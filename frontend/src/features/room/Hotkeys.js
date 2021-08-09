@@ -218,6 +218,26 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Discard all shadow cards</td>
         </tr>
         <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center">
+          <div className={keyClass+" inline-block"} style={keyStyle}>U</div></td>
+          <td className="text-center">Raise threat by 1</td>
+        </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center">
+          <div className={keyClass+" inline-block"} style={keyStyle}>J</div></td>
+          <td className="text-center">Reduce threat by 1</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>U</div></td>
+          <td className="text-center">Raise threat by 1 for all players</td>
+        </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>J</div></td>
+          <td className="text-center">Reduce threat by 1 for all players</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>P</div></td>
           <td className="text-center">Save Game</td>
