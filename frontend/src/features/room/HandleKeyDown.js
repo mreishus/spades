@@ -56,13 +56,13 @@ const keyGameActionMap = {
     "O": "score",
     "u": "increase_threat",
     "j": "decrease_threat",
-    "U": "increase_threat_all",
-    "J": "decrease_threat_all",
 }
 
 const ctrlKeyGameActionMap = {
     "R": "refresh_all",
     "N": "new_round_all",
+    "u": "increase_threat_all",
+    "j": "decrease_threat_all",
     "ArrowLeft": "undo_many",
     "ArrowRight": "redo_many",
     "ArrowUp": "prev_phase",
