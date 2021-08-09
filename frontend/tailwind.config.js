@@ -52,6 +52,9 @@ module.exports = {
        '80': '.8',
        '90': '.9',
        '100': '1',
+      },
+      boxShadow: {
+        yellow: '0 0 7px yellow',
       }
     }
   }

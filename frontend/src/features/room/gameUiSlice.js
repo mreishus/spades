@@ -131,12 +131,10 @@ const gameUiSlice = createSlice({
       }
     },
     setValues: (state, { payload }) => {
-      console.log("setting values")
       console.log(payload)
       updateValues(state, payload.updates);
     },
     incrementRound: (state, { payload }) => {
-      console.log("increment round")
       state.game.roundNumber = state.game.roundNumber+1;
     },
   },

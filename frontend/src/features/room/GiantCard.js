@@ -1,7 +1,7 @@
 import React from "react";
 import { useActiveCard } from "../../contexts/ActiveCardContext";
 import { useTouchAction } from "../../contexts/TouchActionContext";
-import { getVisibleFace, getVisibleFaceSRC } from "./Helpers";
+import { getVisibleFace, getVisibleFaceSrc } from "./Helpers";
 import useProfile from "../../hooks/useProfile";
 
 export const GiantCard = React.memo(({playerN}) => {
@@ -9,13 +9,14 @@ export const GiantCard = React.memo(({playerN}) => {
   const user = useProfile();
   const touchAction = useTouchAction();
   const activeCardAndLoc = useActiveCard();
-  const activeCard = activeCardAndLoc?.card
-  const visibleFace = getVisibleFace(activeCard, playerN)
+  const activeCard = activeCardAndLoc?.card;
+  const visibleFace = getVisibleFace(activeCard, playerN);
+  const visibleFaceSrc = getVisibleFaceSrc(activeCard, playerN, user);
   if (activeCard && !touchAction) {
     return (
       <img 
         className="absolute"
-        src={getVisibleFaceSRC(activeCard, playerN, user)}
+        src={visibleFaceSrc.src} onerror={`this.onerror=null; this.src=${visibleFaceSrc.default}`}
         style={{
           right: activeCardAndLoc?.screenPosition === "left" ? "3%" : "",
           left: activeCardAndLoc?.screenPosition === "right" ? "3%" : "",

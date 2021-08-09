@@ -106,6 +106,7 @@ declare module "elixir-backend" {
     public player_back_url: null | string;
     public encounter_back_url: null | string;
     public playtester: null | integer;
+    public language: null | string;
   }
 
   // User: Public information about other users.

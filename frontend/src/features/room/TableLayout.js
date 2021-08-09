@@ -204,7 +204,7 @@ export const TableLayout = React.memo(({
       }
       {/* Bottom row */}
       <div 
-        className="relative w-full" 
+        className="relative float-left w-full" 
         style={{height: rowHeight}}>
         {layoutInfo[numRows-1].regions.map((region, _regionIndex) => (
           <TableRegion

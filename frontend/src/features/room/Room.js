@@ -4,6 +4,7 @@ import RoomProviders from "./RoomProviders";
 import {useSetMessages} from '../../contexts/MessagesContext';
 import useChannel from "../../hooks/useChannel";
 import { setGameUi, setGame } from "./gameUiSlice";
+import useProfile from "../../hooks/useProfile";
 
 export const Room = ({ slug }) => {
   const dispatch = useDispatch();
@@ -12,6 +13,8 @@ export const Room = ({ slug }) => {
   const errorStore = state => state.gameUi.error;
   const error = useSelector(errorStore);
   const setMessages = useSetMessages();
+  const myUser = useProfile();
+  const myUserId = myUser?.id;
 
   //const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
@@ -42,10 +45,10 @@ export const Room = ({ slug }) => {
       setMessages(payload.response.messages);
     }
   }, []);
-  const gameBroadcast = useChannel(`room:${slug}`, onChannelMessage);
-  const chatBroadcast = useChannel(`chat:${slug}`, onChatMessage);
+  const gameBroadcast = useChannel(`room:${slug}`, onChannelMessage, myUserId);
+  const chatBroadcast = useChannel(`chat:${slug}`, onChatMessage, myUserId);
 
-  console.log('Rendering Room');
+  console.log('Rendering Room',myUserId);
 
   if (gameName !== slug) return (<div></div>);
   else {

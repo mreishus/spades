@@ -4,15 +4,17 @@ import { useKeypress, useSetKeypress} from "../../contexts/KeypressContext";
 import { HandleKeyDown } from "./HandleKeyDown";
 import { DragContainer } from "./DragContainer";
 import { HandleTouchActions } from "./HandleTouchActions";
+import { useTouchMode } from "../../contexts/TouchModeContext";
 
 const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
   console.log('Rendering RoomGame');
   const [typing, setTyping] = useState(false);
   const setKeypress = useSetKeypress();
+  const touchMode = useTouchMode();
 
   useEffect(() => {
     const onKeyUp = (event) => {
-      if (event.key === "Shift") setKeypress({"Shift": false});
+      if (event.key === "Alt") setKeypress({"Alt": false});
       if (event.key === " ") setKeypress({"Space": false});
       if (event.key === "Control") setKeypress({"Control": false});
       if (event.key === "Tab") setKeypress({"Tab": false});
@@ -33,11 +35,11 @@ const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
       />      
-      <HandleTouchActions
+      {touchMode && <HandleTouchActions
         playerN={playerN}
         gameBroadcast={gameBroadcast} 
         chatBroadcast={chatBroadcast}
-      />
+      />}
       <DragContainer 
         playerN={playerN}
         gameBroadcast={gameBroadcast}

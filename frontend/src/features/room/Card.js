@@ -1,20 +1,14 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 import { Tokens } from './Tokens';
-import { GROUPSINFO } from "./Constants";
 import useProfile from "../../hooks/useProfile";
 import { CardMouseRegion } from "./CardMouseRegion";
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { faEye } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getDisplayName, getCurrentFace, getVisibleFace, getVisibleFaceSRC, getVisibleSide, getDefault } from "./Helpers";
+import { getCurrentFace, getVisibleFace, getVisibleFaceSrc, getDefault } from "./Helpers";
 import { Target } from "./Target";
-import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
-import useLongPress from "../../hooks/useLongPress";
 import { useTouchMode } from "../../contexts/TouchModeContext";
-import { useTouchAction } from "../../contexts/TouchActionContext";
-
-var clickTimeout;
 
 export const Card = React.memo(({
     cardId,
@@ -33,6 +27,7 @@ export const Card = React.memo(({
     if (!card) return null;
     const currentFace = getCurrentFace(card);
     const visibleFace = getVisibleFace(card, playerN);
+    const visibleFaceSrc = getVisibleFaceSrc(card, playerN, user);
     const zIndex = 1000 - cardIndex;
     console.log('Rendering Card ',visibleFace.name);
     const setActiveCard = useSetActiveCard();
@@ -48,119 +43,86 @@ export const Card = React.memo(({
 
     return (
         <div id={card.id}>
+            <div 
+                className={isActive ? "shadow-yellow" : ""}
+                key={card.id}
+                style={{
+                    position: "absolute",
+                    //background: `url(${getVisibleFaceSRC(card, playerN, user)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
+                    height: `${cardSize*visibleFace.height}vh`,
+                    width: `${cardSize*visibleFace.width}vh`,
+                    left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize*touchModeSpacingFactor/3*cardIndex}vh`,
+                    top: "50%",
+                    borderRadius: '0.6vh',
+                    transform: `translate(0%, ${groupType === "vertical" ? "0%" : "-50%"}) rotate(${card.rotation}deg)`,
+                    zIndex: zIndex,
+                    cursor: "default",
+                    WebkitTransitionDuration: "0.1s",
+                    MozTransitionDuration: "0.1s",
+                    OTransitionDuration: "0.1s",
+                    transitionDuration: "0.1s",
+                    WebkitTransitionProperty: "-webkit-transform",
+                    MozTransitionProperty: "-moz-transform",
+                    OTransitionProperty: "-o-transform",
+                    transitionProperty: "transform",
+                }}
+                onMouseLeave={event => !touchMode && handleMouseLeave(event)}>
+                <img className="absolute w-full h-full" style={{borderRadius: '0.6vh'}} src={visibleFaceSrc.src} onerror={`this.onerror=null; this.src=${visibleFaceSrc.default}`} />
+
+                {isActive && touchMode && defaultAction &&
+                    <div 
+                        className={"absolute w-full pointer-events-none bg-green-700 font-bold rounded text-white text-xs text-center" + (card.rotation === -30 ? " bottom-0" : "")}
+                        style={{height:"40px", opacity: "80%"}}>
+                            <div>Tap to</div>
+                            {defaultAction.title}
+                    </div>}
+                {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute top-0 right-0 text-2xl" icon={faEye}/>:null}
+                <Target
+                    cardId={cardId}
+                    cardSize={cardSize}
+                />
+                <CardMouseRegion 
+                    position={"top"}
+                    top={"0%"}
+                    card={card}
+                    setIsActive={setIsActive}
+                    zIndex={zIndex}
+                    cardIndex={cardIndex}
+                    groupId={groupId}
+                    groupType={groupType}
+                    playerN={playerN}
+                />
+                <CardMouseRegion 
+                    position={"bottom"}
+                    top={"50%"}
+                    card={card}
+                    setIsActive={setIsActive}
+                    zIndex={zIndex}
+                    cardIndex={cardIndex}
+                    groupId={groupId}
+                    groupType={groupType}
+                    playerN={playerN}
+                />
+                <Tokens
+                    cardName={currentFace.name}
+                    cardId={card.id}
+                    isActive={isActive}
+                    gameBroadcast={gameBroadcast}
+                    chatBroadcast={chatBroadcast}
+                    zIndex={zIndex}
+                    aspectRatio={visibleFace.width/visibleFace.height}
+                />
                 <div 
-                    className={isActive ? 'isActive' : ''}
-                    key={card.id}
+                    ref={registerDivToArrowsContext ? (div) => registerDivToArrowsContext({ id: "arrow-"+card.id, div }) : null} 
                     style={{
                         position: "absolute",
-                        background: `url(${getVisibleFaceSRC(card, playerN, user)}) no-repeat scroll 0% 0% / contain`, //group.type === "deck" ? `url(${card.sides["B"].src}) no-repeat` : `url(${card.sides["A"].src}) no-repeat`,
-                        height: `${cardSize*visibleFace.height}vh`,
-                        width: `${cardSize*visibleFace.width}vh`,
-                        left: `${0.2 + (1.39-visibleFace.width)*cardSize/2 + cardSize*touchModeSpacingFactor/3*cardIndex}vh`,
+                        width: "1px", 
+                        height: "1px",
                         top: "50%",
-                        borderRadius: '0.6vh',
-                        MozBoxShadow: isActive ? '0 0 7px yellow' : '',
-                        WebkitBoxShadow: isActive ? '0 0 7px yellow' : '',
-                        boxShadow: isActive ? '0 0 7px yellow' : '',
-                        transform: `translate(0%, ${groupType === "vertical" ? "0%" : "-50%"}) rotate(${card.rotation}deg)`,
-                        zIndex: zIndex,
-                        cursor: "default",
-                        WebkitTransitionDuration: "0.1s",
-                        MozTransitionDuration: "0.1s",
-                        OTransitionDuration: "0.1s",
-                        transitionDuration: "0.1s",
-                        WebkitTransitionProperty: "-webkit-transform",
-                        MozTransitionProperty: "-moz-transform",
-                        OTransitionProperty: "-o-transform",
-                        transitionProperty: "transform",
+                        left: "50%",
                     }}
-                    onMouseLeave={event => !touchMode && handleMouseLeave(event)}
-                    //onClick={handleClick}
-                    // onDoubleClick={handleDoubleClick}
-                    //onTouchStart={handleClick}
-                >
-                    {isActive && touchMode && defaultAction &&
-                        <div 
-                            className={"absolute w-full pointer-events-none bg-green-700 font-bold rounded text-white text-xs text-center" + (card.rotation === -30 ? " bottom-0" : "")}
-                            style={{height:"40px", opacity: "80%"}}>
-                                <div>Tap to</div>
-                                {defaultAction.title}
-                        </div>}
-                    {(card["peeking"][playerN] && groupType !== "hand" && (card["currentSide"] === "B")) ? <FontAwesomeIcon className="absolute top-0 right-0 text-2xl" icon={faEye}/>:null}
-                    <Target
-                        cardId={cardId}
-                        cardSize={cardSize}
-                    />
-                    <CardMouseRegion 
-                        position={"top"}
-                        top={"0%"}
-                        card={card}
-                        setIsActive={setIsActive}
-                        zIndex={zIndex}
-                        cardIndex={cardIndex}
-                        groupId={groupId}
-                        groupType={groupType}
-                        playerN={playerN}
-                        gameBroadcast={gameBroadcast}
-                        chatBroadcast={chatBroadcast}
-                    />
-                    <CardMouseRegion 
-                        position={"bottom"}
-                        top={"50%"}
-                        card={card}
-                        setIsActive={setIsActive}
-                        zIndex={zIndex}
-                        cardIndex={cardIndex}
-                        groupId={groupId}
-                        groupType={groupType}
-                        playerN={playerN}
-                        gameBroadcast={gameBroadcast}
-                        chatBroadcast={chatBroadcast}
-                    />
-                    {/* <CardTapRegion 
-                        card={card}
-                        playerN={playerN}
-                        setIsActive={setIsActive}
-                        zIndex={zIndex}
-                        cardIndex={cardIndex}
-                        groupId={groupId}
-                        groupType={groupType}
-                        gameBroadcast={gameBroadcast}
-                        chatBroadcast={chatBroadcast}
-                    /> */}
-                    <Tokens
-                        cardName={currentFace.name}
-                        cardId={card.id}
-                        isActive={isActive}
-                        gameBroadcast={gameBroadcast}
-                        chatBroadcast={chatBroadcast}
-                        zIndex={zIndex}
-                        aspectRatio={visibleFace.width/visibleFace.height}
-                    />
-                    <div 
-                        ref={registerDivToArrowsContext ? (div) => registerDivToArrowsContext({ id: "arrow-"+card.id, div }) : null} 
-                        style={{
-                            position: "absolute",
-                            width: "1px", 
-                            height: "1px",
-                            top: "50%",
-                            left: "50%",
-                        }}
-                    />
-                    {/* <ArcherElement
-                        id={"archer-"+card.id}
-                        relations={arrowRelationList()}
-                    >
-                        <div style={{
-                            position: "absolute",
-                            width: "15px", 
-                            height: "15px",
-                            backgroundColor: "red",
-                            top: "70%",
-                            left: "50%",
-                        }}/>
-                    </ArcherElement> */}
-                </div>
+                />
+            </div>
         </div>
     )
 })

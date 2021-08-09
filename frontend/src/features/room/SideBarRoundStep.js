@@ -46,7 +46,7 @@ export const ReminderButton = React.memo(({
   return(
     <div 
       className="absolute flex items-center justify-center bg-red-800 hover:bg-red-600 border"
-      style={{height:"20px", width:"20px", right:"-17px", borderRadius: "15px"}}
+      style={{height:"2.5vh", width:"2.5vh", right:"-2vh", borderRadius: "2.5vh"}}
       onClick={(event) => targetTriggers(event)}
       onMouseEnter={() => handleStartHover()}
       onMouseLeave={() => handleStopHover()}>

@@ -5,12 +5,12 @@ import { useSetTouchAction, useTouchAction } from "../../contexts/TouchActionCon
 import { gameAction, cardAction } from "./Actions";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { useKeypress, useSetKeypress } from "../../contexts/KeypressContext";
-import { getCurrentFace, getDefault, getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
+import { getDefault, getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
 import { useDropdownMenu, useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import { useTouchMode } from "../../contexts/TouchModeContext";
 
 
-export const HandleTouchActions = ({
+export const HandleTouchActions = React.memo(({
     playerN,
     gameBroadcast, 
     chatBroadcast
@@ -107,4 +107,4 @@ export const HandleTouchActions = ({
     // }, [activeCardGameUi])
 
     return null;
-}
+})

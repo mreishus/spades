@@ -79,7 +79,7 @@ export const SpawnCustomModal = React.memo(({
         "cardpackname": "",
         "cardid": "",
         "cardnumber": "1",
-        "loadgroupid": thisLoadGroupId,
+        "loadgroupid": cardLoadGroupId,
         "discardgroupid": discardGroupId,
       },
       "quantity": 1,

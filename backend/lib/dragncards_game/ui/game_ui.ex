@@ -393,28 +393,40 @@ defmodule DragnCardsGame.GameUI do
   # Update a card state
   # Modify the card orientation/tokens based on where it is now
   def update_card_state(gameui, card_id, preserve_state, orig_group_id) do
-    card = get_card(gameui, card_id)
     if preserve_state do
       # We still remove arrows
       #card = put_in(card["arrowIds"], [])
-      update_card(gameui, card)
-      #gameui
+      #update_card(gameui, card)
+      gameui
     else
+      card = get_card(gameui, card_id)
       card_name = card["sides"]["A"]["name"]
-      card_id = card["id"]
-      dest_group = get_group_by_card_id(gameui, card["id"])
+      card_face = get_current_card_face(gameui, card_id)
+      dest_group = get_group_by_card_id(gameui, card_id)
       dest_group_id = dest_group["id"]
       orig_group_type = get_group_type(gameui, orig_group_id)
       dest_group_type = get_group_type(gameui, dest_group_id)
+      committed_willpower = if card["committed"] do
+        card_face["willpower"] + card["tokens"]["willpower"]
+      else
+        0
+      end
+      old_controller = card["controller"]
+      new_controller = dest_group["controller"]
       # Remove arrows
       #card = put_in(card["arrowIds"], [])
       # Set new controller
-      card = put_in(card["controller"], dest_group["controller"])
+      card = put_in(card["controller"], new_controller)
       # Entering play
       card = if dest_group_type == "play" and orig_group_type != "play" do
         card
         |> Map.put("roundEnteredPlay", gameui["game"]["round"])
         |> Map.put("phaseEnteredPlay", gameui["game"]["phase"])
+      else card end
+      # Leaving player control
+      card = if old_controller !== "shared" and new_controller == "shared" do
+        card
+        |> Map.put("committed", false)
       else card end
       # Leaving play
       card = if dest_group_type != "play" do
@@ -423,6 +435,7 @@ defmodule DragnCardsGame.GameUI do
         |> Map.put("tokensPerRound", Tokens.new())
         |> Map.put("exhausted", false)
         |> Map.put("rotation", 0)
+        |> Map.put("committed", false)
         |> Map.put("roundEnteredPlay", nil)
         |> Map.put("phaseEnteredPlay", nil)
         |> clear_targets()
@@ -459,10 +472,31 @@ defmodule DragnCardsGame.GameUI do
       end
       gameui = update_card(gameui, card)
       # Update game based on card moving
+      # Handle triggers
       gameui = if dest_group_type == "play" do
         add_triggers(gameui, card["id"])
       else
         remove_triggers(gameui, card["id"])
+      end
+      # Handle committed willpower leaving play
+      gameui = if committed_willpower > 0 and dest_group_type !== "play" and old_controller !== "shared" do
+        old_controller_willpower = gameui["game"]["playerData"][old_controller]["willpower"]
+        put_in(gameui["game"]["playerData"][old_controller]["willpower"], old_controller_willpower - committed_willpower)
+      else
+        gameui
+      end
+      # Handle committed willpower changing control
+      gameui = if committed_willpower > 0 and old_controller !== new_controller and old_controller !== "shared" do
+        old_controller_willpower = gameui["game"]["playerData"][old_controller]["willpower"]
+        gameui = put_in(gameui["game"]["playerData"][old_controller]["willpower"], old_controller_willpower - committed_willpower)
+        if new_controller !== "shared" do
+          new_controller_willpower = gameui["game"]["playerData"][new_controller]["willpower"]
+          put_in(gameui["game"]["playerData"][new_controller]["willpower"], new_controller_willpower + committed_willpower)
+        else
+          gameui
+        end
+      else
+        gameui
       end
     end
   end

@@ -50,7 +50,6 @@ export const TopBarDataContainer = React.memo(({
     })
     //const totalWillpower = playerWillpower["player1"] + playerWillpower["player2"] + playerWillpower["player3"] + playerWillpower["player4"];
     var totalWillpower = 0;
-    console.log("playerData",playerData);
     for (var i =1; i<=numPlayers; i++) {
       const playerI = "player"+i;
       totalWillpower += playerData[playerI].willpower;

@@ -163,7 +163,6 @@ export const Hotkeys = React.memo(({
         </tr>
         <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>E</div></td>
           <td className="text-center">Deal facedown encounter card</td>
         </tr>
@@ -173,63 +172,73 @@ export const Hotkeys = React.memo(({
         </tr>
         <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>K</div></td>
           <td className="text-center">Deal facedown encounter card from second encounter deck</td>
         </tr>
         <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>M</div></td>
           <td className="text-center">Mulligan</td>
         </tr>
         <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>N</div></td>
           <td className="text-center">Draw card and gain resources. If host, increment round.</td>
         </tr>
         <tr className={"bg-gray-600"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
-          <div className="inline-block p-1">+</div><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>N</div> <div>or</div> 
+          <div className={keyClass} style={keyStyleL}>Alt</div><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>N</div></td>
-          <td className="text-center">Press Ctrl+N for all players.</td>
+          <td className="text-center">Press Shift+N for all players.</td>
         </tr>
         <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>O</div></td>
           <td className="text-center">Calculate score</td>
         </tr>
         <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
           <td className="text-center">Refresh and raise threat. If host, move 1st player token.</td>
         </tr>
         <tr className={"bg-gray-500"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
-          <div className="inline-block p-1">+</div><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
           <td className="text-center">Press Shift+R for all players.</td>
         </tr>
         <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>S</div></td>
           <td className="text-center">Deal all shadow cards</td>
         </tr>
         <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>X</div></td>
           <td className="text-center">Discard all shadow cards</td>
         </tr>
         <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center">
+          <div className={keyClass+" inline-block"} style={keyStyle}>U</div></td>
+          <td className="text-center">Raise threat by 1</td>
+        </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center">
+          <div className={keyClass+" inline-block"} style={keyStyle}>J</div></td>
+          <td className="text-center">Reduce threat by 1</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>U</div></td>
+          <td className="text-center">Raise threat by 1 for all players</td>
+        </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>J</div></td>
+          <td className="text-center">Reduce threat by 1 for all players</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>P</div></td>
           <td className="text-center">Save Game</td>
         </tr>
@@ -242,8 +251,7 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Undo one action</td>
         </tr>
         <tr className={"bg-gray-500"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>←</div></td>
           <td className="text-center">Undo until last round change</td>
         </tr>
@@ -252,8 +260,7 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Redo one action</td>
         </tr>
         <tr className={"bg-gray-500"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>→</div></td>
           <td className="text-center">Redo until next round change</td>
         </tr>
@@ -266,14 +273,12 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Move to next game step</td>
         </tr>
         <tr className={"bg-gray-600"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>↑</div></td>
           <td className="text-center">Move to previous phase</td>
         </tr>
         <tr className={"bg-gray-500"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className="inline-block p-1">+</div>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>↓</div></td>
           <td className="text-center">Move to next phase</td>
         </tr>
