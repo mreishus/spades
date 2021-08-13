@@ -22,12 +22,20 @@ const isStringInQuestPath = (str, questPath) => {
   return lowerCaseQuestName.includes(lowerCaseString);
 }
 
+export const getQuestNameFromModeAndId = (modeAndId) => {
+  const index = getIndexFromModeAndId(modeAndId);
+  const questPath = questsOCTGN[index];
+  return getQuestNameFromPath(questPath);
+}
+
 const getQuestNameFromPath = (questPath) => {
+  if (!questPath) return null;
   var name = questPath.split("/").pop();
   var mode = name.split('.').reverse()[3];
   name = name.split('.').reverse()[2];
   name = name.slice(2);
   name = name.replace(/-/ig, " ");
+  if (name.slice(0,1) === " ") name = name.slice(1);
   return name;
 }
 
@@ -126,10 +134,13 @@ export const SpawnQuestModal = React.memo(({
       console.log(props);
       if (props.goToMenu) setActiveMenu(props.goToMenu);
       else if (props.questIndex !== null) {
-        const res = await fetch(questsOCTGN[props.questIndex]);
+        const questPath = questsOCTGN[props.questIndex];
+        const res = await fetch(questPath);
         const xmlText = await res.text();
         loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast);
         setShowModal(null);
+        const modeAndId = getModeLetterQuestIdFromPath(questPath);
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","questModeAndId", modeAndId]]}});
       }
     }
 

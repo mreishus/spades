@@ -1,6 +1,8 @@
 import React from "react";
 import { useSelector } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
+import { getQuestCompanionCycleFromQuestId } from "./Helpers";
+import { getQuestNameFromModeAndId, getQuestNameFromPath } from "./SpawnQuestModal";
 import { TopBarViewItem } from "./TopBarViewItem";
 
 
@@ -15,11 +17,21 @@ export const TopBarView = React.memo(({
 }) => {
   const numPlayersStore = state => state.gameUi.game.numPlayers;
   const numPlayers = useSelector(numPlayersStore);
+  const questModeAndIdStore = state => state.gameUi.game.questModeAndId;
+  const questModeAndId = useSelector(questModeAndIdStore);
 
   const range = (size, startAt = 0) => {
     return [...Array(size).keys()].map(i => i + startAt);
   }
 
+  const questName = questModeAndId ? getQuestNameFromModeAndId(questModeAndId) : null;
+  const questId = questModeAndId ? questModeAndId.slice(1) : null;
+  const questCompanionCycle = questId ? getQuestCompanionCycleFromQuestId(questId) : null;
+  var extension = "#" + questCompanionCycle + " quest " + questName;
+  extension = extension.toLowerCase();
+  extension = extension.replaceAll(" ","-");
+  if (!questCompanionCycle) extension = "";
+  var questCompanionURL = "https://lotr-lcg-quest-companion.gamersdungeon.net/" + extension;
   return(
     <li>
       <div className="h-full flex items-center justify-center select-none" href="#">View</div>
@@ -29,6 +41,9 @@ export const TopBarView = React.memo(({
           </li>
           <li key={"PlayersInRoom"}>
             <a href="#" onClick={() => setShowPlayersInRoom(true)}>Spectators</a>
+          </li>
+          <li key={"QuestCompanion"}>
+            <a href={questCompanionURL} target="_blank">Quest Companion</a>
           </li>
           <li key={"Shared"}>
             <a href="#">Shared</a>
