@@ -84,6 +84,8 @@ const keyTokenMap = {
   "8": "hitPoints",
 }
 
+const keyDefaultList = ["F11"];
+
 const keyLogBase = {
     "1": 0,
     "2": 0,
@@ -210,6 +212,7 @@ export const HandleKeyDown = ({
     useEffect(() => {
         const onKeyDown = (event) => {
             if (typing) return;
+            else if (keyDefaultList.includes(event.key)) return;
             else {
                 event.preventDefault();
                 handleKeyDown(
