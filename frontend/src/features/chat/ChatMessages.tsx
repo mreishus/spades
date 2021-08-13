@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import ChatLine from "./ChatLine";
 import { useMessages } from "../../contexts/MessagesContext";
+import { useTouchMode } from "../../contexts/TouchModeContext";
 
 interface Props {
   hover: boolean;
@@ -10,6 +11,7 @@ interface Props {
 export const ChatMessages: React.FC<Props> = ({ hover, chatOnly }) => {
   console.log("Rendering ChatMessages")
   const messages = useMessages();
+  const touchMode = useTouchMode();
 
   const bottomRef = useRef<any>();
 
@@ -21,8 +23,8 @@ export const ChatMessages: React.FC<Props> = ({ hover, chatOnly }) => {
   };
 
   useEffect(() => {
-    scrollToBottom()
-  }, [messages, hover])
+    if (!touchMode) scrollToBottom();
+  }, [messages, hover, touchMode])
 
   return (
     <div>
