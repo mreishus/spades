@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 import { useSetActiveCard } from "../../contexts/ActiveCardContext";
+import { getDisplayName } from "./Helpers";
 
 export const ReminderButton = React.memo(({
   triggerCardIds,
@@ -27,6 +28,11 @@ export const ReminderButton = React.memo(({
     });
     chatBroadcast("game_update", {message: "removes targets."})
     gameBroadcast("game_action", {action: "target_card_ids", options:{card_ids: triggerCardIds}});
+    for (var cardId of triggerCardIds) {
+      const card = cardById[cardId];
+      const displayName = getDisplayName(card);
+      chatBroadcast("game_update", {message: "targeted "+displayName+"."});
+    }
   }  
   const handleStartHover = () => {
     setActiveCardAndLoc({
