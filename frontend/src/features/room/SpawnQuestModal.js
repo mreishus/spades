@@ -256,15 +256,19 @@ export const SpawnQuestModal = React.memo(({
                 <div className="menu">
                   <GoBack goToMenu={cycleId} clickCallback={handleDropdownClick}/>
                   {["E","Q","N"].map((modeLetter, letterIndex) => {
+                    console.log(cycleId, questPath.toLowerCase())
                     const selectedIndex = getIndexFromModeAndId(modeLetter+questId);
-                    const selectedPath = questsOCTGN[selectedIndex];
-                    if (selectedIndex >= 0) return(
-                      <DropdownItem
-                        questIndex={selectedIndex}
-                        clickCallback={handleDropdownClick}>
-                        {getModeNameFromPath(selectedPath)}
-                      </DropdownItem>
-                    )
+                    if (selectedIndex >= 0) {
+                      const selectedPath = questsOCTGN[selectedIndex];
+                      if (cycleId !== "PT" && selectedPath?.toLowerCase().includes("playtest")) return null;
+                      else return(
+                        <DropdownItem
+                          questIndex={selectedIndex}
+                          clickCallback={handleDropdownClick}>
+                          {getModeNameFromPath(selectedPath)}
+                        </DropdownItem>
+                      )
+                    }
                   })}
                 </div>
               }
