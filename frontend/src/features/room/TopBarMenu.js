@@ -249,7 +249,7 @@ export const TopBarMenu = React.memo(({
   }
 
   return(
-    <li key={"Menu"}><div className="h-full flex items-center justify-center" href="#">Menu</div>
+    <li key={"Menu"}><div className="h-full flex items-center justify-center select-none" href="#">Menu</div>
       <ul className="second-level-menu">
         {host &&
           <li key={"numPlayers"}>

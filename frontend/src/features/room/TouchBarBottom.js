@@ -47,7 +47,7 @@ export const TouchButton = React.memo(({
 
     return(
       <div className={"absolute flex pointer-events-none h-full w-full top-0 items-center justify-center"}>
-        <img className="" style={{opacity: selected ? "30%" : "100%", height: "30px", width: "30px", transform: transform}} src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}/>
+        <img className="" style={{opacity: selected ? "30%" : "100%", height: "4vh", width: "4vh", transform: transform}} src={process.env.PUBLIC_URL + '/images/tokens/'+tokenType+'.png'}/>
       </div>
     )
   }
@@ -63,7 +63,7 @@ export const TouchButton = React.memo(({
     <div 
       //onMouseUp={(event) => handleClick(event)} onTouchStart={(event) => handleClick(event)} 
       onClick={(event) => handleClick(event)} 
-      className={"absolute cursor-default h-full w-full p-0.5 top-0" + (text.length === 1 ? " text-xl" : " text-xs")}>
+      className={"absolute cursor-default h-full w-full p-0.5 top-0"}>
       <div className={"flex rounded-lg w-full h-full text-center items-center justify-center" + bgColor + hoverColor}>
         {displayText}
       </div>
@@ -78,7 +78,7 @@ export const TouchBarBottom = React.memo(({}) => {
   const containerStyle = {};
   
   return (
-    <table className="table-fixed w-full h-full text-white text-xs select-none" style={{width: "99.9%"}}>
+    <table className="table-fixed w-full h-full text-white select-none" style={{width: "99.9%"}}>
       <tbody className="w-full h-full">
       <tr className={"bg-gray-700"} style={{height: "50%", maxHeight: "50%"}}>
         <td className={containerClass} style={containerStyle}>

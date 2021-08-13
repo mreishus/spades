@@ -292,6 +292,21 @@ export const gameAction = (action, props) => {
         if (stepPhase) {
             gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","roundStep", stepPhase["roundStep"]], ["game", "phase", stepPhase["phase"]]]}});
             chatBroadcast("game_update", {message: "set the round step to "+roundStepToText(stepPhase["roundStep"])+"."});
+            // Handle targeting
+            const triggerCardIds = game.triggerMap[stepPhase["roundStep"]];     
+            // Remove targets from all cards you targeted
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[["targeting", playerN, true]], 
+                    action: "update_card_values", 
+                    options: {updates: [["targeting", playerN, false]]}
+                }
+            });
+            if (triggerCardIds && triggerCardIds.length > 0) {
+                chatBroadcast("game_update", {message: "removes targets."})
+                gameBroadcast("game_action", {action: "target_card_ids", options:{card_ids: triggerCardIds}});
+            }
         }
     }
 

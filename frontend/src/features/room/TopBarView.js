@@ -22,7 +22,7 @@ export const TopBarView = React.memo(({
 
   return(
     <li>
-      <div className="h-full flex items-center justify-center" href="#">View</div>
+      <div className="h-full flex items-center justify-center select-none" href="#">View</div>
         <ul className="second-level-menu">
           <li key={"Hotkeys"}>
             <a href="#" onClick={() => setShowHotkeys(true)}>Hotkeys <div className={keyClass} style={keyStyleL}>Tab</div></a>
