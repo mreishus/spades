@@ -1,10 +1,8 @@
-import Ecto
 
 defmodule DragnCardsGame.CardFace do
   @moduledoc """
   Represents a playing card.
   """
-  alias DragnCardsGame.{CardFace}
 
   @type t :: Map.t()
 
@@ -13,7 +11,7 @@ defmodule DragnCardsGame.CardFace do
     if my_string == nil do
       nil
     else
-      result = Integer.parse(my_string)
+      result = Integer.parse("#{my_string}")
       case result do
         {number, _} -> number
         :error -> 0
@@ -54,6 +52,7 @@ defmodule DragnCardsGame.CardFace do
       steps = if String.match?(search_string, ~r/during the encounter phase/i) do steps ++ ["5.1"] else steps end
       steps = if String.match?(search_string, ~r/during the combat phase/i) do steps ++ ["6.1"] else steps end
       steps = if String.match?(search_string, ~r/during the refresh phase/i) do steps ++ ["7.1"] else steps end
+      steps
     end
     steps
   end

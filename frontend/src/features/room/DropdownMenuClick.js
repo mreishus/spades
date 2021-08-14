@@ -38,6 +38,16 @@ export const handleDropdownClickCard = (dropdownProps) => {
   } else if (dropdownOptions.action === "lock") {
     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "locked", true]]}})
     chatBroadcast("game_update", {message: " locked "+displayName+"."})
+  } else if (dropdownOptions.action === "delete") {
+    gameBroadcast("game_action", {
+      action: "action_on_matching_cards", 
+      options: {
+        criteria:[["id", menuCard?.id]], 
+        action: "delete_card", 
+        options: {}
+      }
+    });
+    chatBroadcast("game_update", {message: " deleted "+displayName+"."})
   } else if (dropdownOptions.action === "unlock") {
     gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "cardById", menuCard.id, "locked", false]]}})
     chatBroadcast("game_update", {message: " unlocked "+displayName+"."})

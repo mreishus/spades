@@ -5,7 +5,7 @@ import useProfile from "../../hooks/useProfile";
 import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
-import { loadRingsDb, processLoadList, processPostLoad } from "./Helpers";
+import { flatListOfCards, loadRingsDb, processLoadList, processPostLoad } from "./Helpers";
 import { cardDB } from "../../cardDB/cardDB";
 import { loadDeckFromXmlText, getRandomIntInclusive } from "./Helpers";
 import { useSetTouchMode } from "../../contexts/TouchModeContext";
@@ -156,6 +156,8 @@ export const TopBarMenu = React.memo(({
       setShowModal("quest");
     } else if (data.action === "download") {
       downloadGameAsJson();
+    } else if (data.action === "export_cards") {
+      exportCardsAsTxt();
     } else if (data.action === "load_game") {
       loadFileGame();
     } else if (data.action === "load_custom") {
@@ -248,6 +250,81 @@ export const TopBarMenu = React.memo(({
     chatBroadcast("game_update", {message: "downloaded the game."});
   }
 
+  const exportCardsAsTxt = () => {
+    const state = store.getState();
+    const game = state.gameUi.game;
+    const cardList = flatListOfCards(game);
+    const exportList = [];
+    for (var card of cardList) {
+      const sideA = card.sides.A;
+      const sideB = card.sides.B;
+      const cardRow = {
+        "cardencounterset": card.cardEncounterSet,
+        "sides": {
+          "A": {
+            "printname": sideA.printName,
+            "sphere": sideA.sphere,
+            "text": sideA.text,
+            "willpower": sideA.willpower,
+            "hitpoints": sideA.hitPoints,
+            "shadow": sideA.shadow,
+            "engagementcost": sideA.engagementCost,
+            "traits": sideA.traits,
+            "keywords": sideA.keywords,
+            "type": sideA.type,
+            "victorypoints": sideA.victoryPoints,
+            "cost": sideA.cost,
+            "name": sideA.name,
+            "questpoints": sideA.questPoints,
+            "attack": sideA.attack,
+            "unique": sideA.unique,
+            "defense": sideA.defense,
+            "threat": sideA.threat,
+            "customimgurl": sideA.customImgUrl,
+          },
+          "B": {
+            "printname": sideB.printName,
+            "sphere": sideB.sphere,
+            "text": sideB.text,
+            "willpower": sideB.willpower,
+            "hitpoints": sideB.hitPoints,
+            "shadow": sideB.shadow,
+            "engagementcost": sideB.engagementCost,
+            "traits": sideB.traits,
+            "keywords": sideB.keywords,
+            "type": sideB.type,
+            "victorypoints": sideB.victoryPoints,
+            "cost": sideB.cost,
+            "name": sideB.name,
+            "questpoints": sideB.questPoints,
+            "attack": sideB.attack,
+            "unique": sideB.unique,
+            "defense": sideB.defense,
+            "threat": sideB.threat,
+            "customimgurl": sideB.customImgUrl,
+          }
+        },
+        "cardquantity": card.cardQuantity,
+        "cardsetid": card.cardSetId,
+        "cardpackname": card.cardPackName,
+        "cardid": card.cardDbId,
+        "cardnumber": card.cardNumber,
+        "deckgroupid": card.deckGroupId,
+        "discardgroupid": card.discardGroupId,
+      }
+      exportList.push({cardRow: cardRow, quantity: 1, groupId: card.groupId})
+    }
+    const exportName = state.gameUi.gameName+"-cards";
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(exportList, null, 2));
+    var downloadAnchorNode = document.createElement('a');
+    downloadAnchorNode.setAttribute("href",     dataStr);
+    downloadAnchorNode.setAttribute("download", exportName + ".txt");
+    document.body.appendChild(downloadAnchorNode); // required for firefox
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+    chatBroadcast("game_update", {message: "exported all the cards."});
+  }
+
   return(
     <li key={"Menu"}><div className="h-full flex items-center justify-center select-none" href="#">Menu</div>
       <ul className="second-level-menu">
@@ -330,7 +407,13 @@ export const TopBarMenu = React.memo(({
             <li key={"quest_mode_normal"}><a onClick={() => handleMenuClick({action:"quest_mode", mode: "Normal"})} href="#">Normal quest</a></li>
           </ul>
         </li> 
-        <li key={"download"}><a onClick={() => handleMenuClick({action:"download"})} href="#">Download game</a></li>
+        <li key={"download"}>
+          <a href="#">Download</a>
+          <ul className="third-level-menu">        
+            <li key={"download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Game state</a></li>
+            <li key={"export_cards"}><a  onClick={() => handleMenuClick({action:"export_cards"})} href="#">Export cards</a></li>
+          </ul>
+        </li>
         {host &&
           <li key={"reset"}>
               <a href="#">Reset Game</a>
