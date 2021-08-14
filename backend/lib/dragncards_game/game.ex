@@ -33,6 +33,7 @@ defmodule DragnCardsGame.Game do
       "id" => Ecto.UUID.generate,
       "version" => 0.1,
       "numPlayers" => 1,
+      "questModeAndId" => nil,
       "layout" => "standard",
       "firstPlayer" => "player1",
       "roundNumber" => 0,

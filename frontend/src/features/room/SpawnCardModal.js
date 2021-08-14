@@ -19,8 +19,9 @@ export const SpawnCardModal = React.memo(({
         const cardRow = cardDB[cardID];
         if (!cardRow || !playerN) return;
         const cardRowCategory = getCardRowCategory(cardRow);
-        const loadGroupId = cardRowCategory === "Player" ? playerN + "Play2" : "sharedStaging";
-        cardRow['loadgroupid'] = loadGroupId;
+        const loadGroupId = cardRowCategory === "Player" ? playerN + "Play1" : "sharedStaging";
+        const deckGroupId = cardRowCategory === "Player" ? playerN + "Deck" : "shared"+cardRowCategory+"Deck";
+        cardRow['deckgroupid'] = deckGroupId;
         if (cardRowCategory === "Quest") cardRow['discardgroupid'] = "sharedQuestDiscard";
         else if (cardRowCategory === "Encounter") cardRow['discardgroupid'] = "sharedEncounterDiscard";
         else cardRow['discardgroupid'] = playerN+"Discard";

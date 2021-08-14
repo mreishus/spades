@@ -8,7 +8,7 @@ defmodule DragnCardsGame.Card do
 
   @spec convert_to_integer(String.t()) :: number
   def convert_to_integer(my_string) do
-    result = Integer.parse(my_string)
+    result = Integer.parse("#{my_string}")
     case result do
       {number, _} -> number
       :error -> 0
@@ -17,6 +17,7 @@ defmodule DragnCardsGame.Card do
 
   @spec card_from_cardrow(Map.t(), String.t()) :: Map.t()
   def card_from_cardrow(card_row, controller) do
+    IO.inspect(card_row)
     %{
       "id" => String.slice(Ecto.UUID.generate,24..-1),
       "rotation" => 0,
@@ -51,7 +52,7 @@ defmodule DragnCardsGame.Card do
       "cardSetId" => card_row["cardsetid"],
       "cardPackName" => card_row["cardpackname"],
 
-      "loadGroupId" => card_row["loadgroupid"],
+      "deckGroupId" => card_row["deckgroupid"],
       "discardGroupId" => card_row["discardgroupid"],
 
       "sides"=> %{

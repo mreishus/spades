@@ -1,7 +1,7 @@
 // ImageWithFallback.tsx
 import React, { useState } from 'react'
 import { cardDB } from "../../cardDB/cardDB";
-import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
+import { sectionToLoadGroupId, sectionToDiscardGroupId, sectionToDeckGroupId } from "./Constants";
 import axios from "axios";
 
 export const getCurrentFace = (card) => {
@@ -391,12 +391,16 @@ export const processLoadList = (loadList, playerN) => {
 
   for (var i=0; i<n; i++) {
     const item = newLoadList[i];
-    if (item.cardRow.loadgroupid.includes("playerN")) {
-      item.cardRow.loadgroupid = item.cardRow.loadgroupid.replace("playerN", playerN);
+    if (item.cardRow.loadgroupid) {
+      item.cardRow.deckgroupid = item.cardRow.loadgroupid; // Legacy
+    }
+    if (item.cardRow.deckgroupid?.includes("playerN")) {
+      item.cardRow.deckgroupid = item.cardRow.deckgroupid.replace("playerN", playerN);
     }
     if (item.groupId.includes("playerN")) {
       item.groupId = item.groupId.replace("playerN", playerN);
     }
+    console.log("item ", item)
   }
 
   const loreThurindir = isCardDbIdInLoadList(newLoadList, "12946b30-a231-4074-a524-960365081360");
@@ -563,11 +567,10 @@ export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadca
         const quantity = parseInt(card['$'].qty);
         var cardRow = cardDB[cardDbId];
         if (cardRow) {
-          const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
-          cardRow['loadgroupid'] = loadGroupId;
+          cardRow['deckgroupid'] = sectionToDeckGroupId(sectionName,playerN);
           cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
           if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
-          loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
+          loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': sectionToLoadGroupId(sectionName,playerN)})
         }
         else {
           alert("Encountered unknown card ID for "+card["_"])
@@ -691,7 +694,7 @@ export const loadRingsDb = (playerI, ringsDbDomain, ringsDbType, ringsDbId, game
           if (cardRow && !slotJsonData.name.includes("MotK")) {
             const type = slotJsonData.type_name;
             const loadGroupId = (type === "Hero" || type === "Contract") ? playerI+"Play1" : playerI+"Deck";
-            cardRow['loadgroupid'] = loadGroupId;
+            cardRow['deckgroupid'] = playerI+"Deck";
             cardRow['discardgroupid'] = playerI+"Discard";
             if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
             loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
@@ -714,9 +717,8 @@ export const loadRingsDb = (playerI, ringsDbDomain, ringsDbType, ringsDbId, game
           // jsonData is parsed json object received from url
           var cardRow = cardDB[slotJsonData.octgnid];
           if (cardRow) {
-            const type = slotJsonData.type_name;
             const loadGroupId = playerI+"Sideboard";
-            cardRow['loadgroupid'] = loadGroupId;
+            cardRow['deckgroupid'] = playerI+"Deck";
             cardRow['discardgroupid'] = playerI+"Discard";
             if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
             loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
@@ -742,4 +744,81 @@ export const loadRingsDb = (playerI, ringsDbDomain, ringsDbType, ringsDbId, game
     // handle your errors here
     alert("Error loading deck. If you are attempting to load an unpublished deck, make sure you have link sharing turned on in your RingsDB profile settings.")
   })
+}
+
+export const getQuestCompanionCycleFromQuestId = (questId) => {
+  if (!questId) return null;
+  const cycleId = questId.slice(0,2);
+  const questNum = parseInt(questId.slice(3));
+
+  switch(cycleId) {
+    case "01":
+      if (questNum <= 3) return "Core Set";
+      else return "Shadows of Mirkwood";
+    case "02":
+      if (questNum <= 3) return "Khazad Dum";
+      else return "Dwarrowdelf";
+    case "03":
+      if (questNum <= 3) return "Heirs of Numenor";
+      else return "Against the Shadow";
+    case "04":
+      if (questNum <= 3) return "Voice of Isengard";
+      else return "The Ring-maker";
+    case "05":
+      if (questNum <= 3) return "The Lost Realm";
+      else return "Angmar Awakened";
+    case "06":
+      if (questNum <= 3) return "The Grey Havens";
+      else return "The Dream-chaser";
+    case "07":
+      if (questNum <= 3) return "Sands of Harad";
+      else return "Haradrim Cycle";
+    case "08":
+      if (questNum <= 3) return "The Wilds of Rhovanion Deluxe Expansion";
+      else return "Ered Mithrin";
+    case "09":
+      if (questNum <= 3) return "A Shadow in the East Deluxe Expansion";
+      else return "Vengeance of Mordor Cycle";
+    case "0A":
+      if (questNum <= 3) return "The Hobbit Over Hill and Under Hill";
+      else return "The Hobbit On the Doorstep";
+    case "0B":
+    case "0C":
+      if (questNum === 1.1 || questNum === 1.2 || questNum === 19) return "Standalone Quests"  
+      else if (questNum <= 3) return "LotR The Black Riders";
+      else if (questNum <= 6) return "LotR The Road Darkens";
+      else if (questNum <= 9) return "LotR The Treason of Saruman Saga Expansion";
+      else if (questNum <= 12) return "LotR The Land of Shadow Saga Expansion";
+      else if (questNum <= 15) return "LotR The Flame of the West Saga Expansion";
+      else if (questNum <= 18) return "The Lord of the Rings The Mountain of Fire Saga Expansion";
+    case "99":
+      return "Standalone Quests";
+    case "A1":
+      if (questNum <= 3) return "Children of Eorl";
+      else return "Oaths of the Rohirrim";
+    case "00":
+      return "Starter Set";
+  }
+  return null;
+
+//   export const CYCLEORDER = ["01", "02", "03", "04", "05", "06", "07", "08", "09", "0A", "0B", "0C", "00", "99", "A1", "PT"];
+
+// export const CYCLEINFO = {
+//   "0A": {name: "The Hobbit"},
+//   "0B": {name: "The Lord of the Rings Standalone"},
+//   "0C": {name: "The Lord of the Rings Campaign"},
+//   "00": {name: "Two-Player Limited-Edition Starter"},
+//   "01": {name: "Core Set & Shadows of Mirkwood"},
+//   "02": {name: "Khazad-dûm & Dwarrowdelf"},
+//   "03": {name: "Heirs of Númenor & Against the Shadow"},
+//   "04": {name: "The Voice of Isengard & The Ringmaker"},
+//   "05": {name: "The Lost Realm & Angmar Awakened"},
+//   "06": {name: "The Grey Havens & The Dreamchaser"},
+//   "07": {name: "The Sands of Harad & The Haradrim"},
+//   "08": {name: "The Wilds of Rhovanion & Ered Mithrin"},
+//   "09": {name: "A Shadow in the East & Vengenace of Mordor"},
+//   "99": {name: "Print on Demand"},
+//   "A1": {name: "ALeP - Children of Eorl & Oaths of the Rohirrim"},
+//   "PT": {name: "ALeP - Playtest"},
+// }
 }
