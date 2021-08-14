@@ -51,7 +51,7 @@ defmodule DragnCardsGame.Card do
       "cardSetId" => card_row["cardsetid"],
       "cardPackName" => card_row["cardpackname"],
 
-      "loadGroupId" => card_row["loadgroupid"],
+      "deckGroupId" => card_row["deckgroupid"],
       "discardGroupId" => card_row["discardgroupid"],
 
       "sides"=> %{

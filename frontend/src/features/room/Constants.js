@@ -288,6 +288,40 @@ export const sectionToLoadGroupId = (section, playerN) => {
   return 'sharedOther';
 }
 
+export const sectionToDeckGroupId = (section, playerN) => {
+  switch(section) {
+    case 'Hero':
+      return playerN+'Deck';
+    case 'Ally':
+      return playerN+'Deck';
+    case 'Attachment':
+      return playerN+'Deck';
+    case 'Event':
+      return playerN+'Deck';
+    case 'Side Quest':
+      return playerN+'Deck';
+    case 'Sideboard':
+      return playerN+'Deck';
+    case 'Quest':
+      return 'sharedQuestDeck';
+    case 'Encounter':
+      return 'sharedEncounterDeck';
+    case 'Special':
+      return 'sharedEncounterDeck2';
+    case 'Second Special':
+      return 'sharedEncounterDeck3';
+    case 'Setup':
+      return 'sharedEncounterDeck';
+    case 'Staging Setup':
+      return 'sharedEncounterDeck';
+    case 'Active Setup':
+      return 'sharedEncounterDeck';
+    case 'Second Quest Deck':
+      return 'sharedQuestDeck2';
+  }
+  return 'sharedOther';
+}
+
 export const sectionToDiscardGroupId = (section, playerN) => {
   switch(section) {
     case 'Hero':

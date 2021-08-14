@@ -1,7 +1,7 @@
 // ImageWithFallback.tsx
 import React, { useState } from 'react'
 import { cardDB } from "../../cardDB/cardDB";
-import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
+import { sectionToLoadGroupId, sectionToDiscardGroupId, sectionToDeckGroupId } from "./Constants";
 import axios from "axios";
 
 export const getCurrentFace = (card) => {
@@ -391,12 +391,16 @@ export const processLoadList = (loadList, playerN) => {
 
   for (var i=0; i<n; i++) {
     const item = newLoadList[i];
-    if (item.cardRow.loadgroupid.includes("playerN")) {
-      item.cardRow.loadgroupid = item.cardRow.loadgroupid.replace("playerN", playerN);
+    if (item.cardRow.loadgroupid) {
+      item.cardRow.deckgroupid = item.cardRow.loadgroupid; // Legacy
+    }
+    if (item.cardRow.deckgroupid?.includes("playerN")) {
+      item.cardRow.deckgroupid = item.cardRow.deckgroupid.replace("playerN", playerN);
     }
     if (item.groupId.includes("playerN")) {
       item.groupId = item.groupId.replace("playerN", playerN);
     }
+    console.log("item ", item)
   }
 
   const loreThurindir = isCardDbIdInLoadList(newLoadList, "12946b30-a231-4074-a524-960365081360");
@@ -563,11 +567,10 @@ export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadca
         const quantity = parseInt(card['$'].qty);
         var cardRow = cardDB[cardDbId];
         if (cardRow) {
-          const loadGroupId = sectionToLoadGroupId(sectionName,playerN);
-          cardRow['loadgroupid'] = loadGroupId;
+          cardRow['deckgroupid'] = sectionToDeckGroupId(sectionName,playerN);
           cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
           if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
-          loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId})
+          loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': sectionToLoadGroupId(sectionName,playerN)})
         }
         else {
           alert("Encountered unknown card ID for "+card["_"])
@@ -691,7 +694,7 @@ export const loadRingsDb = (playerI, ringsDbDomain, ringsDbType, ringsDbId, game
           if (cardRow && !slotJsonData.name.includes("MotK")) {
             const type = slotJsonData.type_name;
             const loadGroupId = (type === "Hero" || type === "Contract") ? playerI+"Play1" : playerI+"Deck";
-            cardRow['loadgroupid'] = loadGroupId;
+            cardRow['deckgroupid'] = playerI+"Deck";
             cardRow['discardgroupid'] = playerI+"Discard";
             if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
             loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});
@@ -714,9 +717,8 @@ export const loadRingsDb = (playerI, ringsDbDomain, ringsDbType, ringsDbId, game
           // jsonData is parsed json object received from url
           var cardRow = cardDB[slotJsonData.octgnid];
           if (cardRow) {
-            const type = slotJsonData.type_name;
             const loadGroupId = playerI+"Sideboard";
-            cardRow['loadgroupid'] = loadGroupId;
+            cardRow['deckgroupid'] = playerI+"Deck";
             cardRow['discardgroupid'] = playerI+"Discard";
             if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
             loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': loadGroupId});

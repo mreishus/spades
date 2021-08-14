@@ -579,7 +579,7 @@ export const cardAction = (action, cardId, options, props) => {
         }
         // If the card was a quest card, load the next quest card
         if (cardFace.type === "Quest") {
-            const questDeckStackIds = game.groupById[card.loadGroupId]?.stackIds;
+            const questDeckStackIds = card.deckGroupId ? game.groupById[card.deckGroupId]?.stackIds : game.groupById[card.loadGroupId]?.stackIds;
             if (questDeckStackIds?.length > 0) {
                 chatBroadcast("game_update", {message: "advanced the quest."});
                 gameBroadcast("game_action", {action: "move_stack", options: {stack_id: questDeckStackIds[0], dest_group_id: groupId, dest_stack_index: stackIndex, dest_card_index: 0, combine: false, preserve_state: false}})

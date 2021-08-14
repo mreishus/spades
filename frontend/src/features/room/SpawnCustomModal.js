@@ -21,11 +21,8 @@ export const SpawnCustomModal = React.memo(({
   const [backType, setBackType] = useState(backOptions[0]);
 
   const onSubmit = (inputs) => {
-    const thisLoadGroupId = inputs.owner === "shared" ? "sharedStaging" : inputs.owner+"Play1";
-    const cardLoadGroupId = inputs.sideAtype === "Quest" ? "sharedQuestDeck" : thisLoadGroupId;
-    var discardGroupId = inputs.owner === "shared" ? +"sharedEncounterDiscard" : inputs.owner + "Discard";
-    if (inputs.owner === "shared" || inputs.sideAkeywords.includes("Encounter")) discardGroupId = "sharedEncounterDiscard";
-    if (inputs.sideAtype === "Quest") discardGroupId = "sharedQuestDiscard";
+    const deckGroupId = inputs.owner;
+    const discardGroupId = deckGroupId.replace("Deck","Discard");
 
     const loadList = [{
       "cardRow": {
@@ -79,11 +76,11 @@ export const SpawnCustomModal = React.memo(({
         "cardpackname": "",
         "cardid": "",
         "cardnumber": "1",
-        "loadgroupid": cardLoadGroupId,
+        "deckgroupid": deckGroupId,
         "discardgroupid": discardGroupId,
       },
       "quantity": 1,
-      "groupId": thisLoadGroupId,
+      "groupId": "sharedStaging",
     }]
 
     gameBroadcast("game_action", {action: "load_cards", options: {load_list: loadList}});
@@ -184,11 +181,15 @@ export const SpawnCustomModal = React.memo(({
         <form className="w-full" onSubmit={handleSubmit(onSubmit)}> 
           <label for="owner"><h2 className="text-white">Owner: </h2></label>
           <select className="form-control mb-1" style={{width:"35%"}} ref={register({ required: false })} id={"owner"} name={"owner"}>
-            <option value="shared" selected>Encounter</option>
-            <option value="player1">Player 1</option>
-            <option value="player2">Player 2</option>
-            <option value="player3">Player 3</option>
-            <option value="player4">Player 4</option>
+            <option value="sharedEncounterDeck" selected>Encounter Deck</option>
+            <option value="sharedEncounterDeck2" selected>Encounter Deck 2</option>
+            <option value="sharedEncounterDeck3" selected>Encounter Deck 3</option>
+            <option value="sharedQuestDeck" selected>Quest Deck</option>
+            <option value="sharedQuestDeck2" selected>Quest Deck 2</option>
+            <option value="player1Deck">Player 1</option>
+            <option value="player2Deck">Player 2</option>
+            <option value="player3Deck">Player 3</option>
+            <option value="player4Deck">Player 4</option>
           </select>
           <div className="w-full h-full">
             <table className="w-full h-full">
