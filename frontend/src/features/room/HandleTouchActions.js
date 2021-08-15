@@ -90,7 +90,7 @@ export const HandleTouchActions = React.memo(({
         if (sameAsPrev && activeCardAndLoc?.clicked) {
             const activeCard = activeCardAndLoc.card;
             const defaultAction = getDefault(activeCard, activeCardAndLoc.groupId, activeCardAndLoc.groupType, activeCardAndLoc.cardIndex);
-            cardAction(defaultAction.action, activeCard.id, defaultAction.options, actionProps);
+            if (activeCard && defaultAction) cardAction(defaultAction.action, activeCard.id, defaultAction.options, actionProps);
         } else {
             setPrevActive(activeCardAndLoc)
         }
