@@ -410,8 +410,8 @@ export const TopBarMenu = React.memo(({
         <li key={"download"}>
           <a href="#">Download</a>
           <ul className="third-level-menu">        
-            <li key={"download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Game state</a></li>
-            <li key={"export_cards"}><a  onClick={() => handleMenuClick({action:"export_cards"})} href="#">Export cards</a></li>
+            <li key={"download"}><a  onClick={() => handleMenuClick({action:"download"})} href="#">Game state (.json)</a></li>
+            <li key={"export_cards"}><a  onClick={() => handleMenuClick({action:"export_cards"})} href="#">Export cards (.txt)</a></li>
           </ul>
         </li>
         {host &&
