@@ -50,7 +50,7 @@ export const SpawnCustomModal = React.memo(({
             "customimgurl": inputs.sideAcustomimgurl,
           },
           "B": {
-            "printname": (backType.value === "encounter" ? "encounter" : inputs.sideBname),
+            "printname": (backType.value === "encounter" || backType.value === "player" ? backType.value : inputs.sideBname),
             "sphere": inputs.sideBsphere,
             "text": inputs.sideBtext,
             "willpower": inputs.sideBwillpower,
@@ -62,7 +62,7 @@ export const SpawnCustomModal = React.memo(({
             "type": inputs.sideBtype,
             "victorypoints": inputs.sideBvictorypoints,
             "cost": inputs.sideBcost,
-            "name": (backType.value === "encounter" ? "encounter" : inputs.sideBname),
+            "name": (backType.value === "encounter" || backType.value === "player" ? backType.value : inputs.sideBname),
             "questpoints": inputs.sideBquestpoints,
             "attack": inputs.sideBattack,
             "unique": inputs.sideBunique,
@@ -182,10 +182,10 @@ export const SpawnCustomModal = React.memo(({
           <label for="owner"><h2 className="text-white">Owner: </h2></label>
           <select className="form-control mb-1" style={{width:"35%"}} ref={register({ required: false })} id={"owner"} name={"owner"}>
             <option value="sharedEncounterDeck" selected>Encounter Deck</option>
-            <option value="sharedEncounterDeck2" selected>Encounter Deck 2</option>
-            <option value="sharedEncounterDeck3" selected>Encounter Deck 3</option>
-            <option value="sharedQuestDeck" selected>Quest Deck</option>
-            <option value="sharedQuestDeck2" selected>Quest Deck 2</option>
+            <option value="sharedEncounterDeck2">Encounter Deck 2</option>
+            <option value="sharedEncounterDeck3">Encounter Deck 3</option>
+            <option value="sharedQuestDeck">Quest Deck</option>
+            <option value="sharedQuestDeck2">Quest Deck 2</option>
             <option value="player1Deck">Player 1</option>
             <option value="player2Deck">Player 2</option>
             <option value="player3Deck">Player 3</option>
