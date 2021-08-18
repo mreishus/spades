@@ -63,8 +63,9 @@ export const gameAction = (action, props) => {
         const isHost = playerN === leftmostNonEliminatedPlayerN(gameUi);
 
         if (game.playerData[playerN].refreshed) {
-            chatBroadcast("game_update", {message: "tried to refresh, but they already refreshed this round."})
-            return;
+            const result = window.confirm("Records show that you ("+playerNToPlayerSpaceN(playerN)+") have not triggered a new round since your last refresh. Refresh anyway?")
+            //chatBroadcast("game_update", {message: "tried to refresh, but they already refreshed this round."})
+            if (!result) return;
         }
         // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
         // This prevents, for example, the token moving multiple times if players refresh at different times.
