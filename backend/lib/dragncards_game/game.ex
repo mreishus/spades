@@ -4,6 +4,7 @@ defmodule DragnCardsGame.Game do
   In early stages of the app, it only represents a
   some toy game used to test everything around it.
   """
+  import Ecto.Query
   alias DragnCardsGame.{Groups, Game, PlayerData}
   alias DragnCards.{Repo, Replay}
 
@@ -15,7 +16,12 @@ defmodule DragnCardsGame.Game do
   @spec load(Map.t()) :: Game.t()
   def load(%{} = options) do
     game = if options["replayId"] != "" do
-      replay = Repo.get_by(Replay, uuid: options["replayId"])
+      gameid = options["replayId"]
+      query = Ecto.Query.from(e in Replay,
+        where: e.uuid == ^gameid,
+        order_by: [desc: e.inserted_at],
+        limit: 1)
+      replay = Repo.one(query)
       if replay.game_json do replay.game_json else Game.new() end
     else
       Game.new()

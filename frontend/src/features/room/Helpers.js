@@ -566,14 +566,15 @@ export const loadDeckFromXmlText = (xmlText, playerN, gameBroadcast, chatBroadca
         const cardDbId = card['$'].id;
         const quantity = parseInt(card['$'].qty);
         var cardRow = cardDB[cardDbId];
-        if (cardRow) {
+        if (!cardRow) {
+          alert("Encountered unknown card ID for "+card["_"])
+        } else if (card["_"].includes("MotK")) {
+          alert("You will need to search your deck for your MotK hero.")
+        } else {
           cardRow['deckgroupid'] = sectionToDeckGroupId(sectionName,playerN);
           cardRow['discardgroupid'] = sectionToDiscardGroupId(sectionName,playerN);
           if (cardRow['sides']['A']['keywords'].includes("Encounter")) cardRow['discardgroupid'] = "sharedEncounterDiscard";
           loadList.push({'cardRow': cardRow, 'quantity': quantity, 'groupId': sectionToLoadGroupId(sectionName,playerN)})
-        }
-        else {
-          alert("Encountered unknown card ID for "+card["_"])
         }
       })
     })
@@ -691,7 +692,9 @@ export const loadRingsDb = (playerI, ringsDbDomain, ringsDbType, ringsDbId, game
         .then((slotJsonData) => {
           // jsonData is parsed json object received from url
           var cardRow = cardDB[slotJsonData.octgnid];
-          if (cardRow && !slotJsonData.name.includes("MotK")) {
+          if (slotJsonData.name.includes("MotK")) {
+            alert("You will need to search your deck for your MotK hero.")
+          } else if (cardRow) {
             const type = slotJsonData.type_name;
             const loadGroupId = (type === "Hero" || type === "Contract") ? playerI+"Play1" : playerI+"Deck";
             cardRow['deckgroupid'] = playerI+"Deck";
