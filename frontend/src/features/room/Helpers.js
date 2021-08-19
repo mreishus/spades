@@ -618,15 +618,18 @@ export const getDefault = (card, groupId, groupType, cardIndex) => {
   } else if (type === "Enemy" && card.tokens.damage < face.hitPoints) {
     return {title: "damage", action: "increment_token", options: {tokenType: "damage", increment: 1}};
   } else if (type === "Enemy" && card.tokens.damage >= face.hitPoints) {
-    return {title: "discard", action: "discard"};
+    if (face.victoryPoints && face.victoryPoints > 0) return {title: "add to VD", action: "victory"}
+    else return {title: "discard", action: "discard"};
   } else if (type === "Treachery") {
     return {title: "discard", action: "discard"};
   } else if (type === "Location" && card.tokens.progress < face.questPoints) {
     return {title: "progress", action: "increment_token", options: {tokenType: "progress", increment: 1}};
   } else if (type === "Location" && card.tokens.progress >= face.questPoints) {
-    return {title: "discard", action: "discard"};
+    if (face.victoryPoints && face.victoryPoints > 0) return {title: "add to VD", action: "victory"}
+    else return {title: "discard", action: "discard"};
   } else if (type === "Event") {
-    return {title: "discard", action: "discard"};
+    if (face.victoryPoints && face.victoryPoints > 0) return {title: "add to VD", action: "victory"}
+    else return {title: "discard", action: "discard"};
   } else if (card.exhausted) {
     return {title: "ready", action: "toggle_exhaust"};
   } else if (!card.exhausted) {
