@@ -151,11 +151,11 @@ export const getCardRowCategory = (cardRow) => {
   return "Player";
 }
 
-export const GetPlayerN = (playerIDs, id) => {
-  if (!playerIDs) return null;
+export const GetPlayerN = (playerIds, id) => {
+  if (!playerIds) return null;
   var playerN = null;
-  Object.keys(playerIDs).forEach(playerI => {
-    if (playerIDs[playerI] === id) playerN = playerI;
+  Object.keys(playerIds).forEach(playerI => {
+    if (playerIds[playerI] === id) playerN = playerI;
   })
   return playerN;
 }
@@ -174,7 +174,7 @@ export const getParentCardsInGroup = (game, groupId) => {
 
 // List of playerN strings of seats that are not eliminated
  export const nonEliminated = (gameUi) => {
-  const playerIDs = gameUi.playerIds;
+  const playerIds = gameUi.playerIds;
   const playerData = gameUi.game.playerData;
   var playerNs = [];
   for (var i = 1; i<= gameUi.game.numPlayers; i++) {
@@ -185,12 +185,12 @@ export const getParentCardsInGroup = (game, groupId) => {
 }
 
  // List of playerN strings of players that are seated and not eliminated
-export const seatedNonEliminated = (gameUi) => {
-  const playerIDs = gameUi.playerIds;
+ export const seatedNonEliminated = (gameUi) => {
+  const playerIds = gameUi.playerIds;
   const playerData = gameUi.game.playerData;
   var seated = []
-  Object.keys(playerIDs).forEach((PlayerI) => {
-    if (playerIDs[PlayerI] && !playerData[PlayerI].eliminated) {
+  Object.keys(playerIds).forEach((PlayerI) => {
+    if (playerIds[PlayerI] && !playerData[PlayerI].eliminated) {
       seated.push(PlayerI);
     }
   })
@@ -211,6 +211,18 @@ export const getNextPlayerN = (gameUi, playerN) => {
   }
   if (nextPlayerN === playerN) nextPlayerN = null;
   return nextPlayerN;
+}
+
+export const getNextEmptyPlayerN = (gameUi, playerN) => {
+  const nonEliminatedPlayerNs = nonEliminated(gameUi);
+  const nonEliminatedPlayerNs2 = nonEliminatedPlayerNs.concat(nonEliminatedPlayerNs);
+  var foundPlayerN = null;
+  for (var i=0; i<nonEliminatedPlayerNs2.length; i++) {
+    const playerI = nonEliminatedPlayerNs2[i];
+    if (foundPlayerN && gameUi.playerIds[playerI] === null) return playerI; 
+    if (playerI === playerN) foundPlayerN = true;
+  }
+  return null;
 }
 
 export const flatListOfCards = (game) => {
@@ -618,15 +630,18 @@ export const getDefault = (card, groupId, groupType, cardIndex) => {
   } else if (type === "Enemy" && card.tokens.damage < face.hitPoints) {
     return {title: "damage", action: "increment_token", options: {tokenType: "damage", increment: 1}};
   } else if (type === "Enemy" && card.tokens.damage >= face.hitPoints) {
-    return {title: "discard", action: "discard"};
+    if (face.victoryPoints && face.victoryPoints > 0) return {title: "add to VD", action: "victory"}
+    else return {title: "discard", action: "discard"};
   } else if (type === "Treachery") {
     return {title: "discard", action: "discard"};
   } else if (type === "Location" && card.tokens.progress < face.questPoints) {
     return {title: "progress", action: "increment_token", options: {tokenType: "progress", increment: 1}};
   } else if (type === "Location" && card.tokens.progress >= face.questPoints) {
-    return {title: "discard", action: "discard"};
+    if (face.victoryPoints && face.victoryPoints > 0) return {title: "add to VD", action: "victory"}
+    else return {title: "discard", action: "discard"};
   } else if (type === "Event") {
-    return {title: "discard", action: "discard"};
+    if (face.victoryPoints && face.victoryPoints > 0) return {title: "add to VD", action: "victory"}
+    else return {title: "discard", action: "discard"};
   } else if (card.exhausted) {
     return {title: "ready", action: "toggle_exhaust"};
   } else if (!card.exhausted) {

@@ -5,16 +5,15 @@ import { Stacks } from "./Stacks";
 import { Browse } from "./Browse";
 import { GROUPSINFO, CARDSCALE, LAYOUTINFO } from "./Constants";
 import Chat from "../chat/Chat";
-import { handleBrowseTopN } from "./HandleBrowseTopN"; 
 import "../../css/custom-misc.css"; 
 import useWindowDimensions from "../../hooks/useWindowDimensions";
+import { useObservingPlayerN } from "../../contexts/ObservingPlayerNContext";
 
 var delayBroadcast;
 
 export const TableRegion = React.memo(({
   region,
   cardSize,
-  observingPlayerN,
   gameBroadcast,
   chatBroadcast,
   playerN,
@@ -23,6 +22,7 @@ export const TableRegion = React.memo(({
   setBrowseGroupTopN,
   registerDivToArrowsContext,
 }) => {
+  const observingPlayerN = useObservingPlayerN();
   const groupId = ["Hand", "Deck", "Discard"].includes(region.id) ? observingPlayerN + region.id : region.id;
   const beingBrowsed = groupId === browseGroupId;
   return (
@@ -56,7 +56,6 @@ export const TableRegion = React.memo(({
 })
 
 export const TableLayout = React.memo(({
-  observingPlayerN,
   gameBroadcast,
   chatBroadcast,
   playerN,
@@ -75,6 +74,7 @@ export const TableLayout = React.memo(({
   const groupById = useSelector(groupByIdStore);
   const layoutStore = state => state.gameUi?.game?.layout;
   const layout = useSelector(layoutStore);
+  const observingPlayerN = useObservingPlayerN();
   const [chatHover, setChatHover] = useState(false);
   const [sideGroupId, setSideGroupId] = useState("sharedSetAside");
   const { height, width } = useWindowDimensions();
@@ -122,7 +122,6 @@ export const TableLayout = React.memo(({
           <TableRegion
             region={region}
             cardSize={cardSize}
-            observingPlayerN={observingPlayerN}
             gameBroadcast={gameBroadcast} 
             chatBroadcast={chatBroadcast}
             playerN={playerN}
@@ -166,7 +165,6 @@ export const TableLayout = React.memo(({
                   <TableRegion
                     region={region}
                     cardSize={cardSize}
-                    observingPlayerN={observingPlayerN}
                     gameBroadcast={gameBroadcast} 
                     chatBroadcast={chatBroadcast}
                     playerN={playerN}
@@ -210,7 +208,6 @@ export const TableLayout = React.memo(({
           <TableRegion
             region={region}
             cardSize={cardSize}
-            observingPlayerN={observingPlayerN}
             gameBroadcast={gameBroadcast} 
             chatBroadcast={chatBroadcast}
             playerN={playerN}

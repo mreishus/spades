@@ -118,7 +118,6 @@ export const Hotkeys = React.memo(({
         <tr className={"bg-gray-600"}>
           <td className="p-1 text-center">
             <div className={keyClass} style={keyStyleL}>Shift</div>
-            <div className="inline-block p-1">+</div>
             <div className={keyClass} style={keyStyle}>Q</div></td>
           <td className="text-center">Commit / uncommit from quest without exhausting / readying</td>
         </tr>
@@ -186,26 +185,14 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Draw card and gain resources. If host, increment round.</td>
         </tr>
         <tr className={"bg-gray-600"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className={keyClass+" inline-block"} style={keyStyle}>N</div> <div>or</div> 
-          <div className={keyClass} style={keyStyleL}>Alt</div><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className={keyClass+" inline-block"} style={keyStyle}>N</div></td>
-          <td className="text-center">Press Shift+N for all players.</td>
-        </tr>
-        <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>O</div></td>
           <td className="text-center">Calculate score</td>
         </tr>
-        <tr className={"bg-gray-600"}>
+        <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
           <td className="text-center">Refresh and raise threat. If host, move 1st player token.</td>
-        </tr>
-        <tr className={"bg-gray-500"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
-          <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
-          <td className="text-center">Press Shift+R for all players.</td>
         </tr>
         <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
@@ -228,16 +215,6 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Reduce threat by 1</td>
         </tr>
         <tr className={"bg-gray-600"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
-          <div className={keyClass+" inline-block"} style={keyStyle}>U</div></td>
-          <td className="text-center">Raise threat by 1 for all players</td>
-        </tr>
-        <tr className={"bg-gray-500"}>
-          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
-          <div className={keyClass+" inline-block"} style={keyStyle}>J</div></td>
-          <td className="text-center">Reduce threat by 1 for all players</td>
-        </tr>
-        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>P</div></td>
           <td className="text-center">Save Game</td>
@@ -247,17 +224,24 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Clear targets/arrows</td>
         </tr>
         <tr className={"bg-gray-600"}>
-          <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>←</div></td>
+          <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>←</div>
+          <div className="px-2 inline-block">or</div> 
+          <div className={keyClass} style={keyStyleL}>Ctrl</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>Z</div>
+          </td>
           <td className="text-center">Undo one action</td>
         </tr>
         <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>→</div>
+          <div className="px-2 inline-block">or</div> 
+          <div className={keyClass} style={keyStyleL}>Ctrl</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>Y</div></td>
+          <td className="text-center">Redo one action</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>←</div></td>
           <td className="text-center">Undo until last round change</td>
-        </tr>
-        <tr className={"bg-gray-600"}>
-          <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>→</div></td>
-          <td className="text-center">Redo one action</td>
         </tr>
         <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
@@ -292,7 +276,51 @@ export const Hotkeys = React.memo(({
         </tr>
       </table>
     )
+  }  
+  const multiplayerTable = () => {
+    return(
+      <table className="table-fixed rounded-lg w-full">
+        <tr className="bg-gray-800">
+          <th className={col1Class}>Key</th>
+          <th className={col2Class}>Description</th>
+        </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>N</div> <div>or</div> 
+          <div className={keyClass} style={keyStyleL}>Alt</div><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>N</div></td>
+          <td className="text-center">Press Shift+N for all players.</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
+          <td className="text-center">Press Shift+R for all players.</td>
+        </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>U</div></td>
+          <td className="text-center">Raise threat by 1 for all players.</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>J</div></td>
+          <td className="text-center">Reduce threat by 1 for all players.</td>
+        </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>W</div></td>
+          <td className="text-center">Sit in next open seat.</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass} style={keyStyle}>D</div></td>
+          <td className="text-center">Draw card on behalf of next empty seat.</td>
+        </tr>
+      </table>
+    )
   }
+
+
   if (tabMode) {
     return(
       <div className={windowClassL} style={windowStyleL}>
@@ -306,6 +334,9 @@ export const Hotkeys = React.memo(({
             <h2 className="mb-2">Card hotkeys</h2>
             Hover over a card.
             {cardTable()}
+            <h2 className="mb-2 mt-6">Multiplayer hotkeys</h2>
+            Useful for two-handed play.
+            {multiplayerTable()}
           </div>
           <div className="w-1/3 float-left p-3">
             <h2 className="mb-2">Game hotkeys</h2>
@@ -333,6 +364,10 @@ export const Hotkeys = React.memo(({
             <br />
             <h2 className="mb-2">Game hotkeys</h2>
             {gameTable()}
+            <br />
+            <h2 className="mb-2">Multiplayer hotkeys</h2>
+            Useful for two-handed play.
+            {multiplayerTable()}
           </div>
         </div>
       </Draggable>

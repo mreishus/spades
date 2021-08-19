@@ -117,12 +117,10 @@ export const TouchBarBottom = React.memo(({}) => {
       <tr className={"bg-gray-700"} style={{height: "50%", maxHeight: "50%"}}>
         {[["Draw", "draw"], 
           ["Reveal", "reveal"], 
-          ["Reveal #2", "reveal_from_second"], 
-          ["Mulligan", "mulligan"], 
-          ["New round", "new_round"],
           ["Shadows", "shadows"],
           ["Discard shadows", "discard_shadows"],
           ["Refresh", "refresh"],
+          ["New round", "new_round"],
           ["Clear targets", "clear_targets"],
           ["Undo", "undo"],
           ["Undo many", "undo_many"],
@@ -131,6 +129,9 @@ export const TouchBarBottom = React.memo(({}) => {
           ["Raise threat", "increase_threat"],
           ["Reduce threat", "decrease_threat"],
           ["Save", "save"],
+          ["Reveal #2", "reveal_from_second"], 
+          ["Mulligan", "mulligan"], 
+          ["Next seat", "next_seat"], 
           ].map((titleAction, _index) => {
             return (
               <td className={containerClass} style={containerStyle}>

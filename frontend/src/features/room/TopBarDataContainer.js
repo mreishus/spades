@@ -9,8 +9,6 @@ export const TopBarDataContainer = React.memo(({
   playerN,
   gameBroadcast,
   chatBroadcast,
-  observingPlayerN,
-  setObservingPlayerN,
   setTyping,
 }) => {
   
@@ -71,8 +69,6 @@ export const TopBarDataContainer = React.memo(({
           playerI={"player1"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
-          observingPlayerN={observingPlayerN}
-          setObservingPlayerN={setObservingPlayerN}
           setTyping={setTyping}
         />
         {numPlayers > 1 &&
@@ -81,8 +77,6 @@ export const TopBarDataContainer = React.memo(({
           playerI={"player2"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
-          observingPlayerN={observingPlayerN}
-          setObservingPlayerN={setObservingPlayerN}
           setTyping={setTyping}
         />}
         {numPlayers > 2 &&
@@ -91,8 +85,6 @@ export const TopBarDataContainer = React.memo(({
           playerI={"player3"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
-          observingPlayerN={observingPlayerN}
-          setObservingPlayerN={setObservingPlayerN}
           setTyping={setTyping}
         />}
         {numPlayers > 3 &&
@@ -101,8 +93,6 @@ export const TopBarDataContainer = React.memo(({
           playerI={"player4"}
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
-          observingPlayerN={observingPlayerN}
-          setObservingPlayerN={setObservingPlayerN}
           setTyping={setTyping}
         />}
       </div>

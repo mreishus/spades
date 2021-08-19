@@ -41,6 +41,7 @@ export const Table = React.memo(({
   // Indices of stacks in group being browsed
   const [browseGroupTopN, setBrowseGroupTopN] = useState(0);
   const [observingPlayerN, setObservingPlayerN] = useState(playerN);
+
   const setMousePosition = useSetMousePosition();
   const setActiveCardAndLoc = useSetActiveCard();
   const setTouchAction = useSetTouchAction();
@@ -113,7 +114,6 @@ export const Table = React.memo(({
           {/* Table */}
           <div className="relative w-full" style={{height: touchMode ? "82%" : "94%"}}>
             <TableLayout
-              observingPlayerN={observingPlayerN}
               gameBroadcast={gameBroadcast} 
               chatBroadcast={chatBroadcast}
               playerN={playerN}

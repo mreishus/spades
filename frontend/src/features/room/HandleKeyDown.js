@@ -12,6 +12,7 @@ import { gameAction, cardAction } from "./Actions";
 import { get } from "https";
 import { useKeypress, useSetKeypress } from "../../contexts/KeypressContext";
 import { useCardSizeFactor, useSetCardSizeFactor } from "../../contexts/CardSizeFactorContext";
+import { useSetObservingPlayerN } from "../../contexts/ObservingPlayerNContext";
 
 // const keyTokenMap: { [id: string] : Array<string | number>; } = {
 const keyUiMap = {
@@ -56,6 +57,8 @@ const keyGameActionMap = {
     "O": "score",
     "u": "increase_threat",
     "j": "decrease_threat",
+    "W": "next_seat",
+    "D": "draw_next_seat",
 }
 
 const ctrlKeyGameActionMap = {
@@ -63,6 +66,8 @@ const ctrlKeyGameActionMap = {
     "N": "new_round_all",
     "u": "increase_threat_all",
     "j": "decrease_threat_all",
+    "z": "undo",
+    "y": "redo",
     "ArrowLeft": "undo_many",
     "ArrowRight": "redo_many",
     "ArrowUp": "prev_phase",
@@ -111,6 +116,7 @@ export const HandleKeyDown = ({
     const dispatch = useDispatch();
     const keypress = useKeypress();
     const setKeypress = useSetKeypress();
+    const setObservingPlayerN = useSetObservingPlayerN();
 
     const cardSizeFactor = useCardSizeFactor();
     const setCardSizeFactor = useSetCardSizeFactor();
@@ -252,7 +258,7 @@ export const HandleKeyDown = ({
         if (k === "Tab") setKeypress({...keypress, "Tab": true});
         if (k === " ") setKeypress({...keypress, "Space": true});
         //else setKeypress({"Control": false});
-        const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+        const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN};
         const uiProps = {cardSizeFactor, setCardSizeFactor};
 
         // Hotkeys

@@ -12,6 +12,7 @@ import {
   checkAlerts,
   getScore,
   playerNToPlayerSpaceN,
+  getNextEmptyPlayerN,
 } from "./Helpers";
 import { setValues } from "./gameUiSlice";
 import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStep, prevRoundStep, nextPhase, prevPhase } from "./Constants";
@@ -49,7 +50,7 @@ const reveal = (game, deckGroupId, discardGroupId, gameBroadcast, chatBroadcast,
 }
 
 export const gameAction = (action, props) => {
-    const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;
+    const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN} = props;
     if (!playerN) {
         alert("Please sit down to do that.")
         return;
@@ -158,8 +159,8 @@ export const gameAction = (action, props) => {
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
-                chatBroadcast("game_update",{message: "presses Shift+N for "+playerNToPlayerSpaceN(playerI)});
-                const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+                chatBroadcast("game_update",{message: "triggers the new round action for "+playerNToPlayerSpaceN(playerI)});
+                const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN};
                 gameAction("new_round", actionProps);
             }
         }
@@ -169,8 +170,8 @@ export const gameAction = (action, props) => {
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
-                chatBroadcast("game_update",{message: "presses Shift+R for "+playerNToPlayerSpaceN(playerI)});
-                const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+                chatBroadcast("game_update",{message: "triggers the refresh action for "+playerNToPlayerSpaceN(playerI)});
+                const actionProps = {gameUi, playerN: playerI, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN};
                 gameAction("refresh", actionProps);
             }
         }
@@ -389,11 +390,37 @@ export const gameAction = (action, props) => {
             }
         }
     }
+    else if (action === "next_seat") {
+        // Get up from any seats first
+        const nextPlayerN = getNextEmptyPlayerN(gameUi, playerN);
+        const myUserId = gameUi.playerIds[playerN];
+        if (nextPlayerN) {
+            gameBroadcast("game_action", {action: "set_seat", options: {"player_n": playerN, "user_id": null}});
+            chatBroadcast("game_update", {message: "got up from "+playerNToPlayerSpaceN(playerN)+"'s seat."});
+            // Sit in seat
+            gameBroadcast("game_action", {action: "set_seat", options: {"player_n": nextPlayerN, "user_id": myUserId}});
+            chatBroadcast("game_update",{message: "sat in "+playerNToPlayerSpaceN(nextPlayerN)+"'s seat."});
+            setObservingPlayerN(nextPlayerN);
+        } else {
+            chatBroadcast("game_update",{message: "tried to sit in the next open seat, but there was none."});
+        }
+    }
+    else if (action === "draw_next_seat") {
+        // Get up from any seats first
+        const nextPlayerN = getNextEmptyPlayerN(gameUi, playerN);
+        if (nextPlayerN) {
+            chatBroadcast("game_update", {message: "triggers the draw action for "+playerNToPlayerSpaceN(nextPlayerN)+"."});
+            const actionProps = {gameUi, playerN: nextPlayerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN};
+            gameAction("draw", actionProps);
+        } else {
+            chatBroadcast("game_update",{message: "tried to draw a card for the next open seat, but there was none."});
+        }
+    }
 }
 
 
 export const cardAction = (action, cardId, options, props) => {
-    const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;
+    const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN} = props;
     if (!playerN) {
         alert("Please sit down to do that.")
         return;
