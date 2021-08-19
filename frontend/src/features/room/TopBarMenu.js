@@ -194,6 +194,7 @@ export const TopBarMenu = React.memo(({
       loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast, options["privacyType"]);
     }
     reader.readAsText(event.target.files[0]);
+    inputFileDeck.current.value = "";
   }
 
   const uploadGameAsJson = async(event) => {
@@ -213,6 +214,7 @@ export const TopBarMenu = React.memo(({
       }
     }
     reader.readAsText(event.target.files[0]);
+    inputFileGame.current.value = "";
   }
 
   const uploadCustomCards = async(event) => {
@@ -234,6 +236,7 @@ export const TopBarMenu = React.memo(({
       //}
     }
     reader.readAsText(event.target.files[0]);
+    inputFileCustom.current.value = "";
   }
 
   const downloadGameAsJson = () => {

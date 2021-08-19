@@ -121,6 +121,12 @@ export const DropdownMenuCard = React.memo(({
             Owner's Deck
           </DropdownItem>
           <DropdownItem
+            rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
+            goToMenu="moveToQuestDeck"
+            clickCallback={handleDropdownClick}>
+            Quest Deck
+          </DropdownItem>
+          <DropdownItem
             action="moveCard"
             destGroupId="sharedVictory"
             position="top"
@@ -141,6 +147,9 @@ export const DropdownMenuCard = React.memo(({
 
         {activeMenu === "moveToOwner" &&
         <DropdownMoveTo destGroupId={playerN+"Deck"}/>}
+
+        {activeMenu === "moveToQuestDeck" &&
+        <DropdownMoveTo destGroupId={"sharedQuestDeck"}/>}
 
         {activeMenu === "perRound" &&
         <div className="menu">
