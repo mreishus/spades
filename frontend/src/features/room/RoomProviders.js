@@ -10,6 +10,7 @@ import {TouchActionProvider} from '../../contexts/TouchActionContext';
 import { GetPlayerN } from "./Helpers";
 import useProfile from "../../hooks/useProfile";
 import { CardSizeFactorProvider } from "../../contexts/CardSizeFactorContext";
+import { ObservingPlayerNProvider } from "../../contexts/ObservingPlayerNContext";
 
 export const RoomProviders = ({ gameBroadcast, chatBroadcast }) => {
   console.log("Rendering RoomProviders");
@@ -35,7 +36,9 @@ export const RoomProviders = ({ gameBroadcast, chatBroadcast }) => {
                   <DropdownMenuProvider value={null}>
                     <ActiveCardProvider value={null}>
                       <CardSizeFactorProvider value={null}>
-                        <RoomGame playerN={playerN} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
+                        <ObservingPlayerNProvider value={null}>
+                          <RoomGame playerN={playerN} gameBroadcast={gameBroadcast} chatBroadcast={chatBroadcast}/>
+                        </ObservingPlayerNProvider>
                       </CardSizeFactorProvider>
                     </ActiveCardProvider>
                   </DropdownMenuProvider>

@@ -8,6 +8,7 @@ import { useKeypress, useSetKeypress } from "../../contexts/KeypressContext";
 import { getDefault, getDisplayName, processTokenType, tokenPrintName } from "./Helpers";
 import { useDropdownMenu, useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import { useTouchMode } from "../../contexts/TouchModeContext";
+import { useSetObservingPlayerN } from "../../contexts/ObservingPlayerNContext";
 
 
 export const HandleTouchActions = React.memo(({
@@ -31,7 +32,8 @@ export const HandleTouchActions = React.memo(({
     const setKeypress = useSetKeypress();
     const [prevActive, setPrevActive] = useState(null);
     const dispatch = useDispatch();
-    const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress};
+    const setObservingPlayerN = useSetObservingPlayerN();
+    const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN};
     console.log("Rendering HandleTouchActions")
 
     useEffect(() => {

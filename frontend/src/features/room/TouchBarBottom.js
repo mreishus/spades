@@ -131,6 +131,7 @@ export const TouchBarBottom = React.memo(({}) => {
           ["Save", "save"],
           ["Reveal #2", "reveal_from_second"], 
           ["Mulligan", "mulligan"], 
+          ["Next seat", "next_seat"], 
           ].map((titleAction, _index) => {
             return (
               <td className={containerClass} style={containerStyle}>

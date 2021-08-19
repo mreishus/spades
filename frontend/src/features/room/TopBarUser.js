@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { setValues } from "./gameUiSlice";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import { getCurrentFace } from "./Helpers";
+import { useObservingPlayerN, useSetObservingPlayerN } from "../../contexts/ObservingPlayerNContext";
 
 var delayBroadcast;
 
@@ -16,8 +17,6 @@ export const TopBarUser = React.memo(({
   playerI,
   gameBroadcast,
   chatBroadcast,
-  observingPlayerN,
-  setObservingPlayerN,
   setTyping,
 }) => {
   console.log("Rendering TopBarUser ", playerI);
@@ -38,6 +37,8 @@ export const TopBarUser = React.memo(({
   const [inputRefThreat, setInputFocusThreat] = useFocus();
   const [inputRefWillpower, setInputFocusWillpower] = useFocus();
   const setDropdownMenu = useSetDropdownMenu();
+  const observingPlayerN = useObservingPlayerN();
+  const setObservingPlayerN = useSetObservingPlayerN();
 
   useEffect(() => {    
     if (gameUiThreat !== threatValue) setThreatValue(gameUiThreat);
