@@ -34,13 +34,16 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
     rowsPerPageOptions: [10, 20, 50, 200],
   }
   var filteredRooms: any[] = [];
+  var activePrivate = 0;
   if (rooms) {
     for (var i=0; i<rooms.length; i++) {
     //for (var replay of replayData) {
       var room = rooms[i];
       const elapsedSeconds = (room.last_update ? currentUnixTime - room.last_update : Number.MAX_SAFE_INTEGER);
       const status = (elapsedSeconds < 60 ? "Active" : "Idle");
+      if (status === "Active" && room.privacy_type !== "public") activePrivate++;
       if (room.privacy_type === "public" || (room.privacy_type === "playtest" && myUser?.playtester) || myUser?.id === room.created_by) {
+
         filteredRooms.push({
           name: room.name,
           quest: <Link to={"/room/" + room.slug}>{room.name || "Unspecified"}</Link>,
@@ -73,12 +76,15 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
     );
   }
   return (
-    <MUIDataTable
-      title={"Rooms"}
-      data={filteredRooms}
-      columns={columns}
-      options={options}
-    />
+    <>
+      <div className="w-full text-white text-center">Active private rooms: {activePrivate}</div>
+      <MUIDataTable
+        title={"Rooms"}
+        data={filteredRooms}
+        columns={columns}
+        options={options}
+      />
+    </>
   );
 };
 export default LobbyTable;
