@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import RoomProviders from "./RoomProviders";
 import {useSetMessages} from '../../contexts/MessagesContext';
@@ -15,11 +15,12 @@ export const Room = ({ slug }) => {
   const setMessages = useSetMessages();
   const myUser = useProfile();
   const myUserId = myUser?.id;
+  const [isClosed, setIsClosed] = useState(false);
 
   //const [gameUI, setGameUI] = useState<GameUI | null>(null);
   const onChannelMessage = useCallback((event, payload) => {
     if (!payload) return;
-    console.log("Got new game state: ", payload.response);
+    console.log("Got new payload: ", event, payload);
     if (
       event === "phx_reply" &&
       payload.response != null &&
@@ -32,6 +33,14 @@ export const Room = ({ slug }) => {
       }
       dispatch(setGame(game_ui.game));
       dispatch(setGameUi(game_ui));
+    } else if (
+      event === "phx_reply" &&
+      payload.response != null &&
+      payload.response.game_ui === null &&
+      !isClosed
+    ) {
+      setIsClosed(true);
+      alert("Your room has closed or timed out. If you were in the middle of playing, it may have crashed. If so, please go to the Menu and download the game state file. Then, create a new room and upload that file to continue where you left off.")
     }
 
   }, []);
