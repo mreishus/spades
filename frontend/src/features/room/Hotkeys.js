@@ -118,7 +118,6 @@ export const Hotkeys = React.memo(({
         <tr className={"bg-gray-600"}>
           <td className="p-1 text-center">
             <div className={keyClass} style={keyStyleL}>Shift</div>
-            <div className="inline-block p-1">+</div>
             <div className={keyClass} style={keyStyle}>Q</div></td>
           <td className="text-center">Commit / uncommit from quest without exhausting / readying</td>
         </tr>
@@ -247,17 +246,24 @@ export const Hotkeys = React.memo(({
           <td className="text-center">Clear targets/arrows</td>
         </tr>
         <tr className={"bg-gray-600"}>
-          <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>←</div></td>
+          <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>←</div>
+          <div className="px-2 inline-block">or</div> 
+          <div className={keyClass} style={keyStyleL}>Ctrl</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>Z</div>
+          </td>
           <td className="text-center">Undo one action</td>
         </tr>
         <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>→</div>
+          <div className="px-2 inline-block">or</div> 
+          <div className={keyClass} style={keyStyleL}>Ctrl</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>Y</div></td>
+          <td className="text-center">Redo one action</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>←</div></td>
           <td className="text-center">Undo until last round change</td>
-        </tr>
-        <tr className={"bg-gray-600"}>
-          <td className="p-1 text-center"><div className={keyClass+" inline-block"} style={keyStyle}>→</div></td>
-          <td className="text-center">Redo one action</td>
         </tr>
         <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>

@@ -63,6 +63,8 @@ const ctrlKeyGameActionMap = {
     "N": "new_round_all",
     "u": "increase_threat_all",
     "j": "decrease_threat_all",
+    "z": "undo",
+    "y": "redo",
     "ArrowLeft": "undo_many",
     "ArrowRight": "redo_many",
     "ArrowUp": "prev_phase",
