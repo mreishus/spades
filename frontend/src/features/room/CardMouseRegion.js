@@ -11,6 +11,7 @@ export const CardMouseRegion = React.memo(({
     position,
     top,
     card,
+    isActive,
     setIsActive,
     zIndex,
     cardIndex,
@@ -89,7 +90,7 @@ export const CardMouseRegion = React.memo(({
             <div 
                 {...longPress}
                 style={regionStyle}
-                onMouseOver={event => !touchMode && makeActive(event)}
+                onMouseOver={event => !isActive && makeActive(event)}
             />
     )} else return (
             <div 

@@ -66,7 +66,7 @@ export const Card = React.memo(({
                     OTransitionProperty: "-o-transform",
                     transitionProperty: "transform",
                 }}
-                onMouseLeave={event => !touchMode && handleMouseLeave(event)}>
+                onMouseLeave={event => handleMouseLeave(event)}>
                 <img className="absolute w-full h-full" style={{borderRadius: '0.6vh'}} src={visibleFaceSrc.src} onerror={`this.onerror=null; this.src=${visibleFaceSrc.default}`} />
 
                 {isActive && touchMode && defaultAction &&
@@ -85,6 +85,7 @@ export const Card = React.memo(({
                     position={"top"}
                     top={"0%"}
                     card={card}
+                    isActive={isActive}
                     setIsActive={setIsActive}
                     zIndex={zIndex}
                     cardIndex={cardIndex}
@@ -96,6 +97,7 @@ export const Card = React.memo(({
                     position={"bottom"}
                     top={"50%"}
                     card={card}
+                    isActive={isActive}
                     setIsActive={setIsActive}
                     zIndex={zIndex}
                     cardIndex={cardIndex}
