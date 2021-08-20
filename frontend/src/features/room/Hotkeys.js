@@ -141,6 +141,10 @@ export const Hotkeys = React.memo(({
           <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>X</div></td>
           <td className="text-center">Discard</td>
         </tr>
+        <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>B</div></td>
+          <td className="text-center">Dend attachment to back of stack</td>
+        </tr>
       </table>
     )
   }

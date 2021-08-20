@@ -45,7 +45,7 @@ export const getRandomIntInclusive = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
 }
 
-function shuffle(array) {
+export const shuffle = (array) => {
   var m = array.length, t, i;
   // While there remain elements to shuffle…
   while (m) {
