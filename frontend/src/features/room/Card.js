@@ -114,17 +114,38 @@ export const Card = React.memo(({
                     zIndex={zIndex}
                     aspectRatio={visibleFace.width/visibleFace.height}
                 />
-                <div 
-                    ref={registerDivToArrowsContext ? (div) => registerDivToArrowsContext({ id: "arrow-"+card.id, div }) : null} 
-                    style={{
-                        position: "absolute",
-                        width: "1px", 
-                        height: "1px",
-                        top: "50%",
-                        left: "50%",
-                    }}
+                <ArrowRegion
+                    cardId={card.id}
+                    registerDivToArrowsContext={registerDivToArrowsContext}
                 />
             </div>
         </div>
+    )
+})
+
+const ArrowRegion = React.memo(({
+    cardId,
+    registerDivToArrowsContext
+}) => {  
+    const arrows1Store = state => state?.gameUi?.game?.playerData.player1.arrows;
+    const arrows1 = useSelector(arrows1Store);
+    const arrows2Store = state => state?.gameUi?.game?.playerData.player2.arrows;
+    const arrows2 = useSelector(arrows2Store);
+    const arrows3Store = state => state?.gameUi?.game?.playerData.player3.arrows;
+    const arrows3 = useSelector(arrows3Store);
+    const arrows4Store = state => state?.gameUi?.game?.playerData.player4.arrows;
+    const arrows4 = useSelector(arrows4Store);
+    const allIds = [arrows1, arrows2, arrows3, arrows4].flat(3);
+    if (!allIds.includes(cardId)) return null;
+    return (
+        <div 
+            ref={registerDivToArrowsContext? (div) => registerDivToArrowsContext({ id: "arrow-"+cardId, div }) : null} 
+            style={{
+                position: "absolute",
+                width: "1px", 
+                height: "1px",
+                top: "50%",
+                left: "50%",
+            }}/>
     )
 })

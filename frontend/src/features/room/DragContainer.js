@@ -39,6 +39,11 @@ export const DragContainer = React.memo(({
   const setTouchAction = useSetTouchAction();
 
   const prevGame = usePrevious(game)
+  const arrows1 = game.playerData.player1.arrows;
+  const arrows2 = game.playerData.player1.arrows;
+  const arrows3 = game.playerData.player1.arrows;
+  const arrows4 = game.playerData.player1.arrows;
+  const usingArrows = arrows1 || arrows2 || arrows3 || arrows4;
 
   useEffect(() => {
     processGameChange(prevGame, game, playerN, gameBroadcast, chatBroadcast);
@@ -171,7 +176,7 @@ export const DragContainer = React.memo(({
             gameBroadcast={gameBroadcast}
             chatBroadcast={chatBroadcast}
             setTyping={setTyping}
-            registerDivToArrowsContext={game.playerData.player1.arrows.length ? registerDivToArrowsContext: null}
+            registerDivToArrowsContext={usingArrows ? registerDivToArrowsContext: null}
           />
         </>
         )}
