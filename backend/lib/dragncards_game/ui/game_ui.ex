@@ -905,9 +905,9 @@ defmodule DragnCardsGame.GameUI do
             gameui
       end
     end
-    # Compare state before and after, and add a delta (unless we are undoing a move)
+    # Compare state before and after, and add a delta (unless we are undoing a move or loading a game with undo info)
     game_new = gameui["game"]
-    gameui = if action != "step_through" do
+    gameui = if options["preserve_undo"] != true do
       game_new = Game.add_delta(game_new, game_old)
       gameui = put_in(gameui["game"], game_new)
       put_in(gameui["game"]["replayLength"], Enum.count(gameui["game"]["deltas"]))
