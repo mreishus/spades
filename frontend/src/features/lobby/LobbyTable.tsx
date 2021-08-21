@@ -42,7 +42,8 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
       const elapsedSeconds = (room.last_update ? currentUnixTime - room.last_update : Number.MAX_SAFE_INTEGER);
       const status = (elapsedSeconds < 60 ? "Active" : "Idle");
       if (status === "Active" && room.privacy_type !== "public") activePrivate++;
-      if (room.privacy_type === "public" || (room.privacy_type === "playtest" && myUser?.playtester) || myUser?.id === room.created_by) {
+      // Currently there is no "admin" user field so I am usering supporter_level === 100 as a hack
+      if (room.privacy_type === "public" || (room.privacy_type === "playtest" && myUser?.playtester) || myUser?.id === room.created_by || myUser?.supporter_level === 100) {
 
         filteredRooms.push({
           name: room.name,
