@@ -28,9 +28,11 @@ export const ChatMessages: React.FC<Props> = ({ hover, chatOnly }) => {
 
   return (
     <div>
-      {messages?.map((m, i) => (
-        (chatOnly && m.game_update ? null : <ChatLine key={m.shortcode} message={m} />)
-      ))}
+      {messages?.map((m, i) => {
+        if (chatOnly && m.game_update) return null;
+        if (!chatOnly && !m.game_update) return null;
+        return(<ChatLine key={m.shortcode} message={m} />)
+      })}
       <div ref={bottomRef} className="list-bottom"></div>
     </div>
   );

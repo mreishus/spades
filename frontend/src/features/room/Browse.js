@@ -173,7 +173,7 @@ export const Browse = React.memo(({
             <select 
               name="numFaceup" 
               id="numFaceup"
-              className="form-control w-full bg-gray-900 text-white border-0 h-full p-0"
+              className="form-control w-full bg-gray-900 text-white border-0 h-full px-1"
               onChange={handleSelectClick}>
               <option value="" disabled selected>Turn faceup...</option>
               <option value="None">None</option>
