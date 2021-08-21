@@ -35,12 +35,14 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
   }
   var filteredRooms: any[] = [];
   var activePrivate = 0;
+  var activeRooms = 0;
   if (rooms) {
     for (var i=0; i<rooms.length; i++) {
     //for (var replay of replayData) {
       var room = rooms[i];
       const elapsedSeconds = (room.last_update ? currentUnixTime - room.last_update : Number.MAX_SAFE_INTEGER);
       const status = (elapsedSeconds < 60 ? "Active" : "Idle");
+      if (status === "Active") activeRooms++;
       if (status === "Active" && room.privacy_type !== "public") activePrivate++;
       // Currently there is no "admin" user field so I am usering supporter_level === 100 as a hack
       if (room.privacy_type === "public" || (room.privacy_type === "playtest" && myUser?.playtester) || myUser?.id === room.created_by || myUser?.supporter_level === 100) {
@@ -78,7 +80,7 @@ export const LobbyTable: React.FC<Props> = ({ rooms }) => {
   }
   return (
     <>
-      <div className="w-full text-white text-center">Active private rooms: {activePrivate}</div>
+      <div className="w-full text-white text-center">Active rooms: {activeRooms}</div>
       <MUIDataTable
         title={"Rooms"}
         data={filteredRooms}
