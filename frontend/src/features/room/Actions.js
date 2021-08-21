@@ -245,7 +245,7 @@ export const gameAction = (action, props) => {
         if (game.replayStep <= 0) {
             chatBroadcast("game_update", {message: "tried to undo an action, but no previous actions exist."});
         } else {
-            gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "undo"}});
+            gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "undo", preserve_undo: true}});
             chatBroadcast("game_update", {message: "pressed undo."});
             // Clear GiantCard
             setActiveCardAndLoc(null);
@@ -257,7 +257,7 @@ export const gameAction = (action, props) => {
         if (game.replayStep <= 0) {
             chatBroadcast("game_update", {message: "tried to undo an action, but no previous actions exist."});
         } else {
-            gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "undo"}});
+            gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "undo", preserve_undo: true}});
             chatBroadcast("game_update", {message: "rewinds a round."});
             // Clear GiantCard
             setActiveCardAndLoc(null);
@@ -269,7 +269,7 @@ export const gameAction = (action, props) => {
         if (game.replayStep >= game.replayLength) {
             chatBroadcast("game_update", {message: "tried to redo an action, but the game is current."});
         } else {
-            gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "redo"}});
+            gameBroadcast("game_action", {action: "step_through", options: {size: "single", direction: "redo", preserve_undo: true}});
             chatBroadcast("game_update", {message: "pressed redo."});
             // Clear GiantCard
             setActiveCardAndLoc(null);
@@ -281,7 +281,7 @@ export const gameAction = (action, props) => {
         if (game.replayStep >= game.replayLength) {
             chatBroadcast("game_update", {message: "tried to redo an action, but the game is current."});
         } else {
-            gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "redo"}});
+            gameBroadcast("game_action", {action: "step_through", options: {size: "round", direction: "redo", preserve_undo: true}});
             chatBroadcast("game_update", {message: "fast-forwards a round."});
             // Clear GiantCard
             setActiveCardAndLoc(null);
@@ -660,5 +660,12 @@ export const cardAction = (action, cardId, options, props) => {
         if (increment <= -1) words  = ["removed", "tokens", "from"];
         gameBroadcast("game_action", {action:"increment_token", options: {card_id: card.id, token_type: tokenType, increment: increment}});
         chatBroadcast("game_update",{message: words[0]+" "+Math.abs(increment)+" "+tokenPrintName(tokenType)+" "+words[1]+" "+words[2]+displayName+"."});
+    }
+    else if (action === "move_to_back") {
+        const stack = game.stackById[stackId];
+        const cardIds = stack.cardIds;
+        const numCardIds = cardIds.length;
+        if (numCardIds <= 1) return;
+        gameBroadcast("game_action", {action: "move_card", options: {card_id: cardId, dest_group_id: groupId, dest_stack_index: stackIndex, dest_card_index: numCardIds-1, combine: true, preserve_state: false}})
     }
 }

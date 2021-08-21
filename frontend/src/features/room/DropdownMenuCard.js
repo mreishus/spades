@@ -43,6 +43,22 @@ export const DropdownMenuCard = React.memo(({
           Shuffle in
         </DropdownItem>
         <DropdownItem
+          leftIcon={<FontAwesomeIcon icon={faRandom}/>}
+          action="moveCard"
+          destGroupId={props.destGroupId}
+          position="shuffle_into_top"
+          clickCallback={handleDropdownClick}>
+          Shuffle into top X
+        </DropdownItem>
+        <DropdownItem
+          leftIcon={<FontAwesomeIcon icon={faRandom}/>}
+          action="moveCard"
+          destGroupId={props.destGroupId}
+          position="shuffle_into_bottom"
+          clickCallback={handleDropdownClick}>
+          Shuffle into bottom X
+        </DropdownItem>
+        <DropdownItem
           leftIcon={<FontAwesomeIcon icon={faArrowDown}/>}
           action="moveCard"
           destGroupId={props.destGroupId}
@@ -60,8 +76,7 @@ export const DropdownMenuCard = React.memo(({
   return (
     <div 
       className="dropdown" 
-      style={{ height: menuHeight, zIndex: 1e7, top: top, left: left }}
-      >
+      style={{ height: menuHeight, zIndex: 1e7, top: top, left: left }}>
         <div className="menu-title">{dropdownMenu.title}</div>
 
         {activeMenu === "main" &&

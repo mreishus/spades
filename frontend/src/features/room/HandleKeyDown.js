@@ -33,6 +33,7 @@ const keyCardActionMap = {
     "v": "victory",
     "x": "discard",
     "c": "detach",
+    "b": "move_to_back",
 }
 
 const keyGameActionMap = {

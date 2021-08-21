@@ -205,9 +205,13 @@ export const TopBarMenu = React.memo(({
         const gameObj = JSON.parse(event.target.result);
         if (gameObj) {
           dispatch(setGame(gameObj));
-          gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", gameObj]]}})
           chatBroadcast("game_update", {message: "uploaded a game."});
-          gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "replayStep", 0]]}})
+          if (gameObj.replayStep) {
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", gameObj]], preserve_undo: true}})            
+          } else {
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "replayStep", 0]]}})
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", gameObj]]}})
+          }
         }
       } catch(e) {
           alert("Game must be a valid JSON file."); // error in the above string (in this case, yes)!

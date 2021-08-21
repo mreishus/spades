@@ -5,6 +5,8 @@ import {
   getDisplayName, 
   getGroupIdStackIndexCardIndex,
   getCurrentFace,
+  shuffle,
+  getRandomIntInclusive,
 } from "./Helpers";
 
 
@@ -63,6 +65,42 @@ export const handleDropdownClickCard = (dropdownProps) => {
       gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: dropdownOptions.destGroupId, dest_stack_index: 0, dest_card_index: 0, combine: false, preserve_state: false}})
       gameBroadcast("game_action", {action: "shuffle_group", options: {group_id: dropdownOptions.destGroupId}})
       chatBroadcast("game_update", {message: "shuffled "+displayName+" into "+destGroupTitle+"."})
+    } else if (dropdownOptions.position === "shuffle_into_top") {
+      const num = parseInt(prompt("Shuffle into top...","5"));
+      // Get stack Ids
+      const stackIds = game.groupById[dropdownOptions.destGroupId].stackIds;
+      if (num > stackIds.length) {
+        alert("Not enough cards in destination group.")
+        return;
+      }
+      const topX = stackIds.slice(0,num);
+      //alert(topX)
+      const topXShuffled = shuffle(topX);
+      const newStackIds = topXShuffled.concat(stackIds.slice(num)); 
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "groupById", dropdownOptions.destGroupId, "stackIds", newStackIds]]}})
+      // Select random number
+      const newIndex = getRandomIntInclusive(0,num);
+      // Move card in
+      gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: dropdownOptions.destGroupId, dest_stack_index: newIndex, dest_card_index: 0, combine: false, preserve_state: false}})
+      chatBroadcast("game_update", {message: "shuffled "+displayName+" into the top "+num+" of "+destGroupTitle+"."})
+    } else if (dropdownOptions.position === "shuffle_into_bottom") {
+      const num = parseInt(prompt("Shuffle into bottom...","10"));
+      // Get stack Ids
+      const stackIds = game.groupById[dropdownOptions.destGroupId].stackIds;
+      const numStacks = stackIds.length;
+      if (num > numStacks) {
+        alert("Not enough cards in destination group.")
+        return;
+      }
+      const bottomX = stackIds.slice(numStacks-num);
+      const bottomXShuffled = shuffle(bottomX);
+      const newStackIds = stackIds.slice(0,numStacks-num).concat(bottomXShuffled); 
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "groupById", dropdownOptions.destGroupId, "stackIds", newStackIds]]}})
+      // Select random number
+      const newIndex = getRandomIntInclusive(numStacks-num,numStacks);
+      // Move card in
+      gameBroadcast("game_action", {action: "move_card", options: {card_id: menuCard.id, dest_group_id: dropdownOptions.destGroupId, dest_stack_index: newIndex, dest_card_index: 0, combine: false, preserve_state: false}})
+      chatBroadcast("game_update", {message: "shuffled "+displayName+" into the bottom "+num+" of "+destGroupTitle+"."})
     }
   } else if (dropdownOptions.action === "incrementTokenPerRound") {
       const increment = dropdownOptions.increment;

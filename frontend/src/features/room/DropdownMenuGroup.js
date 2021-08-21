@@ -50,7 +50,7 @@ export const DropdownMenuGroup = React.memo(({
   }
 
   const left = mouseX < (window.innerWidth/2)  ? mouseX : mouseX -300;
-  const top = mouseY < (window.innerHeight/2) ? mouseY : mouseY -250;
+  const top = mouseY < (window.innerHeight/2) ? mouseY : mouseY -300;
 
   return (
     <div 
@@ -66,6 +66,7 @@ export const DropdownMenuGroup = React.memo(({
           <DropdownItem action="lookAt" topN="None" clickCallback={handleDropdownClick}>Browse</DropdownItem>
           <DropdownItem action="lookAt" topN="5" clickCallback={handleDropdownClick}>Look at top 5</DropdownItem>
           <DropdownItem action="lookAt" topN="10" clickCallback={handleDropdownClick}>Look at top 10</DropdownItem>
+          <DropdownItem action="lookAt" topN="X" clickCallback={handleDropdownClick}>Look at top X</DropdownItem>
           <DropdownItem action="chooseRandom" clickCallback={handleDropdownClick}>Choose Random</DropdownItem>
           <DropdownItem
             rightIcon={<FontAwesomeIcon icon={faChevronRight}/>}
@@ -120,7 +121,6 @@ export const DropdownMenuGroup = React.memo(({
         {activeMenu === "more" &&
         <div className="menu">
           <GoBack goToMenu="main" clickCallback={handleDropdownClick}/>
-          <DropdownItem action="lookAt" topN="X" clickCallback={handleDropdownClick}>Look at top X</DropdownItem>
           <DropdownItem action="dealX" side="B" clickCallback={handleDropdownClick}>Deal top X facedown</DropdownItem>
         </div>}
     </div>
