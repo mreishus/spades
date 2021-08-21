@@ -34,16 +34,16 @@ export const Chat: React.FC<Props> = ({ hover, chatBroadcast, setTyping }) => {
 
   return (
     <div className="overflow-hidden h-full">
-      <div className="bg-gray-800 overflow-y-auto" style={{height: "calc(100% - 4vh)"}}>
+      <div className="bg-gray-800 overflow-y-auto" style={{height: "calc(100% - 3vh)"}}>
         <ChatMessages hover={hover} chatOnly={chatOnly}/>
       </div>
       <div 
-        className="flex items-center justify-center float-left text-white bg-gray-700 hover:bg-gray-600"  
-        style={{height: "4vh", width: chatOnly ? "20%" : "100%", animation: newChatMessage ? "glowing 2s infinite ease" : ""}}
+        className="flex items-center justify-center float-left text-white bg-gray-700 hover:bg-gray-600 select-none"  
+        style={{height: "3vh", width: chatOnly ? "20%" : "100%", animation: newChatMessage ? "glowing 2s infinite ease" : ""}}
         onClick={() => handleChatOnlyClick()}>
         {chatOnly ? "Log" : "Chat"}
       </div>
-      {chatOnly && <div className="text-center float-left"  style={{height: "4vh", width: "80%"}}>
+      {chatOnly && <div className="text-center float-left"  style={{height: "3vh", width: "80%"}}>
         <ChatInput chatBroadcast={chatBroadcast} setTyping={setTyping}/>
       </div>}
     </div>
