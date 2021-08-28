@@ -227,20 +227,20 @@ export const TableLayout = React.memo(({
           onMouseLeave={() => handleStopChatHover()}>
           <Chat hover={chatHover} chatBroadcast={chatBroadcast} setTyping={setTyping}/>
         </div>
-        <div className="absolute h-full text-center text-gray-400 right-0 overflow-y-hidden" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
-          <div className={`quickviewbutton ${sideGroupId === "sharedSetAside" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick("sharedSetAside")}>
+        <div className="absolute h-full cursor-default text-center text-gray-400 right-0 overflow-y-hidden" style={{width:"30px", background:"rgba(0, 0, 0, 0.3)", zIndex: 1e6+1}}>
+          <div className={`h-1/4 w-full bg-gray-800 hover:bg-gray-600 ${sideGroupId === "sharedSetAside" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick("sharedSetAside")}>
             <div style={{height: "50%"}}>SA</div>
             <div style={{height: "50%"}}>{groupById["sharedSetAside"].stackIds.length}</div>
           </div>
-          <div className={`quickviewbutton ${sideGroupId === observingPlayerN+"Sideboard" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick(observingPlayerN+"Sideboard")}>
+          <div className={`h-1/4 w-full bg-gray-800 hover:bg-gray-600 ${sideGroupId === observingPlayerN+"Sideboard" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick(observingPlayerN+"Sideboard")}>
             <div style={{height: "50%"}}>SB</div>
             <div style={{height: "50%"}}>{groupById[observingPlayerN+"Sideboard"]?.stackIds.length}</div>
           </div>
-          <div className={`quickviewbutton ${sideGroupId === "sharedQuestDeck" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick("sharedQuestDeck")}>
+          <div className={`h-1/4 w-full bg-gray-800 hover:bg-gray-600 ${sideGroupId === "sharedQuestDeck" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick("sharedQuestDeck")}>
             <div style={{height: "50%"}}>QD</div>
             <div style={{height: "50%"}}>{groupById["sharedQuestDeck"].stackIds.length}</div>
           </div>
-          <div className={`quickviewbutton ${sideGroupId === "sharedVictory" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick("sharedVictory")}>
+          <div className={`h-1/4 w-full bg-gray-800 hover:bg-gray-600 ${sideGroupId === "sharedVictory" ? "bg-gray-700" : ""}`} onClick={() => handleQuickViewClick("sharedVictory")}>
             <div style={{height: "50%"}}>VD</div>
             <div style={{height: "50%"}}>{groupById["sharedVictory"].stackIds.length}</div>
           </div>
