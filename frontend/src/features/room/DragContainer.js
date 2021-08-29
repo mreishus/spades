@@ -6,8 +6,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setStackIds, setCardIds, setGroupById, setValues } from "./gameUiSlice";
 import { reorderGroupStackIds } from "./Reorder";
 import { Table } from "./Table";
-import { GROUPSINFO } from "./Constants"
-import { getDisplayName, getDisplayNameFlipped, getCurrentFace } from "./Helpers"
+import { GROUPSINFO } from "./Constants";
+import { getDisplayName, getDisplayNameFlipped, getCurrentFace } from "./Helpers";
 import { useKeypress } from "../../contexts/KeypressContext";
 import { processGameChange } from "../automation/ProcessGameChange";
 import { useTouchMode } from "../../contexts/TouchModeContext";
