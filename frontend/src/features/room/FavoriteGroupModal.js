@@ -52,7 +52,7 @@ export const FavoriteGroupModal = ({
       isOpen={isOpen}
       onRequestClose={closeModal}
       contentLabel="Select favorite group"
-      overlayClassName="fixed inset-0 bg-black-50 z-50"
+      overlayClassName="fixed inset-0 bg-black-50 z-10000"
       className="insert-auto p-5 bg-gray-700 border mx-auto my-12 rounded-lg outline-none"
       style={{
         overlay: {
