@@ -11,6 +11,7 @@ export const OnLoad = React.memo(({
 }) => {
   const optionsStore = state => state.gameUi?.game?.options;
   const options = useSelector(optionsStore);  
+  const ringsDbInfo = options?.ringsDbInfo;
   const groupByIdStore = state => state.gameUi?.game.groupById;
   const groupById = useSelector(groupByIdStore);
   const myUser = useProfile();
@@ -18,26 +19,31 @@ export const OnLoad = React.memo(({
   const createdByStore = state => state.gameUi?.created_by;
   const createdBy = useSelector(createdByStore);
   const isHost = myUserID === createdBy;
+  const deckToLoad = ringsDbInfo?.[0] || ringsDbInfo?.[1] || ringsDbInfo?.[2] || ringsDbInfo?.[3]
 
   console.log("Rendering OnLoad", options);
   useEffect(() => {
     if (!options || !isHost) return;
-    if (options["ringsDbIds"] && options["loaded"] !== true) {
+    if (deckToLoad && options["loaded"] !== true) {
       setLoaded(true);
       const newOptions = {...options, loaded: true}
       // Turn off trigger
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}})
       // Load ringsdb decks by ids
-      const idArray = options["ringsDbIds"];
-      const typeArray = options["ringsDbType"];
-      const numDecks = idArray.length;
+      var numDecks = 1;
+      for (var i=1; i<=4; i++) {
+        const playerI = "player"+i;
+        if (!ringsDbInfo[i-1]) continue;
+        numDecks = i;
+        console.log("Rendering OnLoad", ringsDbInfo[i-1]);
+        const deckType = ringsDbInfo[i-1].type;
+        const deckId = ringsDbInfo[i-1].id;
+        const deckDomain = ringsDbInfo[i-1].domain;
+        loadRingsDb(playerI, deckDomain, deckType, deckId, gameBroadcast, chatBroadcast);
+      }
       if (numDecks>1 && numDecks<=4) {
         gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "numPlayers", numDecks]]}});
         chatBroadcast("game_update", {message: "set the number of players to: " + numDecks});
-      }
-      for (var i=0; i<Math.min(numDecks,4); i++) {
-        const playerI = "player"+(i+1);
-        loadRingsDb(playerI, options["ringsDbDomain"], typeArray[i], idArray[i], gameBroadcast, chatBroadcast);
       }
       // Loop over decks complete
     } // End if ringsDb
