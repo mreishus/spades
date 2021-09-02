@@ -1,16 +1,15 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import useProfile from "../../hooks/useProfile";
-import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
 import { flatListOfCards, loadRingsDb, processLoadList, processPostLoad } from "./Helpers";
-import { cardDB } from "../../cardDB/cardDB";
 import { loadDeckFromXmlText, getRandomIntInclusive } from "./Helpers";
 import { useSetTouchMode } from "../../contexts/TouchModeContext";
 import { useSetTouchAction } from "../../contexts/TouchActionContext";
 import { useCardSizeFactor, useSetCardSizeFactor } from "../../contexts/CardSizeFactorContext";
+import { loadDeckFromModeAndId } from "./SpawnQuestModal";
 
 
 export const TopBarMenu = React.memo(({
@@ -18,6 +17,7 @@ export const TopBarMenu = React.memo(({
     gameBroadcast,
     chatBroadcast,
     playerN,
+    setLoaded,
 }) => {
   const myUser = useProfile();
   const myUserID = myUser?.id;
@@ -29,11 +29,11 @@ export const TopBarMenu = React.memo(({
 
   const createdByStore = state => state.gameUi?.created_by;
   const createdBy = useSelector(createdByStore);
-  const optionsStore = state => state.gameUi?.options;
+  const optionsStore = state => state.gameUi?.game?.options;
   const options = useSelector(optionsStore);
   const roundStore = state => state.gameUi?.game.roundNumber;
   const round = useSelector(roundStore);
-  const host = myUserID === createdBy;
+  const isHost = myUserID === createdBy;
   const cardsPerRoundStore = state => state.gameUi?.game.playerData[playerN]?.cardsDrawn;
   const cardsPerRound = useSelector(cardsPerRoundStore);
   
@@ -73,6 +73,13 @@ export const TopBarMenu = React.memo(({
       history.push("/profile");
       chatBroadcast("game_update", {message: "closed the room."});
       gameBroadcast("close_room", {});
+    } else if (data.action === "reset_and_reload") {
+      const newOptions = {...options, loaded: false};
+      const resetData = {action: "reset_game", state: "defeat"};
+      handleMenuClick(resetData);
+      setLoaded(false);
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}})
+      if (options.questModeAndId) loadDeckFromModeAndId(options.questModeAndId, playerN, gameBroadcast, chatBroadcast);
     } else if (data.action === "load_deck") {
       loadFileDeck();
     } else if (data.action === "load_ringsdb") {
@@ -336,7 +343,7 @@ export const TopBarMenu = React.memo(({
   return(
     <li key={"Menu"}><div className="h-full flex items-center justify-center select-none" href="#">Menu</div>
       <ul className="second-level-menu">
-        {host &&
+        {isHost &&
           <li key={"numPlayers"}>
             <a href="#">Player count</a>
             <ul className="third-level-menu">
@@ -347,7 +354,7 @@ export const TopBarMenu = React.memo(({
             </ul>
           </li>
         }
-        {host &&
+        {isHost &&
           <li key={"layout"}>
             <a href="#">Layout</a>
             <ul className="third-level-menu">
@@ -422,17 +429,18 @@ export const TopBarMenu = React.memo(({
             <li key={"export_cards"}><a  onClick={() => handleMenuClick({action:"export_cards"})} href="#">Export cards (.txt)</a></li>
           </ul>
         </li>
-        {host &&
+        {isHost &&
           <li key={"reset"}>
               <a href="#">Reset Game</a>
               <ul className="third-level-menu">
                 <li key={"reset_victory"}><a onClick={() => handleMenuClick({action:"reset_game", state: "victory"})} href="#">Mark as victory</a></li>
                 <li key={"reset_defeat"}><a onClick={() => handleMenuClick({action:"reset_game", state: "defeat"})} href="#">Mark as defeat</a></li>
+                <li key={"reset_reload"}><a onClick={() => handleMenuClick({action:"reset_and_reload"})} href="#">Mark as defeat and reload</a></li>
                 <li key={"reset_incomplete"}><a onClick={() => handleMenuClick({action:"reset_game", state: "incomplete"})} href="#">Mark as incomplete</a></li>
               </ul>
           </li> 
         }       
-        {host &&
+        {isHost &&
           <li key={"shut_down"}>
               <a href="#">Close room</a>
               <ul className="third-level-menu">

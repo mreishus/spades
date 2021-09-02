@@ -1,27 +1,32 @@
-import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { sectionToDiscardGroupId } from "./Constants";
+import React, { useEffect } from "react";
+import { useSelector } from 'react-redux';
 import { GROUPSINFO } from "./Constants";
-import { loadRingsDb, processLoadList, processPostLoad } from "./Helpers";
-import { cardDB } from "../../cardDB/cardDB";
+import { loadRingsDb } from "./Helpers";
+import useProfile from "../../hooks/useProfile";
 
 export const OnLoad = React.memo(({
     setLoaded,
     gameBroadcast,
     chatBroadcast,
 }) => {
-  setLoaded(true);
-  const optionsStore = state => state.gameUi?.options;
+  const optionsStore = state => state.gameUi?.game?.options;
   const options = useSelector(optionsStore);  
   const groupByIdStore = state => state.gameUi?.game.groupById;
   const groupById = useSelector(groupByIdStore);
+  const myUser = useProfile();
+  const myUserID = myUser?.id;
+  const createdByStore = state => state.gameUi?.created_by;
+  const createdBy = useSelector(createdByStore);
+  const isHost = myUserID === createdBy;
 
-  console.log("Rendering OnLoad");
+  console.log("Rendering OnLoad", options);
   useEffect(() => {
-
-    if (options["ringsDbIds"]) {
+    if (!options || !isHost) return;
+    if (options["ringsDbIds"] && options["loaded"] !== true) {
+      setLoaded(true);
+      const newOptions = {...options, loaded: true}
       // Turn off trigger
-      gameBroadcast("game_action", {action: "update_values", options: {updates: [["options", "ringsDbIds", null],["options", "ringsDbType", null]]}})
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}})
       // Load ringsdb decks by ids
       const idArray = options["ringsDbIds"];
       const typeArray = options["ringsDbType"];
@@ -39,7 +44,7 @@ export const OnLoad = React.memo(({
     // Shuffle all decks if setting was set
     if (options["loadShuffle"]) {
       // Turn off trigger
-      const updates = [["options", "loadShuffle", false]];
+      const updates = [["game", "options", "loadShuffle", false]];
       gameBroadcast("game_action", {action: "update_values", options: {updates: updates}});
       //dispatch(setValues({updates: updates}));
       Object.keys(groupById).forEach((groupId) => {
@@ -50,7 +55,7 @@ export const OnLoad = React.memo(({
         }
       })
     }
-  }, []);
+  }, [options]);
 
   return;
 })

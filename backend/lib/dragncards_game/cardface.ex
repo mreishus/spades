@@ -52,6 +52,19 @@ defmodule DragnCardsGame.CardFace do
       steps = if String.match?(search_string, ~r/during the encounter phase/i) do steps ++ ["5.1"] else steps end
       steps = if String.match?(search_string, ~r/during the combat phase/i) do steps ++ ["6.1"] else steps end
       steps = if String.match?(search_string, ~r/during the refresh phase/i) do steps ++ ["7.1"] else steps end
+
+      steps = if String.match?(search_string, ~r/time x./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 1./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 2./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 3./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 4./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 5./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 6./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 7./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 8./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 9./i) do steps ++ ["7.5"] else steps end
+      steps = if String.match?(search_string, ~r/time 10./i) do steps ++ ["7.5"] else steps end
+
       steps
     end
     steps
