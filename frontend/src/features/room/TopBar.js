@@ -12,6 +12,7 @@ export const TopBar = React.memo(({
   chatBroadcast,
   playerN,
   setTyping,
+  setLoaded,
 }) => {
   console.log("Rendering TopBar");
   return(
@@ -22,6 +23,7 @@ export const TopBar = React.memo(({
           gameBroadcast={gameBroadcast}
           chatBroadcast={chatBroadcast}
           playerN={playerN}
+          setLoaded={setLoaded}
         />
         <TopBarView
           setShowHotkeys={setShowHotkeys}

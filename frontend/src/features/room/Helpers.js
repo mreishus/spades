@@ -12,6 +12,14 @@ export const getCurrentFace = (card) => {
 export const playerNToPlayerSpaceN = (playerN) => {
   return "Player " + playerN.slice(6,7);
 }
+ 
+export const playerNToPlayerIndex = (playerN) => {
+  if (playerN === "player1") return 0;
+  if (playerN === "player2") return 1;
+  if (playerN === "player3") return 2;
+  if (playerN === "player4") return 3;
+  return null;
+}
 
 export const getDisplayName = (card) => {
   if (!card) return;

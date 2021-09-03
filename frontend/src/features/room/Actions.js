@@ -47,6 +47,12 @@ const reveal = (game, deckGroupId, discardGroupId, gameBroadcast, chatBroadcast,
     const message = facedown ? "added facedown "+getDisplayName(topCard)+" to the staging area." : "revealed "+getDisplayNameFlipped(topCard)+"."
     chatBroadcast("game_update",{message: message});
     gameBroadcast("game_action", {action: "move_stack", options: {stack_id: topStackId, dest_group_id: "sharedStaging", dest_stack_index: -1, combine: false, preserve_state: facedown}})
+
+    // If there was only 1 card left, then it's now empty. If it's the quest phase we need to reshuffle.
+    if (stacksLeft === 1 && game.phase === "Quest") {
+        gameBroadcast("game_action",{action:"move_stacks", options:{orig_group_id: discardGroupId, dest_group_id: deckGroupId, top_n: encounterDiscardStackIds.length, position: "s"}});
+        chatBroadcast("game_update",{message: " shuffles "+GROUPSINFO[discardGroupId].name+" into "+GROUPSINFO[deckGroupId].name+"."});
+    }
 }
 
 export const gameAction = (action, props) => {

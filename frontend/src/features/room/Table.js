@@ -109,7 +109,8 @@ export const Table = React.memo(({
               setSittingPlayerN={setSittingPlayerN}
               observingPlayerN={observingPlayerN}
               setObservingPlayerN={setObservingPlayerN}
-              setTyping={setTyping}/>
+              setTyping={setTyping}
+              setLoaded={setLoaded}/>
           </div>
           {/* Table */}
           <div className="relative w-full" style={{height: touchMode ? "82%" : "94%"}}>

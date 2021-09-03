@@ -24,7 +24,7 @@ defmodule DragnCardsGame.Game do
       replay = Repo.one(query)
       if replay.game_json do replay.game_json else Game.new() end
     else
-      Game.new()
+      Game.new(options)
     end
     # Refresh id so that replay does not get overwritten
     put_in(game["id"], Ecto.UUID.generate)
@@ -33,13 +33,13 @@ defmodule DragnCardsGame.Game do
   @doc """
   new/1:  Create a game with specified options.
   """
-  @spec new() :: Game.t()
-  def new() do
+  @spec new(Map.t()) :: Game.t()
+  def new(%{} = options) do
     %{
       "id" => Ecto.UUID.generate,
       "version" => 0.1,
       "numPlayers" => 1,
-      "questModeAndId" => nil,
+      #"questModeAndId" => nil,
       "layout" => "standard",
       "firstPlayer" => "player1",
       "roundNumber" => 0,
@@ -60,6 +60,7 @@ defmodule DragnCardsGame.Game do
       "replayLength" => 0, # Length of deltas. We need this because the delta array is not broadcast.
       "victoryState" => nil,
       "questMode" => "Normal",
+      "options" => options,
     }
   end
 

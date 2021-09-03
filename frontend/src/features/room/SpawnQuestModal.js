@@ -86,6 +86,17 @@ const getIndexFromModeAndId = (modeAndId) => { // modeAndId is "N01.01" or "Q01.
   return -1;
 }
 
+export const loadDeckFromModeAndId = async(modeAndId, playerN, gameBroadcast, chatBroadcast) => {
+  const index = getIndexFromModeAndId(modeAndId);
+  if (index >= 0) {
+    const questPath = questsOCTGN[index];
+    const res = await fetch(questPath);
+    const xmlText = await res.text();
+    loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast);
+  }
+  return null;
+}
+
 const isVisible = (questPath, playtester, privacyType) => {
   const questName = getQuestNameFromPath(questPath);
   if (questName.toLowerCase().includes("playtest") && (!playtester || privacyType === "public")) return false;
@@ -101,6 +112,8 @@ export const SpawnQuestModal = React.memo(({
 }) => {  
     const privacyTypeStore = state => state?.gameUi?.privacyType;
     const privacyType = useSelector(privacyTypeStore);
+    const optionsStore = state => state.gameUi?.game?.options;
+    const options = useSelector(optionsStore);
     const myUser = useProfile();
     const [filteredIndices, setFilteredIndices] = useState([]);
     const [activeMenu, setActiveMenu] = useState("main");
@@ -140,7 +153,9 @@ export const SpawnQuestModal = React.memo(({
         loadDeckFromXmlText(xmlText, playerN, gameBroadcast, chatBroadcast);
         setShowModal(null);
         const modeAndId = getModeLetterQuestIdFromPath(questPath);
-        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","questModeAndId", modeAndId]]}});
+        const newOptions = {...options, questModeAndId: modeAndId};
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","options", newOptions]]}});
+        //gameBroadcast("game_action", {action: "update_values", options: {updates: [["game","questModeAndId", modeAndId]]}});
       }
     }
 

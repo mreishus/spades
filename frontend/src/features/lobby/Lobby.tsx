@@ -36,30 +36,29 @@ export const Lobby: React.FC = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [replayId, setReplayId] = useState("");
-  const [ringsDbIds, setRingsDbIds] = useState<Array<string>>([]);
-  const [ringsDbType, setRingsDbType] = useState<Array<string>>([]);
-  const [ringsDbDomain, setRingsDbDomain] = useState("");
+  const [ringsDbInfo, setRingsDbInfo] = useState<Array<any>>([null,null,null,null]);
   const [loadShuffle, setLoadShuffle] = useState(false);
   const { isLoading, isError, data, setData } = useDataApi<any>(
     "/be/api/rooms",
     null
   );
-  console.log("Rendering Lobby", ringsDbIds, ringsDbType, ringsDbDomain)
+  console.log("Rendering Lobby", ringsDbInfo)
   useEffect(() => {
     const url = window.location.href;
     if (url.includes("newroom")) {
       if (url.includes("ringsdb") || url.includes("test")) {
         var splitUrl = url.split( '/' );
         const newroomIndex = splitUrl.findIndex((e) => e === "newroom")
-        setRingsDbDomain(splitUrl[newroomIndex + 1])
-        const idArray = [];
-        const typeArray = [];
+        const ringsDbDomain = splitUrl[newroomIndex + 1]
+        const newRingsDbInfo: Array<any> = [null, null, null, null];
+        var deckIndex = 0;
         for (var i = newroomIndex + 2; i<splitUrl.length-1; i += 2 ) {
-          typeArray.push(splitUrl[i]);
-          idArray.push(splitUrl[i+1]);
+          const ringsDbType = splitUrl[i];
+          const ringsDbId = splitUrl[i+1];
+          newRingsDbInfo[deckIndex] = {id: ringsDbId, type: ringsDbType, domain: ringsDbDomain};
+          deckIndex = deckIndex + 1;
         }
-        setRingsDbType(typeArray);
-        setRingsDbIds(idArray);
+        setRingsDbInfo(newRingsDbInfo);
       }
       if (url.includes("replay")) {
         var splitUrl = url.split( '/' );
@@ -177,9 +176,7 @@ export const Lobby: React.FC = () => {
             isLoggedIn={isLoggedIn}
             closeModal={() => setShowModal(false)}
             replayId={replayId}
-            ringsDbIds={ringsDbIds}
-            ringsDbType={ringsDbType}
-            ringsDbDomain={ringsDbDomain}
+            ringsDbInfo={ringsDbInfo}
             loadShuffle={loadShuffle}
           />
         </div>}

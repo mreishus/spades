@@ -1,16 +1,15 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { useHistory } from "react-router-dom";
 import useProfile from "../../hooks/useProfile";
-import { sectionToLoadGroupId, sectionToDiscardGroupId } from "./Constants";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
-import { flatListOfCards, loadRingsDb, processLoadList, processPostLoad } from "./Helpers";
-import { cardDB } from "../../cardDB/cardDB";
+import { flatListOfCards, loadRingsDb, playerNToPlayerIndex, processLoadList, processPostLoad } from "./Helpers";
 import { loadDeckFromXmlText, getRandomIntInclusive } from "./Helpers";
 import { useSetTouchMode } from "../../contexts/TouchModeContext";
 import { useSetTouchAction } from "../../contexts/TouchActionContext";
 import { useCardSizeFactor, useSetCardSizeFactor } from "../../contexts/CardSizeFactorContext";
+import { loadDeckFromModeAndId } from "./SpawnQuestModal";
 
 
 export const TopBarMenu = React.memo(({
@@ -18,6 +17,7 @@ export const TopBarMenu = React.memo(({
     gameBroadcast,
     chatBroadcast,
     playerN,
+    setLoaded,
 }) => {
   const myUser = useProfile();
   const myUserID = myUser?.id;
@@ -29,11 +29,12 @@ export const TopBarMenu = React.memo(({
 
   const createdByStore = state => state.gameUi?.created_by;
   const createdBy = useSelector(createdByStore);
-  const optionsStore = state => state.gameUi?.options;
+  const optionsStore = state => state.gameUi?.game?.options;
   const options = useSelector(optionsStore);
+  const ringsDbInfo = options?.ringsDbInfo;
   const roundStore = state => state.gameUi?.game.roundNumber;
   const round = useSelector(roundStore);
-  const host = myUserID === createdBy;
+  const isHost = myUserID === createdBy;
   const cardsPerRoundStore = state => state.gameUi?.game.playerData[playerN]?.cardsDrawn;
   const cardsPerRound = useSelector(cardsPerRoundStore);
   
@@ -48,7 +49,7 @@ export const TopBarMenu = React.memo(({
       alert("Please sit at the table first.");
       return;
     }
-    if (data.action === "reset_game") {
+    if (data.action === "clear_table") {
       // Mark status
       chatBroadcast("game_update", {message: "marked game as "+data.state+"."});
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "victoryState", data.state]]}});
@@ -73,6 +74,13 @@ export const TopBarMenu = React.memo(({
       history.push("/profile");
       chatBroadcast("game_update", {message: "closed the room."});
       gameBroadcast("close_room", {});
+    } else if (data.action === "reload_game") {
+      const newOptions = {...options, loaded: false};
+      const resetData = {action: "clear_table", state: data.state};
+      handleMenuClick(resetData);
+      setLoaded(false);
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}})
+      if (options.questModeAndId) loadDeckFromModeAndId(options.questModeAndId, playerN, gameBroadcast, chatBroadcast);
     } else if (data.action === "load_deck") {
       loadFileDeck();
     } else if (data.action === "load_ringsdb") {
@@ -100,9 +108,14 @@ export const TopBarMenu = React.memo(({
         return;
       }
       const ringsDbId = splitUrl[typeIndex + 2];
-
+      const playerIndex = playerNToPlayerIndex(playerN);
+      var newRingsDbInfo;
+      if (ringsDbInfo) newRingsDbInfo = [...ringsDbInfo];
+      else newRingsDbInfo = [null, null, null, null];
+      newRingsDbInfo[playerIndex] = {id: ringsDbId, type: ringsDbType, domain: ringsDbDomain};
+      const newOptions = {...options, ringsDbInfo: newRingsDbInfo}
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}});
       loadRingsDb(playerN, ringsDbDomain, ringsDbType, ringsDbId, gameBroadcast, chatBroadcast);
-      
     } else if (data.action === "unload_my_deck") {
       // Delete all cards you own
       chatBroadcast("game_update",{message: "unloaded their deck."});
@@ -116,7 +129,14 @@ export const TopBarMenu = React.memo(({
       // Set threat to 00
       chatBroadcast("game_update",{message: "reset their deck."});
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", 0]]}});
-
+      // Set RingsDb info for this player to null
+      const playerIndex = playerNToPlayerIndex(playerN);
+      var newRingsDbInfo;
+      if (ringsDbInfo) newRingsDbInfo = [...ringsDbInfo];
+      else newRingsDbInfo = [null, null, null, null];
+      newRingsDbInfo[playerIndex] = null;
+      const newOptions = {...options, ringsDbInfo: newRingsDbInfo}
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}});
     } else if (data.action === "unload_encounter_deck") {
       // Delete all cards from encounter
       chatBroadcast("game_update",{message: "unloaded the encounter deck."});
@@ -127,6 +147,9 @@ export const TopBarMenu = React.memo(({
             action: "delete_card", 
         }
       });
+      // Set quest id to null
+      const newOptions = {...options, questModeAndId: null};
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}});
     } else if (data.action === "random_coin") {
       const result = getRandomIntInclusive(0,1);
       if (result) chatBroadcast("game_update",{message: "flipped heads."});
@@ -336,7 +359,7 @@ export const TopBarMenu = React.memo(({
   return(
     <li key={"Menu"}><div className="h-full flex items-center justify-center select-none" href="#">Menu</div>
       <ul className="second-level-menu">
-        {host &&
+        {isHost &&
           <li key={"numPlayers"}>
             <a href="#">Player count</a>
             <ul className="third-level-menu">
@@ -347,7 +370,7 @@ export const TopBarMenu = React.memo(({
             </ul>
           </li>
         }
-        {host &&
+        {isHost &&
           <li key={"layout"}>
             <a href="#">Layout</a>
             <ul className="third-level-menu">
@@ -422,17 +445,27 @@ export const TopBarMenu = React.memo(({
             <li key={"export_cards"}><a  onClick={() => handleMenuClick({action:"export_cards"})} href="#">Export cards (.txt)</a></li>
           </ul>
         </li>
-        {host &&
+        {isHost &&
           <li key={"reset"}>
-              <a href="#">Reset Game</a>
+              <a href="#">Reload decks</a>
               <ul className="third-level-menu">
-                <li key={"reset_victory"}><a onClick={() => handleMenuClick({action:"reset_game", state: "victory"})} href="#">Mark as victory</a></li>
-                <li key={"reset_defeat"}><a onClick={() => handleMenuClick({action:"reset_game", state: "defeat"})} href="#">Mark as defeat</a></li>
-                <li key={"reset_incomplete"}><a onClick={() => handleMenuClick({action:"reset_game", state: "incomplete"})} href="#">Mark as incomplete</a></li>
+                <li key={"reload_victory"}><a onClick={() => handleMenuClick({action:"reload_game", state: "victory"})} href="#">Mark as victory</a></li>
+                <li key={"reload_defeat"}><a onClick={() => handleMenuClick({action:"reload_game", state: "defeat"})} href="#">Mark as defeat</a></li>
+                <li key={"reload_incomplete"}><a onClick={() => handleMenuClick({action:"reload_game", state: "incomplete"})} href="#">Mark as incomplete</a></li>
               </ul>
           </li> 
-        }       
-        {host &&
+        }    
+        {isHost &&
+          <li key={"reset"}>
+              <a href="#">Clear Table</a>
+              <ul className="third-level-menu">
+                <li key={"reset_victory"}><a onClick={() => handleMenuClick({action:"clear_table", state: "victory"})} href="#">Mark as victory</a></li>
+                <li key={"reset_defeat"}><a onClick={() => handleMenuClick({action:"clear_table", state: "defeat"})} href="#">Mark as defeat</a></li>
+                <li key={"reset_incomplete"}><a onClick={() => handleMenuClick({action:"clear_table", state: "incomplete"})} href="#">Mark as incomplete</a></li>
+              </ul>
+          </li> 
+        }      
+        {isHost &&
           <li key={"shut_down"}>
               <a href="#">Close room</a>
               <ul className="third-level-menu">

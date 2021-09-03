@@ -1024,7 +1024,7 @@ defmodule DragnCardsGame.GameUI do
   end
 
   def reset_game(gameui) do
-    new_game = Game.new()
+    new_game = Game.new(gameui["game"]["options"])
     put_in(gameui["game"], new_game)
   end
 
