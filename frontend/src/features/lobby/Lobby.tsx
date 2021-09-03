@@ -49,13 +49,13 @@ export const Lobby: React.FC = () => {
       if (url.includes("ringsdb") || url.includes("test")) {
         var splitUrl = url.split( '/' );
         const newroomIndex = splitUrl.findIndex((e) => e === "newroom")
-        const deckDomain = splitUrl[newroomIndex + 1]
+        const ringsDbDomain = splitUrl[newroomIndex + 1]
         const newRingsDbInfo: Array<any> = [null, null, null, null];
         var deckIndex = 0;
         for (var i = newroomIndex + 2; i<splitUrl.length-1; i += 2 ) {
-          const deckType = splitUrl[i];
-          const deckId = splitUrl[i+1];
-          newRingsDbInfo[deckIndex] = {id: deckId, type: deckType, domain: deckDomain};
+          const ringsDbType = splitUrl[i];
+          const ringsDbId = splitUrl[i+1];
+          newRingsDbInfo[deckIndex] = {id: ringsDbId, type: ringsDbType, domain: ringsDbDomain};
           deckIndex = deckIndex + 1;
         }
         setRingsDbInfo(newRingsDbInfo);

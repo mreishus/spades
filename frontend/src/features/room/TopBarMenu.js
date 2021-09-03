@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import useProfile from "../../hooks/useProfile";
 import store from "../../store";
 import { setGame } from "./gameUiSlice";
-import { flatListOfCards, loadRingsDb, processLoadList, processPostLoad } from "./Helpers";
+import { flatListOfCards, loadRingsDb, playerNToPlayerIndex, processLoadList, processPostLoad } from "./Helpers";
 import { loadDeckFromXmlText, getRandomIntInclusive } from "./Helpers";
 import { useSetTouchMode } from "../../contexts/TouchModeContext";
 import { useSetTouchAction } from "../../contexts/TouchActionContext";
@@ -31,6 +31,7 @@ export const TopBarMenu = React.memo(({
   const createdBy = useSelector(createdByStore);
   const optionsStore = state => state.gameUi?.game?.options;
   const options = useSelector(optionsStore);
+  const ringsDbInfo = options?.ringsDbInfo;
   const roundStore = state => state.gameUi?.game.roundNumber;
   const round = useSelector(roundStore);
   const isHost = myUserID === createdBy;
@@ -48,7 +49,7 @@ export const TopBarMenu = React.memo(({
       alert("Please sit at the table first.");
       return;
     }
-    if (data.action === "reset_game") {
+    if (data.action === "clear_table") {
       // Mark status
       chatBroadcast("game_update", {message: "marked game as "+data.state+"."});
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "victoryState", data.state]]}});
@@ -73,9 +74,9 @@ export const TopBarMenu = React.memo(({
       history.push("/profile");
       chatBroadcast("game_update", {message: "closed the room."});
       gameBroadcast("close_room", {});
-    } else if (data.action === "reset_and_reload") {
+    } else if (data.action === "reload_game") {
       const newOptions = {...options, loaded: false};
-      const resetData = {action: "reset_game", state: "defeat"};
+      const resetData = {action: "clear_table", state: data.state};
       handleMenuClick(resetData);
       setLoaded(false);
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}})
@@ -107,9 +108,14 @@ export const TopBarMenu = React.memo(({
         return;
       }
       const ringsDbId = splitUrl[typeIndex + 2];
-
+      const playerIndex = playerNToPlayerIndex(playerN);
+      var newRingsDbInfo;
+      if (ringsDbInfo) newRingsDbInfo = [...ringsDbInfo];
+      else newRingsDbInfo = [null, null, null, null];
+      newRingsDbInfo[playerIndex] = {id: ringsDbId, type: ringsDbType, domain: ringsDbDomain};
+      const newOptions = {...options, ringsDbInfo: newRingsDbInfo}
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}});
       loadRingsDb(playerN, ringsDbDomain, ringsDbType, ringsDbId, gameBroadcast, chatBroadcast);
-      
     } else if (data.action === "unload_my_deck") {
       // Delete all cards you own
       chatBroadcast("game_update",{message: "unloaded their deck."});
@@ -123,7 +129,14 @@ export const TopBarMenu = React.memo(({
       // Set threat to 00
       chatBroadcast("game_update",{message: "reset their deck."});
       gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", 0]]}});
-
+      // Set RingsDb info for this player to null
+      const playerIndex = playerNToPlayerIndex(playerN);
+      var newRingsDbInfo;
+      if (ringsDbInfo) newRingsDbInfo = [...ringsDbInfo];
+      else newRingsDbInfo = [null, null, null, null];
+      newRingsDbInfo[playerIndex] = null;
+      const newOptions = {...options, ringsDbInfo: newRingsDbInfo}
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}});
     } else if (data.action === "unload_encounter_deck") {
       // Delete all cards from encounter
       chatBroadcast("game_update",{message: "unloaded the encounter deck."});
@@ -134,6 +147,9 @@ export const TopBarMenu = React.memo(({
             action: "delete_card", 
         }
       });
+      // Set quest id to null
+      const newOptions = {...options, questModeAndId: null};
+      gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}});
     } else if (data.action === "random_coin") {
       const result = getRandomIntInclusive(0,1);
       if (result) chatBroadcast("game_update",{message: "flipped heads."});
@@ -431,15 +447,24 @@ export const TopBarMenu = React.memo(({
         </li>
         {isHost &&
           <li key={"reset"}>
-              <a href="#">Reset Game</a>
+              <a href="#">Reload decks</a>
               <ul className="third-level-menu">
-                <li key={"reset_victory"}><a onClick={() => handleMenuClick({action:"reset_game", state: "victory"})} href="#">Mark as victory</a></li>
-                <li key={"reset_defeat"}><a onClick={() => handleMenuClick({action:"reset_game", state: "defeat"})} href="#">Mark as defeat</a></li>
-                <li key={"reset_reload"}><a onClick={() => handleMenuClick({action:"reset_and_reload"})} href="#">Mark as defeat and reload</a></li>
-                <li key={"reset_incomplete"}><a onClick={() => handleMenuClick({action:"reset_game", state: "incomplete"})} href="#">Mark as incomplete</a></li>
+                <li key={"reload_victory"}><a onClick={() => handleMenuClick({action:"reload_game", state: "victory"})} href="#">Mark as victory</a></li>
+                <li key={"reload_defeat"}><a onClick={() => handleMenuClick({action:"reload_game", state: "defeat"})} href="#">Mark as defeat</a></li>
+                <li key={"reload_incomplete"}><a onClick={() => handleMenuClick({action:"reload_game", state: "incomplete"})} href="#">Mark as incomplete</a></li>
               </ul>
           </li> 
-        }       
+        }    
+        {isHost &&
+          <li key={"reset"}>
+              <a href="#">Clear Table</a>
+              <ul className="third-level-menu">
+                <li key={"reset_victory"}><a onClick={() => handleMenuClick({action:"clear_table", state: "victory"})} href="#">Mark as victory</a></li>
+                <li key={"reset_defeat"}><a onClick={() => handleMenuClick({action:"clear_table", state: "defeat"})} href="#">Mark as defeat</a></li>
+                <li key={"reset_incomplete"}><a onClick={() => handleMenuClick({action:"clear_table", state: "incomplete"})} href="#">Mark as incomplete</a></li>
+              </ul>
+          </li> 
+        }      
         {isHost &&
           <li key={"shut_down"}>
               <a href="#">Close room</a>
