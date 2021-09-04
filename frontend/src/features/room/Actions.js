@@ -675,3 +675,18 @@ export const cardAction = (action, cardId, options, props) => {
         gameBroadcast("game_action", {action: "move_card", options: {card_id: cardId, dest_group_id: groupId, dest_stack_index: stackIndex, dest_card_index: numCardIds-1, combine: true, preserve_state: false}})
     }
 }
+
+export const groupAction = (action, groupId, options, props) => {
+    const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN} = props;
+    if (!playerN) {
+        alert("Please sit down to do that.")
+        return;
+    }
+    if (!gameUi || !playerN || !groupId) return;
+    if (action === "dealX") {
+        var topX = options?.value || 0;
+        const destGroupId = options?.destGroupId;
+        if (!destGroupId) return;
+        gameBroadcast("game_action", {action: "deal_x", options: {group_id: groupId, dest_group_id: destGroupId, top_x: topX}});
+   }
+}

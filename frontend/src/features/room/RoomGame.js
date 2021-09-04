@@ -5,6 +5,7 @@ import { HandleKeyDown } from "./HandleKeyDown";
 import { DragContainer } from "./DragContainer";
 import { HandleTouchActions } from "./HandleTouchActions";
 import { useTouchMode } from "../../contexts/TouchModeContext";
+import { HandleGameChange } from "./HandleGameChange";
 
 const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
   console.log('Rendering RoomGame');
@@ -30,6 +31,12 @@ const RoomGame = React.memo(({ playerN, gameBroadcast, chatBroadcast }) => {
   return (
     <div className="h-full w-full">
       <HandleKeyDown
+        playerN={playerN}
+        typing={typing}
+        gameBroadcast={gameBroadcast} 
+        chatBroadcast={chatBroadcast}
+      />   
+      <HandleGameChange
         playerN={playerN}
         typing={typing}
         gameBroadcast={gameBroadcast} 

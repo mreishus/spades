@@ -390,6 +390,39 @@ defmodule DragnCardsGame.GameUI do
     move_card(gameui, card_id, group_id, stack_index + 1, 0, false, true)
   end
 
+  def discard_group_id_for_deck_group_id(deck_group_id) do
+    case deck_group_id do
+      "player1Deck" ->
+        "player1Discard"
+      "player1Deck2" ->
+        "player1Discard"
+      "player2Deck" ->
+        "player2Discard"
+      "player2Deck2" ->
+        "player2Discard"
+      "player3Deck" ->
+        "player3Discard"
+      "player3Deck2" ->
+        "player3Discard"
+      "player4Deck" ->
+        "player4Discard"
+      "player4Deck2" ->
+        "player4Discard"
+      "sharedEncounterDeck" ->
+        "sharedEncounterDiscard"
+      "sharedEncounterDeck2" ->
+        "sharedEncounterDiscard2"
+      "sharedEncounterDeck3" ->
+        "sharedEncounterDiscard3"
+      "sharedQuestDeck" ->
+        "sharedQuestDiscard"
+      "sharedQuestDeck2" ->
+        "sharedQuestDiscard2"
+      _ ->
+        "sharedEncounterDiscard"
+    end
+  end
+
   # Update a card state
   # Modify the card orientation/tokens based on where it is now
   def update_card_state(gameui, card_id, preserve_state, orig_group_id) do
@@ -442,8 +475,13 @@ defmodule DragnCardsGame.GameUI do
       else card end
       # Entering deck: flip card facedown, no peeking
       card = if dest_group_type == "deck" do
+        new_deck_id = dest_group_id
+        new_discard_id = discard_group_id_for_deck_group_id(new_deck_id)
         card
         |> Map.put("currentSide", "B")
+        |> Map.put("owner", new_controller)
+        |> Map.put("deckGroupId", new_deck_id)
+        |> Map.put("discardGroupId", new_discard_id)
         |> set_all_peeking(false)
       else card end
       # Entering discard: flip card faceup, no peeking
@@ -680,6 +718,12 @@ defmodule DragnCardsGame.GameUI do
     end)
   end
 
+  def set_stack_ids_peeking_all(gameui, stack_ids, value) do
+    Enum.reduce(["player1" ,"player2", "player3", "player4"], gameui, fn(player_n, acc) ->
+      peek_at(acc, stack_ids, player_n, value)
+    end)
+  end
+
   def get_top_card_of_stack(gameui, stack_id) do
     stack = get_stack(gameui, stack_id)
     card_id = Enum.at(stack["cardIds"],0)
@@ -831,6 +875,25 @@ defmodule DragnCardsGame.GameUI do
     update_stack_ids(gameui, group_id, new_stack_ids)
   end
 
+  def deal_x(gameui, group_id, dest_group_id, top_x) do
+    stack_ids = get_stack_ids(gameui, group_id)
+    top_x = if Enum.count(stack_ids) < top_x do Enum.count(stack_ids) else top_x end
+    top_x_stack_ids = Enum.slice(stack_ids, 0, top_x)
+    gameui = set_stack_ids_peeking_all(gameui, stack_ids, false)
+    gameui = if top_x > 0 do
+      move_stack(gameui, Enum.at(top_x_stack_ids,0), dest_group_id, -1, false, true)
+    else
+      gameui
+    end
+    gameui = if top_x > 1 do
+      Enum.reduce(1..(top_x-1), gameui, fn(index, acc) ->
+        move_stack(acc, Enum.at(top_x_stack_ids,index), dest_group_id, -1, true, true)
+      end)
+    else
+      gameui
+    end
+  end
+
   ################################################################
   # Game actions                                                 #
   ################################################################
@@ -894,6 +957,8 @@ defmodule DragnCardsGame.GameUI do
           save_replay(gameui, user_id)
         "card_action" ->
           card_action(gameui, options["card_id"], options["action"], options["options"])
+        "deal_x" ->
+          deal_x(gameui, options["group_id"], options["dest_group_id"], options["top_x"])
         _ ->
           gameui
       end
