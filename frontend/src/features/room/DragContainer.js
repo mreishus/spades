@@ -45,10 +45,6 @@ export const DragContainer = React.memo(({
   const arrows4 = game.playerData.player1.arrows;
   const usingArrows = arrows1 || arrows2 || arrows3 || arrows4;
 
-  useEffect(() => {
-    processGameChange(prevGame, game, playerN, gameBroadcast, chatBroadcast);
-  }, [game]);
-
   const onDragEnd = (result) => {
     const groupById = game.groupById;
     const orig = result.source;

@@ -680,6 +680,12 @@ defmodule DragnCardsGame.GameUI do
     end)
   end
 
+  def set_stack_ids_peeking_all(gameui, stack_ids, value) do
+    Enum.reduce(["player1" ,"player2", "player3", "player4"], gameui, fn(player_n, acc) ->
+      peek_at(acc, stack_ids, player_n, value)
+    end)
+  end
+
   def get_top_card_of_stack(gameui, stack_id) do
     stack = get_stack(gameui, stack_id)
     card_id = Enum.at(stack["cardIds"],0)
@@ -831,6 +837,25 @@ defmodule DragnCardsGame.GameUI do
     update_stack_ids(gameui, group_id, new_stack_ids)
   end
 
+  def deal_x(gameui, group_id, dest_group_id, top_x) do
+    stack_ids = get_stack_ids(gameui, group_id)
+    top_x = if Enum.count(stack_ids) < top_x do Enum.count(stack_ids) else top_x end
+    top_x_stack_ids = Enum.slice(stack_ids, 0, top_x)
+    gameui = set_stack_ids_peeking_all(gameui, stack_ids, false)
+    gameui = if top_x > 0 do
+      move_stack(gameui, Enum.at(top_x_stack_ids,0), dest_group_id, -1, false, true)
+    else
+      gameui
+    end
+    gameui = if top_x > 1 do
+      Enum.reduce(1..(top_x-1), gameui, fn(index, acc) ->
+        move_stack(acc, Enum.at(top_x_stack_ids,index), dest_group_id, -1, true, true)
+      end)
+    else
+      gameui
+    end
+  end
+
   ################################################################
   # Game actions                                                 #
   ################################################################
@@ -894,6 +919,8 @@ defmodule DragnCardsGame.GameUI do
           save_replay(gameui, user_id)
         "card_action" ->
           card_action(gameui, options["card_id"], options["action"], options["options"])
+        "deal_x" ->
+          deal_x(gameui, options["group_id"], options["dest_group_id"], options["top_x"])
         _ ->
           gameui
       end

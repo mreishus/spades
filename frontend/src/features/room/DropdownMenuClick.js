@@ -188,16 +188,7 @@ export const handleDropdownClickGroup = (dropdownProps) => {
     ) 
   } else if (dropdownOptions.action === "dealX") {
     var topX = parseInt(prompt("Enter a number",0)) || 0;
-    const stackIds = group.stackIds;
-    if (topX > stackIds.length) topX = stackIds.length;
-    gameBroadcast("game_action", {action: "peek_at", options: {stack_ids: stackIds.slice(0, topX), value: false}});
-    if (topX > 0) {
-      gameBroadcast("game_action", {action: "move_stack", options: {stack_id: stackIds[0], dest_group_id: playerN+"Play2", dest_stack_index: -1, combine: false, preserve_state: true}})
-    }
-    for (var i=1; i<topX; i++) {
-      gameBroadcast("game_action", {action: "move_stack", options: {stack_id: stackIds[i], dest_group_id: playerN+"Play2", dest_stack_index: -1, combine: true, preserve_state: true}})
-    }
-    chatBroadcast("game_update",{message: "dealt the top "+topX+" cards of "+GROUPSINFO[group.id].name+" facedown."})
+    gameBroadcast("game_action", {action: "deal_x", options: {group_id: group.id, dest_group_id: playerN+"Play1", top_x: topX}});
   }
 }
 

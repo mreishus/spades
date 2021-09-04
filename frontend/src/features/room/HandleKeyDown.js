@@ -139,10 +139,6 @@ export const HandleKeyDown = ({
 
     const keyTokenAction = (rawTokenType, props) => {
         const {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress} = props;       
-                if (!playerN) {
-            alert("Please sit down to do that.")
-            return;
-        }
         if (!gameUi || !playerN || !activeCardAndLoc || !activeCardAndLoc.card) return; 
         const activeCardId = activeCardAndLoc.card.id; 
         const activeCard = game.cardById[activeCardId];
@@ -249,7 +245,10 @@ export const HandleKeyDown = ({
         gameBroadcast, 
         chatBroadcast,
     ) => {
-
+        if (!playerN) {
+            alert("Please sit down to do that.")
+            return;
+        }
         const k = event.key;
         console.log(k);
         // Keep track of held key
