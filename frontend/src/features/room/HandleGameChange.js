@@ -43,7 +43,6 @@ export const HandleGameChange = ({
         if (questModeAndId === prevQuestModeAndId) return;
         else setPrevQuestModeAndId(questModeAndId);
         const questName = getQuestNameFromModeAndId(questModeAndId);
-        alert("loaded quest "+questModeAndId+" "+playerN)
         if (questName === "The Fortress of Nurn") {
             const result = window.confirm("Perform automated setup for this quest? (Make sure all player decks are loaded first.)")
             if (!result) return;
