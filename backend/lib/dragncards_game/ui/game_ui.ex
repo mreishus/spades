@@ -444,6 +444,7 @@ defmodule DragnCardsGame.GameUI do
       card = if dest_group_type == "deck" do
         card
         |> Map.put("currentSide", "B")
+        |> Map.put("owner", new_controller)
         |> set_all_peeking(false)
       else card end
       # Entering discard: flip card faceup, no peeking
