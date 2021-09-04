@@ -390,6 +390,39 @@ defmodule DragnCardsGame.GameUI do
     move_card(gameui, card_id, group_id, stack_index + 1, 0, false, true)
   end
 
+  def discard_group_id_for_deck_group_id(deck_group_id) do
+    case deck_group_id do
+      "player1Deck" ->
+        "player1Discard"
+      "player1Deck2" ->
+        "player1Discard"
+      "player2Deck" ->
+        "player2Discard"
+      "player2Deck2" ->
+        "player2Discard"
+      "player3Deck" ->
+        "player3Discard"
+      "player3Deck2" ->
+        "player3Discard"
+      "player4Deck" ->
+        "player4Discard"
+      "player4Deck2" ->
+        "player4Discard"
+      "sharedEncounterDeck" ->
+        "sharedEncounterDiscard"
+      "sharedEncounterDeck2" ->
+        "sharedEncounterDiscard2"
+      "sharedEncounterDeck3" ->
+        "sharedEncounterDiscard3"
+      "sharedQuestDeck" ->
+        "sharedQuestDiscard"
+      "sharedQuestDeck2" ->
+        "sharedQuestDiscard2"
+      _ ->
+        "sharedEncounterDiscard"
+    end
+  end
+
   # Update a card state
   # Modify the card orientation/tokens based on where it is now
   def update_card_state(gameui, card_id, preserve_state, orig_group_id) do
@@ -442,9 +475,13 @@ defmodule DragnCardsGame.GameUI do
       else card end
       # Entering deck: flip card facedown, no peeking
       card = if dest_group_type == "deck" do
+        new_deck_id = dest_group_id
+        new_discard_id = discard_group_id_for_deck_group_id(new_deck_id)
         card
         |> Map.put("currentSide", "B")
         |> Map.put("owner", new_controller)
+        |> Map.put("deckGroupId", new_deck_id)
+        |> Map.put("discardGroupId", new_discard_id)
         |> set_all_peeking(false)
       else card end
       # Entering discard: flip card faceup, no peeking
