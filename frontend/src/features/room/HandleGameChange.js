@@ -1,21 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStepPhase } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
-import { setValues } from "./gameUiSlice";
-import { 
-    getDisplayName,
-    processTokenType,
-    tokenPrintName,
-} from "./Helpers";
-import { gameAction, cardAction, groupAction } from "./Actions";
-import { get } from "https";
+import { groupAction } from "./Actions";
 import { useKeypress, useSetKeypress } from "../../contexts/KeypressContext";
-import { useCardSizeFactor, useSetCardSizeFactor } from "../../contexts/CardSizeFactorContext";
 import { useSetObservingPlayerN } from "../../contexts/ObservingPlayerNContext";
 import { getQuestNameFromModeAndId } from "./SpawnQuestModal";
 
-export const HandleGameChange = ({
+export const HandleGameChange = React.memo(({
     playerN,
     typing,
     gameBroadcast, 
@@ -44,7 +35,7 @@ export const HandleGameChange = ({
         else setPrevQuestModeAndId(questModeAndId);
         const questName = getQuestNameFromModeAndId(questModeAndId);
         if (questName === "The Fortress of Nurn") {
-            const result = window.confirm("Perform automated setup for this quest? (Make sure all player decks are loaded first.)")
+            const result = window.confirm("Perform automated setup for this quest? (Make sure all player decks are loaded first, and all mulligans have been taken.)")
             if (!result) return;
             for (var i=1; i<=game.numPlayers; i++) {
                 const playerI = "player"+i;
@@ -63,6 +54,6 @@ export const HandleGameChange = ({
 
     return (null);
 
-}
+})
 
 

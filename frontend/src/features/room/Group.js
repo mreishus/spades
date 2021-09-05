@@ -53,8 +53,7 @@ export const Group = React.memo(({
       {hideTitle ? null :
         <div
           className="relative h-full float-left select-none text-gray-500"
-          style={{width:"15px"}} 
-        >
+          style={{width:"15px"}}>
           {group.type === "play" ?        
             <div className="absolute pointer-events-none mt-1" 
             style={{top: "50%", left: "50%", transform: "translate(-50%, -50%) rotate(90deg)", whiteSpace: "nowrap"}}>
