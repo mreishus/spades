@@ -5,6 +5,7 @@ import { useTouchMode } from "../../contexts/TouchModeContext";
 import { getDisplayName } from "./Helpers";
 import { useSetDropdownMenu } from "../../contexts/DropdownMenuContext";
 import useLongPress from "../../hooks/useLongPress";
+import { useTouchAction } from "../../contexts/TouchActionContext";
 
 
 export const CardMouseRegion = React.memo(({
@@ -21,6 +22,7 @@ export const CardMouseRegion = React.memo(({
 }) => {
     const setActiveCardAndLoc = useSetActiveCard();
     const touchMode = useTouchMode();
+    const touchAction = useTouchAction();
     const displayName = getDisplayName(card);
     const setDropdownMenu = useSetDropdownMenu();
 
@@ -90,7 +92,7 @@ export const CardMouseRegion = React.memo(({
             <div 
                 {...longPress}
                 style={regionStyle}
-                onMouseOver={event => !isActive && makeActive(event)}
+                onMouseOver={event => !isActive && !touchAction && makeActive(event)}
             />
     )} else return (
             <div 

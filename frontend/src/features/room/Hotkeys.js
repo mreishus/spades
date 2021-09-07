@@ -297,6 +297,8 @@ export const Hotkeys = React.memo(({
         </tr>
         <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>R</div> <div>or</div> 
+          <div className={keyClass} style={keyStyleL}>Alt</div><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
           <td className="text-center">Press Shift+R for all players.</td>
         </tr>
