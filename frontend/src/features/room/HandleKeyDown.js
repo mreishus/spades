@@ -77,6 +77,7 @@ const ctrlKeyGameActionMap = {
 
 const altKeyGameActionMap = {
     "N": "new_round_all",
+    "R": "refresh_all",
 }
 
 const keyTokenMap = {

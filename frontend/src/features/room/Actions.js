@@ -594,6 +594,11 @@ export const cardAction = (action, cardId, options, props) => {
     }
     // Send to appropriate discard pile
     else if (action === "discard") {
+        // If the card has victory points, ask if you want to send it to the VD
+        if (cardFace.victoryPoints && cardFace.victoryPoints > 0 && window.confirm("This card has victory points. Send it to the victory display?")) {
+            cardAction("victory", cardId, options, props);
+            return;            
+        }
         // If card is the parent card of a stack, discard the whole stack
         if (cardIndex === 0) {
             const stack = getStackByCardId(game.stackById, cardId);

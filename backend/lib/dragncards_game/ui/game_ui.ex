@@ -315,8 +315,12 @@ defmodule DragnCardsGame.GameUI do
   def target_card_ids(gameui, card_ids, player_n) do
     Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
       old_targeting = get_targeting(acc, card_id)
-      new_targeting = put_in(old_targeting[player_n], true)
-      acc = update_targeting(acc, card_id, new_targeting)
+        acc = if old_targeting do
+          new_targeting = put_in(old_targeting[player_n], true)
+          update_targeting(acc, card_id, new_targeting)
+        else
+          acc
+        end
     end)
   end
 
@@ -512,9 +516,9 @@ defmodule DragnCardsGame.GameUI do
       # Update game based on card moving
       # Handle triggers
       gameui = if dest_group_type == "play" do
-        add_triggers(gameui, card["id"])
+        add_triggers_card_face(gameui, card_id, card_face)
       else
-        remove_triggers(gameui, card["id"])
+        remove_triggers_card_face(gameui, card_id, card_face)
       end
       # Handle committed willpower leaving play
       gameui = if committed_willpower > 0 and dest_group_type !== "play" and old_controller !== "shared" do
@@ -595,6 +599,10 @@ defmodule DragnCardsGame.GameUI do
 
   def add_triggers(gameui, card_id) do
     card_face = get_current_card_face(gameui, card_id)
+    add_triggers_card_face(gameui, card_id, card_face)
+  end
+
+  def add_triggers_card_face(gameui, card_id, card_face) do
     card_triggers = card_face["triggers"]
     Enum.reduce(card_triggers, gameui, fn(round_step, acc) ->
       acc = add_trigger(acc, card_id, round_step)
@@ -612,6 +620,10 @@ defmodule DragnCardsGame.GameUI do
 
   def remove_triggers(gameui, card_id) do
     card_face = get_current_card_face(gameui, card_id)
+    remove_triggers_card_face(gameui, card_id, card_face)
+  end
+
+  def remove_triggers_card_face(gameui, card_id, card_face) do
     card_triggers = card_face["triggers"]
     Enum.reduce(card_triggers, gameui, fn(round_step, acc) ->
       acc = remove_trigger(acc, card_id, round_step)
