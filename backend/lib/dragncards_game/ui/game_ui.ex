@@ -315,8 +315,12 @@ defmodule DragnCardsGame.GameUI do
   def target_card_ids(gameui, card_ids, player_n) do
     Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
       old_targeting = get_targeting(acc, card_id)
-      new_targeting = put_in(old_targeting[player_n], true)
-      acc = update_targeting(acc, card_id, new_targeting)
+        acc = if old_targeting do
+          new_targeting = put_in(old_targeting[player_n], true)
+          update_targeting(acc, card_id, new_targeting)
+        else
+          acc
+        end
     end)
   end
 
