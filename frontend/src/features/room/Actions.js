@@ -17,6 +17,13 @@ import {
 import { setValues } from "./gameUiSlice";
 import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStep, prevRoundStep, nextPhase, prevPhase } from "./Constants";
 
+const areMultiplayerHotkeysEnabled = (game, chatBroadcast) => {
+    if (!game.options.multiplayerHotkeys) {
+        chatBroadcast("game_update",{message: "tried to press a multiplayer hotkey (perhaps their Control or Alt key is stuck down?). To enable multiplayer hotkeys, the host must toggle them on first (Shift + L). "});
+        return false;
+    } else return true;
+}
+
 const reveal = (game, deckGroupId, discardGroupId, gameBroadcast, chatBroadcast, facedown) => {
     // Check remaining cards in encounter deck
     const encounterStackIds = game.groupById[deckGroupId].stackIds;
@@ -110,13 +117,22 @@ export const gameAction = (action, props) => {
 
         // The player in the leftmost non-eliminated seat is the only one that does the framework game actions.
         // This prevents, for example, the round number increasing multiple times.
-        if (isHost) {
-            // Update phase
-            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "phase", "Resource"], ["game", "roundStep", "1.R"]]}})
-            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("1.R")+"."})
+        if (isHost) {            
             // Update round number
             const roundNumber = game["roundNumber"];
             const newRoundNumber = parseInt(roundNumber) + 1;
+            // Calculate round number
+            chatBroadcast("game_update", {message: "-----------------------------------------"})
+            chatBroadcast("game_update", {message: "-----------------------------------------"})
+            chatBroadcast("game_update", {message: "-----------------------------------------"})
+            chatBroadcast("game_update", {message: "----------------------------------------- Round "+newRoundNumber})
+            chatBroadcast("game_update", {message: "-----------------------------------------"})
+            chatBroadcast("game_update", {message: "-----------------------------------------"})
+            chatBroadcast("game_update", {message: "-----------------------------------------"})
+            chatBroadcast("game_update", {message: "started a new round as host."})
+            gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "phase", "Resource"], ["game", "roundStep", "1.R"]]}})
+            chatBroadcast("game_update", {message: "set the round step to "+roundStepToText("1.R")+"."})
+            // Update round number
             gameBroadcast("game_action", {action: "update_values", options:{updates:[["game", "roundNumber", newRoundNumber]]}})
             chatBroadcast("game_update",{message: "increased the round number to "+newRoundNumber+"."})
         }
@@ -145,6 +161,16 @@ export const gameAction = (action, props) => {
                 options: {}
             }
         });
+        if (isHost) {
+            gameBroadcast("game_action", {
+                action: "action_on_matching_cards", 
+                options: {
+                    criteria:[["controller","shared"], ["groupType","play"]], 
+                    action: "apply_tokens_per_round", 
+                    options: {}
+                }
+            });
+        }
         // Uncommit all characters to the quest
         gameBroadcast("game_action", {
             action: "action_on_matching_cards", 
@@ -162,6 +188,7 @@ export const gameAction = (action, props) => {
     }
 
     else if (action === "new_round_all") {
+        if (!areMultiplayerHotkeysEnabled(game,chatBroadcast)) return;
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
@@ -173,6 +200,7 @@ export const gameAction = (action, props) => {
     }
 
     else if (action === "refresh_all") {
+        if (!areMultiplayerHotkeysEnabled(game,chatBroadcast)) return;
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
@@ -369,9 +397,10 @@ export const gameAction = (action, props) => {
         // Raise your threat
         const newThreat = game.playerData[playerN].threat + 1;
         chatBroadcast("game_update", {message: "raises "+playerNToPlayerSpaceN(playerN)+"'s threat by 1 ("+newThreat+")."});
-        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat], ["game", "playerData", playerN, "refreshed", true]]}});
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat]]}});
     }
     else if (action === "increase_threat_all") {
+        if (!areMultiplayerHotkeysEnabled(game,chatBroadcast)) return;
         for (var i=1; i<=game.numPlayers; i++) {
             const playerI = "player"+i;
             if (!game.playerData[playerI].eliminated) {
@@ -385,7 +414,7 @@ export const gameAction = (action, props) => {
         var newThreat = game.playerData[playerN].threat - 1;
         newThreat = newThreat < 0 ? 0 : newThreat; 
         chatBroadcast("game_update", {message: "reduces "+playerNToPlayerSpaceN(playerN)+"'s threat by 1 ("+newThreat+")."});
-        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat], ["game", "playerData", playerN, "refreshed", true]]}});
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "playerData", playerN, "threat", newThreat]]}});
     }
     else if (action === "decrease_threat_all") {
         for (var i=1; i<=game.numPlayers; i++) {
@@ -397,6 +426,7 @@ export const gameAction = (action, props) => {
         }
     }
     else if (action === "next_seat") {
+        if (!areMultiplayerHotkeysEnabled(game,chatBroadcast)) return;
         // Get up from any seats first
         const nextPlayerN = getNextEmptyPlayerN(gameUi, playerN);
         const myUserId = gameUi.playerIds[playerN];
@@ -412,6 +442,7 @@ export const gameAction = (action, props) => {
         }
     }
     else if (action === "draw_next_seat") {
+        if (!areMultiplayerHotkeysEnabled(game,chatBroadcast)) return;
         // Get up from any seats first
         const nextPlayerN = getNextEmptyPlayerN(gameUi, playerN);
         if (nextPlayerN) {
@@ -421,6 +452,16 @@ export const gameAction = (action, props) => {
         } else {
             chatBroadcast("game_update",{message: "tried to draw a card for the next open seat, but there was none."});
         }
+    }
+    else if (action === "multiplayer_hotkeys") {
+        if (!isHost) {
+            chatBroadcast("game_update", {message: "tried to toggle multiplayer hotkeys, but they are not the host."});
+            return;
+        }
+        const newValue = !game.options.multiplayerHotkeys;
+        const newOptions = {...game.options, multiplayerHotkeys: newValue};
+        chatBroadcast("game_update", {message: "turned multiplayer hotkeys "+(newValue ? "on" : "off")+"."});
+        gameBroadcast("game_action", {action: "update_values", options: {updates: [["game", "options", newOptions]]}});
     }
 }
 
@@ -595,7 +636,7 @@ export const cardAction = (action, cardId, options, props) => {
     // Send to appropriate discard pile
     else if (action === "discard") {
         // If the card has victory points, ask if you want to send it to the VD
-        if (cardFace.victoryPoints && cardFace.victoryPoints > 0 && window.confirm("This card has victory points. Send it to the victory display?")) {
+        if (cardFace.victoryPoints && cardFace.victoryPoints > 0 && cardIndex === 0 && window.confirm("This card has victory points. Send it to the victory display?")) {
             cardAction("victory", cardId, options, props);
             return;            
         }

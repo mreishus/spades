@@ -141,7 +141,7 @@ export const Hotkeys = React.memo(({
           <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>X</div></td>
           <td className="text-center">Discard</td>
         </tr>
-        <tr className={"bg-gray-500"}>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyle}>B</div></td>
           <td className="text-center">Send attachment to back of stack</td>
         </tr>
@@ -289,35 +289,40 @@ export const Hotkeys = React.memo(({
           <th className={col2Class}>Description</th>
         </tr>
         <tr className={"bg-gray-500"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>L</div></td>
+          <td className="text-center">If host, enable multiplayer hotkeys.</td>
+        </tr>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>N</div> <div>or</div> 
           <div className={keyClass} style={keyStyleL}>Alt</div><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>N</div></td>
           <td className="text-center">Press Shift+N for all players.</td>
         </tr>
-        <tr className={"bg-gray-600"}>
+        <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>R</div> <div>or</div> 
           <div className={keyClass} style={keyStyleL}>Alt</div><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>R</div></td>
           <td className="text-center">Press Shift+R for all players.</td>
         </tr>
-        <tr className={"bg-gray-500"}>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>U</div></td>
           <td className="text-center">Raise threat by 1 for all players.</td>
         </tr>
-        <tr className={"bg-gray-600"}>
+        <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>J</div></td>
           <td className="text-center">Reduce threat by 1 for all players.</td>
         </tr>
-        <tr className={"bg-gray-500"}>
+        <tr className={"bg-gray-600"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>W</div></td>
           <td className="text-center">Sit in next open seat.</td>
         </tr>
-        <tr className={"bg-gray-600"}>
+        <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass} style={keyStyle}>D</div></td>
           <td className="text-center">Draw card on behalf of next empty seat.</td>
