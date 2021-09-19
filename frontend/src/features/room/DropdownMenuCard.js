@@ -185,9 +185,10 @@ export const DropdownMenuCard = React.memo(({
         if (visible) return(
           <div className="menu">
             <GoBack goToMenu="perRound" clickCallback={handleDropdownClick}/>
-            {[-3,-2,-1,0,1,2,3].map((increment, _tokenIndex) => (
+            {[-3,-2,-1,0,1,2,3,4,5].map((increment, _tokenIndex) => (
               <DropdownItem
-                rightIcon={menuCard.tokensPerRound[tokenType]===increment ? <FontAwesomeIcon icon={faCheck}/> : null}
+                rightIcon={(menuCard.tokensPerRound[tokenType]===increment ||
+                  (!menuCard.tokensPerRound[tokenType] && increment===0)) ? <FontAwesomeIcon icon={faCheck}/> : null}
                 action={"incrementTokenPerRound"}
                 tokenType={tokenType}
                 increment={increment}

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { GROUPSINFO, PHASEINFO, roundStepToText, nextRoundStepPhase } from "./Constants";
 import { useActiveCard, useSetActiveCard } from "../../contexts/ActiveCardContext";
 import { setValues } from "./gameUiSlice";
 import { 
@@ -60,6 +59,7 @@ const keyGameActionMap = {
     "j": "decrease_threat",
     "W": "next_seat",
     "D": "draw_next_seat",
+    "L": "multiplayer_hotkeys",
 }
 
 const ctrlKeyGameActionMap = {
@@ -254,17 +254,18 @@ export const HandleKeyDown = ({
         console.log(k);
         // Keep track of held key
         //if (k === "Shift") setKeypress({...keypress, "Shift": true});
-        if (k === "Control") setKeypress({...keypress, "Control": true});
-        if (k === "Alt") setKeypress({...keypress, "Alt": true});
-        if (k === "Tab") setKeypress({...keypress, "Tab": true});
-        if (k === " ") setKeypress({...keypress, "Space": true});
+        const unix_sec = Math.floor(Date.now() / 1000);
+        if (k === "Control") setKeypress({...keypress, "Control": unix_sec});
+        if (k === "Alt") setKeypress({...keypress, "Alt": unix_sec});
+        if (k === "Tab") setKeypress({...keypress, "Tab": unix_sec});
+        if (k === " ") setKeypress({...keypress, "Space": unix_sec});
         //else setKeypress({"Control": false});
         const actionProps = {gameUi, playerN, gameBroadcast, chatBroadcast, activeCardAndLoc, setActiveCardAndLoc, dispatch, keypress, setKeypress, setObservingPlayerN};
         const uiProps = {cardSizeFactor, setCardSizeFactor};
 
         // Hotkeys
-        if (keypress["Control"] && Object.keys(ctrlKeyGameActionMap).includes(k)) gameAction(ctrlKeyGameActionMap[k], actionProps);
-        else if (keypress["Alt"] && Object.keys(altKeyGameActionMap).includes(k)) gameAction(altKeyGameActionMap[k], actionProps);
+        if ((unix_sec - keypress["Control"]) < 30 && Object.keys(ctrlKeyGameActionMap).includes(k)) gameAction(ctrlKeyGameActionMap[k], actionProps);
+        else if ((unix_sec - keypress["Alt"]) < 30 && Object.keys(altKeyGameActionMap).includes(k)) gameAction(altKeyGameActionMap[k], actionProps);
         // else if (keypress["Shift"] && Object.keys(shiftKeyGameActionMap).includes(k)) gameAction(shiftKeyGameActionMap[k], actionProps);
         else if (Object.keys(keyGameActionMap).includes(k)) gameAction(keyGameActionMap[k], actionProps);
         else if (Object.keys(keyCardActionMap).includes(k)) cardAction(keyCardActionMap[k], activeCardAndLoc?.card.id, {}, actionProps);

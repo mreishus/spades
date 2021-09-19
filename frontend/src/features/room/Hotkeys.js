@@ -288,6 +288,11 @@ export const Hotkeys = React.memo(({
           <th className={col1Class}>Key</th>
           <th className={col2Class}>Description</th>
         </tr>
+        <tr className={"bg-gray-600"}>
+          <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Shift</div>
+          <div className={keyClass+" inline-block"} style={keyStyle}>L</div></td>
+          <td className="text-center">If host, enable multiplayer hotkeys.</td>
+        </tr>
         <tr className={"bg-gray-500"}>
           <td className="p-1 text-center"><div className={keyClass} style={keyStyleL}>Ctrl</div><div className={keyClass} style={keyStyleL}>Shift</div>
           <div className={keyClass+" inline-block"} style={keyStyle}>N</div> <div>or</div> 
