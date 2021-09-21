@@ -312,6 +312,13 @@ defmodule DragnCardsGame.GameUI do
     end)
   end
 
+  # Increment tokens for a list of card ids
+  def increment_tokens_object(gameui, increment_object) do
+    Enum.reduce(increment_object, gameui, fn({k,v}, acc) ->
+      acc = increment_token(acc, k, v)
+    end)
+  end
+
   def target_card_ids(gameui, card_ids, player_n) do
     Enum.reduce(card_ids, gameui, fn(card_id, acc) ->
       old_targeting = get_targeting(acc, card_id)
@@ -955,6 +962,8 @@ defmodule DragnCardsGame.GameUI do
           increment_token(gameui, options["card_id"], options["token_type"], options["increment"])
         "increment_tokens" ->
           increment_token(gameui, options["card_id"], options["token_increments"])
+        "increment_tokens_object" ->
+          increment_tokens_object(gameui, options["increment_object"])
         "reset_game" ->
           reset_game(gameui)
         "load_cards" ->
