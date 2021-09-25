@@ -920,7 +920,6 @@ defmodule DragnCardsGame.GameUI do
     player_n = get_player_n(gameui, user_id)
     player_n = if options["for_player_n"] do options["for_player_n"] else player_n end
     Logger.debug("game_action #{user_id} #{player_n} #{action}")
-    Logger.debug(options)
     game_old = gameui["game"]
     gameui = if player_n do
       case action do
