@@ -1,0 +1,186 @@
+## Example Kubernetes Config From 2020 (OLD) ##
+## spades-frontend-svc.yaml ##
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: spades-frontend-http
+  selfLink: /api/v1/namespaces/default/services/spades-frontend-http
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+    nodePort: 31232
+  selector:
+    app: spades
+    tier: frontend
+  sessionAffinity: ClientIP
+  type: NodePort
+status:
+  loadBalancer: {}
+
+## spades-frontend-rs.yaml ##
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: spades-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spades
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: spades
+        tier: frontend
+    spec:
+      containers:
+      - name: spades-frontend
+        image: mreishus/spades-frontend:latest
+        envFrom:
+          - configMapRef:
+              name: spades-config
+        ports:
+        - containerPort: 80
+          protocol: TCP
+
+## sbin-db-pvc.yaml ##
+
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: spades-db-claim
+  annotations:
+    volume.beta.kubernetes.io/storage-class: "managed-nfs-storage"
+spec:
+  accessModes:
+    - ReadWriteOnce
+    #- ReadWriteMany
+  resources:
+    requests:
+      storage: 4Gi
+
+## sbin-db-rs.yaml ##
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: spades-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spades
+      tier: database
+  template:
+    metadata:
+      labels:
+        app: spades
+        tier: database
+    spec:
+      containers:
+      - name: spades-database
+        image: postgres:12
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        envFrom:
+          - configMapRef:
+              name: spades-config
+        volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgredb
+      volumes:
+        - name: postgredb
+          persistentVolumeClaim:
+            claimName: spades-db-claim
+
+## sbin-db-service.yaml ##
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: spades-database
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: spades
+    tier: database
+
+## spades-backend-svc.yaml ##
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: spades-backend-http
+  selfLink: /api/v1/namespaces/default/services/spades-backend-http
+spec:
+  externalTrafficPolicy: Cluster
+  ports:
+  - port: 4000
+    protocol: TCP
+    targetPort: 4000
+    nodePort: 31231
+  selector:
+    app: spades
+    tier: backend
+  sessionAffinity: ClientIP
+  type: NodePort
+status:
+  loadBalancer: {}
+
+## spades-backend-rs.yaml ##
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: spades-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: spades
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: spades
+        tier: backend
+    spec:
+      containers:
+      - name: spades-backend
+        image: mreishus/spades-backend:latest
+        envFrom:
+          - configMapRef:
+              name: spades-config
+        ports:
+        - containerPort: 4000
+          protocol: TCP
+
+## spades-config.yaml ##
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: spades-config
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: spades_prod
+  POSTGRES_USER: postgresadmin
+  POSTGRES_PASSWORD: aaaaaaaaaaaaaaaaaaa
+  SECRET_KEY_BASE: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  DATABASE_URL: "ecto://postgresadmin:aaaaaaaaaaaaaaaaaaaa@spades-database/spades_prod"
+  HONEYCOMB_APIKEY: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  HONEYCOMB_DATASET: "spades-elixir"
+  MAILGUN_API_KEY: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  MAILGUN_DOMAIN: "mg.example.com"
